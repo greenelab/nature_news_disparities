@@ -1,4 +1,3 @@
 .venv
 .history
-*.json
 *.pyc
