@@ -34,5 +34,5 @@ java -Xmx5g edu.stanford.nlp.pipeline.StanfordCoreNLP \
     -outputFormat json
 
 ## process the results
-BENCHMARK_RAW_FILE="${DIR}/../benchmark_data/benchmark_table_raw.tsv"
+BENCHMARK_RAW_FILE="${DIR}/../benchmark_data/benchmark_quote_table_raw.tsv"
 RScript ${DIR}/process_benchmark_corenlp_output.R ${CORENLP_OUTPUT} ${BENCHMARK_RAW_FILE}
