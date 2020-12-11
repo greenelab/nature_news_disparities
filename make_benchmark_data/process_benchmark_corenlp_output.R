@@ -130,6 +130,7 @@ get_speakers <- function(json_res){
 
 format_gender_canonical_speaker <- function(in_df){
 
+
     # if the gender is unknown, but there is a 
     # gender guess in canonical speaker, take it
 
@@ -146,7 +147,27 @@ format_gender_canonical_speaker <- function(in_df){
 
     in_df$gender[female_idx] = "FEMALE"
 
-    return(in_df)
+    ## if gender is still unknown, make a best guess
+    library("genderizeR")
+
+    already_gendered_df = subset(in_df, gender!="UNKNOWN" | is.na(full_name))
+    unknown_gendered_df = subset(in_df, gender=="UNKNOWN")
+
+    names_missing = unique(unknown_gendered_df$full_name)
+    names_processed = findGivenNames(names_missing)
+    genderize_names = data.frame(genderize(names_missing, names_processed))
+    genderize_names$guessed_gender = toupper(genderize_names$gender)
+    colnames(genderize_names)[which(colnames(genderize_names)=="text")] = "full_name"
+
+    unknown_gendered_df = merge(unknown_gendered_df, 
+                                genderize_names[,c("full_name", "guessed_gender")])
+    unknown_gendered_df$gender = unknown_gendered_df$guessed_gender
+    unknown_gendered_df = unknown_gendered_df[,colnames(already_gendered_df)]
+
+    full_gender_df = rbind(unknown_gendered_df, already_gendered_df)
+
+
+    return(full_gender_df)
 
 }
 
