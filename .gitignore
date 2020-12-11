@@ -1,3 +1,6 @@
 .venv
 .history
 *.pyc
+/benchmark_data/coreNLP_output/*
+/benchmark_data/coreNLP_input/*
+.DS_Store
