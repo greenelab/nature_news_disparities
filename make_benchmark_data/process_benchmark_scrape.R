@@ -16,6 +16,25 @@ process_body <- function(in_df){
     # remove redundant white space
     in_df$body = str_squish(in_df$body)
 
+    # convert unicode stuff
+    ## TODO: Do this for all languages, JIC
+    in_df$body = gsub("\u2019", "'", in_df$body)
+    in_df$body = gsub("\u2018", "'", in_df$body)
+    in_df$body = gsub("‘", "'", in_df$body)
+    in_df$body = gsub("’", "'", in_df$body)
+
+    in_df$body = gsub("\u201c", "\"", in_df$body)
+    in_df$body = gsub("“", "\"", in_df$body)
+
+    in_df$body = gsub("\u201d", "\"", in_df$body)
+    in_df$body = gsub("”", "\"", in_df$body)
+
+    in_df$body = gsub("\u2014", "—", in_df$body)
+
+    in_df$body = gsub("\u00a0", " ", in_df$body)
+
+    in_df$body = gsub("\u0022", "\"", in_df$body)
+
     return(in_df)
 
 }
