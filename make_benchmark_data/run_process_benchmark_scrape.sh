@@ -35,4 +35,7 @@ java -Xmx5g edu.stanford.nlp.pipeline.StanfordCoreNLP \
 
 ## process the results
 BENCHMARK_RAW_FILE="${DIR}/../benchmark_data/benchmark_quote_table_raw.tsv"
-RScript ${DIR}/process_benchmark_corenlp_output.R ${CORENLP_OUTPUT} ${BENCHMARK_RAW_FILE}
+RScript ${DIR}/process_benchmark_quotes_corenlp_output.R ${CORENLP_OUTPUT} ${BENCHMARK_RAW_FILE}
+
+BENCHMARK_RAW_FILE="${DIR}/../benchmark_data/benchmark_location_table_raw.tsv"
+RScript ${DIR}/process_benchmark_locations_corenlp_output.R ${CORENLP_OUTPUT} ${BENCHMARK_RAW_FILE}
