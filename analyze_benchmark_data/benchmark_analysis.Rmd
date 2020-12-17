@@ -205,19 +205,19 @@ Now lets first look at the benchmark data
     ggplot(eval_df, aes(x=as.factor(year), fill=true_country)) +
         geom_bar(position="dodge") + theme_bw() + 
         xlab("Year of Article") + 
-        ylab("Number of Articles (10/year) with \n at least one Country Mention") +
+        ylab("Number of Articles (10 articles/year) with \n at least one Country Mention") +
         ggtitle("Country Mention by Year")
 
     ggplot(eval_df, aes(x=as.factor(year), fill=true_un_subregion)) +
         geom_bar(position="dodge") + theme_bw() + 
         xlab("Year of Article") + 
-        ylab("Number of Articles (10/year) with \n at least one UN Subregion Mention") +
+        ylab("Number of Articles (10 articles/year) with \n at least one UN Subregion Mention") +
         ggtitle("Subregion Mention by Year")
     
     ggplot(eval_df, aes(x=as.factor(year), fill=true_un_region)) +
         geom_bar(position="dodge") + theme_bw() + 
         xlab("Year of Article") + 
-        ylab("Number of Articles (10/year) with \n at least one UN Region Mention") +
+        ylab("Number of Articles (10 articles/year) with \n at least one UN Region Mention") +
         ggtitle("Region Mention by Year")
     
 ```
