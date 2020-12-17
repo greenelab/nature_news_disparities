@@ -19,5 +19,5 @@ This will later be extended.
 ## Analysis
   
 Currently, we look at the proportion of MALE:FEMALE quoted speakers in each article and which countries are mentioned in each article.
-All analyses functions and markdown functions can be found in [here](https://github.com/nrosed/nature_news_disparities/tree/main/analyze_benchmark_data/).
+All analysis functions and markdown code that utilizes the functions can be found in [here](https://github.com/nrosed/nature_news_disparities/tree/main/analyze_benchmark_data/).
 

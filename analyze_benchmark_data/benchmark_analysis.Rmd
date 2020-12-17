@@ -2,7 +2,7 @@
 title: "nature_news_disp"
 author: "Natalie Davidson"
 date: "12/16/2020"
-output: html_document
+output: rmarkdown::github_document
 ---
 
 ```{r setup, include=FALSE}
