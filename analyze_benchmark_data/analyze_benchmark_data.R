@@ -2,7 +2,7 @@ library(jsonlite)
 library(data.table)
 library(dplyr)
 
-read_corenlp_files <- function(corenlp_file){
+read_corenlp_quote_files <- function(corenlp_file){
     
     corenlp_df = data.frame(fread(corenlp_file, header=T))
     colnames(corenlp_df)[which(colnames(corenlp_df)=="full_name")] = "est_speaker"
@@ -15,7 +15,7 @@ read_corenlp_files <- function(corenlp_file){
     return(corenlp_df)
 }
 
-read_gold_standard <- function(gold_file){
+read_benchmark_quote_file <- function(gold_file){
     
     gold_df = data.frame(fread(gold_file, header=T))
     colnames(gold_df)[which(colnames(gold_df)=="full_name")] = "true_speaker"
@@ -23,6 +23,33 @@ read_gold_standard <- function(gold_file){
     return(gold_df)
 
 }
+
+
+read_corenlp_location_files <- function(corenlp_file){
+    
+    corenlp_df = data.frame(fread(corenlp_file, header=T))
+    colnames(corenlp_df)[which(colnames(corenlp_df)=="country")] = "est_country"
+    colnames(corenlp_df)[which(colnames(corenlp_df)=="un_region")] = "est_un_region"
+    colnames(corenlp_df)[which(colnames(corenlp_df)=="un_subregion")] = "est_un_subregion"
+
+    corenlp_df$est_country[which(is.na(corenlp_df$est_country))] = "NO_EST"
+    corenlp_df$est_un_region[which(is.na(corenlp_df$est_un_region))] = "NO_EST"
+    corenlp_df$est_un_subregion[which(is.na(corenlp_df$est_un_subregion))] = "NO_EST"
+
+
+    return(corenlp_df)
+}
+
+read_benchmark_location_file <- function(bm_loc_file){
+    
+    gold_df = data.frame(fread(bm_loc_file, header=T))
+    colnames(gold_df)[which(colnames(gold_df)=="country")] = "true_country"
+    colnames(gold_df)[which(colnames(gold_df)=="un_region")] = "true_un_region"
+    colnames(gold_df)[which(colnames(gold_df)=="un_subregion")] = "true_un_subregion"
+    return(gold_df)
+
+}
+
 
 make_comparison <- function(gold_df, res_df){
     
@@ -113,15 +140,11 @@ basic_doc_stats <- function(gold_df, year_idx_file){
 
 }
 
-gold_file = "/Users/natalie/Documents/projects/greenelab/checkouts/nature_news_disparities/make_benchmark_data/../benchmark_data/benchmark_quote_table_hand_annotated.tsv"
-corenlp_file = "/Users/natalie/Documents/projects/greenelab/checkouts/nature_news_disparities/make_benchmark_data/../benchmark_data/benchmark_quote_table_raw.tsv"
+gold_quote_file = "/Users/natalie/Documents/projects/greenelab/checkouts/nature_news_disparities/make_benchmark_data/../benchmark_data/benchmark_quote_table_hand_annotated.tsv"
+corenlp_quote_file = "/Users/natalie/Documents/projects/greenelab/checkouts/nature_news_disparities/make_benchmark_data/../benchmark_data/benchmark_quote_table_raw.tsv"
+
+gold_loc_file = "/Users/natalie/Documents/projects/greenelab/checkouts/nature_news_disparities/make_benchmark_data/../benchmark_data/benchmark_location_table_hand_annotated.tsv"
+corenlp_loc_file = "/Users/natalie/Documents/projects/greenelab/checkouts/nature_news_disparities/make_benchmark_data/../benchmark_data/benchmark_location_table_raw.tsv"
+
 year_idx_file = "/Users/natalie/Documents/projects/greenelab/checkouts/nature_news_disparities/make_benchmark_data/../benchmark_data/coreNLP_input/fileID_year.tsv"
 
-
-res_df = read_corenlp_files(corenlp_file)
-gold_df = read_gold_standard(gold_file)
-
-
-compare_df = make_comparison(gold_df, res_df)
-all_acc = evaluate_comparison(compare_df, result_file)
-    
