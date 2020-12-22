@@ -202,20 +202,24 @@ Now lets first look at the benchmark data
     eval_df = unique(eval_df)
     
     ## plot per year stats
-    ggplot(eval_df, aes(x=as.factor(year), fill=true_country)) +
-        geom_bar(position="dodge") + theme_bw() + 
+    country_agg = data.frame(table(eval_df[,c("true_country", "year")]))
+    ggplot(country_agg, aes(x=year, y=Freq, color=true_country, group=true_country)) +
+        geom_line() + geom_point() + theme_bw() + 
         xlab("Year of Article") + 
         ylab("Number of Articles (10 articles/year) with \n at least one Country Mention") +
+        ylim(c(0, 10)) +
         ggtitle("Country Mention by Year")
 
-    ggplot(eval_df, aes(x=as.factor(year), fill=true_un_subregion)) +
-        geom_bar(position="dodge") + theme_bw() + 
+    subregion_agg = data.frame(table(eval_df[,c("true_un_subregion", "year")]))
+    ggplot(subregion_agg, aes(x=year, y=Freq, color=true_un_subregion, group=true_un_subregion)) +
+        geom_line() + geom_point() + theme_bw() + 
         xlab("Year of Article") + 
         ylab("Number of Articles (10 articles/year) with \n at least one UN Subregion Mention") +
         ggtitle("Subregion Mention by Year")
-    
-    ggplot(eval_df, aes(x=as.factor(year), fill=true_un_region)) +
-        geom_bar(position="dodge") + theme_bw() + 
+
+    region_agg = data.frame(table(eval_df[,c("true_un_region", "year")]))
+    ggplot(region_agg, aes(x=year, y=Freq, color=true_un_region, group=true_un_region)) +
+        geom_line() + geom_point() + theme_bw() + 
         xlab("Year of Article") + 
         ylab("Number of Articles (10 articles/year) with \n at least one UN Region Mention") +
         ggtitle("Region Mention by Year")
