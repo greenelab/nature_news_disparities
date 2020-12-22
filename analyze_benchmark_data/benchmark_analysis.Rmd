@@ -1,0 +1,229 @@
+---
+title: "nature_news_disp"
+author: "Natalie Davidson"
+date: "12/16/2020"
+output: rmarkdown::github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+require(data.table)
+require(here)
+require(ggplot2)
+require(caret)
+
+proj_dir = here()
+source(paste(proj_dir, "/analyze_benchmark_data/analyze_benchmark_data.R", sep=""))
+source(paste(proj_dir, "/utils/plotting_utils.R", sep=""))
+```
+
+## Nature News Disparities -- gender + location
+
+This document is a first attempt to analyze the Nature News content to see if there are differences in geographic and gender representation.
+Currently, this work only looks at a benchmark dataset with 10 articles per year, for the years 2010, 2015, 2020.
+The benchmark dataset currently consists of 2 files
+
+1) `benchmark_quote_table_hand_annotated` contains mapping between the speaker and their name and gender
+    + `benchmark_quote_table_raw` is the output from coreNLP which we will compare against
+2) `benchmark_location_table_hand_annotated` contains a mapping between all found (organizations, states, provencces, countries) with a (normalized country name, UN region, and UN sub-region)
+    + `benchmark_location_table_raw` is the output from coreNLP which we will compare against
+
+
+
+**All analysis shown below depends on the functions described in `/analyze_benchmark_data/analyze_benchmark_data.R`**
+
+
+## Quote Analysis
+
+### reading in the quote data
+
+```{r}
+
+# get the project directory
+proj_dir = here()
+
+# get benchmark (bm) file and read it
+bm_quote_file = paste(proj_dir, 
+                    "/benchmark_data/benchmark_quote_table_hand_annotated.tsv", 
+                    sep="")
+
+bm_quote_df = read_benchmark_quote_file(bm_quote_file)
+
+
+```
+
+Lets look at what the file
+```{r}
+
+head(bm_quote_df)
+
+```
+
+Here we get the `file_id`, the true speaker of the quote, their true gender, and the quote in question.
+Now lets find what we get out of coreNLP, which we will compare against
+
+```{r}
+# 
+raw_quote_file = paste(proj_dir, 
+                    "/benchmark_data/benchmark_quote_table_raw.tsv", 
+                    sep="")
+
+raw_quote_df = read_corenlp_quote_files(raw_quote_file)
+
+head(raw_quote_df)
+
+```
+
+The main columns of interest are `est_gender` and `est_speaker`, which we will compare between lines that have the same `quote` and `file_id`.
+
+
+### analyzing quote data
+
+First, lets look at the *benchmark* data, to see if there exist any gender disparity evidence.
+```{r fig.align='center', echo=FALSE, warning=FALSE, message=F}
+
+
+    # filter out any places where the gender is NA
+    # this can happen when a quote is from an unidentified i.e. spokesperson
+    eval_df = subset(bm_quote_df, !is.na(true_gender))
+
+    # lets see is trends change overtime.. need year indices
+    year_idx_file = paste(proj_dir, 
+                    "/benchmark_data/coreNLP_input/fileID_year.tsv", 
+                    sep="")
+    year_df = data.frame(fread(year_idx_file))
+    eval_df = merge(year_df, eval_df)
+
+    ## get per year stats
+
+    ggplot(eval_df, aes(x=as.factor(year), fill=true_gender)) +
+        geom_bar(position="fill") + theme_bw() + 
+        xlab("Year of Article") + ylab("Male Quote Percentage") +
+        ggtitle("Male Quote Percentage Over Time") + 
+        scale_fill_brewer(palette="Set2")
+
+
+```
+
+Ok, so we see some signal. Now what does it look like for our estimated gender?
+
+```{r fig.align='center', echo=FALSE, warning=FALSE, message=F}
+
+    eval_df = subset(raw_quote_df, !is.na(est_gender))
+    eval_df = merge(year_df, eval_df)
+
+    ggplot(eval_df, aes(x=as.factor(year), fill=est_gender)) +
+        geom_bar(position="fill") + theme_bw() + 
+        xlab("Year of Article") + ylab("Male Quote Percentage") +
+        ggtitle("Estimated Male Quote Percentage Over Time") + 
+        scale_fill_brewer(palette="Set2")
+
+
+```
+
+Nice, it looks pretty close. Things called `NO_EST` are when a quote was found, but no gender was able to be estimated.
+Let's take a closer look at the errors
+```{r  fig.align='center', echo=FALSE, warning=FALSE, message=F}
+
+
+    # join the df to make comparison
+    compare_df = merge(bm_quote_df, raw_quote_df, by=c("file_id", "quote"), all.x=T)
+
+    compare_df = subset(compare_df, true_gender != "NOT_CLEAR")
+    compare_df = subset(compare_df, est_gender != "NO_EST")
+
+    #compare per quote
+    gender_idx = which(colnames(compare_df) == "est_gender")
+    true_gender_idx = which(colnames(compare_df) == "true_gender")
+    gender_match = apply(compare_df, 1, 
+                        function(x) x[gender_idx] == x[true_gender_idx]) 
+    
+    compare_df$is_gender_correct = gender_match
+  
+    # write out confusion tables
+    levels(compare_df$est_gender) = c("FEMALE", "MALE")
+    levels(compare_df$true_gender) = c("FEMALE", "MALE")
+    confusion_matrix <- confusionMatrix(as.factor(compare_df$est_gender),
+                                        as.factor(compare_df$true_gender))
+
+    draw_confusion_matrix(confusion_matrix, "FEMALE", "MALE", "Gender prediction Conf. Matr.")
+    
+        
+    # also see if error changes by year
+
+```
+
+### analyzing location data
+
+```{r }
+
+
+# get benchmark (bm) file and read it
+bm_loc_file = paste(proj_dir, 
+                    "/benchmark_data/benchmark_location_table_hand_annotated.tsv", 
+                    sep="")
+
+bm_loc_df = read_benchmark_location_file(bm_loc_file)
+
+raw_loc_file = paste(proj_dir, 
+                    "/benchmark_data/benchmark_location_table_hand_annotated.tsv", 
+                    sep="")
+
+raw_loc_df = read_corenlp_location_files(raw_loc_file)
+
+
+```
+
+The location data tries to find an organization, state, province, or country.
+After this it tries to tag it to a canonically named country, and UN defined regions.
+Let's take a look.
+
+```{r}
+head(bm_loc_df)
+head(raw_loc_df)
+```
+
+Similar to before we will match columns baed on their names, in `raw_loc_df` it has `est_` columns and in `bm_loc_df` is has matching `true_` columns
+
+Now lets first look at the benchmark data
+```{r echo=F, fig.width=15}
+
+    # filter out any places where the gender is NA
+    # this can happen when a quote is from an unidentified i.e. spokesperson
+    eval_df = subset(bm_loc_df, !is.na(true_country))
+
+    eval_df = merge(year_df, eval_df)
+    
+    # we only care if a country was mentioned once or not at all
+    eval_df = eval_df[,c("file_id", "true_country", "true_un_region", 
+                         "true_un_subregion", "year")]
+
+    eval_df = unique(eval_df)
+    
+    ## plot per year stats
+    country_agg = data.frame(table(eval_df[,c("true_country", "year")]))
+    ggplot(country_agg, aes(x=year, y=Freq, color=true_country, group=true_country)) +
+        geom_line() + geom_point() + theme_bw() + 
+        xlab("Year of Article") + 
+        ylab("Number of Articles (10 articles/year) with \n at least one Country Mention") +
+        ylim(c(0, 10)) +
+        ggtitle("Country Mention by Year")
+
+    subregion_agg = data.frame(table(eval_df[,c("true_un_subregion", "year")]))
+    ggplot(subregion_agg, aes(x=year, y=Freq, color=true_un_subregion, group=true_un_subregion)) +
+        geom_line() + geom_point() + theme_bw() + 
+        xlab("Year of Article") + 
+        ylab("Number of Articles (10 articles/year) with \n at least one UN Subregion Mention") +
+        ggtitle("Subregion Mention by Year")
+
+    region_agg = data.frame(table(eval_df[,c("true_un_region", "year")]))
+    ggplot(region_agg, aes(x=year, y=Freq, color=true_un_region, group=true_un_region)) +
+        geom_line() + geom_point() + theme_bw() + 
+        xlab("Year of Article") + 
+        ylab("Number of Articles (10 articles/year) with \n at least one UN Region Mention") +
+        ggtitle("Region Mention by Year")
+    
+```
+
+
