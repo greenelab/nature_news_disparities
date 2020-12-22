@@ -15,8 +15,10 @@ format_gender_canonical_speaker <- function(in_df){
     male_pronouns = na.omit(pronouns_df$pronouns[pronouns_df$gender == "MALE"])
     female_pronouns = na.omit(pronouns_df$pronouns[pronouns_df$gender == "FEMALE"])
 
-    male_idx = which((in_df$gender == "UNKNOWN" | is.na(in_df$gender)) &
-                        tolower(in_df$canonical_speaker) %in% male_pronouns)
+    male_idx = which(
+    (in_df$gender == "UNKNOWN" | is.na(in_df$gender)) &
+    tolower(in_df$canonical_speaker) %in% male_pronouns
+    )
 
     in_df$gender[male_idx] = "MALE"
 
@@ -37,8 +39,10 @@ format_gender_canonical_speaker <- function(in_df){
     genderize_names$guessed_gender = toupper(genderize_names$gender)
     colnames(genderize_names)[which(colnames(genderize_names)=="text")] = "full_name"
 
-    unknown_gendered_df = merge(unknown_gendered_df, 
-                                genderize_names[,c("full_name", "guessed_gender")])
+    unknown_gendered_df = merge(
+       unknown_gendered_df, 
+       genderize_names[,c("full_name", "guessed_gender")]
+     )
     unknown_gendered_df$gender = unknown_gendered_df$guessed_gender
     unknown_gendered_df = unknown_gendered_df[,colnames(already_gendered_df)]
 
@@ -95,7 +99,11 @@ read_result_files <- function(corenlp_output_dir){
     # format gender is canonical speaker has an idea
     all_quotes = format_gender_canonical_speaker(all_quotes)
 
-    all_quotes = all_quotes[,c("file_id", "full_name", "gender", "canonical_speaker", "partial_name", "quote")]
+    all_quotes = all_quotes[,c(
+      "file_id", "full_name", 
+      "gender", "canonical_speaker", 
+      "partial_name", "quote"
+    )]
     return(all_quotes)
 }
 
