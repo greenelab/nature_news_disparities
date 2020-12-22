@@ -18,7 +18,7 @@ process_body <- function(in_df){
 
     # convert unicode stuff
     ## TODO: Do this for all languages, JIC
-    in_df$body = gsub("\u2019", "'", in_df$body)
+    in_df$body = gsub("(\u2019|\u2018|\u201c|\u201d|\u2014)", "'", in_df$body)
     in_df$body = gsub("\u2018", "'", in_df$body)
     in_df$body = gsub("‘", "'", in_df$body)
     in_df$body = gsub("’", "'", in_df$body)
