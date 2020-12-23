@@ -27,7 +27,7 @@ fi
 
 
 if [[ "$CLASSPATH" != *"stanford-corenlp-${CORENLP_VERSION}"* ]]; then
-    export CLASSPATH="$CLASSPATH:${DIR}/stanford-corenlp-${CORENLP_VERSION})/*"
+    export CLASSPATH="$CLASSPATH:${DIR}/stanford-corenlp-${CORENLP_VERSION}/*"
     echo "New classpath: $CLASSPATH"
 fi
 
