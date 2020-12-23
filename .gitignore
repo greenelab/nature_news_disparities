@@ -3,4 +3,6 @@
 *.pyc
 /benchmark_data/coreNLP_output/*
 /benchmark_data/coreNLP_input/*
+/scraped_data/*
 .DS_Store
+.Rhistory
