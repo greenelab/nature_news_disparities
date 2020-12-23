@@ -12,7 +12,7 @@ CRAWL_SINCE = 2001 # if none, grabs the front page of nature news
 CRAWL_UNTIL = None # if none, uses the current year
 
 class NewsSpider(scrapy.Spider):
-    name = "naturenews"
+    name = "benchmark"
 
     def start_requests(self):
 
