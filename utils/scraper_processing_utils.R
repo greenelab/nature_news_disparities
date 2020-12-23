@@ -32,8 +32,15 @@ format_name_str <- function(in_str){
     format_str = str_replace(in_str, "'s", "")
 
 
-    # remove .
-    format_str = gsub(".", "", format_str, fixed=T)
+    # remove any weird characters .
+    format_str = gsub(
+        "[-.()!@#$%^&*_+=]",
+        "", 
+        format_str, 
+        fixed=F)
+
+    format_str = gsub("[", "", format_str, fixed=T)
+    format_str = gsub("]", "", format_str, fixed=T)
 
     # remove single characters
     # taken from 
@@ -259,6 +266,10 @@ get_locations <- function(json_res){
 
     }
 
+    if(is.na(locs_df)){
+        locs_df = ner_locs_df
+    }
+
     locs_df$location = unlist(locs_df$location)
     locs_df = unique(locs_df)
 
@@ -298,6 +309,12 @@ get_persons <- function(json_res){
 
     ner_names_df = subset(ner_df, ner=="PERSON")
     ner_names_df = subset(ner_names_df, !tolower(text) %in% pronouns)
+
+   # if there are no names, return NA
+    if(nrow(ner_names_df) == 0){
+        print("no speakers found")
+        return(NA)
+    }
     ner_names_df = data.frame(text=ner_names_df$text, gender="UNKNOWN")
 
 
@@ -310,12 +327,7 @@ get_persons <- function(json_res){
 
     coref_names_df = coref_names_df[,c("text", "gender")]
 
-    # if there are no names, return NA
-    if(nrow(ner_names_df) == 0){
-        print("no speakers found")
-        return(NA)
-    }
-
+ 
     # now find the longest strings and gender
     max_str = c()
     for(curr_text in ner_names_df$text){
