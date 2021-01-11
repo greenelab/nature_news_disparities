@@ -59,6 +59,8 @@ read_result_files <- function(corenlp_output_dir){
     
     all_quotes = NA
     for(curr_file in json_res_files){
+
+        print(curr_file)
         
         file_id = basename(curr_file)
         file_id = substr(file_id, 1, nchar(file_id)-9)
@@ -68,6 +70,7 @@ read_result_files <- function(corenlp_output_dir){
         ## get quotes
         quotes_res = json_res$quotes
         if(length(quotes_res) == 0){
+            print("no quote")
             next
         }
         

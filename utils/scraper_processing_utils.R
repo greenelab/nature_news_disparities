@@ -3,7 +3,7 @@ require(tidyr)
 require(here)
 
 proj_dir = here()
-ref_data_dir = paste(proj_dir, "/reference_data/", sep = "")
+ref_data_dir = paste(proj_dir, "/data/reference_data/", sep = "")
 
 
 pronouns = c("i", "me", "my", "mine", "myself",

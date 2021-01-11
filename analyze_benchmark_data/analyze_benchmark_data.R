@@ -140,11 +140,11 @@ basic_doc_stats <- function(gold_df, year_idx_file){
 
 }
 
-gold_quote_file = "/Users/natalie/Documents/projects/greenelab/checkouts/nature_news_disparities/make_benchmark_data/../benchmark_data/benchmark_quote_table_hand_annotated.tsv"
-corenlp_quote_file = "/Users/natalie/Documents/projects/greenelab/checkouts/nature_news_disparities/make_benchmark_data/../benchmark_data/benchmark_quote_table_raw.tsv"
+gold_quote_file = "/Users/natalie/Documents/projects/greenelab/checkouts/nature_news_disparities/process_scraped_data/../data/benchmark_data/benchmark_quote_table_hand_annotated.tsv"
+corenlp_quote_file = "/Users/natalie/Documents/projects/greenelab/checkouts/nature_news_disparities/process_scraped_data/../data/benchmark_data/benchmark_quote_table_raw.tsv"
 
-gold_loc_file = "/Users/natalie/Documents/projects/greenelab/checkouts/nature_news_disparities/make_benchmark_data/../benchmark_data/benchmark_location_table_hand_annotated.tsv"
-corenlp_loc_file = "/Users/natalie/Documents/projects/greenelab/checkouts/nature_news_disparities/make_benchmark_data/../benchmark_data/benchmark_location_table_raw.tsv"
+gold_loc_file = "/Users/natalie/Documents/projects/greenelab/checkouts/nature_news_disparities/process_scraped_data/../data/benchmark_data/benchmark_location_table_hand_annotated.tsv"
+corenlp_loc_file = "/Users/natalie/Documents/projects/greenelab/checkouts/nature_news_disparities/process_scraped_data/../data/benchmark_data/benchmark_location_table_raw.tsv"
 
-year_idx_file = "/Users/natalie/Documents/projects/greenelab/checkouts/nature_news_disparities/make_benchmark_data/../benchmark_data/coreNLP_input/fileID_year.tsv"
+year_idx_file = "/Users/natalie/Documents/projects/greenelab/checkouts/nature_news_disparities/process_scraped_data/../data/benchmark_data/coreNLP_input/fileID_year.tsv"
 

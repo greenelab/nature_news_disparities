@@ -1,8 +1,8 @@
 .venv
 .history
 *.pyc
-/benchmark_data/coreNLP_output/*
-/benchmark_data/coreNLP_input/*
-/scraped_data/*
+/data/benchmark_data/coreNLP_output/*
+/data/benchmark_data/coreNLP_input/*
+/data/scraped_data/*
 .DS_Store
 .Rhistory

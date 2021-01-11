@@ -24,7 +24,7 @@ proj_dir = here()
 
 # get benchmark (bm) file and read it
 bm_quote_file = paste(proj_dir, 
-                    "/benchmark_data/benchmark_quote_table_hand_annotated.tsv", 
+                    "/data/benchmark_data/benchmark_quote_table_hand_annotated.tsv", 
                     sep="")
 
 bm_quote_df = read_benchmark_quote_file(bm_quote_file)
@@ -56,7 +56,7 @@ Here we get the `file_id`, the true speaker of the quote, their true gender, and
 ``` r
 # 
 raw_quote_file = paste(proj_dir, 
-                    "/benchmark_data/benchmark_quote_table_raw.tsv", 
+                    "/data/benchmark_data/benchmark_quote_table_raw.tsv", 
                     sep="")
 
 raw_quote_df = read_corenlp_quote_files(raw_quote_file)
@@ -103,13 +103,13 @@ Nice, it looks pretty close. Things called `NO_EST` are when a quote was found, 
 ``` r
 # get benchmark (bm) file and read it
 bm_loc_file = paste(proj_dir, 
-                    "/benchmark_data/benchmark_location_table_hand_annotated.tsv", 
+                    "/data/benchmark_data/benchmark_location_table_hand_annotated.tsv", 
                     sep="")
 
 bm_loc_df = read_benchmark_location_file(bm_loc_file)
 
 raw_loc_file = paste(proj_dir, 
-                    "/benchmark_data/benchmark_location_table_hand_annotated.tsv", 
+                    "/data/benchmark_data/benchmark_location_table_hand_annotated.tsv", 
                     sep="")
 
 raw_loc_df = read_corenlp_location_files(raw_loc_file)
