@@ -13,4 +13,4 @@ GOLD_STANDARD_FILE="${DIR}/../data/benchmark_data/benchmark_quote_table_hand_ann
 CORENLP_OUTPUT="${DIR}/../data/benchmark_data/benchmark_quote_table_raw.tsv"
 
 
-RScript ${DIR}/process_benchmark_scrape.R ${GOLD_STANDARD_FILE} ${CORENLP_OUTPUT}
+RScript ${DIR}/process_scrape.R ${GOLD_STANDARD_FILE} ${CORENLP_OUTPUT}
