@@ -14,7 +14,7 @@ require(ggplot2)
 require(caret)
 
 proj_dir = here()
-source(paste(proj_dir, "/analyze_benchmark_data/analyze_benchmark_data.R", sep=""))
+source(paste(proj_dir, "/analysis_scripts/analysis_utils.R", sep=""))
 source(paste(proj_dir, "/utils/plotting_utils.R", sep=""))
 ```
 
