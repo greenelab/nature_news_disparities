@@ -12,12 +12,12 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 ## first process the json files from the scrape to make them readable 
 ## by Stanford CoreNLP
 IN_FILE="${DIR}/../data/scraped_data/downloads/links_crawled_${TARGET_YEAR}.json"
-OUT_DIR="${DIR}/../data/scraped_data/coreNLP_input/"
+OUT_DIR="${DIR}/../data/scraped_data/coreNLP_input_${TARGET_YEAR}/"
 mkdir -p ${OUT_DIR}
 RScript ${DIR}/process_scrape.R ${IN_FILE} ${OUT_DIR}
 
 ## now run StanfordNLP on the all files
-CORENLP_OUTPUT="${DIR}/../data/scraped_data/coreNLP_output/"
+CORENLP_OUTPUT="${DIR}/../data/scraped_data/coreNLP_output_${TARGET_YEAR}/"
 mkdir -p ${CORENLP_OUTPUT}
 
 CORENLP_INPUT=${OUT_DIR}/file_list.txt
@@ -35,9 +35,3 @@ java -Xmx5g edu.stanford.nlp.pipeline.StanfordCoreNLP \
     -outputDirectory ${CORENLP_OUTPUT} \
     -outputFormat json
 
-## process the results
-RAW_FILE="${DIR}/../data/scraped_data/quote_table_raw_${TARGET_YEAR}.tsv"
-RScript ${DIR}/process_corenlp_quotes_corenlp_output.R ${CORENLP_OUTPUT} ${RAW_FILE}
-
-RAW_FILE="${DIR}/../data/scraped_data/location_table_raw_${TARGET_YEAR}.tsv"
-RScript ${DIR}/process_corenlp_locations_corenlp_output.R ${CORENLP_OUTPUT} ${RAW_FILE}

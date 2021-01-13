@@ -16,8 +16,8 @@ format_gender_canonical_speaker <- function(in_df){
     female_pronouns = na.omit(pronouns_df$pronouns[pronouns_df$gender == "FEMALE"])
 
     male_idx = which(
-    (in_df$gender == "UNKNOWN" | is.na(in_df$gender)) &
-    tolower(in_df$canonical_speaker) %in% male_pronouns
+        (in_df$gender == "UNKNOWN" | is.na(in_df$gender)) &
+        tolower(in_df$canonical_speaker) %in% male_pronouns
     )
 
     in_df$gender[male_idx] = "MALE"
@@ -27,21 +27,37 @@ format_gender_canonical_speaker <- function(in_df){
 
     in_df$gender[female_idx] = "FEMALE"
 
-    ## if gender is still unknown, make a best guess
-    require("genderizeR")
-
+    ## if gender is still unknown, make a best guess using genderizer
+    ## with reference data
     already_gendered_df = subset(in_df, gender!="UNKNOWN" | is.na(full_name))
     unknown_gendered_df = subset(in_df, gender=="UNKNOWN")
 
-    names_missing = unique(unknown_gendered_df$full_name)
-    names_processed = findGivenNames(names_missing)
-    genderize_names = data.frame(genderize(names_missing, names_processed))
-    genderize_names$guessed_gender = toupper(genderize_names$gender)
-    colnames(genderize_names)[which(colnames(genderize_names)=="text")] = "full_name"
+    # get first name to check the gender
+    unknown_gendered_df$first_name = sapply(strsplit(unknown_gendered_df$full_name," "), `[`, 1)
+    unknown_gendered_df$first_name = tolower(unknown_gendered_df$first_name)
+
+    names_missing = data.frame(first_name=unique(unknown_gendered_df$first_name))
+
+    gender_io_file = paste(proj_dir, "/data/reference_data/genderize.tsv", sep="")
+    names_processed = data.frame(fread(gender_io_file))
+    colnames(names_processed)[1] = "first_name"
+    names_processed$guessed_gender = "UNCLEAR"
+    names_processed$guessed_gender[names_processed$probability_male > 0.6] = "MALE"
+    names_processed$guessed_gender[names_processed$probability_male < 0.4] = "FEMALE"
+
+    # guess genders from reference
+    names_processed = merge(data.table(names_missing), 
+                            data.table(names_processed),
+                            all.x=T)
+
+    names_processed = data.frame(names_processed)
+
+    # save these to add to the reference dataset later
+    names_not_processed = names_processed$first_name[is.na(names_processed$query_date)]
 
     unknown_gendered_df = merge(
        unknown_gendered_df, 
-       genderize_names[,c("full_name", "guessed_gender")]
+       names_processed[,c("first_name", "guessed_gender")]
      )
     unknown_gendered_df$gender = unknown_gendered_df$guessed_gender
     unknown_gendered_df = unknown_gendered_df[,colnames(already_gendered_df)]
@@ -49,7 +65,7 @@ format_gender_canonical_speaker <- function(in_df){
     full_gender_df = rbind(unknown_gendered_df, already_gendered_df)
 
 
-    return(full_gender_df)
+    return(list(full_gender_df, names_not_processed))
 
 }
 
@@ -100,14 +116,23 @@ read_result_files <- function(corenlp_output_dir){
     all_quotes = all_quotes[-1,]
 
     # format gender is canonical speaker has an idea
-    all_quotes = format_gender_canonical_speaker(all_quotes)
+    res = format_gender_canonical_speaker(all_quotes)
 
-    all_quotes = all_quotes[,c(
+    all_quotes_gender = res[[1]]
+    all_quotes_gender = all_quotes_gender[,c(
       "file_id", "full_name", 
       "gender", "canonical_speaker", 
       "partial_name", "quote"
     )]
-    return(all_quotes)
+
+    # write out any names that were not in the reference for batch update later
+    unprocessed_names_gender = res[[2]]
+    outfile = paste(corenlp_output_dir, "/missed_generize_io_names.tsv", sep="")
+    write.table(unprocessed_names_gender, file=outfile, sep="\t", quote=F, row.names=F)
+
+
+
+    return(all_quotes_gender)
 }
 
 

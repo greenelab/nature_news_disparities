@@ -71,3 +71,22 @@ else
     echo "Country and State reference data found"
 fi
 
+
+# get reference data of gender names
+# check for it first
+echo "Checking for genderize.io reference file..."
+if [[ ! -f ./data/reference_data/genderize.tsv ]]; then
+    read -r -p "genderize.io reference data doesn't exist, download? [y/N] " response
+    case "$response" in
+        [yY][eE][sS]|[yY])
+            curl -L "https://github.com/greenelab/iscb-diversity/raw/2beece62588d52dc30229fd65f25ddd523fa955e/data/gender/genderize.tsv" \
+                -o ${DIR}/data/reference_data/genderize.tsv
+            ;;
+        *)
+            # just abort for now
+            ;;
+    esac
+else
+    echo "genderize.io reference data found"
+fi
+
