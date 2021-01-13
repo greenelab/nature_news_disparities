@@ -1,0 +1,107 @@
+---
+title: "Gender analysis"
+author: "Natalie Davidson"
+date: "1/12/2021"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+require(data.table)
+require(here)
+require(ggplot2)
+require(caret)
+
+proj_dir = here()
+source(paste(proj_dir, "/analysis_scripts/analysis_utils.R", sep=""))
+source(paste(proj_dir, "/utils/plotting_utils.R", sep=""))
+```
+
+## Nature News Gender Disparities in Quotes
+
+This document is a working analysis of the quotes extracted from Nature News content to see if there are differences in gender representation.
+The data we will be working with are the following:
+
+1) `./data/benchmark_data/benchmark_quote_table_raw.tsv` is the output after scraping a randomly selected set of 10 articles from 2010, 2015, or 2020 (`./nature_news_scraper/run_scrape_benchmark.sh`) then running it through coreNLP with additional processing (`./process_scraped_data/run_process_target_year.sh`)
+2) `./data/scraped_data/quote_table_raw_20*.tsv` are the output after scraping all articles from a year between 2001 2020 (`./nature_news_scraper/run_scrape_benchmark.sh`) then running it through coreNLP with additional processing (`./process_scraped_data/run_process_target_year.sh`)
+
+
+**All analysis shown below depends on the functions described in `/analysis_scripts/analysis_utils.R`**
+
+
+## Check Benchmark Consistency
+
+We would like to make sure that our benchmark data is representative of our complete dataset, so let's look at some quote stats to make sure.
+
+### reading in the quote data
+
+First we read in the benchmark data
+```{r}
+
+# get the project directory, everything is set relative to this
+proj_dir = here()
+
+# read in the benchmark quote table
+raw_quote_file = paste(proj_dir, 
+                    "/data/benchmark_data/benchmark_quote_table_raw.tsv", 
+                    sep="")
+
+bm_quote_df = read_corenlp_quote_files(raw_quote_file)
+
+# add the year annotation
+year_idx_file = paste(proj_dir, 
+                "/data/benchmark_data/coreNLP_input/fileID_year.tsv", 
+                sep="")
+year_df = data.frame(fread(year_idx_file))
+bm_quote_df = merge(year_df, bm_quote_df)
+
+
+head(bm_quote_df)
+
+
+```
+
+Now we read in the full data for the same years.
+```{r}
+
+# read in the full year quote table for 2010, 2015, and 2020
+full_quote_df = NA
+for(curr_year in c(2010, 2015, 2020)){
+    quote_file = paste(proj_dir, 
+                    "/data/scraped_data/quote_table_raw_", curr_year, ".tsv", 
+                    sep="")
+    quote_df = read_corenlp_quote_files(quote_file)
+    quote_df$year = curr_year
+
+    full_quote_df = rbind(full_quote_df, quote_df)
+}
+full_quote_df = full_quote_df[-1,]
+
+head(full_quote_df)
+
+
+```
+
+Now we join the tables together for comparison.
+```{r}
+
+full_quote_df$is_benchmark = "full_data"
+bm_quote_df$is_benchmark = "benchmark"
+
+bm_full_quote_df = rbind(full_quote_df, bm_quote_df)
+
+```
+
+### compare benchmark and non-benchmark data
+```{r fig.align='center', echo=FALSE, warning=FALSE, message=F}
+
+
+    ggplot(subset(bm_full_quote_df, est_gender != "NO_EST"), aes(x=is_benchmark, fill=est_gender)) +
+        geom_bar(position="fill") + facet_grid(~year) + theme_bw() + 
+        xlab("Year of Article") + ylab("Male Quote Percentage") +
+        ggtitle("Male Quote Percentage Over Time") + 
+        scale_fill_brewer(palette="Set2")
+
+
+```

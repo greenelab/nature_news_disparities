@@ -4,7 +4,7 @@ library(dplyr)
 
 read_corenlp_quote_files <- function(corenlp_file){
     
-    corenlp_df = data.frame(fread(corenlp_file, header=T))
+    corenlp_df = data.frame(fread(corenlp_file, header=T, quote=""))
     colnames(corenlp_df)[which(colnames(corenlp_df)=="full_name")] = "est_speaker"
     colnames(corenlp_df)[which(colnames(corenlp_df)=="gender")] = "est_gender"
 
@@ -17,7 +17,7 @@ read_corenlp_quote_files <- function(corenlp_file){
 
 read_benchmark_quote_file <- function(gold_file){
     
-    gold_df = data.frame(fread(gold_file, header=T))
+    gold_df = data.frame(fread(gold_file, header=T, quote=""))
     colnames(gold_df)[which(colnames(gold_df)=="full_name")] = "true_speaker"
     colnames(gold_df)[which(colnames(gold_df)=="gender")] = "true_gender"
     return(gold_df)
