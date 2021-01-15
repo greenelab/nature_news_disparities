@@ -7,7 +7,7 @@
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
 # process each year individually
-TARGET_YRS=( 2010 2015 2020 )
+TARGET_YRS=( 2010 2015 2016 2017 2018 2019 2020 )
 for TARGET_YEAR in "${TARGET_YRS[@]}"
 do
     sh ${DIR}/run_process_target_year.sh ${TARGET_YEAR}
