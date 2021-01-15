@@ -340,10 +340,12 @@ get_persons <- function(json_res){
             max_str = c(max_str, curr_text)
         }
         else if(length(str_idx) > 1){
-            # there is an error, substring found twice
-            print("error in parsing the speakers")
+            # the substring found twice
+            # so this means if you are searching for John
+            # you could get back John Houghton or John Lee
+            # lets just ignore it
+            print("ambiguous speakers, (names are too similar)")
             print(curr_text)
-            return(NA)
         }else{
             old_str = max_str[str_idx]
             if(nchar(old_str) < nchar(curr_text)){
@@ -374,4 +376,75 @@ get_persons <- function(json_res){
 
     return(final_df)
 
+}
+
+query_genderize_io <- function(in_dir) {
+
+    # find all files that contain missed names
+    missed_gender_files = list.files(in_dir, 
+                                        pattern="missed_generize_io_names",
+                                        recursive=T,
+                                        full.names=T)
+    if(length(missed_gender_files) == 0){
+        warn_str = "No missing name files found. Are you supplying the correct input dir?"
+        warning(warn_str)
+        return()
+    }
+
+    
+    # read them all in and make unique for batch query
+    all_names = NA
+    for(curr_file in missed_gender_files){
+        in_df = data.frame(fread(curr_file))
+        all_names = rbind(all_names, in_df)
+    }
+    all_names = all_names[-1,]
+    all_names = unique(all_names)
+
+
+    # make sure names weren't missed in the already existing genderize reference files
+    reference_files = paste(ref_data_dir, "/genderize.tsv", sep="")
+    ref_df = data.frame(fread(reference_files))
+    reference_files = paste(ref_data_dir, "/genderize_update.tsv", sep="")
+    ref_update_df = data.frame(fread(reference_files))
+    ref_df = rbind(ref_df, ref_update_df)
+
+    if(length(intersect(all_names, ref_df$fore_name_simple)) != 0){
+        all_names = setdiff(all_names, ref_df$fore_name_simple)
+        warn_str = "when making genderize.io query, 
+                there were names that have already 
+                been included in reference. 
+                Re-run the quote-postprocessing, it is likely out of date."
+        warning(warn_str)
+    }
+    if(length(all_names) == 0){
+        return()
+    }
+
+
+    # now run the genderize.io request
+    # be CARFEUL only 1000 a day!
+    ## if gender is still unknown, make a best guess
+    require("genderizeR")
+    names_processed = data.frame(findGivenNames(all_names))
+    names_processed = unique(names_processed)
+    
+
+    # make it in the same format as the reference data
+    colnames(names_processed) = c("fore_name_simple", "remove", "probability_male", "genderize_sample_size", "rm")
+    names_processed$n_authors = NA
+    names_processed$query_date = as.Date(Sys.Date(), format = "%B %d %Y")
+    names_processed = names_processed[,c("fore_name_simple", "n_authors", 
+                            "genderize_sample_size", "query_date", 
+                            "probability_male")]
+    ref_update_df = rbind(ref_update_df, names_processed)
+    ref_update_df = unique(ref_update_df)
+
+    # now write it out
+    outfile = paste(ref_data_dir, "/genderize_update.tsv", sep="")
+    write.table(ref_update_df, outfile, sep="\t", quote=F, row.names=F)
+
+    # now delete the files
+    file.remove(missed_gender_files)
+    
 }
