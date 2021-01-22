@@ -46,10 +46,10 @@ head(bm_quote_df)
     ##                                                                                                                                  quote
     ## 1                                                                 one was exposed to the perfect combination of environmental triggers
     ## 2 It isn't just sequence — they went from sequence to epigenome to expression. That's what really makes [the study] something special.
-    ## 3                                                                           we really ought to look at sequencing of the brain tissue,
-    ## 4                                                          What they've done here is create a very nice template for others to follow,
-    ## 5                                                    Both twins came into the world with the same set of high risks for developing MS,
-    ## 6                                                        There had to be some trigger that caused one to develop it and the other not,
+    ## 3                                                                         "we really ought to look at sequencing of the brain tissue,"
+    ## 4                                                        "What they've done here is create a very nice template for others to follow,"
+    ## 5                                                  "Both twins came into the world with the same set of high risks for developing MS,"
+    ## 6                                                      "There had to be some trigger that caused one to develop it and the other not,"
 
 Here we get the `file_id`, the true speaker of the quote, their true gender, and the quote in question. Now lets find what we get out of coreNLP, which we will compare against
 
@@ -73,18 +73,18 @@ head(raw_quote_df)
     ## 6    ebola-experience-leaves-world-no-less-vulnerable-1.18844      Ashish Jha
     ##   est_gender canonical_speaker    partial_name
     ## 1       MALE      spokesperson           Addex
-    ## 2       MALE       Neena Nizar           Addex
-    ## 3       MALE      spokesperson           Addex
+    ## 2       MALE      spokesperson           Addex
+    ## 3       MALE       Neena Nizar           Addex
     ## 4       MALE           Unknown    Angelo Bassi
     ## 5       MALE   Anthony Leggett Anthony Leggett
-    ## 6       MALE        Ashish Jha      Ashish Jha
-    ##                                                                                                          quote
-    ## 1                                                                           The COVID-19 situation is dynamic,
-    ## 2                I feel like we were chugging along on a train and then somebody dropped a huge boulder on it.
-    ## 3 We are now seeing impacts on clinical-trial continuity in all the regions where we conduct clinical studies.
-    ## 4                     something like a superposition of two different perceptions, even if just for an instant
-    ## 5                                               We don't know at what stage it's going to break down — or how.
-    ## 6                                      I honestly doubt that many of these recommendations will be acted upon.
+    ## 6       MALE           Unknown             Jha
+    ##                                                                                                                                                                    quote
+    ## 1                                                         "We are now seeing impacts on clinical-trial continuity in all the regions where we conduct clinical studies."
+    ## 2                                                                                                                                   "The COVID-19 situation is dynamic,"
+    ## 3                                                                        "I feel like we were chugging along on a train and then somebody dropped a huge boulder on it."
+    ## 4                                                                             "something like a superposition of two different perceptions, even if just for an instant"
+    ## 5                                                                                                       "We don't know at what stage it's going to break down — or how."
+    ## 6 "It is genuinely disappointing that there are so few practical suggestions that take account of the very real political constraints that the WHO currently confronts,"
 
 The main columns of interest are `est_gender` and `est_speaker`, which we will compare between lines that have the same `quote` and `file_id`.
 
