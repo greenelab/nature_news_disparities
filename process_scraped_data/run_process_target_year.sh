@@ -43,8 +43,8 @@ if [ ! -d ${CORENLP_OUTPUT}  ]; then
 fi
 
 ## process the results, we do this always since this code is likely to change
-#QUOTE_RES_FILE="${DIR}/../data/scraped_data/quote_table_raw_${TARGET_YEAR}.tsv"
-#RScript ${DIR}/process_corenlp_quotes_corenlp_output.R ${CORENLP_OUTPUT} ${QUOTE_RES_FILE}
+QUOTE_RES_FILE="${DIR}/../data/scraped_data/quote_table_raw_${TARGET_YEAR}.tsv"
+RScript ${DIR}/process_corenlp_quotes_corenlp_output.R ${CORENLP_OUTPUT} ${QUOTE_RES_FILE}
 
 LOC_RES_FILE="${DIR}/../data/scraped_data/location_table_raw_${TARGET_YEAR}.tsv"
 RScript ${DIR}/process_corenlp_locations_corenlp_output.R ${CORENLP_OUTPUT} ${LOC_RES_FILE}
