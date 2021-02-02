@@ -18,22 +18,13 @@ process_body <- function(in_df){
 
     # convert unicode stuff
     ## TODO: Do this for all languages, JIC
-    in_df$body = gsub("(\u2019|\u2018|\u201c|\u201d|\u2014)", "'", in_df$body)
-    in_df$body = gsub("\u2018", "'", in_df$body)
-    in_df$body = gsub("‘", "'", in_df$body)
-    in_df$body = gsub("’", "'", in_df$body)
-
-    in_df$body = gsub("\u201c", "\"", in_df$body)
-    in_df$body = gsub("“", "\"", in_df$body)
-
-    in_df$body = gsub("\u201d", "\"", in_df$body)
-    in_df$body = gsub("”", "\"", in_df$body)
+    in_df$body = gsub("\u2019|\u2018|‘|’", "'", in_df$body)
+ 
+    in_df$body = gsub("\u201c|\u201d|“|”|\u0022", "\"", in_df$body)
 
     in_df$body = gsub("\u2014", "—", in_df$body)
 
     in_df$body = gsub("\u00a0", " ", in_df$body)
-
-    in_df$body = gsub("\u0022", "\"", in_df$body)
 
     return(in_df)
 
@@ -47,7 +38,11 @@ write_sep_files <- function(in_df, out_dir){
     for(curr_article_idx in 1:nrow(in_df)){
         curr_article = in_df[curr_article_idx,]
         outfile = paste(outdir, curr_article$file_id, ".txt", sep="")
-        writeLines(unlist(curr_article$body), outfile)
+        article_body = unlist(curr_article$body)
+        if(nchar(article_body) == 0){
+            next
+        }
+        writeLines(article_body, outfile)
         all_files = paste(all_files, outfile, "\n", sep="")
     }
 

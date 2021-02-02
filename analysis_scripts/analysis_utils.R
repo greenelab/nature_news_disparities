@@ -4,12 +4,14 @@ library(dplyr)
 
 read_corenlp_quote_files <- function(corenlp_file){
     
-    corenlp_df = data.frame(fread(corenlp_file, header=T))
+    corenlp_df = data.frame(fread(corenlp_file, header=T, quote=""))
     colnames(corenlp_df)[which(colnames(corenlp_df)=="full_name")] = "est_speaker"
     colnames(corenlp_df)[which(colnames(corenlp_df)=="gender")] = "est_gender"
 
     corenlp_df$est_speaker[which(is.na(corenlp_df$est_speaker))] = "NO_EST"
     corenlp_df$est_gender[which(is.na(corenlp_df$est_gender))] = "NO_EST"
+
+    corenlp_df$quote = gsub("\"", "", corenlp_df$quote)
 
 
     return(corenlp_df)
@@ -17,9 +19,11 @@ read_corenlp_quote_files <- function(corenlp_file){
 
 read_benchmark_quote_file <- function(gold_file){
     
-    gold_df = data.frame(fread(gold_file, header=T))
+    gold_df = data.frame(fread(gold_file, header=T, quote=FALSE))
     colnames(gold_df)[which(colnames(gold_df)=="full_name")] = "true_speaker"
     colnames(gold_df)[which(colnames(gold_df)=="gender")] = "true_gender"
+
+    gold_df$quote = gsub("\"", "", gold_df$quote)
     return(gold_df)
 
 }
@@ -139,12 +143,3 @@ basic_doc_stats <- function(gold_df, year_idx_file){
 
 
 }
-
-gold_quote_file = "/Users/natalie/Documents/projects/greenelab/checkouts/nature_news_disparities/make_benchmark_data/../benchmark_data/benchmark_quote_table_hand_annotated.tsv"
-corenlp_quote_file = "/Users/natalie/Documents/projects/greenelab/checkouts/nature_news_disparities/make_benchmark_data/../benchmark_data/benchmark_quote_table_raw.tsv"
-
-gold_loc_file = "/Users/natalie/Documents/projects/greenelab/checkouts/nature_news_disparities/make_benchmark_data/../benchmark_data/benchmark_location_table_hand_annotated.tsv"
-corenlp_loc_file = "/Users/natalie/Documents/projects/greenelab/checkouts/nature_news_disparities/make_benchmark_data/../benchmark_data/benchmark_location_table_raw.tsv"
-
-year_idx_file = "/Users/natalie/Documents/projects/greenelab/checkouts/nature_news_disparities/make_benchmark_data/../benchmark_data/coreNLP_input/fileID_year.tsv"
-

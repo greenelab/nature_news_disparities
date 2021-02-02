@@ -9,13 +9,13 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
 ## first process the json files from the scrape to make them readable 
 ## by Stanford CoreNLP
-IN_FILE="${DIR}/../benchmark_data/links_crawled.json"
-OUT_DIR="${DIR}/../benchmark_data/coreNLP_input/"
+IN_FILE="${DIR}/../data/benchmark_data/links_crawled.json"
+OUT_DIR="${DIR}/../data/benchmark_data/coreNLP_input/"
 mkdir -p ${OUT_DIR}
-RScript ${DIR}/process_benchmark_scrape.R ${IN_FILE} ${OUT_DIR}
+RScript ${DIR}/process_scrape.R ${IN_FILE} ${OUT_DIR}
 
 ## now run StanfordNLP on the benchmark files
-CORENLP_OUTPUT="${DIR}/../benchmark_data/coreNLP_output/"
+CORENLP_OUTPUT="${DIR}/../data/benchmark_data/coreNLP_output/"
 mkdir -p ${CORENLP_OUTPUT}
 
 CORENLP_INPUT=${OUT_DIR}/file_list.txt
@@ -34,8 +34,8 @@ java -Xmx5g edu.stanford.nlp.pipeline.StanfordCoreNLP \
     -outputFormat json
 
 ## process the results
-BENCHMARK_RAW_FILE="${DIR}/../benchmark_data/benchmark_quote_table_raw.tsv"
-RScript ${DIR}/process_benchmark_quotes_corenlp_output.R ${CORENLP_OUTPUT} ${BENCHMARK_RAW_FILE}
+BENCHMARK_RAW_FILE="${DIR}/../data/benchmark_data/benchmark_quote_table_raw.tsv"
+RScript ${DIR}/process_corenlp_quotes_corenlp_output.R ${CORENLP_OUTPUT} ${BENCHMARK_RAW_FILE}
 
-BENCHMARK_RAW_FILE="${DIR}/../benchmark_data/benchmark_location_table_raw.tsv"
-RScript ${DIR}/process_benchmark_locations_corenlp_output.R ${CORENLP_OUTPUT} ${BENCHMARK_RAW_FILE}
+BENCHMARK_RAW_FILE="${DIR}/../data/benchmark_data/benchmark_location_table_raw.tsv"
+RScript ${DIR}/process_corenlp_locations_corenlp_output.R ${CORENLP_OUTPUT} ${BENCHMARK_RAW_FILE}
