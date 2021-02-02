@@ -64,27 +64,27 @@ raw_quote_df = read_corenlp_quote_files(raw_quote_file)
 head(raw_quote_df)
 ```
 
-    ##                                                       file_id     est_speaker
-    ## 1                                          d41586-020-00889-6           Addex
-    ## 2                                          d41586-020-00889-6           Addex
-    ## 3                                          d41586-020-00889-6           Addex
-    ## 4 quantum-technology-probes-ultimate-limits-of-vision-1.17731    Angelo Bassi
-    ## 5 quantum-technology-probes-ultimate-limits-of-vision-1.17731 Anthony Leggett
-    ## 6    ebola-experience-leaves-world-no-less-vulnerable-1.18844      Ashish Jha
-    ##   est_gender canonical_speaker    partial_name
-    ## 1       MALE      spokesperson           Addex
-    ## 2       MALE       Neena Nizar           Addex
-    ## 3       MALE      spokesperson           Addex
-    ## 4       MALE           Unknown    Angelo Bassi
-    ## 5       MALE   Anthony Leggett Anthony Leggett
-    ## 6       MALE        Ashish Jha      Ashish Jha
-    ##                                                                                                          quote
-    ## 1                                                                           The COVID-19 situation is dynamic,
-    ## 2                I feel like we were chugging along on a train and then somebody dropped a huge boulder on it.
-    ## 3 We are now seeing impacts on clinical-trial continuity in all the regions where we conduct clinical studies.
-    ## 4                     something like a superposition of two different perceptions, even if just for an instant
-    ## 5                                               We don't know at what stage it's going to break down — or how.
-    ## 6                                      I honestly doubt that many of these recommendations will be acted upon.
+    ##              file_id        est_speaker est_gender  canonical_speaker
+    ## 1 d41586-020-00889-6              Addex       MALE       spokesperson
+    ## 2 d41586-020-00889-6              Addex       MALE        Neena Nizar
+    ## 3 d41586-020-00889-6              Addex       MALE       spokesperson
+    ## 4 news.2010.179.html Adrian de Ferranti       MALE Adrian de Ferranti
+    ## 5 d41586-020-01756-0    Alexis Kalergis       MALE            Unknown
+    ## 6 news.2010.179.html      Andrew Osmond       MALE            Unknown
+    ##         partial_name
+    ## 1              Addex
+    ## 2              Addex
+    ## 3              Addex
+    ## 4 Adrian de Ferranti
+    ## 5           Kalergis
+    ## 6      Andrew Osmond
+    ##                                                                                                                                                                                                                  quote
+    ## 1                                                                                                                                                                                   The COVID-19 situation is dynamic,
+    ## 2                                                                                                                        I feel like we were chugging along on a train and then somebody dropped a huge boulder on it.
+    ## 3                                                                                                         We are now seeing impacts on clinical-trial continuity in all the regions where we conduct clinical studies.
+    ## 4 It is an endorsement of the council and it's also a message to us that we've got a lot to do and we've got a terrific organization to bring into the twenty-first century and continue with the job we have in hand.
+    ## 5                                                                                                                                              all human vaccines used in Chile are obtained from foreign laboratories
+    ## 6                                                                                                                                                                  outgoings are now substantially in excess of income
 
 The main columns of interest are `est_gender` and `est_speaker`, which we will compare between lines that have the same `quote` and `file_id`.
 

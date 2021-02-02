@@ -6,3 +6,4 @@
 /data/scraped_data/*
 .DS_Store
 .Rhistory
+.Rproj.user

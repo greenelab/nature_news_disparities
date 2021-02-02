@@ -13,4 +13,4 @@ BENCHMARK_FILE="${DIR}/../data/benchmark_data/benchmark_quote_table_hand_annotat
 CORENLP_OUTPUT="${DIR}/../data/benchmark_data/benchmark_quote_table_raw.tsv"
 
 
-RScript ${DIR}/process_scrape.R ${BENCHMARK_FILE} ${CORENLP_OUTPUT}
+RScript ${DIR}/../processed_scraped_data/process_scrape.R ${BENCHMARK_FILE} ${CORENLP_OUTPUT}

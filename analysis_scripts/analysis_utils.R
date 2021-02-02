@@ -11,15 +11,19 @@ read_corenlp_quote_files <- function(corenlp_file){
     corenlp_df$est_speaker[which(is.na(corenlp_df$est_speaker))] = "NO_EST"
     corenlp_df$est_gender[which(is.na(corenlp_df$est_gender))] = "NO_EST"
 
+    corenlp_df$quote = gsub("\"", "", corenlp_df$quote)
+
 
     return(corenlp_df)
 }
 
 read_benchmark_quote_file <- function(gold_file){
     
-    gold_df = data.frame(fread(gold_file, header=T, quote=""))
+    gold_df = data.frame(fread(gold_file, header=T, quote=FALSE))
     colnames(gold_df)[which(colnames(gold_df)=="full_name")] = "true_speaker"
     colnames(gold_df)[which(colnames(gold_df)=="gender")] = "true_gender"
+
+    gold_df$quote = gsub("\"", "", gold_df$quote)
     return(gold_df)
 
 }

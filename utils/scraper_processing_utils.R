@@ -326,6 +326,9 @@ get_persons <- function(json_res){
                                 number == "SINGULAR")
 
     coref_names_df = coref_names_df[,c("text", "gender")]
+    if(nrow(coref_names_df) != 0){
+        coref_names_df$gender = "UNKNOWN"
+    }
 
  
     # now find the longest strings and gender

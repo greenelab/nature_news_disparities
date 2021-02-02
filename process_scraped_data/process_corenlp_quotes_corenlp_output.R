@@ -49,9 +49,8 @@ format_gender_canonical_speaker <- function(in_df){
     names_processed = rbind(names_processed, data.frame(fread(gender_io_file)))
 
     colnames(names_processed)[1] = "first_name"
-    names_processed$guessed_gender = NA
-    names_processed$guessed_gender[names_processed$probability_male > 0.6] = "MALE"
-    names_processed$guessed_gender[names_processed$probability_male < 0.4] = "FEMALE"
+    names_processed$guessed_gender = "MALE"
+    names_processed$guessed_gender[names_processed$probability_male < 0.5] = "FEMALE"
 
     # guess genders from reference
     names_processed = merge(data.table(names_missing), 
@@ -112,8 +111,10 @@ read_result_files <- function(corenlp_output_dir){
                                 all.x=T, by="partial_name") 
             # if there was no full name matching a speaker
             # replace with with the canonical_speaker
-            quotes_res$full_name[is.na(quotes_res$full_name)] = 
-                quotes_res$canonical_speaker[is.na(quotes_res$full_name)]
+            idx_no_name = is.na(quotes_res$full_name)
+            quotes_res$full_name[idx_no_name] = 
+                quotes_res$canonical_speaker[idx_no_name]
+            quotes_res$gender[idx_no_name] = "UNKNOWN"
 
         }else{
             # no speakers found, so make it NA
