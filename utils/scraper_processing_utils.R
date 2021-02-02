@@ -227,6 +227,10 @@ get_locations <- function(json_res){
     # get named entities --locations
     ner_df = get_ner(json_res)
 
+    if(length(ner_df) == 0){
+        return(NA)
+    }
+
     ner_locs_df = subset(ner_df, ner %in% c("ORGANIZATION"))
     ner_locs_df = unique(ner_locs_df)
 
@@ -256,7 +260,7 @@ get_locations <- function(json_res){
         ner_province_df$province_state = ner_province_df$text
         ner_province_df$location = unlist(get_prov_country(ref_provence_df, ner_province_df$province_state))
         ner_province_df$country = ner_province_df$location
-        ner_province_df = ner_province_df[,colnames(locs_df)]
+        ner_province_df = ner_province_df[,c("text", "ner", "country", "location")]
 
         if(is.na(locs_df)){
             locs_df = rbind(ner_locs_df, ner_province_df)
@@ -266,9 +270,13 @@ get_locations <- function(json_res){
 
     }
 
-    if(is.na(locs_df)){
+    if(is.na(locs_df) & nrow(ner_locs_df) != 0){
         locs_df = ner_locs_df
     }
+    if(is.na(locs_df)){
+        return(NA)
+    }
+
 
     locs_df$location = unlist(locs_df$location)
     locs_df = unique(locs_df)

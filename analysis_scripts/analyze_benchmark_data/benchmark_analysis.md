@@ -46,10 +46,10 @@ head(bm_quote_df)
     ##                                                                                                                                  quote
     ## 1                                                                 one was exposed to the perfect combination of environmental triggers
     ## 2 It isn't just sequence — they went from sequence to epigenome to expression. That's what really makes [the study] something special.
-    ## 3                                                                           we really ought to look at sequencing of the brain tissue,
-    ## 4                                                          What they've done here is create a very nice template for others to follow,
-    ## 5                                                    Both twins came into the world with the same set of high risks for developing MS,
-    ## 6                                                        There had to be some trigger that caused one to develop it and the other not,
+    ## 3                                                                         "we really ought to look at sequencing of the brain tissue,"
+    ## 4                                                        "What they've done here is create a very nice template for others to follow,"
+    ## 5                                                  "Both twins came into the world with the same set of high risks for developing MS,"
+    ## 6                                                      "There had to be some trigger that caused one to develop it and the other not,"
 
 Here we get the `file_id`, the true speaker of the quote, their true gender, and the quote in question. Now lets find what we get out of coreNLP, which we will compare against
 
