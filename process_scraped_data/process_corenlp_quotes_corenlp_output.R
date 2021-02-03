@@ -35,42 +35,42 @@ format_gender_canonical_speaker <- function(in_df){
     ## if gender is still unknown, make a best guess using genderizer
     ## with reference data
     already_gendered_df = subset(in_df, gender!="UNKNOWN" | is.na(full_name))
-    unknown_gendered_df = subset(in_df, gender=="UNKNOWN" | is.na(gender))
+    unknown_gendered_df = subset(in_df, (gender=="UNKNOWN" | is.na(gender)) & !is.na(full_name))
 
-    # get first name to check the gender
-    unknown_gendered_df$first_name = sapply(strsplit(unknown_gendered_df$full_name," "), `[`, 1)
-    unknown_gendered_df$first_name = tolower(unknown_gendered_df$first_name)
+    if(nrow(unknown_gendered_df) != 0){
 
-    names_missing = data.frame(first_name=unique(unknown_gendered_df$first_name))
+        # get first name to check the gender
+        unknown_gendered_df$first_name = sapply(strsplit(unknown_gendered_df$full_name," "), `[`, 1)
+        unknown_gendered_df$first_name = tolower(unknown_gendered_df$first_name)
 
-    gender_io_file = paste(proj_dir, "/data/reference_data/genderize.tsv", sep="")
-    names_processed = data.frame(fread(gender_io_file))
-    gender_io_file = paste(proj_dir, "/data/reference_data/genderize_update.tsv", sep="")
-    names_processed = rbind(names_processed, data.frame(fread(gender_io_file)))
+        names_missing = data.frame(first_name=unique(unknown_gendered_df$first_name))
 
-    colnames(names_processed)[1] = "first_name"
-    names_processed$guessed_gender = "MALE"
-    names_processed$guessed_gender[names_processed$probability_male < 0.5] = "FEMALE"
+        gender_io_file = paste(proj_dir, "/data/reference_data/genderize.tsv", sep="")
+        names_processed = data.frame(fread(gender_io_file))
+        gender_io_file = paste(proj_dir, "/data/reference_data/genderize_update.tsv", sep="")
+        names_processed = rbind(names_processed, data.frame(fread(gender_io_file)))
 
-    # guess genders from reference
-    names_processed = merge(data.table(names_missing), 
-                            data.table(names_processed),
-                            all.x=T)
+        colnames(names_processed)[1] = "first_name"
+        names_processed$guessed_gender = "MALE"
+        names_processed$guessed_gender[names_processed$probability_male < 0.5] = "FEMALE"
 
-    names_processed = data.frame(names_processed)
+        # guess genders from reference
+        names_processed = merge(data.table(names_missing), 
+                                data.table(names_processed),
+                                all.x=T)
 
-    # save these to add to the reference dataset later
-    names_not_processed = names_processed$first_name[is.na(names_processed$query_date)]
+        names_processed = data.frame(unique(names_processed))
 
-    unknown_gendered_df = merge(
-       unknown_gendered_df, 
-       names_processed[,c("first_name", "guessed_gender")]
-     )
-    unknown_gendered_df$gender = unknown_gendered_df$guessed_gender
-    unknown_gendered_df = unknown_gendered_df[,colnames(already_gendered_df)]
+        # save these to add to the reference dataset later
+        names_not_processed = names_processed$first_name[is.na(names_processed$query_date)]
 
+        unknown_gendered_df = merge(unknown_gendered_df, 
+                                    unique(names_processed[,c("first_name", "guessed_gender")]))
+        unknown_gendered_df$gender = unknown_gendered_df$guessed_gender
+        unknown_gendered_df = unknown_gendered_df[,colnames(already_gendered_df)]
+
+    }
     full_gender_df = rbind(unknown_gendered_df, already_gendered_df)
-
 
     return(list(full_gender_df, names_not_processed))
 
