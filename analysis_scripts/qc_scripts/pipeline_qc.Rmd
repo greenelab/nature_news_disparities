@@ -510,6 +510,17 @@ loc_stats_df = data.frame(loc_stats_df)
 ```
 
 #### plotting quote stats
+
+Between pipeline step 3 and 4 we are predicting the genders of speakers using genderize.io.
+So we expect almost exactly the same number of quotes and length of quotes.
+We also expect that the number of UNKNOWN gendered speakers typically decrease,
+and the number of MALE/FEMALE speakers may increase.
+This is not a completely 1:1 measurement. Pipeline level 3 only identifies the 
+number of male/female/unknown named entities, there is no gender based quote 
+attribution checked at this stage. 
+Quote attribution is in step 4.
+
+
 ```{r fig.show="hold", out.width="50%", echo=FALSE, warning=FALSE, message=F}
 
 # now plot the stats
@@ -519,29 +530,45 @@ require(dplyr)
 # num quotes stats
 num_quotes = quote_stats_df %>% group_by(file_id, year) %>% summarize(n())
 num_quotes = data.frame(num_quotes)
-colnames(num_quotes)[3] = "num_quotes"
+colnames(num_quotes)[3] = "num_quotes_p4"
+num_quotes$file_id_merge = num_quotes$file_id
 
-num_quotes$pipeline_step = "p4"
-num_quotes = rbind(num_quotes, 
-                article_stats_step3_df[,colnames(num_quotes)])
-p4_quotes = ggplot(num_quotes, aes(x=year, y=num_quotes, fill=pipeline_step)) +
+article_stats_step3_df$file_id_merge = gsub(".txt.json", "", 
+                                            basename(article_stats_step3_df$file_id))
+num_quotes = merge(num_quotes, 
+          article_stats_step3_df[article_stats_step3_df$num_quotes != 0, 
+                                 c("file_id_merge", "num_quotes")], 
+          by=c("file_id_merge"), all=T)
+
+num_quotes$diff = num_quotes$num_quotes_p4 - num_quotes$num_quotes
+
+p4_quotes = ggplot(num_quotes, aes(x=year, y=diff)) +
     geom_boxplot() + theme_bw() + 
-    xlab("Year of Article") + ylab("# quotes") +
-        ggtitle("number of quotes per article over time pipeline step 4")
+    xlab("Year of Article") + ylab("Change in the number of quotes") +
+        ggtitle("number of quotes per article in P4 - P3")
 
+# length quotes stats
 sum_length_quotes = quote_stats_df %>% 
                 select(file_id, year, quote_len) %>% 
                 group_by(file_id, year) %>% 
                 summarize(sum(quote_len))
 sum_length_quotes = data.frame(sum_length_quotes)
-colnames(sum_length_quotes)[3] = "sum_length_quotes"
-sum_length_quotes$pipeline_step = "p4"
-sum_length_quotes = rbind(sum_length_quotes, 
-                article_stats_step3_df[,colnames(sum_length_quotes)])
-p4_sum_quotes = ggplot(sum_length_quotes, aes(x=year, y=sum_length_quotes, fill=pipeline_step)) +
+colnames(sum_length_quotes)[3] = "sum_length_quotes_p4"
+sum_length_quotes$file_id_merge = sum_length_quotes$file_id
+
+sum_length_quotes = merge(sum_length_quotes, 
+          article_stats_step3_df[article_stats_step3_df$sum_length_quotes != 0, 
+                                 c("file_id_merge", "sum_length_quotes")], 
+          by=c("file_id_merge"), all=T)
+
+sum_length_quotes$diff = sum_length_quotes$sum_length_quotes_p4 - 
+                            sum_length_quotes$sum_length_quotes
+
+
+p4_sum_quotes = ggplot(sum_length_quotes, aes(x=year, y=diff)) +
     geom_boxplot() + theme_bw() + 
-    xlab("Year of Article") + ylab("sum length quotes") +
-        ggtitle("summed length of quotes per article over time pipeline step 4")
+    xlab("Year of Article") + ylab("diff. length quotes") +
+        ggtitle("summed length of quotes per article in P4-P3")
 
 
 
@@ -553,11 +580,27 @@ gender_summary <- function(in_df, filter_str, out_name, compare_df){
             group_by(file_id, year) %>% 
             summarize(n())
     filt_table = data.frame(filt_table)
-    colnames(filt_table)[3] = out_name
+    out_name_p4 = paste(out_name, "p4", sep="_")
+    colnames(filt_table)[3] = out_name_p4
     
-    filt_table$pipeline_step = "p4"
-    filt_table = rbind(filt_table, 
-                compare_df[,colnames(filt_table)])
+    # now merge
+    filt_table$file_id_merge = filt_table$file_id
+    filt_table = merge(filt_table, 
+          compare_df[, c("file_id_merge", "year", out_name)], 
+          by=c("file_id_merge"), all=T)
+    
+    # not found in p3
+    missing_p3 = which(is.na(filt_table[,c(out_name)]))
+    filt_table$year.y[missing_p3] = filt_table$year.x[missing_p3]
+    filt_table[missing_p3, out_name] = 0
+    
+    # not found in p4
+    missing_p4 = which(is.na(filt_table[,out_name_p4]))
+    filt_table$year.x[missing_p4] = filt_table$year.y[missing_p4]
+    filt_table[missing_p4, out_name_p4] = 0
+    
+    # calc diff
+    filt_table$diff = filt_table[,out_name_p4] - filt_table[,out_name]
 
     return(filt_table)
 }
@@ -565,28 +608,33 @@ gender_summary <- function(in_df, filter_str, out_name, compare_df){
 # num males
 num_males = gender_summary(quote_stats_df, "MALE", "num_males", 
                            article_stats_step3_df)
-p4_males = ggplot(num_males, aes(x=year, y=num_males, fill=pipeline_step)) +
-    geom_boxplot() + theme_bw() + 
-    xlab("Year of Article") + ylab("# male quotes") +
-    ggtitle("number of male quotes per article over time pipeline step 4")
+
+
+p4_males = ggplot(num_males, aes(x=year.x, y=diff)) +
+    theme_bw() + 
+    geom_violin() + geom_jitter(alpha=0.2) +
+    xlab("Year of Article") + ylab("diff # male quotes") +
+    ggtitle("number of male quotes per article in P4 - P3")
 
 
 # num females
 num_females = gender_summary(quote_stats_df, "FEMALE", "num_females", 
                            article_stats_step3_df)
-p4_females = ggplot(num_females, aes(x=year, y=num_females, fill=pipeline_step)) +
-    geom_boxplot() + theme_bw() + 
-    xlab("Year of Article") + ylab("# female quotes") +
-    ggtitle("number of female quotes per article over time pipeline step 4")
+p4_females = ggplot(num_females, aes(x=year.x, y=diff)) +
+    theme_bw() + 
+    geom_violin() + geom_jitter(alpha=0.2) +
+    xlab("Year of Article") + ylab("diff # female quotes") +
+    ggtitle("number of female quotes per article in P4 - P3")
 
 
 # num unknown
 num_unknown = gender_summary(quote_stats_df, "UNKNOWN", "num_unknown", 
                            article_stats_step3_df)
-p4_unknown = ggplot(num_unknown, aes(x=year, y=num_unknown, fill=pipeline_step)) +
-    geom_boxplot() + theme_bw() + 
-    xlab("Year of Article") + ylab("# female quotes") +
-    ggtitle("number of unknown gender quotes per article over time pipeline step 4")
+p4_unknown = ggplot(num_unknown, aes(x=year.x, y=diff)) +
+    geom_violin() + theme_bw() + geom_jitter(alpha=0.2) +
+    xlab("Year of Article") + ylab("diff # unknown quotes") +
+    ggtitle("number of unknown gender quotes per article in P4 - P3")
+
 
 
 # now plot side by side with p3
