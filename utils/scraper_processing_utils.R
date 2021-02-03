@@ -59,7 +59,9 @@ get_matched_string <- function(key_str, str_vec){
     require("stringdist")
 
     # get match via longest common substring
-    lcs_idx = amatch(tolower(key_str), tolower(str_vec), maxDist=Inf, method="lcs")
+    # where deletions are NOT penalized
+    costs = sapply(tolower(str_vec), adist, y=tolower(key_str), costs=list(deletions=0))
+    lcs_idx = which(costs == min(costs)[1])
     return(str_vec[lcs_idx])
 
 }
@@ -341,7 +343,9 @@ get_persons <- function(json_res){
  
     # now find the longest strings and gender
     max_str = c()
-    for(curr_text in ner_names_df$text){
+    str_to_iter = unique(ner_names_df$text)
+    str_to_iter = str_to_iter[order(nchar(str_to_iter), str_to_iter, decreasing=T)]
+    for(curr_text in str_to_iter){
 
         curr_text = format_name_str(curr_text)
 
@@ -349,8 +353,7 @@ get_persons <- function(json_res){
         if(length(str_idx) == 0){
             # string not found, add it
             max_str = c(max_str, curr_text)
-        }
-        else if(length(str_idx) > 1){
+        }else if(length(str_idx) > 1){
             # the substring found twice
             # so this means if you are searching for John
             # you could get back John Houghton or John Lee
@@ -367,6 +370,7 @@ get_persons <- function(json_res){
 
     # now convert names
     names_df = rbind(ner_names_df, coref_names_df)
+    names_df = ner_names_df
     names_df$full_name = NA
     for(idx in 1:nrow(names_df)){
         curr_text = names_df$text[idx]
