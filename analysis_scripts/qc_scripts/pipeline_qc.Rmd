@@ -1,0 +1,711 @@
+---
+title: "pipeline_qc"
+author: "Natalie Davidson"
+date: "1/20/2021"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+require(data.table)
+require(here)
+require(ggplot2)
+require(readr)
+
+
+proj_dir = here()
+source(paste(proj_dir, "/analysis_scripts/analysis_utils.R", sep=""))
+source(paste(proj_dir, "/utils/plotting_utils.R", sep=""))
+source(paste(proj_dir, "/utils/scraper_processing_utils.R", sep=""))
+
+
+```
+## Nature News Pipeline QC
+
+This document is for QC checking for each step of the pipeline. 
+Here, we like to visualize and check statistics that should be stable across each article across all years.
+The data we will be working with are the following:
+
+1) Pipeline step 1, download data: `./data/scraped_data/downloads/links_crawled_YEAR.json` 
+1) Pipeline step 2, process data into coreNLP readable: `./data/scraped_data/coreNLP_input_YEAR/*` 
+2) Pipeline step 3, coreNLP output: `./data/scraped_data/coreNLP_output_YEAR/*`
+2) Pipeline step 4, processed coreNLP output: `./data/quote_table_raw_*.tsv` 
+    and `./data/location_table_raw_*.tsv`
+
+
+**All analysis shown below depends on the functions described in `/analysis_scripts/analysis_utils.R`**
+
+
+## QC pipeline step 1: Check scrapy output
+
+Make sure there are no empty files.
+Count the number of files to make sure this is constant across all steps.
+Count the number of words in each article to compare down the entire pipeline.
+
+
+```{r fig.align='center', echo=FALSE, warning=FALSE, message=F}
+
+### scripts to read in scrapey data for both article and year specific stats
+
+read_json <- function(infile){
+
+    json_res = fromJSON(infile)
+    json_res = data.frame(json_res)
+    return(json_res)
+
+}
+
+
+# get the project directory, everything is set relative to this
+proj_dir = here()
+
+# read in the downloaded articles for each year
+pipeline_1_dir = paste(proj_dir,
+                    "/data/scraped_data/downloads/", sep="")
+pipeline_1_files = list.files(pipeline_1_dir, full.names = T)
+
+article_stats_df = NA
+year_stats_df = NA
+for(curr_file in pipeline_1_files){
+    
+    curr_df = read_json(curr_file)
+    
+    # get year level stats: check the year
+    curr_year = unique(curr_df$year)
+    file_name_year = substring(curr_file, 
+                            nchar(curr_file)-9+1,  
+                            nchar(curr_file)-6+1)
+    if(length(curr_year) != 1 | file_name_year != curr_year){
+        error_msg = paste(curr_file, "has inconsistent year definitions")
+        stop(error_msg)
+    }
+    # get year level stats: check the articles
+    article_ids = curr_df$file_id
+    num_articles = length(article_ids)
+    num_duplicated_file_names = sum(duplicated(article_ids))
+    
+    library(stringr)
+    curr_df$body = str_squish(curr_df$body)
+    
+    article_bodies = curr_df$body
+    num_empty_files = sum(article_bodies == "")
+    
+    year_level_vec = c(curr_year, num_articles, 
+                       num_duplicated_file_names, num_empty_files)
+    year_stats_df = rbind(year_stats_df, year_level_vec)
+    
+    
+    # get article level stats: # words in article
+    num_words = lapply(article_bodies, 
+                       function(x) sapply(strsplit(x, " "), length))
+    num_words = unlist(num_words)
+    
+    curr_article_info = data.frame(year=curr_year,
+                                   article_ids,
+                                   num_words)
+
+    article_stats_df = rbind(article_stats_df, curr_article_info)
+    
+}
+
+year_stats_df = year_stats_df[-1,]
+article_stats_df = article_stats_df[-1,]
+year_stats_df = data.frame(year_stats_df)
+article_stats_df = data.frame(article_stats_df)
+colnames(year_stats_df) = c("year", "num_articles", 
+                            "num_duplicated_ids", "num_empty_files")
+colnames(article_stats_df) = c("year", "article_ids", "num_words")
+```
+
+#### plotting year level stats
+
+Here we want to plot year level statistics to identify if there was a problem 
+processing any of the years, or to identify trends in the data
+```{r fig.align='center', echo=FALSE, warning=FALSE, message=F}
+
+# now plot the stats
+ggplot(year_stats_df, aes(x=as.factor(year), y=num_articles)) +
+    geom_col() + theme_bw() +
+    xlab("Year of Article") + ylab("# articles") +
+        ggtitle("# Articles Over Time")
+
+ggplot(year_stats_df, aes(x=as.factor(year), y=num_duplicated_ids)) +
+    geom_col() + theme_bw() +
+    xlab("Year of Article") + ylab("# duplicated article ids") +
+        ggtitle("# Duplicated Articles Over Time")
+
+ggplot(year_stats_df, aes(x=as.factor(year), y=num_empty_files)) +
+    geom_col() + theme_bw() +
+    xlab("Year of Article") + ylab("# Empty files") +
+        ggtitle("# empty files")
+
+```
+
+#### plotting article level stats
+
+Now lets do a quick plot of article specific stats.
+So far in the pipeline, we only have the body of the text, so lets just plot that
+and make sure that it is consistent over time and there are no outliers.
+
+```{r fig.align='center', echo=FALSE, warning=FALSE, message=F}
+
+# now plot the stats
+ggplot(article_stats_df, aes(x=as.factor(year), y=num_words)) +
+    geom_boxplot() + theme_bw() +
+    xlab("Year of Article") + ylab("# words in body") +
+        ggtitle("Text length over time")
+
+ggplot(article_stats_df, aes(x=as.factor(year), y=log10(num_words+1))) +
+    geom_boxplot() + theme_bw() +
+    xlab("Year of Article") + ylab("log10(# words in body)") +
+        ggtitle("log10 scaled text length over time")
+
+```
+
+## QC pipeline step 2: Check processed scrapy output
+
+```{r fig.align='center', echo=FALSE, warning=FALSE, message=F}
+
+### scripts to read in processed scrapy data for both article and year specific stats
+
+# read in the downloaded articles for each year
+
+# first grab the directory for each year
+pipeline_2_dir = paste(proj_dir,
+                    "/data/scraped_data/", sep="")
+pipeline_2_dir = list.dirs(pipeline_2_dir, full.names = T)
+pipeline_2_dir = grep("*coreNLP_input*", pipeline_2_dir, value=T)
+article_stats_step2_df = NA
+for(curr_dir in pipeline_2_dir){
+    
+    # now get the text files
+    pipeline_2_files = list.files(curr_dir, full.names = T)
+    pipeline_2_files_body = grep("*fileID*|*file_list*", pipeline_2_files, value=T,
+                                 invert=T)
+    
+    # make sure reference files are consistent with the previous pipeline step
+    fileID_ref = grep("fileID", pipeline_2_files, value=T)
+    file_list_ref = grep("file_list", pipeline_2_files, value=T)
+    
+    fileID_df = data.frame(fread(fileID_ref))
+    file_list_df = data.frame(fread(file_list_ref, header=F))
+    file_list_df = subset(file_list_df, V1 != "")
+    
+    file_name_year = substring(curr_dir, 
+                            nchar(curr_dir)-4+1,  
+                            nchar(curr_dir))
+    
+    if(length(pipeline_2_files_body) != nrow(file_list_df) ){
+        error_msg = paste(curr_dir, "\n reference files do not match")
+        stop(error_msg)
+    }
+    expected_num_files = year_stats_df$num_articles[
+                                year_stats_df$year == file_name_year]
+    empty_files = year_stats_df$num_empty_files[
+                                year_stats_df$year == file_name_year]
+
+    
+    if( expected_num_files != nrow(fileID_df) ){
+        error_msg = paste(curr_dir, "\n expected num files not found")
+        stop(error_msg)
+    }
+     if( (expected_num_files - empty_files) != nrow(file_list_df) ){
+        error_msg = paste(curr_dir, "\n num files missing beyond empty+duplicates")
+        stop(error_msg)
+     }
+    
+    sucess_msg = paste("###", file_name_year, 
+                       "has a consistent number of articles\n")
+    cat(sucess_msg)
+    
+    # now read all files, and check word stats
+    text_df = data.frame(file_id=rep(NA,length(pipeline_2_files_body)),
+                        body=rep(NA,length(pipeline_2_files_body)),
+                        year=file_name_year)
+    idx = 1
+    for(curr_file in pipeline_2_files_body){
+        in_text = read_lines(curr_file)
+        text_df[idx,] = c(curr_file, in_text, file_name_year)
+        idx = idx+1
+    }
+    text_df$num_words = unlist(lapply(text_df$body, 
+                            function(x) sapply(strsplit(x, " "), length)))
+    article_stats_step2_df = rbind(article_stats_step2_df, text_df)
+}
+article_stats_step2_df = article_stats_step2_df[-1,]
+
+ 
+
+```
+
+
+#### plotting article level stats
+
+```{r figures-side, fig.show="hold", out.width="50%", echo=FALSE, warning=FALSE, message=F}
+
+# now plot the stats
+ggplot(article_stats_df, aes(x=as.factor(year), y=log10(num_words+1))) +
+    geom_boxplot() + theme_bw() + ylim(c(0,4.5)) +
+    xlab("Year of Article") + ylab("log10(# words in body)") +
+        ggtitle("log10 scaled text length over time pipeline step 1")
+
+ggplot(article_stats_step2_df, aes(x=as.factor(year), y=log10(num_words+1))) +
+    geom_boxplot() + theme_bw() + ylim(c(0,4.5)) +
+    xlab("Year of Article") + ylab("log10(# words in body)") +
+        ggtitle("log10 scaled text length over time pipeline step 2")
+
+```
+
+## QC pipeline step 3: Check coreNLP output
+
+```{r fig.align='center', echo=FALSE, warning=FALSE, message=F}
+
+### scripts to read in coreNLP output for both article and year specific stats
+
+# read in the json outputs for each year
+
+# first grab the directory for each year
+pipeline_3_dir = paste(proj_dir,
+                    "/data/scraped_data/", sep="")
+pipeline_3_dir = list.dirs(pipeline_3_dir, full.names = T)
+pipeline_3_dir = grep("*coreNLP_output*", pipeline_3_dir, value=T)
+article_stats_step3_df = NA
+for(curr_dir in pipeline_3_dir){
+    
+    # get the year
+    file_name_year = substring(curr_dir, 
+                            nchar(curr_dir)-4+1,  
+                            nchar(curr_dir))
+    print(file_name_year)
+
+    # now get the json output files
+    pipeline_3_all_files = list.files(curr_dir, full.names = T)
+    pipeline_3_json_files = grep(".txt.json", pipeline_3_all_files, value=T)
+    
+    # make sure number of files are consistent with the previous pipeline step
+    expected_num_files = year_stats_df$num_articles[
+                                year_stats_df$year == file_name_year]
+    empty_files = year_stats_df$num_empty_files[
+                                year_stats_df$year == file_name_year]
+     if( (expected_num_files - empty_files) != length(pipeline_3_json_files) ){
+        error_msg = paste(curr_dir, "\n num files missing beyond empty+duplicates")
+        stop(error_msg)
+     }
+    
+    sucess_msg = paste("###", file_name_year, 
+                       "has a consistent number of articles\n")
+    cat(sucess_msg)
+    
+    # now read all files, and check quote, speaker, and location stats
+    require(jsonlite)
+    na_row = rep(NA,length(pipeline_3_json_files))
+    coreNLP_out_df = data.frame(curr_file=na_row, file_name_year=na_row, 
+                                num_quotes=na_row, sum_length_quotes = na_row,
+                                num_males=na_row, 
+                                num_females=na_row, num_unknown=na_row, 
+                                num_org=na_row, num_country=na_row, 
+                                num_state=na_row)
+    idx = 1
+    for(curr_file in pipeline_3_json_files){
+
+        json_res = fromJSON(curr_file)
+
+        ## get quotes
+        quotes_res = json_res$quotes
+        num_quotes = 0
+        sum_length_quotes = 0
+        if(length(nrow(quotes_res)) != 0){
+            num_quotes = nrow(quotes_res)
+            total_quotes = paste(quotes_res$text, collapse = " ")
+            sum_length_quotes = sapply(strsplit(total_quotes, " "), length)
+        }
+
+        ## get persons
+        coref_list = json_res$corefs
+        num_males = 0
+        num_females = 0
+        num_unknown = 0
+        if(length(coref_list) != 0){
+            coref_df = do.call(rbind, coref_list)
+            coref_names_df = subset(coref_df, type=="PROPER" & 
+                                        animacy == "ANIMATE" & 
+                                        number == "SINGULAR")
+            num_males = sum(coref_names_df$gender == "MALE")
+            num_females = sum(coref_names_df$gender == "FEMALE")
+            num_unknown = sum(coref_names_df$gender == "UNKNOWN")
+
+        }
+        
+        ## get locations
+        ner_locs_df = 0
+        num_org = 0
+        num_country = 0
+        num_state = 0
+
+        ner_df = get_ner(json_res)
+        if(length(ner_df) != 0){
+            
+            ner_locs_df = subset(ner_df, ner %in% c("ORGANIZATION",
+                                                "COUNTRY",
+                                                "STATE_OR_PROVINCE"))
+            if(nrow(ner_locs_df) != 0 & length(nrow(ner_locs_df)) != 0){
+                ner_locs_df = unique(ner_locs_df)
+                num_org = sum(ner_locs_df$ner == "ORGANIZATION")
+                num_country = sum(ner_locs_df$ner == "COUNTRY")
+                num_state = sum(ner_locs_df$ner == "STATE_OR_PROVINCE")
+            }
+        }
+        
+        
+        coreNLP_out_df[idx,] = data.frame(curr_file, file_name_year, num_quotes,
+                          sum_length_quotes, num_males, num_females, num_unknown, 
+                          num_org, num_country, num_state)
+        idx = idx+1
+    }
+    
+    article_stats_step3_df = rbind(article_stats_step3_df, coreNLP_out_df)
+}
+
+
+article_stats_step3_df = article_stats_step3_df[-1,]
+colnames(article_stats_step3_df) = c("file_id", "year", "num_quotes", 
+                          "sum_length_quotes",
+                          "num_males", "num_females", "num_unknown", "num_org", 
+                          "num_country", "num_state")
+
+article_stats_step3_df$pipeline_step = "p3"
+
+
+```
+
+#### plotting article level stats
+```{r fig.show="hold", out.width="30%", echo=FALSE, warning=FALSE, message=F}
+
+# now plot the stats
+p3_quotes = ggplot(article_stats_step3_df, aes(x=year, y=num_quotes)) +
+    geom_boxplot() + theme_bw() + 
+    xlab("Year of Article") + ylab("# quotes") +
+        ggtitle("number of quotes over time pipeline step 3")
+
+p3_sum_quotes = ggplot(article_stats_step3_df, aes(x=year, y=sum_length_quotes)) +
+    geom_boxplot() + theme_bw() + 
+    xlab("Year of Article") + ylab("# quotes") +
+        ggtitle("summed length of quotes over time pipeline step 3")
+
+p3_males = ggplot(article_stats_step3_df, aes(x=year, y=num_males)) +
+    geom_boxplot() + theme_bw() + 
+    xlab("Year of Article") + ylab("# male NER") +
+        ggtitle("number of male named entities over time pipeline step 3")
+
+
+p3_females = ggplot(article_stats_step3_df, aes(x=year, y=num_females)) +
+    geom_boxplot() + theme_bw() + 
+    xlab("Year of Article") + ylab("# female NER") +
+        ggtitle("number of female named entities over time pipeline step 3")
+
+
+p3_unknown = ggplot(article_stats_step3_df, aes(x=year, y=num_unknown)) +
+    geom_boxplot() + theme_bw() + 
+    xlab("Year of Article") + ylab("# unknown gender NER") +
+        ggtitle("number of unknown gender named entities over time pipeline step 3")
+
+
+p3_org = ggplot(article_stats_step3_df, aes(x=year, y=num_org)) +
+    geom_boxplot() + theme_bw() + 
+    xlab("Year of Article") + ylab("# org NER") +
+        ggtitle("number of organizations found over time pipeline step 3")
+
+
+p3_country = ggplot(article_stats_step3_df, aes(x=year, y=num_country)) +
+    geom_boxplot() + theme_bw() + 
+    xlab("Year of Article") + ylab("# country NER") +
+        ggtitle("number of countries found over time pipeline step 3")
+
+
+p3_state = ggplot(article_stats_step3_df, aes(x=year, y=num_state)) +
+    geom_boxplot() + theme_bw() + 
+    xlab("Year of Article") + ylab("# state or province NER") +
+        ggtitle("number of states or provinces found over time pipeline step 3")
+
+
+```
+
+```{r fig.show="hold", out.width="50%", echo=FALSE, warning=FALSE, message=F}
+# for formatting purposes I am doing it like this... there must be a better way
+p3_quotes
+p3_sum_quotes
+```
+```{r fig.show="hold", out.width="30%", echo=FALSE, warning=FALSE, message=F}
+# for formatting purposes I am doing it like this... there must be a better way
+p3_males
+p3_females
+p3_unknown
+```
+```{r fig.show="hold", out.width="30%", echo=FALSE, warning=FALSE, message=F}
+# for formatting purposes I am doing it like this... there must be a better way
+p3_org
+p3_country
+p3_state
+```
+
+## QC pipeline step 4: Check coreNLP processed output
+```{r fig.align='center', echo=FALSE, warning=FALSE, message=F}
+
+### scripts to read in coreNLP output for both article and year specific stats
+
+# read in the json outputs for each year
+# first grab the directory for each year
+pipeline_4_dir = paste(proj_dir,
+                    "/data/scraped_data/", sep="")
+pipeline_4_files = list.files(pipeline_4_dir, full.names = T)
+
+
+### lets get the quote data first
+quote_files = grep("*quote_table_raw*", pipeline_4_files, value=T)
+quote_stats_df = NA
+for(curr_file in quote_files){
+    
+    # get the year
+    file_name_year = substring(curr_file, 
+                            nchar(curr_file)-8+1,  
+                            nchar(curr_file)-5+1)
+    
+    # read the contents
+    curr_df = read_tsv(curr_file)
+    curr_df$year = file_name_year
+    quote_stats_df = rbind(quote_stats_df, curr_df)
+
+}
+quote_stats_df = quote_stats_df[-1,]
+quote_stats_df = data.frame(quote_stats_df)
+
+# now get the number of words per quote
+num_words = lapply(quote_stats_df$quote, 
+                       function(x) sapply(strsplit(x, " "), length))
+num_words = unlist(num_words)
+quote_stats_df$quote_len = num_words
+
+
+### lets get the location data now
+loc_files = grep("*location_table_raw*", pipeline_4_files, value=T)
+loc_stats_df = NA
+for(curr_file in loc_files){
+    
+    # get the year
+    file_name_year = substring(curr_file, 
+                            nchar(curr_file)-8+1,  
+                            nchar(curr_file)-5+1)
+    
+    # read the contents
+    curr_df = read_tsv(curr_file)
+    curr_df$year = file_name_year
+    loc_stats_df = rbind(loc_stats_df, curr_df)
+
+}
+loc_stats_df = loc_stats_df[-1,]
+loc_stats_df = data.frame(loc_stats_df)
+
+
+```
+
+#### plotting quote stats
+
+Between pipeline step 3 and 4 we are predicting the genders of speakers using genderize.io.
+So we expect almost exactly the same number of quotes and length of quotes.
+We also expect that the number of UNKNOWN gendered speakers typically decrease,
+and the number of MALE/FEMALE speakers may increase.
+This is not a completely 1:1 measurement. Pipeline level 3 only identifies the 
+number of male/female/unknown named entities, there is no gender based quote 
+attribution checked at this stage. 
+Quote attribution is in step 4.
+
+
+```{r fig.show="hold", out.width="50%", echo=FALSE, warning=FALSE, message=F}
+
+# now plot the stats
+require(dplyr)
+
+
+# num quotes stats
+num_quotes = quote_stats_df %>% group_by(file_id, year) %>% summarize(n())
+num_quotes = data.frame(num_quotes)
+colnames(num_quotes)[3] = "num_quotes_p4"
+num_quotes$file_id_merge = num_quotes$file_id
+
+article_stats_step3_df$file_id_merge = gsub(".txt.json", "", 
+                                            basename(article_stats_step3_df$file_id))
+num_quotes = merge(num_quotes, 
+          article_stats_step3_df[article_stats_step3_df$num_quotes != 0, 
+                                 c("file_id_merge", "num_quotes")], 
+          by=c("file_id_merge"), all=T)
+
+num_quotes$diff = num_quotes$num_quotes_p4 - num_quotes$num_quotes
+
+p4_quotes = ggplot(num_quotes, aes(x=year, y=diff)) +
+    geom_boxplot() + theme_bw() + 
+    xlab("Year of Article") + ylab("Change in the number of quotes") +
+        ggtitle("number of quotes per article in P4 - P3")
+
+# length quotes stats
+sum_length_quotes = quote_stats_df %>% 
+                select(file_id, year, quote_len) %>% 
+                group_by(file_id, year) %>% 
+                summarize(sum(quote_len))
+sum_length_quotes = data.frame(sum_length_quotes)
+colnames(sum_length_quotes)[3] = "sum_length_quotes_p4"
+sum_length_quotes$file_id_merge = sum_length_quotes$file_id
+
+sum_length_quotes = merge(sum_length_quotes, 
+          article_stats_step3_df[article_stats_step3_df$sum_length_quotes != 0, 
+                                 c("file_id_merge", "sum_length_quotes")], 
+          by=c("file_id_merge"), all=T)
+
+sum_length_quotes$diff = sum_length_quotes$sum_length_quotes_p4 - 
+                            sum_length_quotes$sum_length_quotes
+
+
+p4_sum_quotes = ggplot(sum_length_quotes, aes(x=year, y=diff)) +
+    geom_boxplot() + theme_bw() + 
+    xlab("Year of Article") + ylab("diff. length quotes") +
+        ggtitle("summed length of quotes per article in P4-P3")
+
+
+
+# for the rest of the gender plots we will be filtering in the same way
+# so lets make a function
+gender_summary <- function(in_df, filter_str, out_name, compare_df){
+    filt_table = in_df %>% 
+            filter(gender == filter_str) %>%
+            group_by(file_id, year) %>% 
+            summarize(n())
+    filt_table = data.frame(filt_table)
+    out_name_p4 = paste(out_name, "p4", sep="_")
+    colnames(filt_table)[3] = out_name_p4
+    
+    # now merge
+    filt_table$file_id_merge = filt_table$file_id
+    filt_table = merge(filt_table, 
+          compare_df[, c("file_id_merge", "year", out_name)], 
+          by=c("file_id_merge"), all=T)
+    
+    # not found in p3
+    missing_p3 = which(is.na(filt_table[,c(out_name)]))
+    filt_table$year.y[missing_p3] = filt_table$year.x[missing_p3]
+    filt_table[missing_p3, out_name] = 0
+    
+    # not found in p4
+    missing_p4 = which(is.na(filt_table[,out_name_p4]))
+    filt_table$year.x[missing_p4] = filt_table$year.y[missing_p4]
+    filt_table[missing_p4, out_name_p4] = 0
+    
+    # calc diff
+    filt_table$diff = filt_table[,out_name_p4] - filt_table[,out_name]
+
+    return(filt_table)
+}
+
+# num males
+num_males = gender_summary(quote_stats_df, "MALE", "num_males", 
+                           article_stats_step3_df)
+
+
+p4_males = ggplot(num_males, aes(x=year.x, y=diff)) +
+    theme_bw() + 
+    geom_violin() + geom_jitter(alpha=0.2) +
+    xlab("Year of Article") + ylab("diff # male quotes") +
+    ggtitle("number of male quotes per article in P4 - P3")
+
+
+# num females
+num_females = gender_summary(quote_stats_df, "FEMALE", "num_females", 
+                           article_stats_step3_df)
+p4_females = ggplot(num_females, aes(x=year.x, y=diff)) +
+    theme_bw() + 
+    geom_violin() + geom_jitter(alpha=0.2) +
+    xlab("Year of Article") + ylab("diff # female quotes") +
+    ggtitle("number of female quotes per article in P4 - P3")
+
+
+# num unknown
+num_unknown = gender_summary(quote_stats_df, "UNKNOWN", "num_unknown", 
+                           article_stats_step3_df)
+p4_unknown = ggplot(num_unknown, aes(x=year.x, y=diff)) +
+    geom_violin() + theme_bw() + geom_jitter(alpha=0.2) +
+    xlab("Year of Article") + ylab("diff # unknown quotes") +
+    ggtitle("number of unknown gender quotes per article in P4 - P3")
+
+
+
+# now plot side by side with p3
+p4_quotes
+p4_sum_quotes
+p4_males
+p4_females
+p4_unknown
+
+
+```
+
+
+#### plotting location stats
+```{r fig.show="hold", out.width="50%", echo=FALSE, warning=FALSE, message=F}
+
+# now plot the stats
+require(dplyr)
+
+
+# for the location plots we will be filtering in the same way
+# so lets make a function
+loc_summary <- function(in_df, filter_str, out_name, compare_df){
+    filt_table = in_df %>% 
+            filter(ner == filter_str) %>%
+            group_by(file_id, year) %>% 
+            summarize(n())
+    filt_table = data.frame(filt_table)
+    colnames(filt_table)[3] = out_name
+    
+    filt_table$pipeline_step = "p4"
+    filt_table = rbind(filt_table, 
+                compare_df[,colnames(filt_table)])
+
+    return(filt_table)
+}
+
+
+# num orgs
+num_org = loc_summary(loc_stats_df, "ORGANIZATION", "num_org", 
+                           article_stats_step3_df)
+p4_org = ggplot(num_org, aes(x=year, y=num_org, fill=pipeline_step)) +
+    geom_boxplot() + theme_bw() + 
+    xlab("Year of Article") + ylab("# orgs mentioned") +
+    ggtitle("number of orgs mentioned per article over time pipeline step 4")
+
+
+# num countries
+num_country = loc_summary(loc_stats_df, "COUNTRY", "num_country", 
+                           article_stats_step3_df)
+p4_country = ggplot(num_country, aes(x=year, y=num_country, fill=pipeline_step)) +
+    geom_boxplot() + theme_bw() + 
+    xlab("Year of Article") + ylab("# countries mentioned") +
+    ggtitle("number of countries mentioned per article over time pipeline step 4")
+
+
+# num states or provences
+num_state = loc_summary(loc_stats_df, "STATE_OR_PROVINCE", "num_state", 
+                           article_stats_step3_df)
+p4_state = ggplot(num_state, aes(x=year, y=num_state, fill=pipeline_step)) +
+    geom_boxplot() + theme_bw() + 
+    xlab("Year of Article") + ylab("# states/provinces mentioned") +
+    ggtitle("number of states/provinces mentioned per 
+            article over time pipeline step 4")
+
+
+
+# now plot side by side with p3
+p4_org
+p4_country
+p4_state
+
+
+```

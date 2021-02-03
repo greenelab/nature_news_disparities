@@ -59,7 +59,9 @@ get_matched_string <- function(key_str, str_vec){
     require("stringdist")
 
     # get match via longest common substring
-    lcs_idx = amatch(tolower(key_str), tolower(str_vec), maxDist=Inf, method="lcs")
+    # where deletions are NOT penalized
+    costs = sapply(tolower(str_vec), adist, y=tolower(key_str), costs=list(deletions=0))
+    lcs_idx = which(costs == min(costs)[1])
     return(str_vec[lcs_idx])
 
 }
@@ -227,6 +229,10 @@ get_locations <- function(json_res){
     # get named entities --locations
     ner_df = get_ner(json_res)
 
+    if(length(ner_df) == 0){
+        return(NA)
+    }
+
     ner_locs_df = subset(ner_df, ner %in% c("ORGANIZATION"))
     ner_locs_df = unique(ner_locs_df)
 
@@ -256,7 +262,7 @@ get_locations <- function(json_res){
         ner_province_df$province_state = ner_province_df$text
         ner_province_df$location = unlist(get_prov_country(ref_provence_df, ner_province_df$province_state))
         ner_province_df$country = ner_province_df$location
-        ner_province_df = ner_province_df[,colnames(locs_df)]
+        ner_province_df = ner_province_df[,c("text", "ner", "country", "location")]
 
         if(is.na(locs_df)){
             locs_df = rbind(ner_locs_df, ner_province_df)
@@ -266,9 +272,13 @@ get_locations <- function(json_res){
 
     }
 
-    if(is.na(locs_df)){
+    if(is.na(locs_df) & nrow(ner_locs_df) != 0){
         locs_df = ner_locs_df
     }
+    if(is.na(locs_df)){
+        return(NA)
+    }
+
 
     locs_df$location = unlist(locs_df$location)
     locs_df = unique(locs_df)
@@ -333,7 +343,9 @@ get_persons <- function(json_res){
  
     # now find the longest strings and gender
     max_str = c()
-    for(curr_text in ner_names_df$text){
+    str_to_iter = unique(ner_names_df$text)
+    str_to_iter = str_to_iter[order(nchar(str_to_iter), str_to_iter, decreasing=T)]
+    for(curr_text in str_to_iter){
 
         curr_text = format_name_str(curr_text)
 
@@ -341,8 +353,7 @@ get_persons <- function(json_res){
         if(length(str_idx) == 0){
             # string not found, add it
             max_str = c(max_str, curr_text)
-        }
-        else if(length(str_idx) > 1){
+        }else if(length(str_idx) > 1){
             # the substring found twice
             # so this means if you are searching for John
             # you could get back John Houghton or John Lee
@@ -359,6 +370,7 @@ get_persons <- function(json_res){
 
     # now convert names
     names_df = rbind(ner_names_df, coref_names_df)
+    names_df = ner_names_df
     names_df$full_name = NA
     for(idx in 1:nrow(names_df)){
         curr_text = names_df$text[idx]
