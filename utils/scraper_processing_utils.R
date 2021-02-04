@@ -393,6 +393,170 @@ get_persons <- function(json_res){
 
 }
 
+
+url_nominatim_search <- function(single_query) {
+    # this code is augmented from 
+    # https://towardsdatascience.com/breaking-down-geocoding-in-r-a-complete-guide-1d0f8acd0d4b
+    # load libraries
+    require(RCurl)
+    # nominatim search api url
+    url_nominatim_search_api <- "https://nominatim.openstreetmap.org/search/"
+
+
+    # percent-encode search request
+    single_query <- URLencode(single_query)
+    parameters_url <- paste0("?format=json",
+                             "&addressdetails=1&limit=1")
+    # construct search request for geocode
+    url_nominatim_search_call <- paste0(url_nominatim_search_api,
+                                        single_query, parameters_url)
+
+
+    return(url_nominatim_search_call)
+}
+
+
+internal_osm_query <- function(curr_q){
+
+    url_search = url_nominatim_search(curr_q)
+
+    # block augmented from here: 
+    # https://stackoverflow.com/questions/12193779/how-to-write-trycatch-in-r
+    out <- tryCatch(
+        {
+            getURL(url_search, httpheader=c('User-Agent'="nature news scraper v0.1"))
+        },
+        error=function(cond) {
+            message(paste("query error:", curr_q))
+            # Choose a return value in case of error
+            return(NA)
+        }
+    )    
+    return(out)
+}
+
+
+single_osm_query <- function(curr_q){
+
+    # we need to follow OSM quidelines
+    # we MUST cache
+    # no parallel processes
+    # no more than one query per second
+
+    require(tmaptools)
+
+    # make sure query is not in cache
+    cache_file = paste(ref_data_dir, "/osm_cache.tsv", sep="")
+    if(!file.exists(cache_file)){
+        stop("osm_cache file not found, file should be in git, 
+                you must download this before querying locations")
+    }
+
+    cache_df = data.frame(fread(cache_file))
+    if(tolower(curr_q) %in% tolower(cache_df$query)){
+        return(subset(cache_df, tolower(query) == tolower(curr_q)))
+    }
+    
+    #run query
+    print(paste("running query:", tolower(curr_q)))
+    resp = internal_osm_query(tolower(curr_q))
+    resp_df = data.frame("place_id" = NA,
+                            "osm_type" = NA, "display_name" = NA,
+                            "class" = NA, "type" = NA, "importance" = NA,
+                            "address.country" = NA, "address.country_code" = NA)
+
+    
+    if(resp != "[]"){
+        resp = unlist(fromJSON(resp,simplifyVector = FALSE))
+
+        # make sure its in a country
+        in_country = all(c("address.country", "address.country_code") %in% names(resp))
+        if(!in_country){
+            resp_df = data.frame(t(resp[c("place_id", "osm_type", 
+                                "display_name", "class", "type", 
+                                "importance")]))
+            resp_df$address.country = NA
+            resp_df$address.country_code = NA
+        }
+        else{
+            resp_df = data.frame(t(resp[c("place_id", "osm_type", 
+                                "display_name", "class", "type", 
+                                "importance", "address.country", 
+                                "address.country_code")]))
+        }
+    }
+    
+    #process query info
+    resp_df$query = curr_q
+
+    # get metadata
+    query_date = as.Date(Sys.Date(), format = "%B %d %Y")
+    resp_df$query_date = query_date
+
+    # format the data frame
+    resp_df = resp_df[,c("query", "query_date", "place_id", "osm_type", 
+                        "display_name", "class", "type", 
+                        "importance", "address.country", 
+                        "address.country_code")]
+
+
+    # append to the cache
+    cache_df = rbind(cache_df, resp_df)
+    cache_file = paste(ref_data_dir, "/osm_cache.tsv", sep="")
+    write.table(cache_df, cache_file, sep="\t", quote=F, row.names=F)
+
+    Sys.sleep(1)
+
+    return(resp_df)
+
+
+}
+
+batch_osm_query <- function(query_vec){
+
+    # query one at a time and append together
+    batch_resp = NA
+    for(curr_q in query_vec){
+
+        curr_resp = single_osm_query(curr_q)
+
+        batch_resp = rbind(batch_resp, curr_resp)
+
+    }
+    batch_resp = batch_resp[-1,]
+    return(batch_resp)
+
+}
+
+initial_osm_query <- function(in_dir) {
+
+    # find all files that unfound locations
+    all_loc_files = list.files(in_dir, 
+                                pattern="location_table_raw",
+                                recursive=F,
+                                full.names=T)
+    if(length(all_loc_files) == 0){
+        warn_str = "No location files found. Are you supplying the correct input dir?"
+        warning(warn_str)
+        return()
+    }
+
+    # read in location files
+    all_missing_locs = NA
+    for(curr_file in all_loc_files){
+        in_df = data.frame(fread(curr_file))
+        all_missing_locs = rbind(all_missing_locs, in_df[,c("file_id", "text")])
+    }
+    all_missing_locs = all_missing_locs[-1,]
+    all_missing_locs = unique(tolower(all_missing_locs$text))
+
+
+    batch_resp = batch_osm_query(all_missing_locs)
+
+
+
+}
+
 query_genderize_io <- function(in_dir) {
 
     # find all files that contain missed names
