@@ -192,19 +192,19 @@ Now lets first look at the benchmark data
 
     # filter out any places where the gender is NA
     # this can happen when a quote is from an unidentified i.e. spokesperson
-    eval_df = subset(bm_loc_df, !is.na(true_country))
+    eval_df = subset(bm_loc_df, true_country_code != "NAN")
 
     eval_df = merge(year_df, eval_df)
     
     # we only care if a country was mentioned once or not at all
-    eval_df = eval_df[,c("file_id", "true_country", "true_un_region", 
+    eval_df = eval_df[,c("file_id", "true_country_code", "true_un_region", 
                          "true_un_subregion", "year")]
 
     eval_df = unique(eval_df)
     
     ## plot per year stats
-    country_agg = data.frame(table(eval_df[,c("true_country", "year")]))
-    ggplot(country_agg, aes(x=year, y=Freq, color=true_country, group=true_country)) +
+    country_agg = data.frame(table(eval_df[,c("true_country_code", "year")]))
+    ggplot(country_agg, aes(x=year, y=Freq, color=true_country_code, group=true_country_code)) +
         geom_line() + geom_point() + theme_bw() + 
         xlab("Year of Article") + 
         ylab("Number of Articles (10 articles/year) with \n at least one Country Mention") +
@@ -227,8 +227,7 @@ Now lets first look at the benchmark data
     
 ```
 
-Let's take a closer look at the errors in predicting at first the highest
-granularity: country
+Let's take a closer look at the errors in predicting UN Subregions
 
 ```{r  fig.align='center', fig.width = 15, fig.height = 15, echo=FALSE, warning=FALSE, message=F}
 
@@ -243,31 +242,34 @@ granularity: country
     compare_df = unique(compare_df)
     
     #compare per country
-    country_idx = which(colnames(compare_df) == "est_country_code")
-    true_country_idx = which(colnames(compare_df) == "true_country_code")
+    country_idx = which(colnames(compare_df) == "est_un_subregion")
+    true_country_idx = which(colnames(compare_df) == "true_un_subregion")
     country_match = apply(compare_df, 1, 
                         function(x) x[country_idx] == x[true_country_idx]) 
     
     compare_df$is_country_correct = country_match
   
     # write out confusion tables
-    a = table(compare_df$est_country_code, compare_df$true_country_code)
-    all_levels = unique(c(compare_df$est_country_code, compare_df$true_country_code))
     
-    compare_df$est_country_code = as.factor(compare_df$est_country_code)
-    missing_levels = setdiff(all_levels, levels(compare_df$est_country_code))
-    levels(compare_df$est_country_code) = 
-        c(levels(compare_df$est_country_code), missing_levels)
-    
-    compare_df$true_country_code = as.factor(compare_df$true_country_code)
-    missing_levels = setdiff(all_levels, levels(compare_df$true_country_code))
-    levels(compare_df$true_country_code) = 
-        c(levels(compare_df$true_country_code), missing_levels)
+    # first need to format the levels
+    compare_df$est_un_subregion = as.factor(compare_df$est_un_subregion)
+    compare_df$true_un_subregion = as.factor(compare_df$true_un_subregion)
 
-    confusion_matrix <- confusionMatrix(compare_df$est_country_code, 
-                                        compare_df$true_country_code)
-    gg_conf = prettyConfused(compare_df$true_country_code, compare_df$est_country_code, text.scl = 0)
-    gg_conf = gg_conf + ggtitle(paste("Country Prediction Kappa:", 
+    all_levels = unique(c(levels(compare_df$est_un_subregion), 
+                          levels(compare_df$true_un_subregion)))
+    
+    missing_levels = setdiff(all_levels, levels(compare_df$est_un_subregion))
+    levels(compare_df$est_un_subregion) = 
+        c(levels(compare_df$est_un_subregion), missing_levels)
+    
+    missing_levels = setdiff(all_levels, levels(compare_df$true_un_subregion))
+    levels(compare_df$true_un_subregion) = 
+        c(levels(compare_df$true_un_subregion), missing_levels)
+
+    confusion_matrix <- confusionMatrix(compare_df$est_un_subregion, 
+                                        compare_df$true_un_subregion)
+    gg_conf = prettyConfused(compare_df$true_un_subregion, compare_df$est_un_subregion, text.scl = 5)
+    gg_conf = gg_conf + ggtitle(paste("UN Subregion Prediction Kappa:", 
                                       round(confusion_matrix$overall['Kappa'], 4))) +
               theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust=1))
 
@@ -372,7 +374,7 @@ Now, finally large regions:
                 xlab("Predicted Frequency") + 
                 ylab("True Frequency") +
                 xlim(c(0,60)) + ylim(c(0,60)) + 
-                ggtitle("Excluding top 1: Pred. vs. True  UN Region Frequencies")
+                ggtitle("Excluding top Europe+Americas: Pred. vs. True  UN Region Frequencies")
      
        gg_corr_all    
        gg_corr_subset

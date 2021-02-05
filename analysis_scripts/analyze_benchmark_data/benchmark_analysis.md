@@ -173,7 +173,7 @@ Similar to before we will match columns baed on their names, in `raw_loc_df` it 
 
 Now lets first look at the benchmark data ![](benchmark_analysis_files/figure-markdown_github/unnamed-chunk-9-1.png)![](benchmark_analysis_files/figure-markdown_github/unnamed-chunk-9-2.png)![](benchmark_analysis_files/figure-markdown_github/unnamed-chunk-9-3.png)
 
-Let's take a closer look at the errors in predicting at first the highest granularity: country
+Let's take a closer look at the errors in predicting UN Subregions
 
 <img src="benchmark_analysis_files/figure-markdown_github/unnamed-chunk-10-1.png" style="display: block; margin: auto;" />
 

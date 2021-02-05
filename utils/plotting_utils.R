@@ -81,7 +81,7 @@ prettyConfused <- function(Actual, Predict, colors=c("white","red4","dodgerblue3
     #calculate percentage of test cases based on actual frequency
 
     confusion = merge(confusion, actual, by=c('Actual','Actual'))
-    confusion$Percent = confusion$Freq/(confusion$ActualFreq+0.1)*100
+    confusion$Percent = confusion$Freq/(confusion$ActualFreq+0.000001)*100
     confusion$ColorScale<-confusion$Percent*-1
     confusion[which(confusion$Actual==confusion$Predicted),]$ColorScale<-confusion[which(confusion$Actual==confusion$Predicted),]$ColorScale*-1
     confusion$Label<-paste(round(confusion$Percent,0),"%, \nn=",confusion$Freq,sep="")
