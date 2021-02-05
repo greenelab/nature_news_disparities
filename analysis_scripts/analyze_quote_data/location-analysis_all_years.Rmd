@@ -29,3 +29,80 @@ The data we will be working with are the following:
 
 **All analysis shown below depends on the functions described in `/analysis_scripts/analysis_utils.R`**
 
+
+## Check Benchmark Consistency
+
+We would like to make sure that our benchmark data is representative of our complete dataset, so let's look at some quote stats to make sure.
+
+### reading in the quote data
+
+First we read in the benchmark data
+```{r}
+
+# get the project directory, everything is set relative to this
+proj_dir = here()
+
+# read in the benchmark quote table
+bm_loc_file = paste(proj_dir, 
+                    "/data/benchmark_data/benchmark_location_table_raw.tsv", 
+                    sep="")
+
+bm_loc_df = read_corenlp_location_files(bm_loc_file)
+
+# add the year annotation
+year_idx_file = paste(proj_dir, 
+                "/data/benchmark_data/coreNLP_input/fileID_year.tsv", 
+                sep="")
+year_df = data.frame(fread(year_idx_file))
+bm_loc_df = merge(year_df, bm_loc_df)
+
+
+head(bm_loc_df)
+
+
+```
+
+Now we read in the full data for the same years.
+```{r}
+
+# read in the full year quote table for 2010, 2015, and 2020
+full_loc_df = NA
+for(curr_year in c(2010, 2015, 2020)){
+    loc_file = paste(proj_dir, 
+                    "/data/scraped_data/location_table_raw_", curr_year, ".tsv", 
+                    sep="")
+    loc_df = read_corenlp_location_files(loc_file)
+    loc_df$year = curr_year
+
+    full_loc_df = rbind(full_loc_df, loc_df)
+}
+full_loc_df = full_loc_df[-1,]
+
+head(full_loc_df)
+
+
+```
+
+Now we join the tables together for comparison.
+```{r}
+
+full_loc_df$is_benchmark = "full_data"
+bm_loc_df$is_benchmark = "benchmark"
+
+bm_full_loc_df = rbind(full_loc_df, bm_loc_df)
+
+```
+
+### compare benchmark and non-benchmark data
+```{r fig.align='center', echo=FALSE, warning=FALSE, message=F}
+
+    un_region_df = unique(bm_full_loc_df[,c("is_benchmark", "year", 
+                                            "est_un_region", "est_country")])
+    ggplot(un_region_df, aes(x=is_benchmark, fill=est_un_region)) +
+        geom_bar(position="fill") + facet_grid(~year) + theme_bw() + 
+        xlab("Year of Article") + ylab("UN Region Proportions") +
+        ggtitle("UN Region mentions over Time") + 
+        scale_fill_brewer(palette="Set2")
+
+
+```

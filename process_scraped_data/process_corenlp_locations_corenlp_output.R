@@ -20,7 +20,7 @@ read_result_files <- function(corenlp_output_dir){
 
         ## get location info
         print(file_id)
-        loc_df = get_locations(json_res)
+        loc_df = get_osm_locations(json_res)
 
         ## format final df
         if(!is.na(loc_df)){
@@ -30,12 +30,12 @@ read_result_files <- function(corenlp_output_dir){
         }
         all_locations = rbind(all_locations, loc_df)
 
+        # clean up in case memory issues 
+        gc()
+
     }
 
     all_locations = all_locations[-1,]
-    all_locations$country = unlist(all_locations$location)
-    all_locations$location = NULL
-    all_locations = apply(all_locations, 2, unlist)
 
     return(all_locations)
 }
@@ -49,3 +49,6 @@ outfile = args[2]
 
 loc_res = read_result_files(corenlp_output_dir)
 write.table(loc_res, file=outfile, sep="\t", quote=F, row.names=F)
+
+rm(list=ls())
+gc()

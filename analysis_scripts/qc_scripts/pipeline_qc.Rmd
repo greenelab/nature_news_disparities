@@ -346,6 +346,8 @@ for(curr_dir in pipeline_3_dir){
         ner_df = get_ner(json_res)
         if(length(ner_df) != 0){
             
+            ner_df$text = tolower(ner_df$text)
+            
             ner_locs_df = subset(ner_df, ner %in% c("ORGANIZATION",
                                                 "COUNTRY",
                                                 "STATE_OR_PROVINCE"))
@@ -574,7 +576,7 @@ p4_sum_quotes = ggplot(sum_length_quotes, aes(x=year, y=diff)) +
 
 # for the rest of the gender plots we will be filtering in the same way
 # so lets make a function
-gender_summary <- function(in_df, filter_str, out_name, compare_df){
+diff_summary <- function(in_df, filter_str, out_name, compare_df){
     filt_table = in_df %>% 
             filter(gender == filter_str) %>%
             group_by(file_id, year) %>% 
@@ -606,34 +608,34 @@ gender_summary <- function(in_df, filter_str, out_name, compare_df){
 }
 
 # num males
-num_males = gender_summary(quote_stats_df, "MALE", "num_males", 
+num_males = diff_summary(quote_stats_df, "MALE", "num_males", 
                            article_stats_step3_df)
 
 
 p4_males = ggplot(num_males, aes(x=year.x, y=diff)) +
     theme_bw() + 
-    geom_violin() + geom_jitter(alpha=0.2) +
+    geom_violin() + geom_jitter(alpha=0.2, height=0) +
     xlab("Year of Article") + ylab("diff # male quotes") +
-    ggtitle("number of male quotes per article in P4 - P3")
+    ggtitle("number of male quotes per article in P4 - P3 Male NERs")
 
 
 # num females
-num_females = gender_summary(quote_stats_df, "FEMALE", "num_females", 
+num_females = diff_summary(quote_stats_df, "FEMALE", "num_females", 
                            article_stats_step3_df)
 p4_females = ggplot(num_females, aes(x=year.x, y=diff)) +
     theme_bw() + 
-    geom_violin() + geom_jitter(alpha=0.2) +
+    geom_violin() + geom_jitter(alpha=0.2, height=0) +
     xlab("Year of Article") + ylab("diff # female quotes") +
-    ggtitle("number of female quotes per article in P4 - P3")
+    ggtitle("number of female quotes per article in P4 - P3 Female NERs")
 
 
 # num unknown
-num_unknown = gender_summary(quote_stats_df, "UNKNOWN", "num_unknown", 
+num_unknown = diff_summary(quote_stats_df, "UNKNOWN", "num_unknown", 
                            article_stats_step3_df)
 p4_unknown = ggplot(num_unknown, aes(x=year.x, y=diff)) +
-    geom_violin() + theme_bw() + geom_jitter(alpha=0.2) +
+    geom_violin() + theme_bw() + geom_jitter(alpha=0.2, height=0) +
     xlab("Year of Article") + ylab("diff # unknown quotes") +
-    ggtitle("number of unknown gender quotes per article in P4 - P3")
+    ggtitle("number of unknown gender quotes per article in P4 - P3 Unknown NERs")
 
 
 
@@ -654,51 +656,66 @@ p4_unknown
 # now plot the stats
 require(dplyr)
 
-
-# for the location plots we will be filtering in the same way
-# so lets make a function
-loc_summary <- function(in_df, filter_str, out_name, compare_df){
+diff_summary <- function(in_df, filter_str, out_name, compare_df){
     filt_table = in_df %>% 
             filter(ner == filter_str) %>%
             group_by(file_id, year) %>% 
             summarize(n())
     filt_table = data.frame(filt_table)
-    colnames(filt_table)[3] = out_name
+    out_name_p4 = paste(out_name, "p4", sep="_")
+    colnames(filt_table)[3] = out_name_p4
     
-    filt_table$pipeline_step = "p4"
-    filt_table = rbind(filt_table, 
-                compare_df[,colnames(filt_table)])
+    # now merge
+    filt_table$file_id_merge = filt_table$file_id
+    filt_table = merge(filt_table, 
+          compare_df[, c("file_id_merge", "year", out_name)], 
+          by=c("file_id_merge"), all=T)
+    
+    # not found in p3
+    missing_p3 = which(is.na(filt_table[,c(out_name)]))
+    filt_table$year.y[missing_p3] = filt_table$year.x[missing_p3]
+    filt_table[missing_p3, out_name] = 0
+    
+    # not found in p4
+    missing_p4 = which(is.na(filt_table[,out_name_p4]))
+    filt_table$year.x[missing_p4] = filt_table$year.y[missing_p4]
+    filt_table[missing_p4, out_name_p4] = 0
+    
+    # calc diff
+    filt_table$diff = filt_table[,out_name_p4] - filt_table[,out_name]
 
     return(filt_table)
 }
 
 
 # num orgs
-num_org = loc_summary(loc_stats_df, "ORGANIZATION", "num_org", 
+num_org = diff_summary(loc_stats_df, "ORGANIZATION", "num_org", 
                            article_stats_step3_df)
-p4_org = ggplot(num_org, aes(x=year, y=num_org, fill=pipeline_step)) +
-    geom_boxplot() + theme_bw() + 
-    xlab("Year of Article") + ylab("# orgs mentioned") +
-    ggtitle("number of orgs mentioned per article over time pipeline step 4")
+
+p4_org = ggplot(num_org, aes(x=year.x, y=diff)) +
+    geom_violin() + geom_jitter(alpha=0.2, height=0) +
+    theme_bw() + xlab("Year of Article") + ylab("# orgs mentioned") +
+    ggtitle("number of orgs mentioned per article over time P4-P3")
 
 
 # num countries
-num_country = loc_summary(loc_stats_df, "COUNTRY", "num_country", 
+num_country = diff_summary(loc_stats_df, "COUNTRY", "num_country", 
                            article_stats_step3_df)
-p4_country = ggplot(num_country, aes(x=year, y=num_country, fill=pipeline_step)) +
-    geom_boxplot() + theme_bw() + 
+p4_country = ggplot(num_country, aes(x=year.x, y=diff)) +
+    geom_violin() + geom_jitter(alpha=0.2, height=0) +
+    theme_bw() + 
     xlab("Year of Article") + ylab("# countries mentioned") +
-    ggtitle("number of countries mentioned per article over time pipeline step 4")
+    ggtitle("number of countries mentioned per article over time P4-P3")
 
 
 # num states or provences
-num_state = loc_summary(loc_stats_df, "STATE_OR_PROVINCE", "num_state", 
+num_state = diff_summary(loc_stats_df, "STATE_OR_PROVINCE", "num_state", 
                            article_stats_step3_df)
-p4_state = ggplot(num_state, aes(x=year, y=num_state, fill=pipeline_step)) +
-    geom_boxplot() + theme_bw() + 
-    xlab("Year of Article") + ylab("# states/provinces mentioned") +
+p4_state = ggplot(num_state, aes(x=year.x, y=diff)) +
+    geom_violin() + geom_jitter(alpha=0.2, height=0) +
+    theme_bw() + xlab("Year of Article") + ylab("# states/provinces mentioned") +
     ggtitle("number of states/provinces mentioned per 
-            article over time pipeline step 4")
+            article over time P4-P3")
 
 
 

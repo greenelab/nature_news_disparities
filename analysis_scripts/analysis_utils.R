@@ -32,10 +32,12 @@ read_benchmark_quote_file <- function(gold_file){
 read_corenlp_location_files <- function(corenlp_file){
     
     corenlp_df = data.frame(fread(corenlp_file, header=T))
+    colnames(corenlp_df)[which(colnames(corenlp_df)=="address.country_code")] = "est_country_code"
     colnames(corenlp_df)[which(colnames(corenlp_df)=="country")] = "est_country"
     colnames(corenlp_df)[which(colnames(corenlp_df)=="un_region")] = "est_un_region"
     colnames(corenlp_df)[which(colnames(corenlp_df)=="un_subregion")] = "est_un_subregion"
 
+    corenlp_df$est_country[which(is.na(corenlp_df$est_country_code))] = "NO_EST"
     corenlp_df$est_country[which(is.na(corenlp_df$est_country))] = "NO_EST"
     corenlp_df$est_un_region[which(is.na(corenlp_df$est_un_region))] = "NO_EST"
     corenlp_df$est_un_subregion[which(is.na(corenlp_df$est_un_subregion))] = "NO_EST"
@@ -47,6 +49,7 @@ read_corenlp_location_files <- function(corenlp_file){
 read_benchmark_location_file <- function(bm_loc_file){
     
     gold_df = data.frame(fread(bm_loc_file, header=T))
+    colnames(gold_df)[which(colnames(gold_df)=="address.country_code")] = "true_country_code"
     colnames(gold_df)[which(colnames(gold_df)=="country")] = "true_country"
     colnames(gold_df)[which(colnames(gold_df)=="un_region")] = "true_un_region"
     colnames(gold_df)[which(colnames(gold_df)=="un_subregion")] = "true_un_subregion"

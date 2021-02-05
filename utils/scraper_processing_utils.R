@@ -223,6 +223,65 @@ get_prov_country <- function(ref_df, all_prov){
 
 }
 
+get_country_info <- function(){
+
+    # now get the UN region info
+    country_file = paste(ref_data_dir, "cdh_country_codes.txt", sep="")
+    if(!file.exists(country_file)){
+        stop("cdh_country_codes file not found, please run setup.sh to get it")
+    }
+
+    # format country file
+    country_df = data.frame(fread(country_file))
+    colnames(country_df)[which(colnames(country_df) == "FIPS.COUNTRY.NAME")] = "country"
+    colnames(country_df)[which(colnames(country_df) == "ISO.3166.1.COUNTRY.CHAR.2.CODE")] = "address.country_code"
+    colnames(country_df)[which(colnames(country_df) == "UN.REGION")] = "un_region"
+    colnames(country_df)[which(colnames(country_df) == "UN.SUB.REGION.NAME")] = "un_subregion"
+    country_df = country_df[,c( "country", "address.country_code", "un_region", "un_subregion")]
+    country_df$address.country_code = tolower(country_df$address.country_code)
+
+    return(country_df)
+}
+
+get_osm_locations <- function(json_res){
+
+    # get named entities --locations
+    ner_df = get_ner(json_res)
+
+    if(length(ner_df) == 0){
+        return(NA)
+    }
+
+    ner_locs_df = subset(ner_df, ner %in% 
+                        c("ORGANIZATION", "COUNTRY", "STATE_OR_PROVINCE"))
+    ner_locs_df = unique(ner_locs_df)
+
+
+    if(length(ner_locs_df) == 0){
+        return(NA)
+    }
+
+    if(all(is.na(ner_locs_df))){
+        return(NA)
+    }
+
+    # now query open street map to get the country codes
+    ner_locs_df$text = tolower(ner_locs_df$text)
+    osm_res = batch_osm_query(unique(ner_locs_df$text))
+    colnames(osm_res)[which(colnames(osm_res) == "query")] = "text"
+    ner_locs_df = merge(ner_locs_df, 
+                        osm_res[,c("text", "address.country_code")],
+                        all=T)
+    ner_locs_df$address.country_code[
+        which(is.na(ner_locs_df$address.country_code))] = "NOT_FOUND"
+
+    country_df = get_country_info()
+    locs_df = merge(ner_locs_df, country_df, all.x=T)
+    locs_df = unique(locs_df)
+
+    return(locs_df)
+
+}
 
 get_locations <- function(json_res){
 
@@ -504,7 +563,7 @@ single_osm_query <- function(curr_q){
     cache_df = rbind(cache_df, resp_df)
     cache_file = paste(ref_data_dir, "/osm_cache.tsv", sep="")
     write.table(cache_df, cache_file, sep="\t", quote=F, row.names=F)
-
+    
     Sys.sleep(1)
 
     return(resp_df)
@@ -529,6 +588,13 @@ batch_osm_query <- function(query_vec){
 }
 
 initial_osm_query <- function(in_dir) {
+
+    # this method will just populate the cache with any locations
+    # that are missing
+
+    # people should never use this method, this is only
+    # for me to run the first instance of the cache, others
+    # should already have a populated cache file from github
 
     # find all files that unfound locations
     all_loc_files = list.files(in_dir, 
@@ -558,6 +624,12 @@ initial_osm_query <- function(in_dir) {
 }
 
 query_genderize_io <- function(in_dir) {
+
+    # this method will just populate the cache with any locations
+    # that are missing
+
+    # people should never use this method, this is only
+    # for me to run once in a while if I scraped new articles
 
     # find all files that contain missed names
     missed_gender_files = list.files(in_dir, 

@@ -12,6 +12,7 @@ require(data.table)
 require(here)
 require(ggplot2)
 require(caret)
+require(ggrepel)
 
 proj_dir = here()
 source(paste(proj_dir, "/analysis_scripts/analysis_utils.R", sep=""))
@@ -167,7 +168,7 @@ bm_loc_file = paste(proj_dir,
 bm_loc_df = read_benchmark_location_file(bm_loc_file)
 
 raw_loc_file = paste(proj_dir, 
-                    "/data/benchmark_data/benchmark_location_table_hand_annotated.tsv", 
+                    "/data/benchmark_data/benchmark_location_table_raw.tsv", 
                     sep="")
 
 raw_loc_df = read_corenlp_location_files(raw_loc_file)
@@ -226,4 +227,154 @@ Now lets first look at the benchmark data
     
 ```
 
+Let's take a closer look at the errors in predicting at first the highest
+granularity: country
 
+```{r  fig.align='center', fig.width = 15, fig.height = 15, echo=FALSE, warning=FALSE, message=F}
+
+
+    # join the df to make comparison
+    bm_loc_df$text = tolower(bm_loc_df$text)
+    raw_loc_df$text = tolower(raw_loc_df$text)
+    compare_df = merge(bm_loc_df, raw_loc_df, by=c("file_id", "text"), all.x=T)
+
+    # now we only count ONCE per article
+    compare_df = subset(compare_df, select = -c(text))
+    compare_df = unique(compare_df)
+    
+    #compare per country
+    country_idx = which(colnames(compare_df) == "est_country_code")
+    true_country_idx = which(colnames(compare_df) == "true_country_code")
+    country_match = apply(compare_df, 1, 
+                        function(x) x[country_idx] == x[true_country_idx]) 
+    
+    compare_df$is_country_correct = country_match
+  
+    # write out confusion tables
+    a = table(compare_df$est_country_code, compare_df$true_country_code)
+    all_levels = unique(c(compare_df$est_country_code, compare_df$true_country_code))
+    
+    compare_df$est_country_code = as.factor(compare_df$est_country_code)
+    missing_levels = setdiff(all_levels, levels(compare_df$est_country_code))
+    levels(compare_df$est_country_code) = 
+        c(levels(compare_df$est_country_code), missing_levels)
+    
+    compare_df$true_country_code = as.factor(compare_df$true_country_code)
+    missing_levels = setdiff(all_levels, levels(compare_df$true_country_code))
+    levels(compare_df$true_country_code) = 
+        c(levels(compare_df$true_country_code), missing_levels)
+
+    confusion_matrix <- confusionMatrix(compare_df$est_country_code, 
+                                        compare_df$true_country_code)
+    gg_conf = prettyConfused(compare_df$true_country_code, compare_df$est_country_code, text.scl = 0)
+    gg_conf = gg_conf + ggtitle(paste("Country Prediction Kappa:", 
+                                      round(confusion_matrix$overall['Kappa'], 4))) +
+              theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust=1))
+
+    gg_conf
+    
+    
+
+```
+
+what we want to see is that these are more or less correlated
+
+```{r  echo=FALSE,  out.width="50%", warning=FALSE, message=F}
+
+    pred_freq = as.data.frame(table(compare_df$est_country_code))
+    colnames(pred_freq) = c("country", "Pred_Freq")
+
+    true_freq = as.data.frame(table(compare_df$true_country_code))
+    colnames(true_freq) = c("country", "True_Freq")
+
+    freq_df = merge(pred_freq, true_freq, all=T)
+    freq_df = subset(freq_df, !country %in% c("NOT_COUNTRY", "NOT_FOUND"))
+    
+    gg_corr_all = ggplot(freq_df, aes(x=Pred_Freq, y=True_Freq, label=country)) +
+                geom_point() + geom_abline(intercept = 0, slope = 1) +
+                theme_bw() + geom_text_repel() +
+                xlab("Predicted Frequency") + 
+                ylab("True Frequency") +
+                ggtitle("Pred. vs. True Country Frequencies")
+                
+     gg_corr_subset = ggplot(subset(freq_df, Pred_Freq < 20),
+                             aes(x=Pred_Freq, y=True_Freq, label=country)) +
+                geom_point() + geom_abline(intercept = 0, slope = 1) +
+                theme_bw() + geom_text_repel() +
+                xlab("Predicted Frequency") + 
+                ylab("True Frequency") +
+                ggtitle("Excluding top 2: Pred. vs. True Country Frequencies")
+     
+       gg_corr_all    
+       gg_corr_subset
+
+```
+Let's look at if subregions is any better/worse:
+
+```{r  echo=FALSE,  out.width="50%", warning=FALSE, message=F}
+
+    pred_freq = as.data.frame(table(compare_df$est_un_subregion))
+    colnames(pred_freq) = c("un_subregion", "Pred_Freq")
+
+    true_freq = as.data.frame(table(compare_df$true_un_subregion))
+    colnames(true_freq) = c("un_subregion", "True_Freq")
+
+    freq_df = merge(pred_freq, true_freq, all=T)
+    freq_df = subset(freq_df, un_subregion != "NO_EST")
+    freq_df[is.na(freq_df)] = 0
+    
+    gg_corr_all = ggplot(freq_df, aes(x=Pred_Freq, y=True_Freq, label=un_subregion)) +
+                geom_point() + geom_abline(intercept = 0, slope = 1) +
+                theme_bw() + geom_text_repel() +
+                xlab("Predicted Frequency") + 
+                ylab("True Frequency") +
+                ggtitle("Pred. vs. True UN Subregion Frequencies")
+                
+     gg_corr_subset = ggplot(subset(freq_df, Pred_Freq < 60),
+                             aes(x=Pred_Freq, y=True_Freq, label=un_subregion)) +
+                geom_point() + geom_abline(intercept = 0, slope = 1) +
+                theme_bw() + geom_text_repel() +
+                xlab("Predicted Frequency") + 
+                ylab("True Frequency") +
+                ggtitle("Excluding top 1: Pred. vs. True  UN Subregion Frequencies")
+     
+       gg_corr_all    
+       gg_corr_subset
+
+```
+
+Now, finally large regions:
+
+```{r  echo=FALSE,  out.width="50%", warning=FALSE, message=F}
+
+    pred_freq = as.data.frame(table(compare_df$est_un_region))
+    colnames(pred_freq) = c("un_region", "Pred_Freq")
+
+    true_freq = as.data.frame(table(compare_df$true_un_region))
+    colnames(true_freq) = c("un_region", "True_Freq")
+
+    freq_df = merge(pred_freq, true_freq, all=T)
+    freq_df = subset(freq_df, un_region != "NO_EST")
+    freq_df[is.na(freq_df)] = 0
+    
+    gg_corr_all = ggplot(freq_df, aes(x=Pred_Freq, y=True_Freq, label=un_region)) +
+                geom_point() + geom_abline(intercept = 0, slope = 1) +
+                theme_bw() + geom_text_repel() +
+                xlab("Predicted Frequency") + 
+                ylab("True Frequency") +
+                xlim(c(0,110)) + ylim(c(0,110)) + 
+                ggtitle("Pred. vs. True UN Region Frequencies")
+                
+     gg_corr_subset = ggplot(subset(freq_df, Pred_Freq < 60),
+                             aes(x=Pred_Freq, y=True_Freq, label=un_region)) +
+                geom_point() + geom_abline(intercept = 0, slope = 1) +
+                theme_bw() + geom_text_repel() +
+                xlab("Predicted Frequency") + 
+                ylab("True Frequency") +
+                xlim(c(0,60)) + ylim(c(0,60)) + 
+                ggtitle("Excluding top 1: Pred. vs. True  UN Region Frequencies")
+     
+       gg_corr_all    
+       gg_corr_subset
+
+```

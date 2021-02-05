@@ -67,3 +67,31 @@ draw_confusion_matrix <- function(cm, c1_name, c2_name, title="CONFUSION MATRIX"
     text(70, 20, round(as.numeric(cm$overall[2]), 3), cex=1.4)
 
 }  
+
+prettyConfused <- function(Actual, Predict, colors=c("white","red4","dodgerblue3"), text.scl=5){
+
+    #### taken from https://stackoverflow.com/questions/37897252/plot-confusion-matrix-in-r-using-ggplot
+    actual = as.data.frame(table(Actual))
+    names(actual) = c("Actual","ActualFreq")
+
+    #build confusion matrix
+    confusion = as.data.frame(table(Actual, Predict))
+    names(confusion) = c("Actual","Predicted","Freq")
+
+    #calculate percentage of test cases based on actual frequency
+
+    confusion = merge(confusion, actual, by=c('Actual','Actual'))
+    confusion$Percent = confusion$Freq/(confusion$ActualFreq+0.1)*100
+    confusion$ColorScale<-confusion$Percent*-1
+    confusion[which(confusion$Actual==confusion$Predicted),]$ColorScale<-confusion[which(confusion$Actual==confusion$Predicted),]$ColorScale*-1
+    confusion$Label<-paste(round(confusion$Percent,0),"%, \nn=",confusion$Freq,sep="")
+    tile <- ggplot() +
+    geom_tile(aes(x=Actual, y=Predicted,fill=ColorScale),data=confusion, color="black",size=0.1) +
+    labs(x="Actual",y="Predicted")
+
+    tile = tile +
+        geom_text(aes(x=Actual,y=Predicted, label=Label),data=confusion, size=text.scl, colour="black") +
+        scale_fill_gradient2(low=colors[2],high=colors[3],mid=colors[1],midpoint = 0,guide='none')
+
+    return(tile)
+}

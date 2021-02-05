@@ -67,7 +67,9 @@ Now lets do a quick plot of article specific stats. So far in the pipeline, we o
 
 #### plotting quote stats
 
-Between pipeline step 3 and 4 we are predicting the genders of speakers using genderize.io. So we expect almost exactly the same number of quotes and length of quotes. We also expect that the number of UNKNOWN gendered speakers typically decrease, and the number of MALE/FEMALE speakers may increase. This is not a completely 1:1 measurement. Pipeline level 3 only identifies the number of male/female/unknown named entities, there is no quote attribution checked at this stage. Quote attribution is in step 4. <img src="pipeline_qc_files/figure-markdown_github/unnamed-chunk-11-1.png" width="50%" /><img src="pipeline_qc_files/figure-markdown_github/unnamed-chunk-11-2.png" width="50%" /><img src="pipeline_qc_files/figure-markdown_github/unnamed-chunk-11-3.png" width="50%" /><img src="pipeline_qc_files/figure-markdown_github/unnamed-chunk-11-4.png" width="50%" /><img src="pipeline_qc_files/figure-markdown_github/unnamed-chunk-11-5.png" width="50%" />
+Between pipeline step 3 and 4 we are predicting the genders of speakers using genderize.io. So we expect almost exactly the same number of quotes and length of quotes. We also expect that the number of UNKNOWN gendered speakers typically decrease, and the number of MALE/FEMALE speakers may increase. This is not a completely 1:1 measurement. Pipeline level 3 only identifies the number of male/female/unknown named entities, there is no gender based quote attribution checked at this stage. Quote attribution is in step 4.
+
+<img src="pipeline_qc_files/figure-markdown_github/unnamed-chunk-11-1.png" width="50%" /><img src="pipeline_qc_files/figure-markdown_github/unnamed-chunk-11-2.png" width="50%" /><img src="pipeline_qc_files/figure-markdown_github/unnamed-chunk-11-3.png" width="50%" /><img src="pipeline_qc_files/figure-markdown_github/unnamed-chunk-11-4.png" width="50%" /><img src="pipeline_qc_files/figure-markdown_github/unnamed-chunk-11-5.png" width="50%" />
 
 #### plotting location stats
 

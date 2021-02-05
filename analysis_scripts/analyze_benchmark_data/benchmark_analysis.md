@@ -109,7 +109,7 @@ bm_loc_file = paste(proj_dir,
 bm_loc_df = read_benchmark_location_file(bm_loc_file)
 
 raw_loc_file = paste(proj_dir, 
-                    "/data/benchmark_data/benchmark_location_table_hand_annotated.tsv", 
+                    "/data/benchmark_data/benchmark_location_table_raw.tsv", 
                     sep="")
 
 raw_loc_df = read_corenlp_location_files(raw_loc_file)
@@ -121,54 +121,68 @@ The location data tries to find an organization, state, province, or country. Af
 head(bm_loc_df)
 ```
 
-    ##         file_id                                             text
-    ## 1 4641259a.html National Center for Genome Resources in Santa Fe
-    ## 2 4641259a.html                         University of California
-    ## 3 4641259a.html                                  Yale University
-    ## 4 4641259a.html                                               US
-    ## 5 4641259a.html                                       New Mexico
-    ## 6 4641259a.html                                      Connecticut
-    ##                 ner                   true_country true_un_region
-    ## 1      ORGANIZATION United States of America (USA)       Americas
-    ## 2      ORGANIZATION United States of America (USA)       Americas
-    ## 3      ORGANIZATION United States of America (USA)       Americas
-    ## 4           COUNTRY United States of America (USA)       Americas
-    ## 5 STATE_OR_PROVINCE United States of America (USA)       Americas
-    ## 6 STATE_OR_PROVINCE United States of America (USA)       Americas
-    ##   true_un_subregion
-    ## 1  Northern America
-    ## 2  Northern America
-    ## 3  Northern America
-    ## 4  Northern America
-    ## 5  Northern America
-    ## 6  Northern America
+    ##   true_country_code                                                    file_id
+    ## 1                ar                                         d41586-020-01756-0
+    ## 2                ar                                         d41586-020-01756-0
+    ## 3                au climatologists-to-physicists-your-planet-needs-you-1.17270
+    ## 4                au climatologists-to-physicists-your-planet-needs-you-1.17270
+    ## 5                au                                         d41586-020-00166-6
+    ## 6                au                                         d41586-020-00166-6
+    ##                            text          ner true_country true_un_region
+    ## 1                     Argentina      COUNTRY    Argentina       Americas
+    ## 2             Sinergium Biotech ORGANIZATION    Argentina       Americas
+    ## 3             Monash University ORGANIZATION    Australia        Oceania
+    ## 4                     Australia      COUNTRY    Australia        Oceania
+    ## 5 University of New South Wales ORGANIZATION    Australia        Oceania
+    ## 6                     Australia      COUNTRY    Australia        Oceania
+    ##           true_un_subregion
+    ## 1             South America
+    ## 2             South America
+    ## 3 Australia and New Zealand
+    ## 4 Australia and New Zealand
+    ## 5 Australia and New Zealand
+    ## 6 Australia and New Zealand
 
 ``` r
 head(raw_loc_df)
 ```
 
-    ##         file_id                                             text
-    ## 1 4641259a.html National Center for Genome Resources in Santa Fe
-    ## 2 4641259a.html                         University of California
-    ## 3 4641259a.html                                  Yale University
-    ## 4 4641259a.html                                               US
-    ## 5 4641259a.html                                       New Mexico
-    ## 6 4641259a.html                                      Connecticut
-    ##                 ner                    est_country est_un_region
-    ## 1      ORGANIZATION United States of America (USA)      Americas
-    ## 2      ORGANIZATION United States of America (USA)      Americas
-    ## 3      ORGANIZATION United States of America (USA)      Americas
-    ## 4           COUNTRY United States of America (USA)      Americas
-    ## 5 STATE_OR_PROVINCE United States of America (USA)      Americas
-    ## 6 STATE_OR_PROVINCE United States of America (USA)      Americas
-    ##   est_un_subregion
-    ## 1 Northern America
-    ## 2 Northern America
-    ## 3 Northern America
-    ## 4 Northern America
-    ## 5 Northern America
-    ## 6 Northern America
+    ##         file_id est_country_code
+    ## 1 4641259a.html               us
+    ## 2 4641259a.html               us
+    ## 3 4641259a.html               us
+    ## 4 4641259a.html               us
+    ## 5 4641259a.html               us
+    ## 6 4641259a.html               us
+    ##                                               text               ner
+    ## 1                                      connecticut STATE_OR_PROVINCE
+    ## 2                                               ms STATE_OR_PROVINCE
+    ## 3 national center for genome resources in santa fe      ORGANIZATION
+    ## 4                                       new mexico STATE_OR_PROVINCE
+    ## 5                         university of california      ORGANIZATION
+    ## 6                                               us           COUNTRY
+    ##     est_country est_un_region est_un_subregion
+    ## 1 United States      Americas Northern America
+    ## 2 United States      Americas Northern America
+    ## 3 United States      Americas Northern America
+    ## 4 United States      Americas Northern America
+    ## 5 United States      Americas Northern America
+    ## 6 United States      Americas Northern America
 
 Similar to before we will match columns baed on their names, in `raw_loc_df` it has `est_` columns and in `bm_loc_df` is has matching `true_` columns
 
 Now lets first look at the benchmark data ![](benchmark_analysis_files/figure-markdown_github/unnamed-chunk-9-1.png)![](benchmark_analysis_files/figure-markdown_github/unnamed-chunk-9-2.png)![](benchmark_analysis_files/figure-markdown_github/unnamed-chunk-9-3.png)
+
+Let's take a closer look at the errors in predicting at first the highest granularity: country
+
+<img src="benchmark_analysis_files/figure-markdown_github/unnamed-chunk-10-1.png" style="display: block; margin: auto;" />
+
+what we want to see is that these are more or less correlated
+
+<img src="benchmark_analysis_files/figure-markdown_github/unnamed-chunk-11-1.png" width="50%" /><img src="benchmark_analysis_files/figure-markdown_github/unnamed-chunk-11-2.png" width="50%" /> Let's look at if subregions is any better/worse:
+
+<img src="benchmark_analysis_files/figure-markdown_github/unnamed-chunk-12-1.png" width="50%" /><img src="benchmark_analysis_files/figure-markdown_github/unnamed-chunk-12-2.png" width="50%" />
+
+Now, finally large regions:
+
+<img src="benchmark_analysis_files/figure-markdown_github/unnamed-chunk-13-1.png" width="50%" /><img src="benchmark_analysis_files/figure-markdown_github/unnamed-chunk-13-2.png" width="50%" />
