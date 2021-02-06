@@ -30,7 +30,15 @@ bm_loc_file = paste(proj_dir,
                     sep="")
 
 bm_loc_df = read_corenlp_location_files(bm_loc_file)
+```
 
+    ## Warning in fread(country_file): Detected 12 column names but the data has 13
+    ## columns (i.e. invalid file). Added 1 extra default column name for the first
+    ## column which is guessed to be row names or an index. Use setnames() afterwards
+    ## if this guess is not correct, or fix the file write command that created the
+    ## file to create a valid file.
+
+``` r
 # add the year annotation
 year_idx_file = paste(proj_dir, 
                 "/data/benchmark_data/coreNLP_input/fileID_year.tsv", 
@@ -50,12 +58,12 @@ head(bm_loc_df)
     ## 5 4641259a.html 2010               us
     ## 6 4641259a.html 2010               us
     ##                                               text               ner
-    ## 1 national center for genome resources in santa fe      ORGANIZATION
-    ## 2                         university of california      ORGANIZATION
-    ## 3                                               us           COUNTRY
-    ## 4                                  yale university      ORGANIZATION
-    ## 5                                      connecticut STATE_OR_PROVINCE
-    ## 6                                       new mexico STATE_OR_PROVINCE
+    ## 1                                       new mexico STATE_OR_PROVINCE
+    ## 2                                      connecticut STATE_OR_PROVINCE
+    ## 3                                               ms STATE_OR_PROVINCE
+    ## 4 national center for genome resources in santa fe      ORGANIZATION
+    ## 5                                               us           COUNTRY
+    ## 6                         university of california      ORGANIZATION
     ##     est_country est_un_region est_un_subregion
     ## 1 United States      Americas Northern America
     ## 2 United States      Americas Northern America
@@ -78,25 +86,46 @@ for(curr_year in c(2010, 2015, 2020)){
 
     full_loc_df = rbind(full_loc_df, loc_df)
 }
+```
+
+    ## Warning in fread(country_file): Detected 12 column names but the data has 13
+    ## columns (i.e. invalid file). Added 1 extra default column name for the first
+    ## column which is guessed to be row names or an index. Use setnames() afterwards
+    ## if this guess is not correct, or fix the file write command that created the
+    ## file to create a valid file.
+
+    ## Warning in fread(country_file): Detected 12 column names but the data has 13
+    ## columns (i.e. invalid file). Added 1 extra default column name for the first
+    ## column which is guessed to be row names or an index. Use setnames() afterwards
+    ## if this guess is not correct, or fix the file write command that created the
+    ## file to create a valid file.
+
+    ## Warning in fread(country_file): Detected 12 column names but the data has 13
+    ## columns (i.e. invalid file). Added 1 extra default column name for the first
+    ## column which is guessed to be row names or an index. Use setnames() afterwards
+    ## if this guess is not correct, or fix the file write command that created the
+    ## file to create a valid file.
+
+``` r
 full_loc_df = full_loc_df[-1,]
 
 head(full_loc_df)
 ```
 
-    ##        file_id est_country_code                             text          ner
-    ## 2 463011a.html               cd democratic republic of the congo      COUNTRY
-    ## 3 463011a.html               ch                      switzerland      COUNTRY
-    ## 4 463011a.html               co                         colombia      COUNTRY
-    ## 5 463011a.html               de                            alcon ORGANIZATION
-    ## 6 463011a.html               gb                          britain      COUNTRY
-    ## 7 463011a.html               gb                    royal society ORGANIZATION
-    ##                        est_country est_un_region est_un_subregion year
-    ## 2 Democratic Republic of the Congo        Africa    Middle Africa 2010
-    ## 3                      Switzerland        Europe   Western Europe 2010
-    ## 4                         Colombia      Americas    South America 2010
-    ## 5                          Germany        Europe   Western Europe 2010
-    ## 6                   United Kingdom        Europe  Northern Europe 2010
-    ## 7                   United Kingdom        Europe  Northern Europe 2010
+    ##   est_country_code            file_id                              text
+    ## 2               ae news.2010.647.html rochester institute of technology
+    ## 3               ae news.2010.491.html rochester institute of technology
+    ## 4               ae       468609a.html                               ias
+    ## 5               af       464014b.html                       afghanistan
+    ## 6               af news.2010.684.html                       afghanistan
+    ## 7               af       465990a.html                       afghanistan
+    ##            ner          est_country est_un_region est_un_subregion year
+    ## 2 ORGANIZATION United Arab Emirates          Asia     Western Asia 2010
+    ## 3 ORGANIZATION United Arab Emirates          Asia     Western Asia 2010
+    ## 4 ORGANIZATION United Arab Emirates          Asia     Western Asia 2010
+    ## 5      COUNTRY          Afghanistan          Asia    Southern Asia 2010
+    ## 6      COUNTRY          Afghanistan          Asia    Southern Asia 2010
+    ## 7      COUNTRY          Afghanistan          Asia    Southern Asia 2010
 
 Now we join the tables together for comparison.
 
