@@ -2,6 +2,12 @@ library(jsonlite)
 library(data.table)
 library(dplyr)
 
+
+proj_dir = here()
+source(paste(proj_dir, "/utils/scraper_processing_utils.R", sep=""))
+
+
+
 read_corenlp_quote_files <- function(corenlp_file){
     
     corenlp_df = data.frame(fread(corenlp_file, header=T, quote=""))
@@ -32,6 +38,10 @@ read_benchmark_quote_file <- function(gold_file){
 read_corenlp_location_files <- function(corenlp_file){
     
     corenlp_df = data.frame(fread(corenlp_file, header=T))
+    country_df = get_country_info()
+    corenlp_df = merge(corenlp_df, country_df, all.x=T)
+    corenlp_df = unique(corenlp_df)
+
     colnames(corenlp_df)[which(colnames(corenlp_df)=="address.country_code")] = "est_country_code"
     colnames(corenlp_df)[which(colnames(corenlp_df)=="country")] = "est_country"
     colnames(corenlp_df)[which(colnames(corenlp_df)=="un_region")] = "est_un_region"

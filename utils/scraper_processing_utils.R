@@ -275,9 +275,9 @@ get_osm_locations <- function(json_res){
     ner_locs_df$address.country_code[
         which(is.na(ner_locs_df$address.country_code))] = "NOT_FOUND"
 
-    country_df = get_country_info()
-    locs_df = merge(ner_locs_df, country_df, all.x=T)
-    locs_df = unique(locs_df)
+    #country_df = get_country_info()
+    #locs_df = merge(ner_locs_df, country_df, all.x=T)
+    locs_df = unique(ner_locs_df)
 
     return(locs_df)
 
@@ -522,7 +522,8 @@ single_osm_query <- function(curr_q){
     resp_df = data.frame("place_id" = NA,
                             "osm_type" = NA, "display_name" = NA,
                             "class" = NA, "type" = NA, "importance" = NA,
-                            "address.country" = NA, "address.country_code" = NA)
+                            "address.country" = NA, "address.country_code" = "NONE",
+                            "Freq" = NA, "hand_edited" = FALSE, "reviewed" = FALSE)
 
     
     if(resp != "[]"){
@@ -535,7 +536,7 @@ single_osm_query <- function(curr_q){
                                 "display_name", "class", "type", 
                                 "importance")]))
             resp_df$address.country = NA
-            resp_df$address.country_code = NA
+            resp_df$address.country_code = "NONE"
         }
         else{
             resp_df = data.frame(t(resp[c("place_id", "osm_type", 
@@ -552,18 +553,22 @@ single_osm_query <- function(curr_q){
     query_date = as.Date(Sys.Date(), format = "%B %d %Y")
     resp_df$query_date = query_date
 
+    ref_code_df = get_country_info()
+    resp_df = merge(resp_df, ref_code_df, all.x=T)
+    resp_df$Freq = NA
+    resp_df$hand_edited = FALSE
+    resp_df$reviewed = FALSE
+    
+
     # format the data frame
-    resp_df = resp_df[,c("query", "query_date", "place_id", "osm_type", 
-                        "display_name", "class", "type", 
-                        "importance", "address.country", 
-                        "address.country_code")]
+    resp_df = resp_df[,colnames(cache_df)]
 
 
     # append to the cache
     cache_df = rbind(cache_df, resp_df)
     cache_file = paste(ref_data_dir, "/osm_cache.tsv", sep="")
     write.table(cache_df, cache_file, sep="\t", quote=F, row.names=F)
-    
+
     Sys.sleep(1)
 
     return(resp_df)
@@ -614,11 +619,24 @@ initial_osm_query <- function(in_dir) {
         all_missing_locs = rbind(all_missing_locs, in_df[,c("file_id", "text")])
     }
     all_missing_locs = all_missing_locs[-1,]
-    all_missing_locs = unique(tolower(all_missing_locs$text))
+    query_locs = unique(tolower(all_missing_locs$text))
 
 
-    batch_resp = batch_osm_query(all_missing_locs)
+    batch_resp = batch_osm_query(query_locs)
 
+    # write out the frequncies of organizations, 
+    # we want to make sure that the top ones are correct
+    freq_locs = as.data.frame(table(all_missing_locs$text))
+    colnames(freq_locs)[1] = "query"
+
+    cache_file = paste(ref_data_dir, "/osm_cache.tsv", sep="")
+    cache_df = data.frame(fread(cache_file))
+    freq_locs = merge(freq_locs, cache_df)
+    freq_locs = freq_locs[order(freq_locs$Freq, decreasing=T),]
+    freq_locs$hand_edited = F
+
+    cache_edit_file = paste(ref_data_dir, "/osm_cache_edited2.tsv", sep="")
+    write.table(freq_locs, cache_edit_file, sep="\t", quote=F, row.names=F)
 
 
 }

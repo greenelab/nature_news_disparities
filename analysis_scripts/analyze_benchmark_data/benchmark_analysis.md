@@ -115,6 +115,12 @@ raw_loc_file = paste(proj_dir,
 raw_loc_df = read_corenlp_location_files(raw_loc_file)
 ```
 
+    ## Warning in fread(country_file): Detected 12 column names but the data has 13
+    ## columns (i.e. invalid file). Added 1 extra default column name for the first
+    ## column which is guessed to be row names or an index. Use setnames() afterwards
+    ## if this guess is not correct, or fix the file write command that created the
+    ## file to create a valid file.
+
 The location data tries to find an organization, state, province, or country. After this it tries to tag it to a canonically named country, and UN defined regions. Let's take a look.
 
 ``` r
@@ -147,37 +153,39 @@ head(bm_loc_df)
 head(raw_loc_df)
 ```
 
-    ##         file_id est_country_code
-    ## 1 4641259a.html               us
-    ## 2 4641259a.html               us
-    ## 3 4641259a.html               us
-    ## 4 4641259a.html               us
-    ## 5 4641259a.html               us
-    ## 6 4641259a.html               us
-    ##                                               text               ner
-    ## 1                                      connecticut STATE_OR_PROVINCE
-    ## 2                                               ms STATE_OR_PROVINCE
-    ## 3 national center for genome resources in santa fe      ORGANIZATION
-    ## 4                                       new mexico STATE_OR_PROVINCE
-    ## 5                         university of california      ORGANIZATION
-    ## 6                                               us           COUNTRY
-    ##     est_country est_un_region est_un_subregion
-    ## 1 United States      Americas Northern America
-    ## 2 United States      Americas Northern America
-    ## 3 United States      Americas Northern America
-    ## 4 United States      Americas Northern America
-    ## 5 United States      Americas Northern America
-    ## 6 United States      Americas Northern America
+    ##   est_country_code                                                   file_id
+    ## 1               ao us-science-academies-take-on-human-genome-editing-1.17581
+    ## 2               ar                                        d41586-020-01756-0
+    ## 3               au                                        d41586-020-00166-6
+    ## 4               au                                        d41586-020-02835-y
+    ## 5               au                                        d41586-020-02835-y
+    ## 6               au                                        d41586-020-02835-y
+    ##                                                           text          ner
+    ## 1                                                          nam ORGANIZATION
+    ## 2                                                    argentina      COUNTRY
+    ## 3                                                    australia      COUNTRY
+    ## 4                                                        csiro ORGANIZATION
+    ## 5 commonwealth scientific and industrial research organisation ORGANIZATION
+    ## 6                                        james cook university ORGANIZATION
+    ##   est_country est_un_region          est_un_subregion
+    ## 1      Angola        Africa             Middle Africa
+    ## 2   Argentina      Americas             South America
+    ## 3   Australia       Oceania Australia and New Zealand
+    ## 4   Australia       Oceania Australia and New Zealand
+    ## 5   Australia       Oceania Australia and New Zealand
+    ## 6   Australia       Oceania Australia and New Zealand
 
 Similar to before we will match columns baed on their names, in `raw_loc_df` it has `est_` columns and in `bm_loc_df` is has matching `true_` columns
 
 Now lets first look at the benchmark data ![](benchmark_analysis_files/figure-markdown_github/unnamed-chunk-9-1.png)![](benchmark_analysis_files/figure-markdown_github/unnamed-chunk-9-2.png)![](benchmark_analysis_files/figure-markdown_github/unnamed-chunk-9-3.png)
 
-Let's take a closer look at the errors in predicting UN Subregions
+Ok, so we see a strong signal that US/Americas/Europe are mentioned at a much higher rate than other regions. We would like to also see this pattern in our predicted locations, but first we need to show that our estimations are accurate. Shown below are now analyses comparing our hand-annotated benchmark data against the fully-automated processed data. We would like to show that the true number of articles with a region mention, is highly correlated to the estimated number of articles from our full pipeline.
+
+First let's take a look at the prediction errors for UN Subregions
 
 <img src="benchmark_analysis_files/figure-markdown_github/unnamed-chunk-10-1.png" style="display: block; margin: auto;" />
 
-what we want to see is that these are more or less correlated
+We find that there exist errors in the prediction, but it is not completely off. We would like to verify that our hand annotation and pipeline results are at least strongly correlated.
 
 <img src="benchmark_analysis_files/figure-markdown_github/unnamed-chunk-11-1.png" width="50%" /><img src="benchmark_analysis_files/figure-markdown_github/unnamed-chunk-11-2.png" width="50%" /> Let's look at if subregions is any better/worse:
 

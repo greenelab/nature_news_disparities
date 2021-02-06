@@ -203,7 +203,8 @@ Now lets first look at the benchmark data
     eval_df = unique(eval_df)
     
     ## plot per year stats
-    country_agg = data.frame(table(eval_df[,c("true_country_code", "year")]))
+    country_agg = unique(eval_df[,c("file_id","true_country_code", "year")])
+    country_agg = data.frame(table(country_agg[,c("true_country_code", "year")]))
     ggplot(country_agg, aes(x=year, y=Freq, color=true_country_code, group=true_country_code)) +
         geom_line() + geom_point() + theme_bw() + 
         xlab("Year of Article") + 
@@ -211,14 +212,16 @@ Now lets first look at the benchmark data
         ylim(c(0, 10)) +
         ggtitle("Country Mention by Year")
 
-    subregion_agg = data.frame(table(eval_df[,c("true_un_subregion", "year")]))
+    subregion_agg = unique(eval_df[,c("file_id","true_un_subregion", "year")])
+    subregion_agg = data.frame(table(subregion_agg[,c("true_un_subregion", "year")]))
     ggplot(subregion_agg, aes(x=year, y=Freq, color=true_un_subregion, group=true_un_subregion)) +
         geom_line() + geom_point() + theme_bw() + 
         xlab("Year of Article") + 
         ylab("Number of Articles (10 articles/year) with \n at least one UN Subregion Mention") +
         ggtitle("Subregion Mention by Year")
 
-    region_agg = data.frame(table(eval_df[,c("true_un_region", "year")]))
+    region_agg = unique(eval_df[,c("file_id","true_un_region", "year")])
+    region_agg = data.frame(table(region_agg[,c("true_un_region", "year")]))
     ggplot(region_agg, aes(x=year, y=Freq, color=true_un_region, group=true_un_region)) +
         geom_line() + geom_point() + theme_bw() + 
         xlab("Year of Article") + 
@@ -227,7 +230,17 @@ Now lets first look at the benchmark data
     
 ```
 
-Let's take a closer look at the errors in predicting UN Subregions
+Ok, so we see a strong signal that US/Americas/Europe are mentioned at a much 
+higher rate than other regions.
+We would like to also see this pattern in our predicted locations, but first we 
+need to show that our estimations are accurate.
+Shown below are now analyses comparing our hand-annotated benchmark data
+against the fully-automated processed data.
+We would like to show that the true number of articles with a region mention,
+is highly correlated to the estimated number of articles from our full pipeline.
+
+
+First let's take a look at the prediction errors for UN Subregions
 
 ```{r  fig.align='center', fig.width = 15, fig.height = 15, echo=FALSE, warning=FALSE, message=F}
 
@@ -279,7 +292,10 @@ Let's take a closer look at the errors in predicting UN Subregions
 
 ```
 
-what we want to see is that these are more or less correlated
+We find that there exist errors in the prediction, but it is not completely off.
+We would like to verify that our hand annotation and pipeline results
+are at least strongly correlated.
+
 
 ```{r  echo=FALSE,  out.width="50%", warning=FALSE, message=F}
 
@@ -373,7 +389,7 @@ Now, finally large regions:
                 theme_bw() + geom_text_repel() +
                 xlab("Predicted Frequency") + 
                 ylab("True Frequency") +
-                xlim(c(0,60)) + ylim(c(0,60)) + 
+                xlim(c(0,20)) + ylim(c(0,20)) + 
                 ggtitle("Excluding top Europe+Americas: Pred. vs. True  UN Region Frequencies")
      
        gg_corr_all    
