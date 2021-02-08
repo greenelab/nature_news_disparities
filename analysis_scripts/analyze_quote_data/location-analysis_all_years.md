@@ -77,7 +77,7 @@ Now we read in the full data for the same years.
 ``` r
 # read in the full year quote table for 2010, 2015, and 2020
 full_loc_df = NA
-for(curr_year in c(2010, 2015, 2020)){
+for(curr_year in c(2010, 2015:2020)){
     loc_file = paste(proj_dir, 
                     "/data/scraped_data/location_table_raw_", curr_year, ".tsv", 
                     sep="")
@@ -106,8 +106,37 @@ for(curr_year in c(2010, 2015, 2020)){
     ## if this guess is not correct, or fix the file write command that created the
     ## file to create a valid file.
 
+    ## Warning in fread(country_file): Detected 12 column names but the data has 13
+    ## columns (i.e. invalid file). Added 1 extra default column name for the first
+    ## column which is guessed to be row names or an index. Use setnames() afterwards
+    ## if this guess is not correct, or fix the file write command that created the
+    ## file to create a valid file.
+
+    ## Warning in fread(country_file): Detected 12 column names but the data has 13
+    ## columns (i.e. invalid file). Added 1 extra default column name for the first
+    ## column which is guessed to be row names or an index. Use setnames() afterwards
+    ## if this guess is not correct, or fix the file write command that created the
+    ## file to create a valid file.
+
+    ## Warning in fread(country_file): Detected 12 column names but the data has 13
+    ## columns (i.e. invalid file). Added 1 extra default column name for the first
+    ## column which is guessed to be row names or an index. Use setnames() afterwards
+    ## if this guess is not correct, or fix the file write command that created the
+    ## file to create a valid file.
+
+    ## Warning in fread(country_file): Detected 12 column names but the data has 13
+    ## columns (i.e. invalid file). Added 1 extra default column name for the first
+    ## column which is guessed to be row names or an index. Use setnames() afterwards
+    ## if this guess is not correct, or fix the file write command that created the
+    ## file to create a valid file.
+
 ``` r
 full_loc_df = full_loc_df[-1,]
+
+full_loc_df = subset(full_loc_df, est_un_region != "" & 
+                                        est_un_subregion != "" &
+                                        est_un_region != "NO_EST" & 
+                                        est_un_subregion != "NO_EST")
 
 head(full_loc_df)
 ```
@@ -133,7 +162,8 @@ Now we join the tables together for comparison.
 full_loc_df$is_benchmark = "full_data"
 bm_loc_df$is_benchmark = "benchmark"
 
-bm_full_loc_df = rbind(full_loc_df, bm_loc_df)
+bm_full_loc_df = rbind(subset(full_loc_df, year %in% c("2010", "2015", "2020")), 
+                       bm_loc_df)
 bm_full_loc_df = subset(bm_full_loc_df, est_un_region != "" & 
                                         est_un_subregion != "" &
                                         est_un_region != "NO_EST" & 
@@ -142,17 +172,17 @@ bm_full_loc_df = subset(bm_full_loc_df, est_un_region != "" &
 
 ### compare benchmark and non-benchmark data
 
-Now lets check how well the benchmark proportions match the full dataset proportions.
+Now lets check how well the benchmark proportions match the full dataset proportions. The number of articles per year in each benchmark set is 10, the total number of articles in the year is between 400-1000. Since the number of articles in the benchmark set is very small, we don't expect exact consistency between the benchmark and total data sets.
 
-#### Lets look at the UN region level
+#### Lets look at the largest region definition first: UN region
 
 <img src="location-analysis_all_years_files/figure-markdown_github/unnamed-chunk-4-1.png" style="display: block; margin: auto;" />
 
-## Lets look at the UN Subregion level
+#### Lets look at the UN Subregion level
 
 <img src="location-analysis_all_years_files/figure-markdown_github/unnamed-chunk-5-1.png" style="display: block; margin: auto;" /><img src="location-analysis_all_years_files/figure-markdown_github/unnamed-chunk-5-2.png" style="display: block; margin: auto;" />
 
-## Now Finally the Country Code level, except divided by subregion
+#### Now Finally the Country Code level, except divided by subregion
 
     ## $`1`
 
@@ -196,3 +226,9 @@ Now lets check how well the benchmark proportions match the full dataset proport
     ## 
     ## attr(,"class")
     ## [1] "list"      "ggarrange"
+
+### Compare locations over all years
+
+Now lets see the proportion of articles that mention each UN Subregion.
+
+<img src="location-analysis_all_years_files/figure-markdown_github/unnamed-chunk-7-1.png" style="display: block; margin: auto;" /><img src="location-analysis_all_years_files/figure-markdown_github/unnamed-chunk-7-2.png" style="display: block; margin: auto;" />

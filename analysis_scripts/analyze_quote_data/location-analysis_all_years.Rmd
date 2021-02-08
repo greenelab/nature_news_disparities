@@ -69,7 +69,7 @@ Now we read in the full data for the same years.
 
 # read in the full year quote table for 2010, 2015, and 2020
 full_loc_df = NA
-for(curr_year in c(2010, 2015, 2020)){
+for(curr_year in c(2010, 2015:2020)){
     loc_file = paste(proj_dir, 
                     "/data/scraped_data/location_table_raw_", curr_year, ".tsv", 
                     sep="")
@@ -79,6 +79,11 @@ for(curr_year in c(2010, 2015, 2020)){
     full_loc_df = rbind(full_loc_df, loc_df)
 }
 full_loc_df = full_loc_df[-1,]
+
+full_loc_df = subset(full_loc_df, est_un_region != "" & 
+                                        est_un_subregion != "" &
+                                        est_un_region != "NO_EST" & 
+                                        est_un_subregion != "NO_EST")
 
 head(full_loc_df)
 
@@ -91,7 +96,8 @@ Now we join the tables together for comparison.
 full_loc_df$is_benchmark = "full_data"
 bm_loc_df$is_benchmark = "benchmark"
 
-bm_full_loc_df = rbind(full_loc_df, bm_loc_df)
+bm_full_loc_df = rbind(subset(full_loc_df, year %in% c("2010", "2015", "2020")), 
+                       bm_loc_df)
 bm_full_loc_df = subset(bm_full_loc_df, est_un_region != "" & 
                                         est_un_subregion != "" &
                                         est_un_region != "NO_EST" & 
@@ -102,8 +108,12 @@ bm_full_loc_df = subset(bm_full_loc_df, est_un_region != "" &
 ### compare benchmark and non-benchmark data
 
 Now lets check how well the benchmark proportions match the full dataset proportions.
+The number of articles per year in each benchmark set is 10, the total number of articles
+in the year is between 400-1000.
+Since the number of articles in the benchmark set is very small, we don't expect 
+exact consistency between the benchmark and total data sets.
 
-#### Lets look at the UN region level
+#### Lets look at the largest region definition first: UN region
 ```{r fig.align='center', fig.width = 15, fig.height = 10, echo=FALSE, warning=FALSE, message=F}
 
     
@@ -224,5 +234,50 @@ Now lets check how well the benchmark proportions match the full dataset proport
     }
     ggarrange(plotlist=all_gg, ncol = 2)
     
+
+```
+
+### Compare locations over all years
+
+Now lets see the proportion of articles that mention each UN Subregion.
+
+```{r fig.align='center', fig.width = 15, fig.height = 10, echo=FALSE, warning=FALSE, message=F}
+
+    tot_num_articles = unique(full_loc_df[,c("is_benchmark", "year", 
+                                            "file_id")])
+    tot_num_articles = tot_num_articles %>%
+                    group_by(is_benchmark, year) %>% 
+                    summarize(n())
+    colnames(tot_num_articles) = c("is_benchmark", "year",
+                               "num_total_articles")
+
+    un_subregion_df = get_aggr_region(full_loc_df, region_col_id="est_un_subregion", 
+                                   tot_num_articles)
+    un_subregion_df$label[un_subregion_df$year != "2020"] = ""
+    ggplot(un_subregion_df, aes(x=as.factor(year), y=prop_mentioned, 
+                             color = est_un_subregion, fill=est_un_subregion,
+                             label = label)) +
+        geom_point() + geom_line(aes(group=est_un_subregion)) + 
+        geom_text_repel() + theme_bw() + 
+        xlab("Year of Article") + 
+        ylab("Fraction Articles with mention of UN Subregion ") +
+        ggtitle("Proportion of articles with at least 1 mention of a UN Subregion") + 
+        scale_fill_brewer(palette="Set2") + ylim(c(0, 1.1)) +
+        theme(legend.position = "none")
+    
+    prop_region = subset(un_subregion_df, prop_mentioned < 0.2 )
+    ggplot(subset(un_subregion_df, est_un_subregion %in% prop_region$est_un_subregion),
+           aes(x=as.factor(year), y=prop_mentioned, 
+                 color = est_un_subregion, fill=est_un_subregion,
+                 label = label)) +
+        geom_point() + geom_line(aes(group=est_un_subregion)) + 
+        geom_text_repel() + theme_bw() + 
+        xlab("Year of Article") + 
+        ylab("Fraction Articles with mention of UN Subregion ") +
+        ggtitle("Proportion of articles with at least 1 mention of a UN Subregion
+                subsetted to having a proportion 0.2 or lower") + 
+        scale_fill_brewer(palette="Set2") +
+        theme(legend.position = "none")
+
 
 ```
