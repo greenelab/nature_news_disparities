@@ -144,7 +144,7 @@ bm_full_loc_df = subset(bm_full_loc_df, est_un_region != "" &
 
 Now lets check how well the benchmark proportions match the full dataset proportions.
 
-## Lets look at the UN region level
+#### Lets look at the UN region level
 
 <img src="location-analysis_all_years_files/figure-markdown_github/unnamed-chunk-4-1.png" style="display: block; margin: auto;" />
 

@@ -103,7 +103,7 @@ bm_full_loc_df = subset(bm_full_loc_df, est_un_region != "" &
 
 Now lets check how well the benchmark proportions match the full dataset proportions.
 
-## Lets look at the UN region level
+#### Lets look at the UN region level
 ```{r fig.align='center', fig.width = 15, fig.height = 10, echo=FALSE, warning=FALSE, message=F}
 
     
@@ -158,7 +158,7 @@ Now lets check how well the benchmark proportions match the full dataset proport
 
 ```
 
-## Lets look at the UN Subregion level
+#### Lets look at the UN Subregion level
 ```{r fig.align='center', fig.width = 15, fig.height = 10, echo=FALSE, warning=FALSE, message=F}
 
     
@@ -192,7 +192,7 @@ Now lets check how well the benchmark proportions match the full dataset proport
 
 ```
 
-## Now Finally the Country Code level, except divided by subregion
+#### Now Finally the Country Code level, except divided by subregion
 ```{r fig.align='center', fig.width = 15, fig.height = 10, echo=FALSE, warning=FALSE, message=F}
 
     
