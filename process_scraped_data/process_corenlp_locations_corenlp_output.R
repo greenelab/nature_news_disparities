@@ -3,9 +3,12 @@ require(data.table)
 require(here)
 
 proj_dir = here()
-source(paste(proj_dir, "/utils/scraper_processing_utils.R", sep=""))
+source(file.path(proj_dir, "/utils/scraper_processing_utils.R"))
 
-
+#' Read in the location informations from the coreNLP JSON output
+#'
+#' @param corenlp_output_dir The directory containing all JSON result files, one per article
+#' @return a dataframe of the location information
 read_result_files <- function(corenlp_output_dir){
     
     json_res_files = list.files(corenlp_output_dir, pattern=".txt.json", full.names = TRUE)

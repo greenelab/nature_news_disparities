@@ -25,6 +25,11 @@ gender = c(NA, NA, NA, NA, NA,
 
 pronouns_df = data.frame(pronouns, gender)
 
+#' Format string version of a name
+#'
+#' @param in_str, string; a name
+#' @return format_str, string; formatted name 
+#' (no white space, no non-letter characters)
 format_name_str <- function(in_str){
     require("stringr")
 
@@ -53,8 +58,16 @@ format_name_str <- function(in_str){
     # remove trailing white space
     format_str = trimws(format_str)
 
+    return(format_str)
+
 }
 
+#' Given a query string, return closest string in the
+#' vector of reference strings (no penalty for deletion)
+#'
+#' @param key_str, a query string 
+#' @param str_vec, a string vector
+#' @return string, a string from str_vec that has closest distance to key_str
 get_matched_string <- function(key_str, str_vec){
     require("stringdist")
 
@@ -66,6 +79,10 @@ get_matched_string <- function(key_str, str_vec){
 
 }
 
+#' get all named entities found in coreNLP output JSON
+#'
+#' @param json_res, JSON object that was output from coreNLP
+#' @return dataframe of all named entities in json_res
 get_ner <- function(json_res){
 
     # get named entities
@@ -77,10 +94,13 @@ get_ner <- function(json_res){
     return(ner_df)
 }
 
+#' read in and return the reference country information
+#'
+#' @return dataframe of all reference country information
 get_country_info <- function(){
 
     # now get the UN region info
-    country_file = paste(ref_data_dir, "cdh_country_codes.txt", sep="")
+    country_file = file.path(ref_data_dir, "cdh_country_codes.txt")
     if(!file.exists(country_file)){
         stop("cdh_country_codes file not found, please run setup.sh to get it")
     }
@@ -97,6 +117,14 @@ get_country_info <- function(){
     return(country_df)
 }
 
+#' get the OSM location information for all 
+#' organization, country, or state/province NERs 
+#' identified in corenLP JSON output.
+#' OSM location information first comes from the cache, 
+#' if not found it will query the online database
+#'
+#' @param json_res, JSON object that was output from coreNLP
+#' @return dataframe of all OSM information for each location NER
 get_osm_locations <- function(json_res){
 
     # get named entities --locations
@@ -135,6 +163,14 @@ get_osm_locations <- function(json_res){
 
 }
 
+
+#' get all individual names from coreNLP output
+#' The names either come from NERs or coref.
+#' Partial names are also matched to full names
+#' using the function get_matched_string
+#' 
+#' @param json_res, JSON object that was output from coreNLP
+#' @return dataframe of all the name information and a first guess at gender
 get_persons <- function(json_res){
 
     # get named entities --names
@@ -217,6 +253,10 @@ get_persons <- function(json_res){
 }
 
 
+#' format query into OSM-appropriate URL query
+#' 
+#' @param single_query, string to query OSM
+#' @return string, url
 url_nominatim_search <- function(single_query) {
     # this code is augmented from 
     # https://towardsdatascience.com/breaking-down-geocoding-in-r-a-complete-guide-1d0f8acd0d4b
@@ -239,6 +279,10 @@ url_nominatim_search <- function(single_query) {
 }
 
 
+#' private internal method that queries OSM
+#' 
+#' @param curr_q, string to query OSM
+#' @return OSM JSON response
 internal_osm_query <- function(curr_q){
 
     url_search = url_nominatim_search(curr_q)
@@ -259,6 +303,14 @@ internal_osm_query <- function(curr_q){
 }
 
 
+#' public method that makes a single query to OSM.
+#' This method takes into account all OSM query guidelines
+#' It first checks the cache for the query,
+#' if it is not there then it will query OSM and 
+#' update the cache
+#' 
+#' @param curr_q, string to query OSM
+#' @return dataframe result from OSM with formatted location data
 single_osm_query <- function(curr_q){
 
     # we need to follow OSM quidelines
@@ -269,7 +321,7 @@ single_osm_query <- function(curr_q){
     require(tmaptools)
 
     # make sure query is not in cache
-    cache_file = paste(ref_data_dir, "/osm_cache.tsv", sep="")
+    cache_file = file.path(ref_data_dir, "/osm_cache.tsv")
     if(!file.exists(cache_file)){
         stop("osm_cache file not found, file should be in git, 
                 you must download this before querying locations")
@@ -330,7 +382,7 @@ single_osm_query <- function(curr_q){
 
     # append to the cache
     cache_df = rbind(cache_df, resp_df)
-    cache_file = paste(ref_data_dir, "/osm_cache.tsv", sep="")
+    cache_file = file.path(ref_data_dir, "/osm_cache.tsv")
     write.table(cache_df, cache_file, sep="\t", quote=F, row.names=F)
 
     Sys.sleep(1)
@@ -340,6 +392,14 @@ single_osm_query <- function(curr_q){
 
 }
 
+#' public method that makes multiple queries to OSM.
+#' This method takes into account all OSM query guidelines
+#' It first checks the cache for the query,
+#' if it is not there then it will query OSM and 
+#' update the cache
+#' 
+#' @param query_vec, vector of strings to query OSM
+#' @return dataframe result from OSM with formatted location data
 batch_osm_query <- function(query_vec){
 
     # query one at a time and append together
@@ -356,6 +416,14 @@ batch_osm_query <- function(query_vec){
 
 }
 
+#' private method that runs the first population of the OSM
+#' cache. 
+#' This method should not be run by users since they 
+#' should always have a populated cache.
+#' 
+#' @param in_dir, full location of folder that contains all location tables
+#' from pipeline step 4. Files must contain the string location_table_raw
+#' in the name
 initial_osm_query <- function(in_dir) {
 
     # this method will just populate the cache with any locations
@@ -393,18 +461,25 @@ initial_osm_query <- function(in_dir) {
     freq_locs = as.data.frame(table(all_missing_locs$text))
     colnames(freq_locs)[1] = "query"
 
-    cache_file = paste(ref_data_dir, "/osm_cache.tsv", sep="")
+    cache_file = file.path(ref_data_dir, "/osm_cache.tsv")
     cache_df = data.frame(fread(cache_file))
     freq_locs = merge(freq_locs, cache_df)
     freq_locs = freq_locs[order(freq_locs$Freq, decreasing=T),]
     freq_locs$hand_edited = F
 
-    cache_edit_file = paste(ref_data_dir, "/osm_cache_edited2.tsv", sep="")
+    cache_edit_file = file.path(ref_data_dir, "/osm_cache_edited2.tsv")
     write.table(freq_locs, cache_edit_file, sep="\t", quote=F, row.names=F)
 
 
 }
 
+#' private method that updates the gender cache. 
+#' This method should not be run by users since they 
+#' should always have a fully populated cache.
+#' 
+#' @param in_dir, full location of folder that contains all location tables
+#' from pipeline step 4. Files must contain the string missed_generize_io_names
+#' in the name
 query_genderize_io <- function(in_dir) {
 
     # this method will just populate the cache with any locations
@@ -436,9 +511,9 @@ query_genderize_io <- function(in_dir) {
 
 
     # make sure names weren't missed in the already existing genderize reference files
-    reference_files = paste(ref_data_dir, "/genderize.tsv", sep="")
+    reference_files = file.path(ref_data_dir, "/genderize.tsv")
     ref_df = data.frame(fread(reference_files))
-    reference_files = paste(ref_data_dir, "/genderize_update.tsv", sep="")
+    reference_files = file.path(ref_data_dir, "/genderize_update.tsv")
     ref_update_df = data.frame(fread(reference_files))
     ref_df = rbind(ref_df, ref_update_df)
 
@@ -474,7 +549,7 @@ query_genderize_io <- function(in_dir) {
     ref_update_df = unique(ref_update_df)
 
     # now write it out
-    outfile = paste(ref_data_dir, "/genderize_update.tsv", sep="")
+    outfile = file.path(ref_data_dir, "/genderize_update.tsv")
     write.table(ref_update_df, outfile, sep="\t", quote=F, row.names=F)
 
     # now delete the files
