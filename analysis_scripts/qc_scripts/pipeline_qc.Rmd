@@ -514,7 +514,8 @@ loc_stats_df = data.frame(loc_stats_df)
 #### plotting quote stats
 
 Between pipeline step 3 and 4 we are predicting the genders of speakers using genderize.io.
-So we expect almost exactly the same number of quotes and length of quotes.
+So we expect exactly the same number of quotes and almost exactly the same length of quotes
+(unicode characters + whitespace editing happens in step 4).
 We also expect that the number of UNKNOWN gendered speakers typically decrease,
 and the number of MALE/FEMALE speakers may increase.
 This is not a completely 1:1 measurement. Pipeline level 3 only identifies the 
