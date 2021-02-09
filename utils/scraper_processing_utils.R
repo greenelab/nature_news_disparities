@@ -106,7 +106,11 @@ get_country_info <- function(){
     }
 
     # format country file
-    country_df = data.frame(fread(country_file))
+    country_df = data.frame(fread(country_file, skip=1))
+    colnames(country_df) = c("idx_name", "country_alt_name", "ISO.3166.1.COUNTRY.CHAR.2.CODE",
+                                "ISO.3166.1.COUNTRY.CHAR.3.CODE", "ISO.3166.1.COUNTRY.NUMBER.CODE", 
+                                "FIPS.COUNTRY.CODE", "FIPS.COUNTRY.NAME", "UN.REGION",
+                                "UN.SUB.REGION.NAME", "CDH.ID")
     colnames(country_df)[which(colnames(country_df) == "FIPS.COUNTRY.NAME")] = "country"
     colnames(country_df)[which(colnames(country_df) == "ISO.3166.1.COUNTRY.CHAR.2.CODE")] = "address.country_code"
     colnames(country_df)[which(colnames(country_df) == "UN.REGION")] = "un_region"
