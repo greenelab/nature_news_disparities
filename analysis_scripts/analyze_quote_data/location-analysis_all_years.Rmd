@@ -67,7 +67,7 @@ head(bm_loc_df)
 Now we read in the full data for the same years.
 ```{r}
 
-# read in the full year quote table for 2010, 2015, and 2020
+# read in the full year quote table for 2010, 2015-2020
 full_loc_df = NA
 for(curr_year in c(2010, 2015:2020)){
     loc_file = paste(proj_dir, 
@@ -239,7 +239,10 @@ exact consistency between the benchmark and total data sets.
 
 ### Compare locations over all years
 
-Now lets see the proportion of articles that mention each UN Subregion.
+Now lets see the proportion of articles on the full dataset that mention each UN Subregion.
+This is shown in the next 2 plots: the top plot is all UN subregions and the bottom plot 
+removes the Northern American and Northern Europe subregions in order to get a 
+clearer look at the change in other subregions.
 
 ```{r fig.align='center', fig.width = 15, fig.height = 10, echo=FALSE, warning=FALSE, message=F}
 

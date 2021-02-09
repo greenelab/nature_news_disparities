@@ -4,10 +4,14 @@ library(dplyr)
 
 
 proj_dir = here()
-source(paste(proj_dir, "/utils/scraper_processing_utils.R", sep=""))
+source(file.path(proj_dir, "/utils/scraper_processing_utils.R"))
 
 
-
+#' Read in the quote information from processed coreNLP TSV output
+#'
+#' @param corenlp_file The processed coreNLP output TSV file.
+#' Expected column names are full_name, gender, and quote
+#' @return a dataframe of the quote information
 read_corenlp_quote_files <- function(corenlp_file){
     
     corenlp_df = data.frame(fread(corenlp_file, header=T, quote=""))
@@ -23,6 +27,11 @@ read_corenlp_quote_files <- function(corenlp_file){
     return(corenlp_df)
 }
 
+#' Read in the benchmark quote information from processed coreNLP TSV output
+#'
+#' @param gold_file The hand-processed coreNLP output TSV file.
+#' Expected column names are full_name, gender, quote
+#' @return a dataframe of the benchmark quote information
 read_benchmark_quote_file <- function(gold_file){
     
     gold_df = data.frame(fread(gold_file, header=T, quote=FALSE))
@@ -34,7 +43,11 @@ read_benchmark_quote_file <- function(gold_file){
 
 }
 
-
+#' Read in the location information from processed coreNLP TSV output
+#'
+#' @param corenlp_file The processed coreNLP output TSV file.
+#' Expected column names are address.country_code, country, un_region, and un_subregion
+#' @return a dataframe of the location information
 read_corenlp_location_files <- function(corenlp_file){
     
     corenlp_df = data.frame(fread(corenlp_file, header=T))
@@ -56,6 +69,11 @@ read_corenlp_location_files <- function(corenlp_file){
     return(corenlp_df)
 }
 
+#' Read in the benchmark location information from processed coreNLP TSV output
+#'
+#' @param bm_loc_file The  hand-processed coreNLP output TSV file.
+#' Expected column names are address.country_code, country, un_region, and un_subregion
+#' @return a dataframe of the benchmark location information
 read_benchmark_location_file <- function(bm_loc_file){
     
     gold_df = data.frame(fread(bm_loc_file, header=T))
@@ -67,92 +85,3 @@ read_benchmark_location_file <- function(bm_loc_file){
 
 }
 
-
-make_comparison <- function(gold_df, res_df){
-    
-    # join the df to make comparison
-    compare_df = merge(gold_df, res_df, by=c("file_id", "quote"), all.x=T)
-    
-    #check if the predicted speaker is contained within the true speaker
-    speaker_idx = which(colnames(compare_df) == "est_speaker")
-    true_speaker_idx = which(colnames(compare_df) == "true_speaker")
-    speaker_match = apply(compare_df, 1, 
-                          function(x) grepl(x[speaker_idx], 
-                                            x[true_speaker_idx], 
-                                            fixed=T)) 
-    
-    compare_df$is_speaker_correct = speaker_match
-
-
-
-    gender_idx = which(colnames(compare_df) == "est_gender")
-    true_gender_idx = which(colnames(compare_df) == "true_gender")
-    gender_match = apply(compare_df, 1, 
-                        function(x) x[gender_idx] == x[true_gender_idx]) 
-    
-    compare_df$is_gender_correct = gender_match
-  
-    return(compare_df)
-    
-}
-
-evaluate_gender_speaker <- function(compare_df){
-
-    eval_df = subset(compare_df, !is.na(true_gender))
-    eval_df = subset(eval_df, true_gender!="NOT_CLEAR")
-    
-    # overall accuracy
-    overall_gender_acc = sum(eval_df$is_gender_correct) / nrow(eval_df)
-    
-    ## get per DOC stats
-    # perdocument accuracy
-    per_doc_acc = eval_df %>%
-                    group_by(file_id) %>%
-                    summarize(acc = sum(is_gender_correct) / length(is_gender_correct))
-    per_doc_acc = data.frame(per_doc_acc)
-    
-}
-
-evaluate_speaker_attrib <- function(compare_df, outfile){
-    
-    eval_df = subset(compare_df, !is.na(true_speaker))
-    eval_df = subset(eval_df, true_speaker!="NOT_CLEAR")
-    
-    # overall accuracy
-    overall_speaker_acc = sum(eval_df$is_speaker_correct) / nrow(eval_df)
-    
-    ## get per DOC stats
-    # perdocument accuracy
-    per_doc_acc = eval_df %>%
-                    group_by(file_id) %>%
-                    summarize(acc = sum(is_speaker_correct) / length(is_speaker_correct))
-    per_doc_acc = data.frame(per_doc_acc)
-    
-    # document stats
-    num_quotes = data.frame(table(eval_df$file_id))
-    colnames(num_quotes) = c("file_id", "num_quotes")
-    per_doc_acc = merge(per_doc_acc, num_quotes)
-    
-    
-}
-
-basic_doc_stats <- function(gold_df, year_idx_file){
-
-
-    eval_df = subset(gold_df, !is.na(true_gender))
-    eval_df = subset(eval_df, true_gender!="NOT_CLEAR")
-
-
-    year_df = data.frame(fread(year_idx_file))
-    eval_df = merge(year_df, eval_df)
-
-    ## get per year stats
-    # perdocument accuracy
-    per_year_gender = eval_df %>%
-                    group_by(year) %>%
-                    summarize(percent_male = sum(true_gender=="MALE") / length(true_gender))
-    per_year_gender = data.frame(per_year_gender)
-
-
-
-}
