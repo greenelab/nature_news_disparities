@@ -185,7 +185,7 @@ head(bm_loc_df)
 head(raw_loc_df)
 ```
 
-Similar to before we will match columns baed on their names, in `raw_loc_df` it has `est_` columns and in `bm_loc_df` is has matching `true_` columns
+Similar to before we will match columns based on their names, in `raw_loc_df` it has `est_` columns and in `bm_loc_df` is has matching `true_` columns
 
 Now lets first look at the benchmark data
 ```{r echo=F, fig.width=15}
@@ -278,7 +278,10 @@ First let's take a look at the prediction errors for UN Subregions
     missing_levels = setdiff(all_levels, levels(compare_df$true_un_subregion))
     levels(compare_df$true_un_subregion) = 
         c(levels(compare_df$true_un_subregion), missing_levels)
-
+    compare_df$true_un_subregion = factor(compare_df$true_un_subregion, 
+                                          levels=levels(compare_df$est_un_subregion))
+    
+    
     confusion_matrix <- confusionMatrix(compare_df$est_un_subregion, 
                                         compare_df$true_un_subregion)
     gg_conf = prettyConfused(compare_df$true_un_subregion, compare_df$est_un_subregion, text.scl = 5)
@@ -299,6 +302,10 @@ are at least strongly correlated.
 
 ```{r  echo=FALSE,  out.width="50%", warning=FALSE, message=F}
 
+    rsq <- function (x, y) cor(x, y) ^ 2
+    rmse <- function (x, y) sqrt(mean((x-y) ^ 2))
+
+
     pred_freq = as.data.frame(table(compare_df$est_country_code))
     colnames(pred_freq) = c("country", "Pred_Freq")
 
@@ -306,22 +313,32 @@ are at least strongly correlated.
     colnames(true_freq) = c("country", "True_Freq")
 
     freq_df = merge(pred_freq, true_freq, all=T)
-    freq_df = subset(freq_df, !country %in% c("NOT_COUNTRY", "NOT_FOUND"))
+    freq_df = subset(freq_df, !country %in% c("NOT_COUNTRY", "NOT_FOUND", 
+                                              "NAN", "NONE", "MULTI"))
+    freq_df[is.na(freq_df)] = 0
     
+    rsq_tot = round(rsq(freq_df$Pred_Freq, freq_df$True_Freq), 2)
+    rmse_tot = round(rmse(freq_df$Pred_Freq, freq_df$True_Freq), 2)
     gg_corr_all = ggplot(freq_df, aes(x=Pred_Freq, y=True_Freq, label=country)) +
                 geom_point() + geom_abline(intercept = 0, slope = 1) +
                 theme_bw() + geom_text_repel() +
                 xlab("Predicted Frequency") + 
                 ylab("True Frequency") +
-                ggtitle("Pred. vs. True Country Frequencies")
-                
-     gg_corr_subset = ggplot(subset(freq_df, Pred_Freq < 20),
+                ggtitle(paste("Pred. vs. True Country Frequencies, R-sq:", rsq_tot,
+                              "RMSE:", rmse_tot))
+    
+    freq_df = subset(freq_df, Pred_Freq < 20)
+    rsq_sub = round(rsq(freq_df$Pred_Freq, freq_df$True_Freq), 2)
+    rmse_sub = round(rmse(freq_df$Pred_Freq, freq_df$True_Freq), 2)
+    gg_corr_subset = ggplot(freq_df,
                              aes(x=Pred_Freq, y=True_Freq, label=country)) +
                 geom_point() + geom_abline(intercept = 0, slope = 1) +
                 theme_bw() + geom_text_repel() +
                 xlab("Predicted Frequency") + 
                 ylab("True Frequency") +
-                ggtitle("Excluding top 2: Pred. vs. True Country Frequencies")
+                ggtitle(paste("Excluding top 2: Pred. vs. True Country Frequencies, R-sq:",
+                              rsq_sub,
+                              "RMSE:", rmse_sub))
      
        gg_corr_all    
        gg_corr_subset
@@ -341,21 +358,28 @@ Let's look at if subregions is any better/worse:
     freq_df = subset(freq_df, un_subregion != "NO_EST")
     freq_df[is.na(freq_df)] = 0
     
+    rsq_tot = round(rsq(freq_df$Pred_Freq, freq_df$True_Freq), 2)
+    rmse_tot = round(rmse(freq_df$Pred_Freq, freq_df$True_Freq), 2)
     gg_corr_all = ggplot(freq_df, aes(x=Pred_Freq, y=True_Freq, label=un_subregion)) +
                 geom_point() + geom_abline(intercept = 0, slope = 1) +
                 theme_bw() + geom_text_repel() +
                 xlab("Predicted Frequency") + 
                 ylab("True Frequency") +
-                ggtitle("Pred. vs. True UN Subregion Frequencies")
-                
-     gg_corr_subset = ggplot(subset(freq_df, Pred_Freq < 60),
+                ggtitle(paste("Pred. vs. True UN Subregion Frequencies, R-sq:", rsq_tot,
+                              "RMSE:", rmse_tot))
+           
+    freq_df = subset(freq_df, Pred_Freq < 60)
+    rsq_sub = round(rsq(freq_df$Pred_Freq, freq_df$True_Freq), 2)
+    rmse_sub = round(rmse(freq_df$Pred_Freq, freq_df$True_Freq), 2)
+    gg_corr_subset = ggplot(freq_df,
                              aes(x=Pred_Freq, y=True_Freq, label=un_subregion)) +
                 geom_point() + geom_abline(intercept = 0, slope = 1) +
                 theme_bw() + geom_text_repel() +
                 xlab("Predicted Frequency") + 
                 ylab("True Frequency") +
-                ggtitle("Excluding top 1: Pred. vs. True  UN Subregion Frequencies")
-     
+                ggtitle(paste("Excluding top 1: Pred. vs. True  UN Subregion Frequencies, R-sq:",
+                              rsq_sub,
+                              "RMSE:", rmse_sub))
        gg_corr_all    
        gg_corr_subset
 
@@ -375,22 +399,30 @@ Now, finally large regions:
     freq_df = subset(freq_df, un_region != "NO_EST")
     freq_df[is.na(freq_df)] = 0
     
+    rsq_tot = round(rsq(freq_df$Pred_Freq, freq_df$True_Freq), 2)
+    rmse_tot = round(rmse(freq_df$Pred_Freq, freq_df$True_Freq), 2)
     gg_corr_all = ggplot(freq_df, aes(x=Pred_Freq, y=True_Freq, label=un_region)) +
                 geom_point() + geom_abline(intercept = 0, slope = 1) +
                 theme_bw() + geom_text_repel() +
                 xlab("Predicted Frequency") + 
                 ylab("True Frequency") +
                 xlim(c(0,110)) + ylim(c(0,110)) + 
-                ggtitle("Pred. vs. True UN Region Frequencies")
-                
-     gg_corr_subset = ggplot(subset(freq_df, Pred_Freq < 60),
+                ggtitle(paste("Pred. vs. True UN Region Frequencies, R-sq:", rsq_tot,
+                              "RMSE:", rmse_tot))
+
+    freq_df = subset(freq_df, Pred_Freq < 60)
+    rsq_sub = round(rsq(freq_df$Pred_Freq, freq_df$True_Freq), 2)
+    rmse_sub = round(rmse(freq_df$Pred_Freq, freq_df$True_Freq), 2)
+    gg_corr_subset = ggplot(freq_df,
                              aes(x=Pred_Freq, y=True_Freq, label=un_region)) +
                 geom_point() + geom_abline(intercept = 0, slope = 1) +
                 theme_bw() + geom_text_repel() +
                 xlab("Predicted Frequency") + 
                 ylab("True Frequency") +
                 xlim(c(0,20)) + ylim(c(0,20)) + 
-                ggtitle("Excluding top Europe+Americas: Pred. vs. True  UN Region Frequencies")
+                ggtitle(paste("Excluding top Europe+Americas: \nPred. vs. True  UN Region Frequencies, R-sq:",
+                              rsq_sub,
+                              "RMSE:", rmse_sub))
      
        gg_corr_all    
        gg_corr_subset

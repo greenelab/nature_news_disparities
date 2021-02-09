@@ -115,12 +115,6 @@ raw_loc_file = paste(proj_dir,
 raw_loc_df = read_corenlp_location_files(raw_loc_file)
 ```
 
-    ## Warning in fread(country_file): Detected 12 column names but the data has 13
-    ## columns (i.e. invalid file). Added 1 extra default column name for the first
-    ## column which is guessed to be row names or an index. Use setnames() afterwards
-    ## if this guess is not correct, or fix the file write command that created the
-    ## file to create a valid file.
-
 The location data tries to find an organization, state, province, or country. After this it tries to tag it to a canonically named country, and UN defined regions. Let's take a look.
 
 ``` r
@@ -175,7 +169,7 @@ head(raw_loc_df)
     ## 5   Australia       Oceania Australia and New Zealand
     ## 6   Australia       Oceania Australia and New Zealand
 
-Similar to before we will match columns baed on their names, in `raw_loc_df` it has `est_` columns and in `bm_loc_df` is has matching `true_` columns
+Similar to before we will match columns based on their names, in `raw_loc_df` it has `est_` columns and in `bm_loc_df` is has matching `true_` columns
 
 Now lets first look at the benchmark data ![](benchmark_analysis_files/figure-markdown_github/unnamed-chunk-9-1.png)![](benchmark_analysis_files/figure-markdown_github/unnamed-chunk-9-2.png)![](benchmark_analysis_files/figure-markdown_github/unnamed-chunk-9-3.png)
 
