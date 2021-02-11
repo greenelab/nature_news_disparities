@@ -30,7 +30,15 @@ Now lets do a quick plot of article specific stats. So far in the pipeline, we o
 
 ## QC pipeline step 2: Check processed scrapy output
 
+    ## ### 2005 has a consistent number of articles
+    ## ### 2006 has a consistent number of articles
+    ## ### 2007 has a consistent number of articles
+    ## ### 2008 has a consistent number of articles
     ## ### 2010 has a consistent number of articles
+    ## ### 2011 has a consistent number of articles
+    ## ### 2012 has a consistent number of articles
+    ## ### 2013 has a consistent number of articles
+    ## ### 2014 has a consistent number of articles
     ## ### 2015 has a consistent number of articles
     ## ### 2016 has a consistent number of articles
     ## ### 2017 has a consistent number of articles
@@ -44,8 +52,24 @@ Now lets do a quick plot of article specific stats. So far in the pipeline, we o
 
 ## QC pipeline step 3: Check coreNLP output
 
+    ## [1] "2005"
+    ## ### 2005 has a consistent number of articles
+    ## [1] "2006"
+    ## ### 2006 has a consistent number of articles
+    ## [1] "2007"
+    ## ### 2007 has a consistent number of articles
+    ## [1] "2008"
+    ## ### 2008 has a consistent number of articles
     ## [1] "2010"
     ## ### 2010 has a consistent number of articles
+    ## [1] "2011"
+    ## ### 2011 has a consistent number of articles
+    ## [1] "2012"
+    ## ### 2012 has a consistent number of articles
+    ## [1] "2013"
+    ## ### 2013 has a consistent number of articles
+    ## [1] "2014"
+    ## ### 2014 has a consistent number of articles
     ## [1] "2015"
     ## ### 2015 has a consistent number of articles
     ## [1] "2016"
@@ -67,7 +91,7 @@ Now lets do a quick plot of article specific stats. So far in the pipeline, we o
 
 #### plotting quote stats
 
-Between pipeline step 3 and 4 we are predicting the genders of speakers using genderize.io. So we expect almost exactly the same number of quotes and length of quotes. We also expect that the number of UNKNOWN gendered speakers typically decrease, and the number of MALE/FEMALE speakers may increase. This is not a completely 1:1 measurement. Pipeline level 3 only identifies the number of male/female/unknown named entities, there is no gender based quote attribution checked at this stage. Quote attribution is in step 4.
+Between pipeline step 3 and 4 we are predicting the genders of speakers using genderize.io. So we expect exactly the same number of quotes and almost exactly the same length of quotes (unicode characters + whitespace editing happens in step 4). We also expect that the number of UNKNOWN gendered speakers typically decrease, and the number of MALE/FEMALE speakers may increase. This is not a completely 1:1 measurement. Pipeline level 3 only identifies the number of male/female/unknown named entities, there is no gender based quote attribution checked at this stage. Quote attribution is in step 4.
 
 <img src="pipeline_qc_files/figure-markdown_github/unnamed-chunk-11-1.png" width="50%" /><img src="pipeline_qc_files/figure-markdown_github/unnamed-chunk-11-2.png" width="50%" /><img src="pipeline_qc_files/figure-markdown_github/unnamed-chunk-11-3.png" width="50%" /><img src="pipeline_qc_files/figure-markdown_github/unnamed-chunk-11-4.png" width="50%" /><img src="pipeline_qc_files/figure-markdown_github/unnamed-chunk-11-5.png" width="50%" />
 

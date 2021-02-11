@@ -183,7 +183,7 @@ for(curr_dir in pipeline_2_dir){
     pipeline_2_files = list.files(curr_dir, full.names = T)
     pipeline_2_files_body = grep("*fileID*|*file_list*", pipeline_2_files, value=T,
                                  invert=T)
-    
+
     # make sure reference files are consistent with the previous pipeline step
     fileID_ref = grep("fileID", pipeline_2_files, value=T)
     file_list_ref = grep("file_list", pipeline_2_files, value=T)
@@ -270,6 +270,7 @@ pipeline_3_dir = paste(proj_dir,
                     "/data/scraped_data/", sep="")
 pipeline_3_dir = list.dirs(pipeline_3_dir, full.names = T)
 pipeline_3_dir = grep("*coreNLP_output*", pipeline_3_dir, value=T)
+
 article_stats_step3_df = NA
 for(curr_dir in pipeline_3_dir){
     

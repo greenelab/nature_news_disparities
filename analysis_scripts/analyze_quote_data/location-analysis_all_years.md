@@ -30,15 +30,7 @@ bm_loc_file = paste(proj_dir,
                     sep="")
 
 bm_loc_df = read_corenlp_location_files(bm_loc_file)
-```
 
-    ## Warning in fread(country_file): Detected 12 column names but the data has 13
-    ## columns (i.e. invalid file). Added 1 extra default column name for the first
-    ## column which is guessed to be row names or an index. Use setnames() afterwards
-    ## if this guess is not correct, or fix the file write command that created the
-    ## file to create a valid file.
-
-``` r
 # add the year annotation
 year_idx_file = paste(proj_dir, 
                 "/data/benchmark_data/coreNLP_input/fileID_year.tsv", 
@@ -75,9 +67,9 @@ head(bm_loc_df)
 Now we read in the full data for the same years.
 
 ``` r
-# read in the full year quote table for 2010, 2015, and 2020
+# read in the full year quote table for 2010, 2015-2020
 full_loc_df = NA
-for(curr_year in c(2010, 2015:2020)){
+for(curr_year in c(2005:2006, 2008, 2010:2020)){
     loc_file = paste(proj_dir, 
                     "/data/scraped_data/location_table_raw_", curr_year, ".tsv", 
                     sep="")
@@ -86,51 +78,6 @@ for(curr_year in c(2010, 2015:2020)){
 
     full_loc_df = rbind(full_loc_df, loc_df)
 }
-```
-
-    ## Warning in fread(country_file): Detected 12 column names but the data has 13
-    ## columns (i.e. invalid file). Added 1 extra default column name for the first
-    ## column which is guessed to be row names or an index. Use setnames() afterwards
-    ## if this guess is not correct, or fix the file write command that created the
-    ## file to create a valid file.
-
-    ## Warning in fread(country_file): Detected 12 column names but the data has 13
-    ## columns (i.e. invalid file). Added 1 extra default column name for the first
-    ## column which is guessed to be row names or an index. Use setnames() afterwards
-    ## if this guess is not correct, or fix the file write command that created the
-    ## file to create a valid file.
-
-    ## Warning in fread(country_file): Detected 12 column names but the data has 13
-    ## columns (i.e. invalid file). Added 1 extra default column name for the first
-    ## column which is guessed to be row names or an index. Use setnames() afterwards
-    ## if this guess is not correct, or fix the file write command that created the
-    ## file to create a valid file.
-
-    ## Warning in fread(country_file): Detected 12 column names but the data has 13
-    ## columns (i.e. invalid file). Added 1 extra default column name for the first
-    ## column which is guessed to be row names or an index. Use setnames() afterwards
-    ## if this guess is not correct, or fix the file write command that created the
-    ## file to create a valid file.
-
-    ## Warning in fread(country_file): Detected 12 column names but the data has 13
-    ## columns (i.e. invalid file). Added 1 extra default column name for the first
-    ## column which is guessed to be row names or an index. Use setnames() afterwards
-    ## if this guess is not correct, or fix the file write command that created the
-    ## file to create a valid file.
-
-    ## Warning in fread(country_file): Detected 12 column names but the data has 13
-    ## columns (i.e. invalid file). Added 1 extra default column name for the first
-    ## column which is guessed to be row names or an index. Use setnames() afterwards
-    ## if this guess is not correct, or fix the file write command that created the
-    ## file to create a valid file.
-
-    ## Warning in fread(country_file): Detected 12 column names but the data has 13
-    ## columns (i.e. invalid file). Added 1 extra default column name for the first
-    ## column which is guessed to be row names or an index. Use setnames() afterwards
-    ## if this guess is not correct, or fix the file write command that created the
-    ## file to create a valid file.
-
-``` r
 full_loc_df = full_loc_df[-1,]
 
 full_loc_df = subset(full_loc_df, est_un_region != "" & 
@@ -141,20 +88,20 @@ full_loc_df = subset(full_loc_df, est_un_region != "" &
 head(full_loc_df)
 ```
 
-    ##   est_country_code            file_id                              text
-    ## 2               ae news.2010.647.html rochester institute of technology
-    ## 3               ae news.2010.491.html rochester institute of technology
-    ## 4               ae       468609a.html                               ias
-    ## 5               af       464014b.html                       afghanistan
-    ## 6               af news.2010.684.html                       afghanistan
-    ## 7               af       465990a.html                       afghanistan
-    ##            ner          est_country est_un_region est_un_subregion year
-    ## 2 ORGANIZATION United Arab Emirates          Asia     Western Asia 2010
-    ## 3 ORGANIZATION United Arab Emirates          Asia     Western Asia 2010
-    ## 4 ORGANIZATION United Arab Emirates          Asia     Western Asia 2010
-    ## 5      COUNTRY          Afghanistan          Asia    Southern Asia 2010
-    ## 6      COUNTRY          Afghanistan          Asia    Southern Asia 2010
-    ## 7      COUNTRY          Afghanistan          Asia    Southern Asia 2010
+    ##   est_country_code            file_id        text     ner est_country
+    ## 2               af            437302a afghanistan COUNTRY Afghanistan
+    ## 3               af     050228-17.html afghanistan COUNTRY Afghanistan
+    ## 4               am     050221-17.html     armenia COUNTRY     Armenia
+    ## 5               ao     050531-12.html      angola COUNTRY      Angola
+    ## 6               ao  news050627-9.html      angola COUNTRY      Angola
+    ## 7               ao news050328-11.html      angola COUNTRY      Angola
+    ##   est_un_region est_un_subregion year
+    ## 2          Asia    Southern Asia 2005
+    ## 3          Asia    Southern Asia 2005
+    ## 4          Asia     Western Asia 2005
+    ## 5        Africa    Middle Africa 2005
+    ## 6        Africa    Middle Africa 2005
+    ## 7        Africa    Middle Africa 2005
 
 Now we join the tables together for comparison.
 
@@ -229,6 +176,6 @@ Now lets check how well the benchmark proportions match the full dataset proport
 
 ### Compare locations over all years
 
-Now lets see the proportion of articles that mention each UN Subregion.
+Now lets see the proportion of articles on the full dataset that mention each UN Subregion. This is shown in the next 2 plots: the top plot is all UN subregions and the bottom plot removes the Northern American and Northern Europe subregions in order to get a clearer look at the change in other subregions.
 
 <img src="location-analysis_all_years_files/figure-markdown_github/unnamed-chunk-7-1.png" style="display: block; margin: auto;" /><img src="location-analysis_all_years_files/figure-markdown_github/unnamed-chunk-7-2.png" style="display: block; margin: auto;" />

@@ -69,7 +69,7 @@ Now we read in the full data for the same years.
 
 # read in the full year quote table for 2010, 2015-2020
 full_loc_df = NA
-for(curr_year in c(2010, 2015:2020)){
+for(curr_year in c(2005:2006, 2008, 2010:2020)){
     loc_file = paste(proj_dir, 
                     "/data/scraped_data/location_table_raw_", curr_year, ".tsv", 
                     sep="")
