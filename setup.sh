@@ -5,7 +5,8 @@
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 CORENLP_VERSION='4.2.0'
-
+SCOPUS_API_KEY='665c78c68c008efa0d3cbee3b4c60f86'
+SPRINGER_API_KEY='aa526f60fdf49130aa089a4728046233'
 
 # check for coreNLP
 echo "Checking for stanford-corenlp-${CORENLP_VERSION}..."

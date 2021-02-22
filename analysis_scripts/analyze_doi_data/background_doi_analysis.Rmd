@@ -1,0 +1,117 @@
+---
+title: "background_doi_analysis"
+author: "Natalie Davidson"
+date: "2/19/2021"
+output: rmarkdown::github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+require(data.table)
+require(here)
+require(ggplot2)
+require(caret)
+require(ggrepel)
+
+proj_dir = here()
+source(paste(proj_dir, "/analysis_scripts/analysis_utils.R", sep=""))
+source(paste(proj_dir, "/utils/plotting_utils.R", sep=""))
+```
+
+## Springer DOI background analysis
+
+This document looks at the background rate of gender & location of journal articles from Springer
+
+1) `springer_country_cache` has the number of journal articles from a particular country between 2005:2020
+2) `XX` contains the gender information for articles in Springers that were cited in at least one Nature-news related article
+
+
+
+## Look at breakdown of country articles
+
+We would like to make sure that our benchmark data is representative of our complete dataset, so let's look at some quote stats to make sure.
+
+### reading in the quote data
+
+First we read in the benchmark data
+```{r}
+
+# get the project directory, everything is set relative to this
+proj_dir = here()
+
+# read in the Springer country reference file
+springer_country_file = paste(proj_dir, 
+                    "/data/reference_data/springer_country_cache.tsv", 
+                    sep="")
+
+country_df =  data.frame(fread(springer_country_file))
+
+# add the country annotation
+country_ref_df = get_country_info()
+country_df = merge(country_df, country_ref_df)
+
+
+head(country_df)
+
+
+```
+
+### compare countries across years
+
+
+
+#### Lets look at UN Subregion
+```{r fig.align='center', fig.width = 15, fig.height = 10, echo=FALSE, warning=FALSE, message=F}
+
+    
+    num_articles = unique(bm_full_loc_df[,c("is_benchmark", "year", 
+                                            "file_id")])
+    num_articles = num_articles %>%
+                    group_by(is_benchmark, year) %>% 
+                    summarize(n())
+    colnames(num_articles) = c("is_benchmark", "year",
+                               "num_total_articles")
+
+    # function for aggregating over the region of interest
+    get_aggr_region <- function(bm_full_loc_df, region_col_id, num_articles){
+        
+        region_df = unique(bm_full_loc_df[,c("is_benchmark", "year", 
+                                            region_col_id, "file_id")])
+        colnames(region_df)[3] = "est_region"
+        region_df = region_df %>%
+                        group_by(is_benchmark, year, est_region) %>% 
+                        summarize(n())
+        colnames(region_df) = c("is_benchmark", "year",
+                                   "est_region", "num_articles")
+        
+        region_df = merge(num_articles, region_df)
+        region_df$prop_mentioned = region_df$num_articles / region_df$num_total_articles
+        
+        # plotting labels
+        region_df$label = region_df$est_region
+        region_df$label[region_df$is_benchmark == "benchmark"] = ""
+        
+        colnames(region_df)[4] = region_col_id
+
+        
+        return(region_df)
+
+    }
+    
+    un_region_df = get_aggr_region(bm_full_loc_df, region_col_id="est_un_region", 
+                                   num_articles)
+    ggplot(un_region_df, aes(x=is_benchmark, y=prop_mentioned, 
+                             color = est_un_region, fill=est_un_region,
+                             label = label)) +
+        geom_point() + geom_line(aes(group=est_un_region)) + 
+        geom_text_repel() + facet_grid(~year) + theme_bw() + 
+        xlab("Year of Article") + 
+        ylab("Fraction Articles with mention of UN Region ") +
+        ggtitle("Proportion of articles with at least 1 mention of a UN Region") + 
+        scale_fill_brewer(palette="Set2") + ylim(c(0, 1.1)) +
+        theme(legend.position = "none")
+    
+    
+
+```

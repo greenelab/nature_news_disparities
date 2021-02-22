@@ -2,11 +2,12 @@
 from collections import defaultdict
 from random import sample, seed
 import scrapy
+import re
 from datetime import datetime
 from nature_news_scraper.spiders import article_crawl
 
 class NewsSpider(scrapy.Spider):
-    name = "target_year_crawl"
+    name = "doi_crawl"
 
     def start_requests(self):
 
@@ -43,29 +44,40 @@ class NewsSpider(scrapy.Spider):
 
     def parse_article(self, response, year=None):
 
-        article_body = response.css('div.article__body.cleared > p::text')
+        import re
 
-        ## 2015
-        if not article_body:
-            article_body = response.css('section#article-body div.main-content.content > p *::text')
+        # get doi's that are in an anchor tag
+        doi_box = response.css('#article-refrences a')
+        href_doi = [x.attrib.get('href') for x in doi_box if 'doi' in x.attrib.get('href', '')]
 
-        ## 2010
-        if not article_body:
-            article_body = response.css('div#content div.entry-content > p *::text')
+        # get doi's that are written in text
+        refbox =  response.css('#article-refrences')
+        doi_re = re.compile(r"doi:10\.[.0-9]+/[^\s<>]+")
+        text_doi = doi_re.findall(" ".join(refbox.getall()))
 
-        
-        ## 2006
-        if not article_body:
-            article_body = response.css('div#content > main > article > div.c-article-body div.c-article-section__content > p *::text')
+        # starting in 2011, format changed
+        if year > 2010:
+            # doi box in anchor tag
+            doi_box = response.css('#references a')
+            href_doi = [x.attrib.get('href') for x in doi_box if 'doi' in x.attrib.get('href', '')]
+            # doi in text, not hyperlinked
+            refbox =  response.css('#references')
+            doi_re_url = [re.sub(r"http[s]?://(dx[./])?doi\.org/", "doi:", x) for x in refbox.getall()]
+            doi_re = re.compile(r"doi:10\.[.0-9]+/[^\s<>]+")
+            text_doi = doi_re.findall(" ".join(doi_re_url))
 
 
-        # format the articles
-        article_body = " ".join(article_body.getall())
-        article_body = article_body.strip("\xa0")
+
+
+        # format the doi's
+        all_doi = set(re.sub(r"http[s]?://(dx[./])?doi\.org/", "doi:", x) for x in href_doi + text_doi)
+        all_doi = set(re.sub(r"[%][2][F]", "/", x) for x in all_doi)
+        doi_str = ", ".join(all_doi)
+        doi_str
 
         yield {
            "file_id": response.url.split("/")[-1],
            "year": year,
-           "body": article_body
+           "dois": doi_str
         }
 

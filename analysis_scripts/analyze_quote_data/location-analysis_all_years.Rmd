@@ -14,6 +14,7 @@ require(ggplot2)
 require(ggrepel)
 require(ggpubr)
 require(caret)
+require(stringr)
 
 proj_dir = here()
 source(paste(proj_dir, "/analysis_scripts/analysis_utils.R", sep=""))
@@ -69,12 +70,12 @@ Now we read in the full data for the same years.
 
 # read in the full year quote table for 2010, 2015-2020
 full_loc_df = NA
-for(curr_year in c(2010, 2015:2020)){
-    loc_file = paste(proj_dir, 
-                    "/data/scraped_data/location_table_raw_", curr_year, ".tsv", 
-                    sep="")
+loc_files = list.files(paste(proj_dir,"/data/scraped_data/", sep=""), full.names = T)
+loc_files = grep("location_table_raw_", loc_files, value=T)
+for(loc_file in loc_files){
+
     loc_df = read_corenlp_location_files(loc_file)
-    loc_df$year = curr_year
+    loc_df$year = str_extract(loc_file, "[1-9][0-9]+") # curr_year
 
     full_loc_df = rbind(full_loc_df, loc_df)
 }
