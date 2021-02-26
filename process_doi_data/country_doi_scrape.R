@@ -7,7 +7,9 @@ require(here)
 proj_dir = here()
 ref_data_dir = paste(proj_dir, "/data/reference_data/", sep = "")
 source(file.path(proj_dir, "/utils/scraper_processing_utils.R"))
+source(file.path(proj_dir, "/process_doi_data/springer_scrape_utils.R"))
 
+## initialize reading in data frame for use in querying
 springer_country_file = file.path(ref_data_dir, "springer_country_map.tsv")
 if(!file.exists(springer_country_file)){
         stop("springer name translations not found, 
@@ -50,27 +52,6 @@ url_springer_country_search <- function(country, year, api_key) {
     return(single_query)
 }
 
-
-#' private internal method that queries springer
-#' 
-#' @param string; URL formatted for springer API
-#' @return OSM JSON response
-internal_springer_query <- function(url_search){
-
-    # block augmented from here: 
-    # https://stackoverflow.com/questions/12193779/how-to-write-trycatch-in-r
-    out <- tryCatch(
-        {
-            fromJSON(getURL(url_search))
-        },
-        error=function(cond) {
-            message(paste("query error:", url_search))
-            # Choose a return value in case of error
-            return(NA)
-        }
-    )    
-    return(out)
-}
 
 
 #' public method that makes a single query to Springer.
@@ -186,3 +167,9 @@ initialize_springer_country_query <- function(api_key){
     return(batch_resp)
 
 }
+
+
+### read in arguments
+args = commandArgs(trailingOnly=TRUE)
+api_key = args[1]
+initialize_springer_country_query(api_key)
