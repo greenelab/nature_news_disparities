@@ -30,3 +30,144 @@ internal_springer_query <- function(url_search){
     )    
     return(out)
 }
+#' public method that formats doi's 
+#' from the scraped data
+#' 
+#' @param doi, string doi from scraped article
+#' @return formatted_doi, string
+process_dois <- function(doi){
+
+    require("stringr")
+    options(useFancyQuotes = FALSE)
+
+
+    # remove PNAS, plos and science journals
+    if(length(grep("http://www.pnas.org_cgi_doi_", doi))!= 0){
+        #doi = str_replace(doi, "http://www.pnas.org_cgi_doi_", "doi:")
+        doi = ""
+    }
+    if(length(grep("http://www.pnas.org/cgi/doi/", doi))!= 0){
+        #doi = str_replace(doi, "http://www.pnas.org/cgi/doi/", "doi:")
+        doi = ""
+    }
+    if(length(grep("science", doi))!= 0){
+        doi = ""
+    }
+    if(length(grep("science", doi))!= 0){
+        doi = ""
+    }
+
+
+
+    # format the string
+
+    # remove quotes
+    if(length(grep("\"", doi, fixed=T))!= 0){
+        doi = str_replace(doi, "\"", "")
+    }
+
+    # because of Api call issues, ignore doi's with < and >
+    if(length(grep("&lt;|&gt;|<|>", doi, fixed=F))!= 0){
+        doi = ""
+    }
+
+    # format scraped code
+    if(length(grep("http://www.nature.com/doifinder/", doi))!= 0){
+        doi = str_replace(doi, "http://www.nature.com/doifinder/", "doi:")
+    }
+    if(length(grep("http://nature.comdoi", doi))!= 0){
+        doi = str_replace(doi, "http://nature.comdoi", "doi:")
+    }
+    if(length(grep("/doifinder/", doi))!= 0){
+        doi = str_replace(doi, "/doifinder/", "doi:")
+    }
+
+    
+    # if the last character is a . replace it
+    if(substr(doi, nchar(doi), nchar(doi)) == "."){
+        doi = substr(doi, 1, nchar(doi)-1)
+    }
+
+    # if the last character is an unmatched ) replace it
+    if(substr(doi, nchar(doi), nchar(doi)) == ")"){
+        str_counter = 0
+        doi_split <- strsplit(doi, "")[[1]]
+        for(idx in doi_split){
+            if(idx == "("){
+                str_counter = str_counter + 1
+            }else if(idx == ")"){
+                str_counter = str_counter - 1
+            }
+        }
+        if(str_counter == -1){
+            doi = substr(doi, 1, nchar(doi)-1)
+        }
+    }
+
+    # if the scraped doi is messed up, we ignore
+    if(length(grep("http", doi))!= 0){
+        doi = ""
+    }
+
+    # if there is a () then this doi has to be quoted
+    if(length(grep("(", doi, fixed=T))!= 0){
+        doi_base = substr(doi, 5, nchar(doi))
+        doi = paste("doi:", dQuote(doi_base), sep="")
+    }
+
+
+    return(doi)
+
+
+}
+
+#' public method that gets all the DOIs from the 
+#' references in scraped articles. 
+#' 
+#' @param ref_dir, directory of JSON files with DOIs from references
+#' @return dataframe of all dois with metadata
+get_ref_dois <- function(ref_dir){
+        
+    json_res_files = list.files(ref_dir, pattern=".json", full.names = TRUE)
+    
+    all_ref_dois = NA
+    for(curr_file in json_res_files){
+
+        print(curr_file)
+        
+        # get file meta data
+        file_id = basename(curr_file)
+        file_year = substr(file_id, 15, 18)
+        file_type = substr(file_id, 20, nchar(file_id)-5)
+        
+        # skip empty files
+        if(file.info(curr_file)$size == 0){
+            next
+        }
+
+        # read and format JSON
+        json_df = data.frame(fromJSON(curr_file))
+        json_df = data.frame(separate_rows(json_df, dois, sep=", "))
+
+        doi_df = json_df
+        doi_df$year = file_year
+        doi_df$type = file_type
+
+        # only get the files with actual dois
+        doi_df = subset(doi_df, dois != "")
+
+        if(nrow(doi_df) != 0){
+            all_ref_dois = rbind(all_ref_dois, doi_df)
+        }
+
+    }
+    all_ref_dois = all_ref_dois[-1,]
+
+    # format 
+    colnames(all_ref_dois)[which(colnames(all_ref_dois) == "dois")] = "doi"
+    all_ref_dois$doi = unlist(lapply(all_ref_dois$doi, process_dois))
+    all_ref_dois = subset(all_ref_dois, doi != "")
+
+
+    return(all_ref_dois)
+}
