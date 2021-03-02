@@ -99,7 +99,8 @@ bm_full_quote_df = rbind(full_quote_df, bm_quote_df)
 ```{r fig.align='center', echo=FALSE, warning=FALSE, message=F}
 
 
-    ggplot(bm_full_quote_df, aes(x=is_benchmark, fill=est_gender)) +
+    ggplot(subset(bm_full_quote_df, year %in% c(2010, 2015, 2020)), 
+           aes(x=is_benchmark, fill=est_gender)) +
         geom_bar(position="fill") + facet_grid(~year) + theme_bw() + 
         xlab("Year of Article") + ylab("Male Quote Percentage") +
         ggtitle("Male Quote Percentage Over Time") + 

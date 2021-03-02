@@ -20,10 +20,10 @@ else
     RScript ${DIR}/cite_author_doi_scrape.R ${SPRINGER_API_KEY} ${REF_DIR}
     RScript ${DIR}/country_doi_scrape.R ${SPRINGER_API_KEY}
 
-    echo "processing Springer API calls"
+    echo "processing Springer/Nature API calls"
+    RScript ${DIR}/process_author_gender.R ${SPRINGER_API_KEY}
+    RScript ${DIR}/process_author_country.R ${SPRINGER_API_KEY}
 
-
-    echo "processing Nature scrape"
 
 
 fi

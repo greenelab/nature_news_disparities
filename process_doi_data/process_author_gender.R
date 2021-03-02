@@ -32,7 +32,8 @@ get_author_gender <- function(unknown_gendered_df){
     names_not_processed = names_processed$author[is.na(names_processed$query_date)]
 
     unknown_gendered_df = merge(unknown_gendered_df, 
-                                unique(names_processed[,c("author", "guessed_gender")]))
+                                unique(names_processed[,c("author", "guessed_gender")]),
+                                all.x=T)
     unknown_gendered_df$gender = unknown_gendered_df$guessed_gender
 
     return(list(names_not_processed, unknown_gendered_df))
