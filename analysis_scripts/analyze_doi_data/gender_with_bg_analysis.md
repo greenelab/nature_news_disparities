@@ -3,19 +3,23 @@ background\_gender\_analysis
 Natalie Davidson
 3/01/2021
 
-## Data description
+## Data Description
 
 This document compares two "foreground" datasets (gender of quoted authors and gender of cited authors) and compares it to two possible "background" datasets (random sampling of 36K Springer articles, and all nature articles)
 
-Foreground files: 1) `./data/author_data/cited_author_gender.tsv` has the gender for each first and last authors that were cited in any nature news article between 2005-2020. Only articles that are indexed by Springer are included in this analysis.
+Foreground files:
 
-1.  `./data/scraped_data/quote_table_raw_20*.tsv` has all quotes with estimated gender for the speaker. It is generated after scraping all articles from a year between 2005-2020 (`./nature_news_scraper/run_scrape_benchmark.sh`) then running it through coreNLP with additional processing (`./process_scraped_data/run_process_target_year.sh`)
+1.  `./data/author_data/cited_author_gender.tsv` has the gender for each first and last authors that were cited in any nature news article between 2005-2020. Only articles that are indexed by Springer are included in this analysis.
 
-Background files: 1) `./data/author_data/springer_author_gender.tsv` has the gender of first and last authors from a randomly selected 36K Springer articles from 2005-2020.
+2.  `./data/scraped_data/quote_table_raw_20*.tsv` has all quotes with estimated gender for the speaker. It is generated after scraping all articles from a year between 2005-2020 (`./nature_news_scraper/run_scrape_benchmark.sh`) then running it through coreNLP with additional processing (`./process_scraped_data/run_process_target_year.sh`)
 
-1.  `./data/scraped_data/nature_author_gender.tsv` has the gender of first and last authors from all Nature articles from 2005-2020.
+Background files:
 
-## Foreground gender breakdown
+1.  `./data/author_data/springer_author_gender.tsv` has the gender of first and last authors from a randomly selected 36K Springer articles from 2005-2020.
+
+2.  `./data/scraped_data/nature_author_gender.tsv` has the gender of first and last authors from all Nature articles from 2005-2020.
+
+## Foreground Gender Breakdown
 
 Read in the quote and citation data from Nature News.
 
@@ -87,7 +91,7 @@ head(full_quote_df)
 
 From the Nature News corpus, we predict the gender of quoted speakers and cited (first and last) authors. Now lets plot the trend of predicted proportion of Male speakers/authors over time <img src="gender_with_bg_analysis_files/figure-markdown_github/unnamed-chunk-2-1.png" width="50%" /><img src="gender_with_bg_analysis_files/figure-markdown_github/unnamed-chunk-2-2.png" width="50%" />
 
-## Background gender breakdown
+## Background Gender Breakdown
 
 Now we read in the background data: random sampling of Springer articles and all Nature articles.
 
@@ -133,7 +137,7 @@ Since the number of articles in Nature are small and the resulting proportion of
 
 <img src="gender_with_bg_analysis_files/figure-markdown_github/unnamed-chunk-4-1.png" width="50%" /><img src="gender_with_bg_analysis_files/figure-markdown_github/unnamed-chunk-4-2.png" width="50%" />
 
-## compare foreground and background
+## Compare Foreground and Background
 
 Now we will compare the identified quotes and cited authors from Nature News and compare the proportions of male speakers/authors against the previously shown background set of Springer articles.
 
