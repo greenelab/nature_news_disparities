@@ -370,6 +370,11 @@ single_osm_query <- function(curr_q){
         }
     }
     
+    # if no OSM type, make sure its null
+    if(!"osm_type" %in% colnames(resp_df)){
+        resp_df$osm_type = NA
+    }
+
     #process query info
     resp_df$query = curr_q
 
