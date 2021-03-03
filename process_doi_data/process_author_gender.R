@@ -203,8 +203,8 @@ process_all_author_gender <- function(nature_dir, cited_dois_dir, outdir){
 ### read in arguments
 args = commandArgs(trailingOnly=TRUE)
 nature_dir = args[1]
-cited_dois_dir = args[1]
-outdir = args[2]
+cited_dois_dir = args[2]
+outdir = args[3]
 
 process_all_author_gender(nature_dir, cited_dois_dir, outdir)
 

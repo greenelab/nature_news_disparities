@@ -9,14 +9,6 @@ ref_data_dir = paste(proj_dir, "/data/reference_data/", sep = "")
 source(file.path(proj_dir, "/utils/scraper_processing_utils.R"))
 source(file.path(proj_dir, "/process_doi_data/springer_scrape_utils.R"))
 
-## initialize reading in data frame for use in querying
-springer_country_file = file.path(ref_data_dir, "springer_country_map.tsv")
-if(!file.exists(springer_country_file)){
-        stop("springer name translations not found, 
-            this should be in the GIT repo named springer_country_map.tsv 
-            in data/reference_data")
-}
-springer_country_map = data.frame(fread(springer_country_file))
 
 #' format query into Springer-appropriate URL query
 #' 
@@ -24,24 +16,17 @@ springer_country_map = data.frame(fread(springer_country_file))
 #' @param year, year the journal publication was made
 #' @param api_key, personal API_KEY
 #' @return string, url
-url_springer_country_search <- function(country, year, api_key) {
+url_springer_year_search <- function(year, api_key) {
 
     # load libraries
     require(RCurl)
     options(useFancyQuotes = FALSE)
 
-    # check if country is not in springer format
-    if(country %in% springer_country_map$cdh_country){
-        country = springer_country_map$springer_country[
-                        which(springer_country_map$cdh_country == country)
-                        ]
-    }
 
     # nominatim search api url
     url_springer_search_api <- "http://api.springernature.com/metadata/json?q=(type:Journal AND "
     query_str <- paste(url_springer_search_api, 
-                        "year:", year,
-                        " AND country:", dQuote(country), ")",
+                        "year:", year, ")",
                         "&api_key=", api_key,
                         sep="")
 
@@ -64,7 +49,7 @@ url_springer_country_search <- function(country, year, api_key) {
 #' @param year, year the journal publication was made
 #' @param api_key, personal API_KEY
 #' @return dataframe result from OSM with formatted location data
-single_springer_country_query <- function(curr_country, curr_year, api_key){
+single_springer_year_query <- function(curr_year, api_key){
 
     # we need to follow Springer quidelines
     # we MUST cache
@@ -73,13 +58,13 @@ single_springer_country_query <- function(curr_country, curr_year, api_key){
     # no more than 9 queries per second
 
     # make sure query is not in cache
-    cache_file = file.path(ref_data_dir, "/springer_country_cache.tsv")
+    cache_file = file.path(ref_data_dir, "/springer_year_cache.tsv")
     if(!file.exists(cache_file)){
-        warning("springer_country_cache file not found, will be created")
+        warning("springer_year_cache file not found, will be created")
         cache_df = NA
     }else{
         cache_df = data.frame(fread(cache_file))
-        query_df = subset(cache_df, country == curr_country & year == curr_year)
+        query_df = subset(cache_df, year == curr_year)
         if(nrow(query_df) != 0){
             return(query_df)
         }
@@ -87,13 +72,12 @@ single_springer_country_query <- function(curr_country, curr_year, api_key){
 
 
     #run query
-    print(paste("running query:", curr_country, curr_year))
-    query_url = url_springer_country_search(curr_country, curr_year, api_key)
+    print(paste("running query:", curr_year))
+    query_url = url_springer_year_search(curr_year, api_key)
     resp = internal_springer_query(query_url)
 
     # format response
-    resp_df = data.frame("country" = curr_country,
-                        "year" = curr_year, "num_entries" = NA)
+    resp_df = data.frame("year" = curr_year, "num_entries" = NA)
     if(all(!is.na(resp))){
         num_entries = as.numeric(resp$result$total)
         resp_df$num_entries = num_entries
@@ -112,7 +96,7 @@ single_springer_country_query <- function(curr_country, curr_year, api_key){
     }else{
         cache_df = resp_df
     }
-    cache_file = file.path(ref_data_dir, "/springer_country_cache.tsv")
+    cache_file = file.path(ref_data_dir, "/springer_year_cache.tsv")
     write.table(cache_df, cache_file, sep="\t", quote=F, row.names=F)
 
     Sys.sleep(1)
@@ -132,16 +116,14 @@ single_springer_country_query <- function(curr_country, curr_year, api_key){
 #' @param country_vec, vector of countries to query over
 #' @param api_key, personal API_KEY
 #' @return dataframe result from Springer
-batch_springer_country_query <- function(year_vec, country_vec, api_key){
+batch_springer_year_query <- function(year_vec, api_key){
 
 
     # query one at a time and append together
     batch_resp = NA
     for(curr_year in year_vec){
-        for(curr_country in country_vec){
-            curr_resp = single_springer_country_query(curr_country, curr_year, api_key)
+            curr_resp = single_springer_year_query(curr_year, api_key)
             batch_resp = rbind(batch_resp, curr_resp)
-        }
     }
     batch_resp = batch_resp[-1,]
     return(batch_resp)
@@ -155,15 +137,11 @@ batch_springer_country_query <- function(year_vec, country_vec, api_key){
 #' @param api_key, API Key for Springer API, the user must make their own
 #' this can be attained through registration here: 
 #' https://dev.springernature.com/signup?cannot_be_converted_to_param
-initialize_springer_country_query <- function(api_key){
+initialize_springer_total_query <- function(api_key){
 
-    # run initial springer country query
-    country_info = get_country_info()
-
-    # query each country for each year
-    year_vec = 2012:2020
-    country_vec = unique(country_info$country)
-    batch_resp = batch_springer_country_query(year_vec, country_vec, api_key)
+    # query each  year
+    year_vec = 2005:2020
+    batch_resp = batch_springer_year_query(year_vec, api_key)
 
     return(batch_resp)
 
@@ -173,4 +151,4 @@ initialize_springer_country_query <- function(api_key){
 ### read in arguments
 args = commandArgs(trailingOnly=TRUE)
 api_key = args[1]
-initialize_springer_country_query(api_key)
+initialize_springer_total_query(api_key)

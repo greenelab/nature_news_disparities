@@ -171,3 +171,39 @@ get_ref_dois <- function(ref_dir){
 
     return(all_ref_dois)
 }
+
+#' format query into Springer-appropriate URL query
+#' 
+#' @param doi_chunk, vector of dois
+#' @param api_key, personal API_KEY
+#' @return string, url for Springer API call
+url_springer_doi_search <- function(doi_chunk, api_key) {
+
+    # load libraries
+    library(RCurl)
+
+    if(length(doi_chunk) > 1){
+        doi_str = paste(doi_chunk, "OR", collapse=" ")
+        if(substr(doi_str, nchar(doi_str)-2, nchar(doi_str)) == " OR"){
+            doi_str = substr(doi_str, 1, nchar(doi_str)-3)
+        }
+    }else if(length(doi_chunk) == 1){
+        doi_str = doi_chunk
+    }else{
+        return(NA)
+    }
+
+    # search api url
+    url_springer_search_api <- "http://api.springernature.com/metadata/json?q=( "
+    query_str <- paste(url_springer_search_api, 
+                        doi_str, ")",
+                        "&api_key=", api_key,
+                        "&p=", max(length(doi_chunk), 10),
+                        sep="")
+
+
+    # percent-encode search request
+    single_query <- URLencode(query_str, repeated=T)
+    
+    return(single_query)
+}

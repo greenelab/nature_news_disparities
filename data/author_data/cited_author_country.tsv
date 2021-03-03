@@ -1,0 +1,731 @@
+year	country	sum_entries
+2005		4
+2005	Argentina	1
+2005	Australia	10
+2005	Austria	2
+2005	Belgium	3
+2005	Brazil	3
+2005	Canada	3
+2005	Chile	1
+2005	China	4
+2005	Denmark	5
+2005	Finland	1
+2005	France	20
+2005	Germany	18
+2005	India	1
+2005	Indonesia	1
+2005	Israel	5
+2005	Italy	13
+2005	Japan	11
+2005	Kenya	3
+2005	Netherlands	3
+2005	South Africa	1
+2005	South Korea	4
+2005	Spain	4
+2005	Sweden	5
+2005	Switzerland	14
+2005	Thailand	1
+2005	United Kingdom	39
+2005	United States	102
+2006		2
+2006	Australia	8
+2006	Austria	2
+2006	Belgium	3
+2006	Botswana	1
+2006	Brazil	4
+2006	Canada	11
+2006	Chile	1
+2006	China	4
+2006	Denmark	6
+2006	Ethiopia	1
+2006	France	21
+2006	Germany	22
+2006	Ghana	1
+2006	Indonesia	2
+2006	Israel	1
+2006	Italy	10
+2006	Japan	11
+2006	Jordan	1
+2006	Netherlands	11
+2006	Norway	3
+2006	Pakistan	2
+2006	Russia	2
+2006	South Africa	3
+2006	Spain	4
+2006	Sweden	10
+2006	Switzerland	8
+2006	Tanzania	1
+2006	United Arab Emirates	1
+2006	United Kingdom	40
+2006	United States	84
+2007		5
+2007	Australia	4
+2007	Belgium	1
+2007	Bolivia	1
+2007	Canada	5
+2007	China	2
+2007	Croatia	1
+2007	DE	1
+2007	Finland	4
+2007	France	7
+2007	Germany	10
+2007	India	3
+2007	Italy	2
+2007	Japan	9
+2007	Lebanon	1
+2007	Netherlands	4
+2007	New Zealand	1
+2007	Norway	2
+2007	Peru	1
+2007	Portugal	1
+2007	South Korea	1
+2007	Spain	3
+2007	Sweden	3
+2007	Switzerland	2
+2007	Taiwan	1
+2007	Thailand	1
+2007	Uganda	1
+2007	United Kingdom	27
+2007	United States	56
+2008		5
+2008	Argentina	4
+2008	Australia	8
+2008	Belgium	7
+2008	Brazil	2
+2008	Canada	8
+2008	Chile	1
+2008	China	6
+2008	Costa Rica	1
+2008	Croatia	1
+2008	Czech Republic	2
+2008	Denmark	3
+2008	Ecuador	1
+2008	Finland	7
+2008	France	8
+2008	Germany	16
+2008	Hong Kong	1
+2008	Hungary	1
+2008	Iceland	5
+2008	Indonesia	1
+2008	Ireland	2
+2008	Israel	3
+2008	Italy	12
+2008	Japan	11
+2008	Kenya	1
+2008	Madagascar	1
+2008	Mexico	2
+2008	Netherlands	11
+2008	Norway	2
+2008	Papua New Guinea	1
+2008	Russia	2
+2008	Singapore	2
+2008	South Africa	2
+2008	Spain	10
+2008	Sweden	10
+2008	Switzerland	8
+2008	United Kingdom	40
+2008	United States	74
+2009		9
+2009	Algeria	1
+2009	Australia	13
+2009	Austria	1
+2009	Belgium	5
+2009	Brazil	3
+2009	Canada	14
+2009	Chad	1
+2009	China	16
+2009	Colombia	1
+2009	Croatia	1
+2009	Czech Republic	1
+2009	Denmark	6
+2009	Estonia	1
+2009	Ethiopia	1
+2009	Finland	2
+2009	France	21
+2009	Germany	29
+2009	Iceland	3
+2009	India	1
+2009	Indonesia	2
+2009	Iran	2
+2009	Ireland	1
+2009	Israel	7
+2009	Italy	9
+2009	Japan	21
+2009	Mexico	1
+2009	Netherlands	17
+2009	New Zealand	1
+2009	Norway	3
+2009	Poland	1
+2009	Russia	2
+2009	Singapore	4
+2009	South Africa	1
+2009	South Korea	4
+2009	Spain	9
+2009	Sweden	12
+2009	Switzerland	13
+2009	Tanzania	1
+2009	Ukraine	1
+2009	United Kingdom	81
+2009	United States	137
+2010		8
+2010	Argentina	2
+2010	Australia	20
+2010	Austria	4
+2010	Belgium	7
+2010	Brazil	8
+2010	Canada	20
+2010	Chile	1
+2010	China	18
+2010	Croatia	2
+2010	Czech Republic	2
+2010	Denmark	16
+2010	Egypt	1
+2010	Finland	6
+2010	France	24
+2010	Germany	36
+2010	Greece	1
+2010	Haiti	3
+2010	Hong Kong	1
+2010	Hungary	1
+2010	Iceland	2
+2010	India	6
+2010	Ireland	2
+2010	Israel	5
+2010	Italy	11
+2010	Ivory Coast	2
+2010	Japan	16
+2010	Mexico	2
+2010	Netherlands	16
+2010	New Zealand	1
+2010	Norway	2
+2010	Peru	1
+2010	Poland	1
+2010	Portugal	1
+2010	Russia	5
+2010	Saudi Arabia	1
+2010	Singapore	3
+2010	South Africa	2
+2010	South Korea	12
+2010	Spain	8
+2010	Sweden	12
+2010	Switzerland	20
+2010	Taiwan	1
+2010	Turkey	2
+2010	United Kingdom	67
+2010	United States	179
+2011		1
+2011	Australia	1
+2011	Brazil	1
+2011	Canada	2
+2011	China	1
+2011	Czech Republic	2
+2011	France	3
+2011	Germany	6
+2011	Ireland	1
+2011	Italy	1
+2011	Japan	1
+2011	Mali	1
+2011	Norway	1
+2011	South Africa	1
+2011	Spain	1
+2011	Sweden	3
+2011	Switzerland	1
+2011	United Kingdom	9
+2011	United States	16
+2012		4
+2012	Argentina	1
+2012	Australia	28
+2012	Austria	7
+2012	Belgium	9
+2012	Brazil	4
+2012	Burkina Faso	1
+2012	Canada	11
+2012	Chile	3
+2012	China	31
+2012	Czech Republic	2
+2012	Denmark	8
+2012	Estonia	1
+2012	Finland	3
+2012	France	29
+2012	Germany	39
+2012	Gibraltar	1
+2012	Greece	4
+2012	Hong Kong	2
+2012	Hungary	1
+2012	Iceland	1
+2012	India	1
+2012	Indonesia	2
+2012	Ireland	5
+2012	Israel	7
+2012	Italy	15
+2012	Ivory Coast	1
+2012	Japan	21
+2012	Madagascar	1
+2012	Malawi	2
+2012	Mongolia	1
+2012	Netherlands	12
+2012	New Zealand	4
+2012	Norway	2
+2012	Pakistan	1
+2012	Philippines	1
+2012	Poland	2
+2012	Portugal	1
+2012	Russia	7
+2012	Saudi Arabia	1
+2012	Singapore	2
+2012	South Africa	2
+2012	South Korea	3
+2012	Spain	16
+2012	Sweden	6
+2012	Switzerland	12
+2012	Turkey	1
+2012	Uganda	2
+2012	United Kingdom	60
+2012	United States	229
+2013		9
+2013	Argentina	1
+2013	Australia	24
+2013	Austria	5
+2013	Belarus	2
+2013	Belgium	9
+2013	Brazil	5
+2013	Burkina Faso	1
+2013	Canada	32
+2013	Chile	2
+2013	China	32
+2013	Colombia	1
+2013	Costa Rica	2
+2013	Czech Republic	1
+2013	Denmark	12
+2013	Estonia	1
+2013	Finland	8
+2013	France	20
+2013	Germany	44
+2013	Gibraltar	1
+2013	Greece	4
+2013	Hungary	1
+2013	India	2
+2013	Israel	9
+2013	Italy	7
+2013	Japan	29
+2013	Kenya	1
+2013	Malawi	2
+2013	Malaysia	2
+2013	Mali	1
+2013	Mexico	1
+2013	Netherlands	22
+2013	New Zealand	1
+2013	Norway	7
+2013	Poland	6
+2013	Portugal	5
+2013	Russia	4
+2013	Saudi Arabia	2
+2013	Singapore	5
+2013	Slovenia	1
+2013	South Africa	4
+2013	South Korea	5
+2013	Spain	11
+2013	Sweden	15
+2013	Switzerland	13
+2013	Taiwan	2
+2013	Turkey	1
+2013	Ukraine	1
+2013	United Kingdom	67
+2013	United States	272
+2013	Zambia	1
+2013	Zimbabwe	1
+2014		5
+2014	Argentina	1
+2014	Australia	25
+2014	Austria	7
+2014	Belarus	1
+2014	Belgium	1
+2014	Brazil	2
+2014	Bulgaria	1
+2014	Canada	19
+2014	China	16
+2014	Colombia	1
+2014	Cyprus	1
+2014	Czech Republic	4
+2014	Denmark	6
+2014	Egypt	1
+2014	Estonia	1
+2014	Faroe Islands	1
+2014	Finland	2
+2014	France	24
+2014	Georgia	1
+2014	Germany	23
+2014	Gibraltar	1
+2014	Hungary	4
+2014	Iceland	2
+2014	Indonesia	2
+2014	Ireland	2
+2014	Israel	4
+2014	Italy	9
+2014	Japan	9
+2014	Luxembourg	1
+2014	Malaysia	2
+2014	Mongolia	1
+2014	Nepal	2
+2014	Netherlands	11
+2014	New Zealand	1
+2014	Norway	5
+2014	Poland	5
+2014	Portugal	2
+2014	Romania	3
+2014	Russia	1
+2014	Saudi Arabia	1
+2014	Singapore	2
+2014	Slovakia	1
+2014	Slovenia	1
+2014	South Africa	3
+2014	South Korea	6
+2014	Spain	9
+2014	Sudan	1
+2014	Sweden	12
+2014	Switzerland	12
+2014	Taiwan	1
+2014	United Kingdom	45
+2014	United States	190
+2015		5
+2015	Algeria	1
+2015	Argentina	4
+2015	Armenia	2
+2015	Australia	36
+2015	Austria	9
+2015	Belarus	1
+2015	Belgium	9
+2015	Bolivia	2
+2015	Brazil	5
+2015	Cambodia	1
+2015	Canada	26
+2015	Chile	4
+2015	China	41
+2015	Colombia	1
+2015	Czech Republic	4
+2015	Democratic Republic of the Congo	1
+2015	Denmark	11
+2015	Ecuador	1
+2015	Estonia	3
+2015	Finland	3
+2015	France	29
+2015	Germany	49
+2015	Hong Kong	2
+2015	Hungary	3
+2015	Iran	1
+2015	Ireland	2
+2015	Israel	7
+2015	Italy	18
+2015	Japan	19
+2015	Kenya	1
+2015	Lithuania	2
+2015	Netherlands	17
+2015	New Zealand	5
+2015	Norway	3
+2015	Papua New Guinea	1
+2015	Peru	1
+2015	Philippines	1
+2015	Poland	3
+2015	Portugal	3
+2015	Russia	4
+2015	Saudi Arabia	4
+2015	Singapore	4
+2015	Slovenia	1
+2015	South Africa	6
+2015	South Korea	4
+2015	Spain	11
+2015	Sweden	11
+2015	Switzerland	22
+2015	Taiwan	1
+2015	Turkey	3
+2015	United Kingdom	69
+2015	United States	226
+2015	Venezuela	1
+2016		3
+2016	Albania	1
+2016	Argentina	3
+2016	Armenia	1
+2016	Australia	33
+2016	Austria	5
+2016	Bangladesh	1
+2016	Belarus	1
+2016	Belgium	5
+2016	Bosnia and Herzegovina	1
+2016	Brazil	6
+2016	Canada	32
+2016	Chile	4
+2016	China	31
+2016	Colombia	3
+2016	Croatia	1
+2016	Cuba	1
+2016	Denmark	14
+2016	Estonia	2
+2016	Finland	5
+2016	France	26
+2016	Gabon	1
+2016	Germany	39
+2016	Greece	1
+2016	India	2
+2016	Indonesia	5
+2016	Ireland	3
+2016	Israel	9
+2016	Italy	13
+2016	Japan	17
+2016	Kenya	3
+2016	Madagascar	1
+2016	Mexico	7
+2016	Netherlands	17
+2016	New Zealand	2
+2016	Norway	5
+2016	Panama	1
+2016	Peru	1
+2016	Poland	1
+2016	Portugal	4
+2016	Russia	3
+2016	Rwanda	1
+2016	Saudi Arabia	2
+2016	Singapore	4
+2016	South Africa	4
+2016	South Korea	2
+2016	Spain	16
+2016	Sweden	11
+2016	Switzerland	17
+2016	Taiwan	1
+2016	Tanzania	1
+2016	Thailand	1
+2016	United Kingdom	65
+2016	United States	178
+2017		4
+2017	Australia	35
+2017	Austria	18
+2017	Belgium	15
+2017	Belize	1
+2017	Brazil	8
+2017	Canada	30
+2017	China	38
+2017	Costa Rica	2
+2017	Croatia	1
+2017	Czech Republic	2
+2017	Denmark	9
+2017	Ecuador	1
+2017	Egypt	1
+2017	Ethiopia	1
+2017	Finland	8
+2017	France	37
+2017	Gambia	1
+2017	Germany	60
+2017	Greenland	1
+2017	Hong Kong	1
+2017	Hungary	3
+2017	India	5
+2017	Ireland	2
+2017	Israel	16
+2017	Italy	18
+2017	Japan	25
+2017	Malawi	1
+2017	Malaysia	1
+2017	Mali	1
+2017	Mexico	1
+2017	Morocco	3
+2017	Netherlands	26
+2017	New Zealand	7
+2017	Norway	12
+2017	Pakistan	2
+2017	Poland	4
+2017	Portugal	6
+2017	Russia	1
+2017	Sierra Leone	1
+2017	Singapore	5
+2017	South Africa	5
+2017	South Korea	11
+2017	Spain	18
+2017	Sweden	11
+2017	Switzerland	31
+2017	Taiwan	2
+2017	Turkey	1
+2017	United Kingdom	77
+2017	United States	252
+2017	Zimbabwe	1
+2018		13
+2018	Argentina	5
+2018	Armenia	4
+2018	Australia	107
+2018	Austria	34
+2018	Belgium	37
+2018	Brazil	4
+2018	Brunei	2
+2018	Canada	96
+2018	Chad	1
+2018	Chile	10
+2018	China	122
+2018	Colombia	1
+2018	Croatia	4
+2018	Cyprus	2
+2018	Czech Republic	6
+2018	Denmark	53
+2018	Ecuador	1
+2018	Estonia	4
+2018	Finland	12
+2018	France	121
+2018	Gabon	1
+2018	Germany	219
+2018	Greece	5
+2018	Hong Kong	1
+2018	Hungary	4
+2018	India	16
+2018	Indonesia	5
+2018	Iran	2
+2018	Ireland	10
+2018	Israel	33
+2018	Italy	57
+2018	Japan	81
+2018	Jordan	1
+2018	Kenya	3
+2018	Lithuania	1
+2018	Luxembourg	1
+2018	Malawi	1
+2018	Mexico	4
+2018	Morocco	1
+2018	Netherlands	92
+2018	New Zealand	14
+2018	Nigeria	1
+2018	Norway	20
+2018	Peru	2
+2018	Philippines	1
+2018	Poland	11
+2018	Portugal	9
+2018	Russia	16
+2018	Saudi Arabia	3
+2018	Singapore	15
+2018	Slovenia	2
+2018	South Africa	2
+2018	South Korea	18
+2018	Spain	76
+2018	Sweden	54
+2018	Switzerland	112
+2018	Thailand	1
+2018	United Kingdom	296
+2018	United States	819
+2019		14
+2019	Argentina	3
+2019	Armenia	7
+2019	Australia	104
+2019	Austria	34
+2019	Azerbaijan	1
+2019	Belgium	39
+2019	Botswana	1
+2019	Brazil	12
+2019	Bulgaria	3
+2019	Cambodia	1
+2019	Canada	118
+2019	Chad	1
+2019	Chile	6
+2019	China	143
+2019	Colombia	2
+2019	Costa Rica	1
+2019	Croatia	3
+2019	Czech Republic	15
+2019	Denmark	49
+2019	Estonia	5
+2019	Ethiopia	1
+2019	Finland	18
+2019	France	124
+2019	Germany	213
+2019	Greece	6
+2019	Greenland	2
+2019	Hungary	4
+2019	Iceland	1
+2019	India	2
+2019	Indonesia	5
+2019	Ireland	9
+2019	Israel	27
+2019	Italy	81
+2019	Japan	119
+2019	Kazakhstan	1
+2019	Kenya	3
+2019	Malaysia	1
+2019	Mali	1
+2019	Mexico	5
+2019	Morocco	1
+2019	Mozambique	1
+2019	Namibia	1
+2019	Netherlands	85
+2019	New Zealand	5
+2019	Norway	15
+2019	Pakistan	1
+2019	Panama	1
+2019	Poland	16
+2019	Portugal	9
+2019	Qatar	2
+2019	Romania	3
+2019	Russia	29
+2019	Saudi Arabia	4
+2019	Singapore	1
+2019	South Africa	13
+2019	South Korea	24
+2019	Spain	82
+2019	Sweden	53
+2019	Switzerland	119
+2019	Taiwan	3
+2019	Tanzania	2
+2019	United Arab Emirates	1
+2019	United Kingdom	289
+2019	United States	836
+2020		7
+2020	Albania	1
+2020	Argentina	6
+2020	Australia	99
+2020	Austria	31
+2020	Belgium	36
+2020	Bolivia	3
+2020	Brazil	24
+2020	Canada	104
+2020	Chile	4
+2020	China	124
+2020	Colombia	5
+2020	Czech Republic	6
+2020	Denmark	48
+2020	Ecuador	3
+2020	Egypt	1
+2020	Estonia	4
+2020	Finland	16
+2020	France	131
+2020	Germany	201
+2020	Greece	2
+2020	Greenland	1
+2020	Hong Kong	5
+2020	Hungary	6
+2020	India	6
+2020	Indonesia	1
+2020	Ireland	3
+2020	Israel	28
+2020	Italy	72
+2020	Japan	93
+2020	Malaysia	1
+2020	Mexico	12
+2020	Mongolia	1
+2020	Netherlands	86
+2020	New Zealand	8
+2020	Nigeria	2
+2020	Norway	15
+2020	Pakistan	6
+2020	Philippines	2
+2020	Poland	10
+2020	Portugal	4
+2020	Qatar	1
+2020	Russia	20
+2020	Saudi Arabia	4
+2020	Singapore	20
+2020	South Africa	3
+2020	South Korea	23
+2020	Spain	66
+2020	Sweden	68
+2020	Switzerland	82
+2020	Taiwan	4
+2020	Thailand	1
+2020	Turkey	1
+2020	Ukraine	2
+2020	United Arab Emirates	1
+2020	United Kingdom	257
+2020	United States	657
+2020	Venezuela	3

@@ -9,42 +9,6 @@ ref_data_dir = paste(proj_dir, "/data/reference_data/", sep = "")
 source(file.path(proj_dir, "/utils/scraper_processing_utils.R"))
 source(file.path(proj_dir, "/process_doi_data/springer_scrape_utils.R"))
 
-#' format query into Springer-appropriate URL query
-#' 
-#' @param doi_chunk, vector of dois
-#' @param api_key, personal API_KEY
-#' @return string, url for Springer API call
-url_springer_doi_search <- function(doi_chunk, api_key) {
-
-    # load libraries
-    library(RCurl)
-
-    if(length(doi_chunk) > 1){
-        doi_str = paste(doi_chunk, "OR", collapse=" ")
-        if(substr(doi_str, nchar(doi_str)-2, nchar(doi_str)) == " OR"){
-            doi_str = substr(doi_str, 1, nchar(doi_str)-3)
-        }
-    }else if(length(doi_chunk) == 1){
-        doi_str = doi_chunk
-    }else{
-        return(NA)
-    }
-
-    # search api url
-    url_springer_search_api <- "http://api.springernature.com/metadata/json?q=( "
-    query_str <- paste(url_springer_search_api, 
-                        doi_str, ")",
-                        "&api_key=", api_key,
-                        "&p=", max(length(doi_chunk), 10),
-                        sep="")
-
-
-    # percent-encode search request
-    single_query <- URLencode(query_str, repeated=T)
-    
-    return(single_query)
-}
-
 
 
 #' public method that makes a single query to Springer.
@@ -97,7 +61,7 @@ springer_doi_query <- function(doi_chunk, api_key){
                         "content_type" = na_elem,
                         "article_type" = na_elem,
                         "authors" = na_elem,
-                        "publisher" = na_elem
+                        "publisher" = na_elem,
                         "year" = na_elem)
 
         resp_df$doi = paste("doi:", resp$records$doi, sep="")
@@ -129,7 +93,8 @@ springer_doi_query <- function(doi_chunk, api_key){
                         "content_type" = na_elem,
                         "article_type" = na_elem,
                         "authors" = na_elem,
-                        "publisher" = na_elem)
+                        "publisher" = na_elem,
+                        "year" = na_elem)
 
         if(!all(is.na(resp_df))){
             resp_df = rbind(resp_df, missed_df)
