@@ -1,348 +1,348 @@
-file_id	text	ner	country	un_region	un_subregion
-4641259a.html	National Center for Genome Resources in Santa Fe	ORGANIZATION	United States of America (USA)	Americas	Northern America
-4641259a.html	University of California	ORGANIZATION	United States of America (USA)	Americas	Northern America
-4641259a.html	Yale University	ORGANIZATION	United States of America (USA)	Americas	Northern America
-4641259a.html	US	COUNTRY	United States of America (USA)	Americas	Northern America
-4641259a.html	New Mexico	STATE_OR_PROVINCE	United States of America (USA)	Americas	Northern America
-4641259a.html	Connecticut	STATE_OR_PROVINCE	United States of America (USA)	Americas	Northern America
-464472b.html	Canada	COUNTRY	Canada	Americas	Northern America
-464472b.html	Ontario	STATE_OR_PROVINCE	Canada	Americas	Northern America
-464472b.html	Maryland	STATE_OR_PROVINCE	United States of America (USA)	Americas	Northern America
-464472b.html	Columbia University's Lamont-Doherty Earth Observatory	ORGANIZATION	United States of America (USA)	Americas	Northern America
-464472b.html	American Geophysical Union	ORGANIZATION	United States of America (USA)	Americas	Northern America
-464472b.html	NASA	ORGANIZATION	United States of America (USA)	Americas	Northern America
-464472b.html	Goddard Space Flight Center	ORGANIZATION	United States of America (USA)	Americas	Northern America
-464472b.html	Northern Illinois University in DeKalb	ORGANIZATION	United States of America (USA)	Americas	Northern America
-464472b.html	Russia	COUNTRY	Russia	Russia	Russia
-464472b.html	Antarctic Survey	ORGANIZATION	United Kingdom (UK)	Europe	Northern Europe
-464472b.html	United Kingdom	COUNTRY	United Kingdom (UK)	Europe	Northern Europe
-464472b.html	United States	COUNTRY	United States of America (USA)	Americas	Northern America
-464472b.html	US	COUNTRY	United States of America (USA)	Americas	Northern America
-464472b.html	New York	STATE_OR_PROVINCE	United States of America (USA)	Americas	Northern America
-4661029a.html	University of Alberta	ORGANIZATION	Canada	Americas	Northern America
-4661029a.html	Canada	COUNTRY	Canada	Americas	Northern America
-4661029a.html	Germany	COUNTRY	Germany	Europe	Western Europe
-4661029a.html	Leiden University	ORGANIZATION	Netherlands	Europe	Western Europe
-4661029a.html	Netherlands	COUNTRY	Netherlands	Europe	Western Europe
-4661029a.html	University of Georgia	ORGANIZATION	United States of America (USA)	Americas	Northern America
-4661029a.html	Max Planck Institute of Colloids and Interfaces	ORGANIZATION	Germany	Europe	Western Europe
-4661029a.html	Ancora Pharmaceuticals	ORGANIZATION	United States of America (USA)	Americas	Northern America
-4661029a.html	American Chemical Society	ORGANIZATION	United States of America (USA)	Americas	Northern America
-4661029a.html	LuCella Biosciences	ORGANIZATION	United States of America (USA)	Americas	Northern America
-4661029a.html	Massachusetts	STATE_OR_PROVINCE	United States of America (USA)	Americas	Northern America
-4661029a.html	Iowa State University	ORGANIZATION	United States of America (USA)	Americas	Northern America
-4661029a.html	MASSACHUSETTS	STATE_OR_PROVINCE	United States of America (USA)	Americas	Northern America
-bat-drinks-using-tongue-pump-trick-1.18434	Canada	COUNTRY	Canada	Americas	Northern America
-bat-drinks-using-tongue-pump-trick-1.18434	Germany	COUNTRY	Germany	Europe	Western Europe
-bat-drinks-using-tongue-pump-trick-1.18434	University of Ulm	ORGANIZATION	Germany	Europe	Western Europe
-bat-drinks-using-tongue-pump-trick-1.18434	St Lawrence River Institute of Environmental Sciences	ORGANIZATION	Canada	Americas	Northern America
-climatologists-to-physicists-your-planet-needs-you-1.17270	Monash University	ORGANIZATION	Australia	Oceania	Australia and New Zealand
-climatologists-to-physicists-your-planet-needs-you-1.17270	Australia	COUNTRY	Australia	Oceania	Australia and New Zealand
-climatologists-to-physicists-your-planet-needs-you-1.17270	Catholic University of Leuven	ORGANIZATION	Belgium	Europe	Western Europe
-climatologists-to-physicists-your-planet-needs-you-1.17270	Belgium	COUNTRY	Belgium	Europe	Western Europe
-climatologists-to-physicists-your-planet-needs-you-1.17270	Germany	COUNTRY	Germany	Europe	Western Europe
-climatologists-to-physicists-your-planet-needs-you-1.17270	Maryland	STATE_OR_PROVINCE	United States of America (USA)	Americas	Northern America
-climatologists-to-physicists-your-planet-needs-you-1.17270	Laboratory of Dynamic Meteorology	ORGANIZATION	France	Europe	Western Europe
-climatologists-to-physicists-your-planet-needs-you-1.17270	American Institute of Physics in College Park	ORGANIZATION	United States of America (USA)	Americas	Northern America
-climatologists-to-physicists-your-planet-needs-you-1.17270	Max Planck Institute for Meteorology	ORGANIZATION	Germany	Europe	Western Europe
-climatologists-to-physicists-your-planet-needs-you-1.17270	UK	COUNTRY	United Kingdom (UK)	Europe	Northern Europe
-climatologists-to-physicists-your-planet-needs-you-1.17270	University of Leeds	ORGANIZATION	United Kingdom (UK)	Europe	Northern Europe
-climatologists-to-physicists-your-planet-needs-you-1.17270	University of Cambridge	ORGANIZATION	United Kingdom (UK)	Europe	Northern Europe
-climatologists-to-physicists-your-planet-needs-you-1.17270	United States	COUNTRY	United States of America (USA)	Americas	Northern America
-d41586-020-00166-6	University of New South Wales	ORGANIZATION	Australia	Oceania	Australia and New Zealand
-d41586-020-00166-6	Australia	COUNTRY	Australia	Oceania	Australia and New Zealand
-d41586-020-00166-6	China	COUNTRY	China	China	China
-d41586-020-00166-6	Pasteur Institute	ORGANIZATION	France	Europe	Western Europe
-d41586-020-00166-6	National Health Commission	ORGANIZATION	China	China	China
-d41586-020-00166-6	WHO	ORGANIZATION	NA	NA	NA
-d41586-020-00166-6	National Engineering Research Center for the Emergence Drugs	ORGANIZATION	China	China	China
-d41586-020-00166-6	Yunnan	STATE_OR_PROVINCE	China	China	China
-d41586-020-00166-6	World Health Organization	ORGANIZATION	NA	NA	NA
-d41586-020-00166-6	Thailand	COUNTRY	Thailand	Asia	South-Eastern Asia
-d41586-020-00166-6	University of Nottingham	ORGANIZATION	United Kingdom (UK)	Europe	Northern Europe
-d41586-020-00166-6	University of Cambridge	ORGANIZATION	United Kingdom (UK)	Europe	Northern Europe
-d41586-020-00166-6	University of Edinburgh	ORGANIZATION	United Kingdom (UK)	Europe	Northern Europe
-d41586-020-00166-6	University of Glasgow	ORGANIZATION	United Kingdom (UK)	Europe	Northern Europe
-d41586-020-00166-6	Imperial College London	ORGANIZATION	United Kingdom (UK)	Europe	Northern Europe
-d41586-020-00166-6	UK	COUNTRY	United Kingdom (UK)	Europe	Northern Europe
-d41586-020-00166-6	Fred Hutchinson Cancer Research Center	ORGANIZATION	United States of America (USA)	Americas	Northern America
-d41586-020-00166-6	United States	COUNTRY	United States of America (USA)	Americas	Northern America
-d41586-020-00166-6	Washington	STATE_OR_PROVINCE	United States of America (USA)	Americas	Northern America
-d41586-020-00365-1	European Space Agency	ORGANIZATION	NA	Europe	NA
-d41586-020-00365-1	Netherlands	COUNTRY	Netherlands	Europe	Western Europe
-d41586-020-00365-1	ESA	ORGANIZATION	NA	Europe	NA
-d41586-020-00365-1	Florida	STATE_OR_PROVINCE	United States of America (USA)	Americas	Northern America
-d41586-020-00365-1	Maryland	STATE_OR_PROVINCE	United States of America (USA)	Americas	Northern America
-d41586-020-00365-1	Science Mission Directorate	ORGANIZATION	United States of America (USA)	Americas	Northern America
-d41586-020-00365-1	NASA	ORGANIZATION	United States of America (USA)	Americas	Northern America
-d41586-020-00365-1	ESA's European Space Research and Technology Centre	ORGANIZATION	NA	Europe	NA
-d41586-020-00365-1	Johns Hopkins University Applied Physics Laboratory	ORGANIZATION	United States of America (USA)	Americas	Northern America
-d41586-020-00365-1	Imperial College London	ORGANIZATION	United Kingdom (UK)	Europe	Northern Europe
-d41586-020-00889-6	Women's Hospital	ORGANIZATION	United States of America (USA)	Americas	Northern America
-d41586-020-00889-6	Roche	ORGANIZATION	Switzerland	Europe	Western Europe
-d41586-020-00889-6	US National Institutes of Health	ORGANIZATION	United States of America (USA)	Americas	Northern America
-d41586-020-00889-6	Addex Therapeutics	ORGANIZATION	Switzerland	Europe	Western Europe
-d41586-020-00889-6	US Food and Drug Administration	ORGANIZATION	United States of America (USA)	Americas	Northern America
-d41586-020-00889-6	US National Cancer Institute	ORGANIZATION	United States of America (USA)	Americas	Northern America
-d41586-020-00889-6	Oregon Health & Science University	ORGANIZATION	United States of America (USA)	Americas	Northern America
-d41586-020-00889-6	SWOG Cancer Research Network	ORGANIZATION	United States of America (USA)	Americas	Northern America
-d41586-020-00889-6	Switzerland	COUNTRY	Switzerland	Europe	Western Europe
-d41586-020-00889-6	Yale University	ORGANIZATION	United States of America (USA)	Americas	Northern America
-d41586-020-00889-6	Connecticut	STATE_OR_PROVINCE	United States of America (USA)	Americas	Northern America
-d41586-020-00889-6	Harvard	ORGANIZATION	United States of America (USA)	Americas	Northern America
-d41586-020-00889-6	Yale	ORGANIZATION	United States of America (USA)	Americas	Northern America
-d41586-020-00889-6	Eli Lilly	ORGANIZATION	United States of America (USA)	Americas	Northern America
-d41586-020-00889-6	Massachusetts	STATE_OR_PROVINCE	United States of America (USA)	Americas	Northern America
-d41586-020-00889-6	Nebraska	STATE_OR_PROVINCE	United States of America (USA)	Americas	Northern America
-d41586-020-00889-6	Indiana	STATE_OR_PROVINCE	United States of America (USA)	Americas	Northern America
-d41586-020-00941-5	China	COUNTRY	China	China	China
-d41586-020-00941-5	India	COUNTRY	India	Asia	Southern Asia
-d41586-020-00941-5	Italy	COUNTRY	Italy	Europe	Southern Europe
-d41586-020-00941-5	US Environmental Protection Agency	ORGANIZATION	United States of America (USA)	Americas	Northern America
-d41586-020-00941-5	Center for International Climate Research	ORGANIZATION	NA	NA	NA
-d41586-020-00941-5	ICAO	ORGANIZATION	NA	NA	NA
-d41586-020-00941-5	Eurasia Group	ORGANIZATION	United States of America (USA)	Americas	Northern America
-d41586-020-00941-5	United Nations International Civil Aviation Organization	ORGANIZATION	NA	NA	NA
-d41586-020-00941-5	World Resources Institute	ORGANIZATION	United States of America (USA)	Americas	Northern America
-d41586-020-00941-5	US	COUNTRY	United States of America (USA)	Americas	Northern America
-d41586-020-00941-5	Environmental Defense Fund	ORGANIZATION	United States of America (USA)	Americas	Northern America
-d41586-020-00941-5	United States	COUNTRY	United States of America (USA)	Americas	Northern America
-d41586-020-01114-0	European Space Agency	ORGANIZATION	NA	Europe	NA
-d41586-020-01114-0	ESA	ORGANIZATION	NA	Europe	NA
-d41586-020-01114-0	NASA	ORGANIZATION	United States of America (USA)	Americas	Northern America
-d41586-020-01114-0	California Institute of Technology	ORGANIZATION	United States of America (USA)	Americas	Northern America
-d41586-020-01587-z	Brazil	COUNTRY	Brazil	Brazil	Brazil
-d41586-020-01587-z	University of Northern British Columbia	ORGANIZATION	Canada	Americas	Northern America
-d41586-020-01587-z	Canada	COUNTRY	Canada	Americas	Northern America
-d41586-020-01587-z	Costa Rica	COUNTRY	Costa Rica	Americas	Central America
-d41586-020-01587-z	Germany	COUNTRY	Germany	Europe	Western Europe
-d41586-020-01587-z	Honduras	COUNTRY	Honduras	Americas	Central America
-d41586-020-01587-z	Italy	COUNTRY	Italy	Europe	Southern Europe
-d41586-020-01587-z	Netherlands	COUNTRY	Netherlands	Europe	Western Europe
-d41586-020-01587-z	University of Groningen	ORGANIZATION	Netherlands	Europe	Western Europe
-d41586-020-01587-z	University of Auckland	ORGANIZATION	New Zealand	Oceania	Australia and New Zealand
-d41586-020-01587-z	New Zealand	COUNTRY	New Zealand	Oceania	Australia and New Zealand
-d41586-020-01587-z	Nicaragua	COUNTRY	Nicaragua	Americas	Central America
-d41586-020-01587-z	Heidelberg University	ORGANIZATION	Germany	Europe	Western Europe
-d41586-020-01587-z	Centers for Disease Control and Prevention	ORGANIZATION	United States of America (USA)	Americas	Northern America
-d41586-020-01587-z	Association of American Universities	ORGANIZATION	United States of America (USA)	Americas	Northern America
-d41586-020-01587-z	University of Central America	ORGANIZATION	Nicaragua	Americas	Central America
-d41586-020-01587-z	University of Padua	ORGANIZATION	Italy	Europe	Southern Europe
-d41586-020-01587-z	WHO	ORGANIZATION	NA	NA	NA
-d41586-020-01587-z	United Kingdom	COUNTRY	United Kingdom (UK)	Europe	Northern Europe
-d41586-020-01587-z	United States	COUNTRY	United States of America (USA)	Americas	Northern America
-d41586-020-01587-z	University of California	ORGANIZATION	United States of America (USA)	Americas	Northern America
-d41586-020-01587-z	America	COUNTRY	United States of America (USA)	Americas	Northern America
-d41586-020-01587-z	Yale University	ORGANIZATION	United States of America (USA)	Americas	Northern America
-d41586-020-01587-z	Connecticut	STATE_OR_PROVINCE	United States of America (USA)	Americas	Northern America
-d41586-020-01756-0	Argentina	COUNTRY	Argentina	Americas	South America
-d41586-020-01756-0	University of São Paulo	ORGANIZATION	Brazil	Brazil	Brazil
-d41586-020-01756-0	Brazil	COUNTRY	Brazil	Brazil	Brazil
-d41586-020-01756-0	Chile	COUNTRY	Chile	Americas	South America
-d41586-020-01756-0	Pontifical Catholic University of Chile	ORGANIZATION	Chile	Americas	South America
-d41586-020-01756-0	China	COUNTRY	China	China	China
-d41586-020-01756-0	National Autonomous University of Mexico	ORGANIZATION	Mexico	Americas	Central America
-d41586-020-01756-0	Mexico	COUNTRY	Mexico	Americas	Central America
-d41586-020-01756-0	FARVET	ORGANIZATION	Peru	Americas	South America
-d41586-020-01756-0	Monterrey Institute of Technology and Higher Education	ORGANIZATION	Mexico	Americas	Central America
-d41586-020-01756-0	Sinergium Biotech	ORGANIZATION	Argentina	Americas	South America
-d41586-020-01756-0	Butantan Institute	ORGANIZATION	Brazil	Brazil	Brazil
-d41586-020-01756-0	Cayetano Heredia University	ORGANIZATION	Peru	Americas	South America
-d41586-020-01756-0	Peru	COUNTRY	Peru	Americas	South America
-d41586-020-01756-0	Duke University	ORGANIZATION	United States of America (USA)	Americas	Northern America
-d41586-020-01756-0	United States	COUNTRY	United States of America (USA)	Americas	Northern America
-d41586-020-01756-0	America	COUNTRY	United States of America (USA)	Americas	Northern America
-d41586-020-01756-0	Baylor College of Medicine	ORGANIZATION	United States of America (USA)	Americas	Northern America
-d41586-020-01756-0	Texas	STATE_OR_PROVINCE	United States of America (USA)	Americas	Northern America
-d41586-020-01756-0	North Carolina	STATE_OR_PROVINCE	United States of America (USA)	Americas	Northern America
-d41586-020-02821-4	Belgium	COUNTRY	Belgium	Europe	Western Europe
-d41586-020-02821-4	New Brunswick	STATE_OR_PROVINCE	Canada	Americas	Northern America
-d41586-020-02821-4	Maryland	STATE_OR_PROVINCE	United States of America (USA)	Americas	Northern America
-d41586-020-02821-4	US National Institute of Allergy	ORGANIZATION	United States of America (USA)	Americas	Northern America
-d41586-020-02821-4	Royal Free Hospital	ORGANIZATION	United Kingdom (UK)	Europe	Northern Europe
-d41586-020-02821-4	UK Medicines and Healthcare Regulatory Agency	ORGANIZATION	United Kingdom (UK)	Europe	Northern Europe
-d41586-020-02821-4	MHRA	ORGANIZATION	United Kingdom (UK)	Europe	Northern Europe
-d41586-020-02821-4	University of Maryland School of Medicine	ORGANIZATION	United States of America (USA)	Americas	Northern America
-d41586-020-02821-4	NIAID	ORGANIZATION	United States of America (USA)	Americas	Northern America
-d41586-020-02821-4	Rutgers University	ORGANIZATION	United States of America (USA)	Americas	Northern America
-d41586-020-02821-4	Lurie Children's Hospital and Northwestern University	ORGANIZATION	United States of America (USA)	Americas	Northern America
-d41586-020-02821-4	Colorado State University in Fort Collins	ORGANIZATION	United States of America (USA)	Americas	Northern America
-d41586-020-02821-4	Imperial College London	ORGANIZATION	United Kingdom (UK)	Europe	Northern Europe
-d41586-020-02821-4	London School of Hygiene and Tropical Medicine	ORGANIZATION	United Kingdom (UK)	Europe	Northern Europe
-d41586-020-02821-4	UK	COUNTRY	United Kingdom (UK)	Europe	Northern Europe
-d41586-020-02821-4	United Kingdom	COUNTRY	United Kingdom (UK)	Europe	Northern Europe
-d41586-020-02821-4	New Jersey	STATE_OR_PROVINCE	United States of America (USA)	Americas	Northern America
-d41586-020-02821-4	Illinois	STATE_OR_PROVINCE	United States of America (USA)	Americas	Northern America
-d41586-020-02835-y	Australian Nuclear Science and Technology Organisation	ORGANIZATION	Australia	Oceania	Australia and New Zealand
-d41586-020-02835-y	Commonwealth Scientific and Industrial Research Organisation	ORGANIZATION	Australia	Oceania	Australia and New Zealand
-d41586-020-02835-y	University of Sydney	ORGANIZATION	Australia	Oceania	Australia and New Zealand
-d41586-020-02835-y	James Cook University	ORGANIZATION	Australia	Oceania	Australia and New Zealand
-d41586-020-02835-y	Australian National University	ORGANIZATION	Australia	Oceania	Australia and New Zealand
-d41586-020-02835-y	CSIRO	ORGANIZATION	Australia	Oceania	Australia and New Zealand
-d41586-020-02835-y	Australia	COUNTRY	Australia	Oceania	Australia and New Zealand
-d41586-020-02835-y	Senate	ORGANIZATION	Australia	Oceania	Australia and New Zealand
-d41586-020-02835-y	Victoria University	ORGANIZATION	Australia	Oceania	Australia and New Zealand
-d41586-020-02835-y	Australian Research Council	ORGANIZATION	Australia	Oceania	Australia and New Zealand
-d41586-020-02835-y	National Health and Medical Research Council	ORGANIZATION	Australia	Oceania	Australia and New Zealand
-d41586-020-02835-y	Australian Institute of Marine Sciences	ORGANIZATION	Australia	Oceania	Australia and New Zealand
-d41586-020-02835-y	Australian Academy of Science	ORGANIZATION	Australia	Oceania	Australia and New Zealand
-d41586-020-02835-y	Research Support Program	ORGANIZATION	Australia	Oceania	Australia and New Zealand
-d41586-020-02835-y	Group of Eight	ORGANIZATION	Australia	Oceania	Australia and New Zealand
-d41586-020-02835-y	Australian Renewable Energy Agency	ORGANIZATION	Australia	Oceania	Australia and New Zealand
-d41586-020-03495-8	Senate	ORGANIZATION	United States of America (USA)	Americas	Northern America
-d41586-020-03495-8	Food and Drug Administration	ORGANIZATION	United States of America (USA)	Americas	Northern America
-d41586-020-03495-8	California	STATE_OR_PROVINCE	United States of America (USA)	Americas	Northern America
-d41586-020-03495-8	Department of Health and Human Services	ORGANIZATION	United States of America (USA)	Americas	Northern America
-d41586-020-03495-8	US Centers for Disease Control and Prevention	ORGANIZATION	United States of America (USA)	Americas	Northern America
-d41586-020-03495-8	CDC	ORGANIZATION	United States of America (USA)	Americas	Northern America
-d41586-020-03495-8	Yale School of Medicine	ORGANIZATION	United States of America (USA)	Americas	Northern America
-d41586-020-03495-8	Harvard T.H. Chan School of Public Health	ORGANIZATION	United States of America (USA)	Americas	Northern America
-d41586-020-03495-8	Massachusetts General Hospital	ORGANIZATION	United States of America (USA)	Americas	Northern America
-d41586-020-03495-8	Harvard Medical School	ORGANIZATION	United States of America (USA)	Americas	Northern America
-d41586-020-03495-8	Joint United Nations Programme	ORGANIZATION	NA	NA	NA
-d41586-020-03495-8	Harris County Public Health	ORGANIZATION	United States of America (USA)	Americas	Northern America
-d41586-020-03495-8	Equity Task Force	ORGANIZATION	United States of America (USA)	Americas	Northern America
-d41586-020-03495-8	World Health Organization	ORGANIZATION	NA	NA	NA
-d41586-020-03495-8	George Mason University	ORGANIZATION	United States of America (USA)	Americas	Northern America
-d41586-020-03495-8	Twitter	ORGANIZATION	United States of America (USA)	Americas	Northern America
-d41586-020-03495-8	Arizona	STATE_OR_PROVINCE	United States of America (USA)	Americas	Northern America
-d41586-020-03495-8	United States	COUNTRY	United States of America (USA)	Americas	Northern America
-d41586-020-03495-8	National Institutes of Health	ORGANIZATION	United States of America (USA)	Americas	Northern America
-d41586-020-03495-8	Massachusetts	STATE_OR_PROVINCE	United States of America (USA)	Americas	Northern America
-d41586-020-03495-8	Texas	STATE_OR_PROVINCE	United States of America (USA)	Americas	Northern America
-d41586-020-03495-8	US	COUNTRY	United States of America (USA)	Americas	Northern America
-d41586-020-03495-8	Connecticut	STATE_OR_PROVINCE	United States of America (USA)	Americas	Northern America
-d41586-020-03495-8	Washington	STATE_OR_PROVINCE	United States of America (USA)	Americas	Northern America
-ebola-experience-leaves-world-no-less-vulnerable-1.18844	University of Sydney	ORGANIZATION	Australia	Oceania	Australia and New Zealand
-ebola-experience-leaves-world-no-less-vulnerable-1.18844	Australia	COUNTRY	Australia	Oceania	Australia and New Zealand
-ebola-experience-leaves-world-no-less-vulnerable-1.18844	Liberia	COUNTRY	Liberia	Africa	Western Africa
-ebola-experience-leaves-world-no-less-vulnerable-1.18844	United Nations	ORGANIZATION	NA	NA	NA
-ebola-experience-leaves-world-no-less-vulnerable-1.18844	US National Academy of Medicine	ORGANIZATION	United States of America (USA)	Americas	Northern America
-ebola-experience-leaves-world-no-less-vulnerable-1.18844	WHO	ORGANIZATION	NA	NA	NA
-ebola-experience-leaves-world-no-less-vulnerable-1.18844	World Health Organization	ORGANIZATION	NA	NA	NA
-ebola-experience-leaves-world-no-less-vulnerable-1.18844	London School of Hygiene and Tropical Medicine	ORGANIZATION	United Kingdom (UK)	Europe	Northern Europe
-ebola-experience-leaves-world-no-less-vulnerable-1.18844	Harvard University	ORGANIZATION	United States of America (USA)	Americas	Northern America
-mosquitoes-engineered-to-pass-down-genes-that-would-wipe-out-their-species-1.18974	Imperial College London	ORGANIZATION	United Kingdom (UK)	Europe	Northern Europe
-mosquitoes-engineered-to-pass-down-genes-that-would-wipe-out-their-species-1.18974	University of California	ORGANIZATION	United States of America (USA)	Americas	Northern America
-mosquitoes-engineered-to-pass-down-genes-that-would-wipe-out-their-species-1.18974	Harvard University	ORGANIZATION	United States of America (USA)	Americas	Northern America
-mosquitoes-engineered-to-pass-down-genes-that-would-wipe-out-their-species-1.18974	US	COUNTRY	United States of America (USA)	Americas	Northern America
-mosquitoes-engineered-to-pass-down-genes-that-would-wipe-out-their-species-1.18974	Massachusetts	STATE_OR_PROVINCE	United States of America (USA)	Americas	Northern America
-news.2010.179.html	RI	ORGANIZATION	United Kingdom (UK)	Europe	Northern Europe
-news.2010.179.html	Queen Mary University London	ORGANIZATION	United Kingdom (UK)	Europe	Northern Europe
-news.2010.179.html	University of Oxford	ORGANIZATION	United Kingdom (UK)	Europe	Northern Europe
-news.2010.179.html	United Kingdom	COUNTRY	United Kingdom (UK)	Europe	Northern Europe
-news.2010.278.html	NASA	ORGANIZATION	United States of America (USA)	Americas	Northern America
-news.2010.278.html	California Institute of Technology	ORGANIZATION	United States of America (USA)	Americas	Northern America
-news.2010.278.html	University of Arizona	ORGANIZATION	United States of America (USA)	Americas	Northern America
-news.2010.365.html	University of Reims	ORGANIZATION	France	Europe	Western Europe
-news.2010.365.html	France	COUNTRY	France	Europe	Western Europe
-news.2010.365.html	the research department of Moët & Chandon	ORGANIZATION	France	Europe	Western Europe
-news.2010.365.html	University of California	ORGANIZATION	United States of America (USA)	Americas	Northern America
-news.2010.377.html	Indonesia	COUNTRY	Indonesia	Asia	South-Eastern Asia
-news.2010.377.html	Netherlands	COUNTRY	Netherlands	Europe	Western Europe
-news.2010.377.html	Institute of Technology Bandung	ORGANIZATION	Indonesia	Asia	South-Eastern Asia
-news.2010.377.html	Rutgers University	ORGANIZATION	United States of America (USA)	Americas	Northern America
-news.2010.377.html	Republic of Georgia	COUNTRY	Republic of Georgia	Republic of Georgia	Republic of Georgia
-news.2010.377.html	University of Iowa	ORGANIZATION	United States of America (USA)	Americas	Northern America
-news.2010.377.html	University of Texas at Austin	ORGANIZATION	United States of America (USA)	Americas	Northern America
-news.2010.377.html	New Jersey	STATE_OR_PROVINCE	United States of America (USA)	Americas	Northern America
-news.2010.377.html	Georgia	STATE_OR_PROVINCE	United States of America (USA)	Americas	Northern America
-news.2010.377.html	United States	COUNTRY	United States of America (USA)	Americas	Northern America
-news.2010.402.html	MIT	ORGANIZATION	United States of America (USA)	Americas	Northern America
-news.2010.402.html	Harvard University	ORGANIZATION	United States of America (USA)	Americas	Northern America
-news.2010.402.html	Georgia Institute of Technology	ORGANIZATION	United States of America (USA)	Americas	Northern America
-news.2010.402.html	Massachusetts Institute of Technology	ORGANIZATION	United States of America (USA)	Americas	Northern America
-news.2010.404.html	University of Freiburg	ORGANIZATION	Germany	Europe	Western Europe
-news.2010.404.html	Germany	COUNTRY	Germany	Europe	Western Europe
-news.2010.404.html	Max Planck Institute for Chemistry	ORGANIZATION	Germany	Europe	Western Europe
-news.2010.404.html	Greenpeace Russia	ORGANIZATION	Russia	Russia	Russia
-news.2010.404.html	ITAR TASS	ORGANIZATION	NOT_FOUND	NA	NA
-news.2010.404.html	GFMC	ORGANIZATION	NOT_FOUND	NA	NA
-news.2010.404.html	Russia	COUNTRY	Russia	Russia	Russia
-news.2010.404.html	Russian Federation	COUNTRY	Russia	Russia	Russia
-news.2010.404.html	University of Portsmouth	ORGANIZATION	United Kingdom (UK)	Europe	Northern Europe
-news.2010.404.html	UK	COUNTRY	United Kingdom (UK)	Europe	Northern Europe
-news.2010.585.html	Guatemala	COUNTRY	Guatemala	Americas	Central America
-news.2010.585.html	Mexico	COUNTRY	Mexico	Americas	Central America
-news.2010.585.html	US Environmental Protection Agency	ORGANIZATION	United States of America (USA)	Americas	Northern America
-news.2010.585.html	Pink Bollworm Rearing Facility	ORGANIZATION	United States of America (USA)	Americas	Northern America
-news.2010.585.html	University of Arizona	ORGANIZATION	United States of America (USA)	Americas	Northern America
-news.2010.585.html	North Carolina State University	ORGANIZATION	United States of America (USA)	Americas	Northern America
-news.2010.585.html	University of Minnesota	ORGANIZATION	United States of America (USA)	Americas	Northern America
-news.2010.585.html	United States	COUNTRY	United States of America (USA)	Americas	Northern America
-news.2010.585.html	America	COUNTRY	United States of America (USA)	Americas	Northern America
-news.2010.585.html	Arizona	STATE_OR_PROVINCE	United States of America (USA)	Americas	Northern America
-quantum-technology-probes-ultimate-limits-of-vision-1.17731	University of Trieste	ORGANIZATION	Italy	Europe	Southern Europe
-quantum-technology-probes-ultimate-limits-of-vision-1.17731	Italy	COUNTRY	Italy	Europe	Southern Europe
-quantum-technology-probes-ultimate-limits-of-vision-1.17731	University of Geneva	ORGANIZATION	Switzerland	Europe	Western Europe
-quantum-technology-probes-ultimate-limits-of-vision-1.17731	Switzerland	COUNTRY	Switzerland	Europe	Western Europe
-quantum-technology-probes-ultimate-limits-of-vision-1.17731	University of Illinois	ORGANIZATION	United States of America (USA)	Americas	Northern America
-quantum-technology-probes-ultimate-limits-of-vision-1.17731	Urbana-Champaign	ORGANIZATION	United States of America (USA)	Americas	Northern America
-quantum-technology-probes-ultimate-limits-of-vision-1.17731	American Physical Society	ORGANIZATION	United States of America (USA)	Americas	Northern America
-quantum-technology-probes-ultimate-limits-of-vision-1.17731	Ohio	STATE_OR_PROVINCE	United States of America (USA)	Americas	Northern America
-russian-secret-service-to-vet-research-papers-1.18602	A. N. Belozersky Institute of Physico-Chemical Biology	ORGANIZATION	Russia	Russia	Russia
-russian-secret-service-to-vet-research-papers-1.18602	Federal Security Service	ORGANIZATION	Russia	Russia	Russia
-russian-secret-service-to-vet-research-papers-1.18602	Belozersky Institute	ORGANIZATION	Russia	Russia	Russia
-russian-secret-service-to-vet-research-papers-1.18602	First Department	ORGANIZATION	Russia	Russia	Russia
-russian-secret-service-to-vet-research-papers-1.18602	Lomonosov Moscow State University	ORGANIZATION	Russia	Russia	Russia
-russian-secret-service-to-vet-research-papers-1.18602	FSB	ORGANIZATION	Russia	Russia	Russia
-russian-secret-service-to-vet-research-papers-1.18602	Russian Academy of Sciences	ORGANIZATION	Russia	Russia	Russia
-russian-secret-service-to-vet-research-papers-1.18602	Skolkovo Institute of Science and Technology	ORGANIZATION	Russia	Russia	Russia
-russian-secret-service-to-vet-research-papers-1.18602	Russia	COUNTRY	Russia	Russia	Russia
-russian-secret-service-to-vet-research-papers-1.18602	MSU	ORGANIZATION	Russia	Russia	Russia
-russian-secret-service-to-vet-research-papers-1.18602	Spain	COUNTRY	Spain	Europe	Southern Europe
-russian-secret-service-to-vet-research-papers-1.18602	Ukraine	COUNTRY	Ukraine	Europe	Eastern Europe
-severe-weather-linked-more-strongly-to-global-warming-1.17828	Mexico	COUNTRY	Mexico	Americas	Central America
-severe-weather-linked-more-strongly-to-global-warming-1.17828	California	STATE_OR_PROVINCE	United States of America (USA)	Americas	Northern America
-severe-weather-linked-more-strongly-to-global-warming-1.17828	Environmental Research	ORGANIZATION	United States of America (USA)	Americas	Northern America
-severe-weather-linked-more-strongly-to-global-warming-1.17828	US National Oceanic and Atmospheric Administration	ORGANIZATION	United States of America (USA)	Americas	Northern America
-severe-weather-linked-more-strongly-to-global-warming-1.17828	National Center for Atmospheric Research	ORGANIZATION	United States of America (USA)	Americas	Northern America
-severe-weather-linked-more-strongly-to-global-warming-1.17828	Stanford University	ORGANIZATION	United States of America (USA)	Americas	Northern America
-severe-weather-linked-more-strongly-to-global-warming-1.17828	United States	COUNTRY	United States of America (USA)	Americas	Northern America
-severe-weather-linked-more-strongly-to-global-warming-1.17828	US	COUNTRY	United States of America (USA)	Americas	Northern America
-severe-weather-linked-more-strongly-to-global-warming-1.17828	America	COUNTRY	United States of America (USA)	Americas	Northern America
-severe-weather-linked-more-strongly-to-global-warming-1.17828	Colorado	STATE_OR_PROVINCE	United States of America (USA)	Americas	Northern America
-severe-weather-linked-more-strongly-to-global-warming-1.17828	Massachusetts	STATE_OR_PROVINCE	United States of America (USA)	Americas	Northern America
-structural-biologist-named-president-of-uk-royal-society-1.17153	India	COUNTRY	India	Asia	Southern Asia
-structural-biologist-named-president-of-uk-royal-society-1.17153	Royal Society	ORGANIZATION	United Kingdom (UK)	Europe	Northern Europe
-structural-biologist-named-president-of-uk-royal-society-1.17153	Medical Research Council	ORGANIZATION	United Kingdom (UK)	Europe	Northern Europe
-structural-biologist-named-president-of-uk-royal-society-1.17153	Laboratory for Molecular Biology	ORGANIZATION	United Kingdom (UK)	Europe	Northern Europe
-structural-biologist-named-president-of-uk-royal-society-1.17153	Science Policy Centre	ORGANIZATION	United Kingdom (UK)	Europe	Northern Europe
-structural-biologist-named-president-of-uk-royal-society-1.17153	UK Research Councils	ORGANIZATION	United Kingdom (UK)	Europe	Northern Europe
-structural-biologist-named-president-of-uk-royal-society-1.17153	European Union	ORGANIZATION	NA	Europe	NA
-structural-biologist-named-president-of-uk-royal-society-1.17153	Campaign for Science and Engineering	ORGANIZATION	United Kingdom (UK)	Europe	Northern Europe
-structural-biologist-named-president-of-uk-royal-society-1.17153	MRC	ORGANIZATION	United Kingdom (UK)	Europe	Northern Europe
-structural-biologist-named-president-of-uk-royal-society-1.17153	University of Sussex	ORGANIZATION	United Kingdom (UK)	Europe	Northern Europe
-structural-biologist-named-president-of-uk-royal-society-1.17153	Francis Crick Institute	ORGANIZATION	United Kingdom (UK)	Europe	Northern Europe
-structural-biologist-named-president-of-uk-royal-society-1.17153	United Kingdom	COUNTRY	United Kingdom (UK)	Europe	Northern Europe
-structural-biologist-named-president-of-uk-royal-society-1.17153	UK	COUNTRY	United Kingdom (UK)	Europe	Northern Europe
-structural-biologist-named-president-of-uk-royal-society-1.17153	United States	COUNTRY	United States of America (USA)	Americas	Northern America
-us-precision-medicine-proposal-sparks-questions-1.16774	England	COUNTRY	England	England	England
-us-precision-medicine-proposal-sparks-questions-1.16774	NIH	ORGANIZATION	United States of America (USA)	Americas	Northern America
-us-precision-medicine-proposal-sparks-questions-1.16774	House	ORGANIZATION	United States of America (USA)	Americas	Northern America
-us-precision-medicine-proposal-sparks-questions-1.16774	California	STATE_OR_PROVINCE	United States of America (USA)	Americas	Northern America
-us-precision-medicine-proposal-sparks-questions-1.16774	Congress	ORGANIZATION	United States of America (USA)	Americas	Northern America
-us-precision-medicine-proposal-sparks-questions-1.16774	House of Representatives' Energy & Commerce Committee	ORGANIZATION	United States of America (USA)	Americas	Northern America
-us-precision-medicine-proposal-sparks-questions-1.16774	US National Institutes of Health	ORGANIZATION	United States of America (USA)	Americas	Northern America
-us-precision-medicine-proposal-sparks-questions-1.16774	Genentech	ORGANIZATION	United States of America (USA)	Americas	Northern America
-us-precision-medicine-proposal-sparks-questions-1.16774	Biotechnology Industry Organization	ORGANIZATION	United States of America (USA)	Americas	Northern America
-us-precision-medicine-proposal-sparks-questions-1.16774	US Department of Veterans Affairs	ORGANIZATION	United States of America (USA)	Americas	Northern America
-us-precision-medicine-proposal-sparks-questions-1.16774	Million Veteran Program	ORGANIZATION	United States of America (USA)	Americas	Northern America
-us-precision-medicine-proposal-sparks-questions-1.16774	UK National Health Service	ORGANIZATION	United Kingdom (UK)	Europe	Northern Europe
-us-precision-medicine-proposal-sparks-questions-1.16774	National Children's Study	ORGANIZATION	United States of America (USA)	Americas	Northern America
-us-precision-medicine-proposal-sparks-questions-1.16774	Geisinger Health System	ORGANIZATION	United States of America (USA)	Americas	Northern America
-us-precision-medicine-proposal-sparks-questions-1.16774	Pennsylvania	STATE_OR_PROVINCE	United States of America (USA)	Americas	Northern America
-us-precision-medicine-proposal-sparks-questions-1.16774	Boston University	ORGANIZATION	United States of America (USA)	Americas	Northern America
-us-precision-medicine-proposal-sparks-questions-1.16774	US	COUNTRY	United States of America (USA)	Americas	Northern America
-us-precision-medicine-proposal-sparks-questions-1.16774	White House	ORGANIZATION	United States of America (USA)	Americas	Northern America
-us-precision-medicine-proposal-sparks-questions-1.16774	Massachusetts	STATE_OR_PROVINCE	United States of America (USA)	Americas	Northern America
-us-science-academies-take-on-human-genome-editing-1.17581	National Academy of Medicine	ORGANIZATION	United States of America (USA)	Americas	Northern America
-us-science-academies-take-on-human-genome-editing-1.17581	NAS	ORGANIZATION	United States of America (USA)	Americas	Northern America
-us-science-academies-take-on-human-genome-editing-1.17581	NAM	ORGANIZATION	United States of America (USA)	Americas	Northern America
-us-science-academies-take-on-human-genome-editing-1.17581	California	STATE_OR_PROVINCE	United States of America (USA)	Americas	Northern America
-us-science-academies-take-on-human-genome-editing-1.17581	US National Academy of Sciences	ORGANIZATION	United States of America (USA)	Americas	Northern America
-us-science-academies-take-on-human-genome-editing-1.17581	Center for Genetics and Society	ORGANIZATION	United States of America (USA)	Americas	Northern America
-us-science-academies-take-on-human-genome-editing-1.17581	"University of California, Berkeley"	ORGANIZATION	United States of America (USA)	Americas	Northern America
-us-science-academies-take-on-human-genome-editing-1.17581	Stanford University	ORGANIZATION	United States of America (USA)	Americas	Northern America
-us-science-academies-take-on-human-genome-editing-1.17581	United States	COUNTRY	United States of America (USA)	Americas	Northern America
-us-science-academies-take-on-human-genome-editing-1.17581	US	COUNTRY	United States of America (USA)	Americas	Northern America
+address.country_code	file_id	text	ner	country	un_region	un_subregion
+ar	d41586-020-01756-0	Argentina	COUNTRY	Argentina	Americas	South America
+ar	d41586-020-01756-0	Sinergium Biotech	ORGANIZATION	Argentina	Americas	South America
+au	climatologists-to-physicists-your-planet-needs-you-1.17270	Monash University	ORGANIZATION	Australia	Oceania	Australia and New Zealand
+au	climatologists-to-physicists-your-planet-needs-you-1.17270	Australia	COUNTRY	Australia	Oceania	Australia and New Zealand
+au	d41586-020-00166-6	University of New South Wales	ORGANIZATION	Australia	Oceania	Australia and New Zealand
+au	d41586-020-00166-6	Australia	COUNTRY	Australia	Oceania	Australia and New Zealand
+au	d41586-020-02835-y	Australian Nuclear Science and Technology Organisation	ORGANIZATION	Australia	Oceania	Australia and New Zealand
+au	d41586-020-02835-y	Commonwealth Scientific and Industrial Research Organisation	ORGANIZATION	Australia	Oceania	Australia and New Zealand
+au	d41586-020-02835-y	University of Sydney	ORGANIZATION	Australia	Oceania	Australia and New Zealand
+au	d41586-020-02835-y	James Cook University	ORGANIZATION	Australia	Oceania	Australia and New Zealand
+au	d41586-020-02835-y	Australian National University	ORGANIZATION	Australia	Oceania	Australia and New Zealand
+au	d41586-020-02835-y	CSIRO	ORGANIZATION	Australia	Oceania	Australia and New Zealand
+au	d41586-020-02835-y	Australia	COUNTRY	Australia	Oceania	Australia and New Zealand
+au	d41586-020-02835-y	Senate	ORGANIZATION	Australia	Oceania	Australia and New Zealand
+au	d41586-020-02835-y	Victoria University	ORGANIZATION	Australia	Oceania	Australia and New Zealand
+au	d41586-020-02835-y	Australian Research Council	ORGANIZATION	Australia	Oceania	Australia and New Zealand
+au	d41586-020-02835-y	National Health and Medical Research Council	ORGANIZATION	Australia	Oceania	Australia and New Zealand
+au	d41586-020-02835-y	Australian Institute of Marine Sciences	ORGANIZATION	Australia	Oceania	Australia and New Zealand
+au	d41586-020-02835-y	Australian Academy of Science	ORGANIZATION	Australia	Oceania	Australia and New Zealand
+au	d41586-020-02835-y	Research Support Program	ORGANIZATION	Australia	Oceania	Australia and New Zealand
+au	d41586-020-02835-y	Group of Eight	ORGANIZATION	Australia	Oceania	Australia and New Zealand
+au	d41586-020-02835-y	Australian Renewable Energy Agency	ORGANIZATION	Australia	Oceania	Australia and New Zealand
+au	ebola-experience-leaves-world-no-less-vulnerable-1.18844	University of Sydney	ORGANIZATION	Australia	Oceania	Australia and New Zealand
+au	ebola-experience-leaves-world-no-less-vulnerable-1.18844	Australia	COUNTRY	Australia	Oceania	Australia and New Zealand
+be	climatologists-to-physicists-your-planet-needs-you-1.17270	Catholic University of Leuven	ORGANIZATION	Belgium	Europe	Western Europe
+be	climatologists-to-physicists-your-planet-needs-you-1.17270	Belgium	COUNTRY	Belgium	Europe	Western Europe
+be	d41586-020-02821-4	Belgium	COUNTRY	Belgium	Europe	Western Europe
+br	d41586-020-01587-z	Brazil	COUNTRY	Brasil	Americas	South America
+br	d41586-020-01756-0	University of São Paulo	ORGANIZATION	Brasil	Americas	South America
+br	d41586-020-01756-0	Brazil	COUNTRY	Brasil	Americas	South America
+br	d41586-020-01756-0	Butantan Institute	ORGANIZATION	Brasil	Americas	South America
+ca	464472b.html	Canada	COUNTRY	Canada	Americas	Northern America
+ca	464472b.html	Ontario	STATE_OR_PROVINCE	Canada	Americas	Northern America
+ca	4661029a.html	University of Alberta	ORGANIZATION	Canada	Americas	Northern America
+ca	4661029a.html	Canada	COUNTRY	Canada	Americas	Northern America
+ca	bat-drinks-using-tongue-pump-trick-1.18434	Canada	COUNTRY	Canada	Americas	Northern America
+ca	bat-drinks-using-tongue-pump-trick-1.18434	St Lawrence River Institute of Environmental Sciences	ORGANIZATION	Canada	Americas	Northern America
+ca	d41586-020-01587-z	University of Northern British Columbia	ORGANIZATION	Canada	Americas	Northern America
+ca	d41586-020-01587-z	Canada	COUNTRY	Canada	Americas	Northern America
+ca	d41586-020-02821-4	New Brunswick	STATE_OR_PROVINCE	Canada	Americas	Northern America
+ch	d41586-020-00889-6	Roche	ORGANIZATION	Switzerland	Europe	Western Europe
+ch	d41586-020-00889-6	Addex Therapeutics	ORGANIZATION	Switzerland	Europe	Western Europe
+ch	d41586-020-00889-6	Switzerland	COUNTRY	Switzerland	Europe	Western Europe
+ch	quantum-technology-probes-ultimate-limits-of-vision-1.17731	University of Geneva	ORGANIZATION	Switzerland	Europe	Western Europe
+ch	quantum-technology-probes-ultimate-limits-of-vision-1.17731	Switzerland	COUNTRY	Switzerland	Europe	Western Europe
+cl	d41586-020-01756-0	Chile	COUNTRY	Chile	Americas	South America
+cl	d41586-020-01756-0	Pontifical Catholic University of Chile	ORGANIZATION	Chile	Americas	South America
+cn	d41586-020-00166-6	China	COUNTRY	People's Republic of China	Asia	Eastern Asia
+cn	d41586-020-00166-6	National Health Commission	ORGANIZATION	People's Republic of China	Asia	Eastern Asia
+cn	d41586-020-00166-6	National Engineering Research Center for the Emergence Drugs	ORGANIZATION	People's Republic of China	Asia	Eastern Asia
+cn	d41586-020-00166-6	Yunnan	STATE_OR_PROVINCE	People's Republic of China	Asia	Eastern Asia
+cn	d41586-020-00941-5	China	COUNTRY	People's Republic of China	Asia	Eastern Asia
+cn	d41586-020-01756-0	China	COUNTRY	People's Republic of China	Asia	Eastern Asia
+cr	d41586-020-01587-z	Costa Rica	COUNTRY	Costa Rica	Americas	Central America
+de	4661029a.html	Germany	COUNTRY	Germany	Europe	Western Europe
+de	4661029a.html	Max Planck Institute of Colloids and Interfaces	ORGANIZATION	Germany	Europe	Western Europe
+de	bat-drinks-using-tongue-pump-trick-1.18434	Germany	COUNTRY	Germany	Europe	Western Europe
+de	bat-drinks-using-tongue-pump-trick-1.18434	University of Ulm	ORGANIZATION	Germany	Europe	Western Europe
+de	climatologists-to-physicists-your-planet-needs-you-1.17270	Germany	COUNTRY	Germany	Europe	Western Europe
+de	climatologists-to-physicists-your-planet-needs-you-1.17270	Max Planck Institute for Meteorology	ORGANIZATION	Germany	Europe	Western Europe
+de	d41586-020-01587-z	Germany	COUNTRY	Germany	Europe	Western Europe
+de	d41586-020-01587-z	Heidelberg University	ORGANIZATION	Germany	Europe	Western Europe
+de	news.2010.404.html	University of Freiburg	ORGANIZATION	Germany	Europe	Western Europe
+de	news.2010.404.html	Germany	COUNTRY	Germany	Europe	Western Europe
+de	news.2010.404.html	Max Planck Institute for Chemistry	ORGANIZATION	Germany	Europe	Western Europe
+es	russian-secret-service-to-vet-research-papers-1.18602	Spain	COUNTRY	Spain	Europe	Southern Europe
+fr	climatologists-to-physicists-your-planet-needs-you-1.17270	Laboratory of Dynamic Meteorology	ORGANIZATION	France	Europe	Western Europe
+fr	d41586-020-00166-6	Pasteur Institute	ORGANIZATION	France	Europe	Western Europe
+fr	news.2010.365.html	University of Reims	ORGANIZATION	France	Europe	Western Europe
+fr	news.2010.365.html	France	COUNTRY	France	Europe	Western Europe
+fr	news.2010.365.html	the research department of Moët & Chandon	ORGANIZATION	France	Europe	Western Europe
+gb	us-precision-medicine-proposal-sparks-questions-1.16774	England	COUNTRY	United Kingdom	Europe	Northern Europe
+gb	structural-biologist-named-president-of-uk-royal-society-1.17153	UK Research Councils	ORGANIZATION	United Kingdom	Europe	Northern Europe
+gb	structural-biologist-named-president-of-uk-royal-society-1.17153	Campaign for Science and Engineering	ORGANIZATION	United Kingdom	Europe	Northern Europe
+gb	structural-biologist-named-president-of-uk-royal-society-1.17153	MRC	ORGANIZATION	United Kingdom	Europe	Northern Europe
+gb	structural-biologist-named-president-of-uk-royal-society-1.17153	University of Sussex	ORGANIZATION	United Kingdom	Europe	Northern Europe
+gb	structural-biologist-named-president-of-uk-royal-society-1.17153	Francis Crick Institute	ORGANIZATION	United Kingdom	Europe	Northern Europe
+gb	structural-biologist-named-president-of-uk-royal-society-1.17153	United Kingdom	COUNTRY	United Kingdom	Europe	Northern Europe
+gb	structural-biologist-named-president-of-uk-royal-society-1.17153	UK	COUNTRY	United Kingdom	Europe	Northern Europe
+gb	us-precision-medicine-proposal-sparks-questions-1.16774	UK National Health Service	ORGANIZATION	United Kingdom	Europe	Northern Europe
+gb	464472b.html	Antarctic Survey	ORGANIZATION	United Kingdom	Europe	Northern Europe
+gb	464472b.html	United Kingdom	COUNTRY	United Kingdom	Europe	Northern Europe
+gb	climatologists-to-physicists-your-planet-needs-you-1.17270	UK	COUNTRY	United Kingdom	Europe	Northern Europe
+gb	climatologists-to-physicists-your-planet-needs-you-1.17270	University of Leeds	ORGANIZATION	United Kingdom	Europe	Northern Europe
+gb	climatologists-to-physicists-your-planet-needs-you-1.17270	University of Cambridge	ORGANIZATION	United Kingdom	Europe	Northern Europe
+gb	d41586-020-00166-6	University of Nottingham	ORGANIZATION	United Kingdom	Europe	Northern Europe
+gb	d41586-020-00166-6	University of Cambridge	ORGANIZATION	United Kingdom	Europe	Northern Europe
+gb	d41586-020-00166-6	University of Edinburgh	ORGANIZATION	United Kingdom	Europe	Northern Europe
+gb	d41586-020-00166-6	University of Glasgow	ORGANIZATION	United Kingdom	Europe	Northern Europe
+gb	d41586-020-00166-6	Imperial College London	ORGANIZATION	United Kingdom	Europe	Northern Europe
+gb	d41586-020-00166-6	UK	COUNTRY	United Kingdom	Europe	Northern Europe
+gb	d41586-020-00365-1	Imperial College London	ORGANIZATION	United Kingdom	Europe	Northern Europe
+gb	d41586-020-01587-z	United Kingdom	COUNTRY	United Kingdom	Europe	Northern Europe
+gb	d41586-020-02821-4	Royal Free Hospital	ORGANIZATION	United Kingdom	Europe	Northern Europe
+gb	d41586-020-02821-4	UK Medicines and Healthcare Regulatory Agency	ORGANIZATION	United Kingdom	Europe	Northern Europe
+gb	d41586-020-02821-4	MHRA	ORGANIZATION	United Kingdom	Europe	Northern Europe
+gb	d41586-020-02821-4	Imperial College London	ORGANIZATION	United Kingdom	Europe	Northern Europe
+gb	d41586-020-02821-4	London School of Hygiene and Tropical Medicine	ORGANIZATION	United Kingdom	Europe	Northern Europe
+gb	d41586-020-02821-4	UK	COUNTRY	United Kingdom	Europe	Northern Europe
+gb	d41586-020-02821-4	United Kingdom	COUNTRY	United Kingdom	Europe	Northern Europe
+gb	ebola-experience-leaves-world-no-less-vulnerable-1.18844	London School of Hygiene and Tropical Medicine	ORGANIZATION	United Kingdom	Europe	Northern Europe
+gb	mosquitoes-engineered-to-pass-down-genes-that-would-wipe-out-their-species-1.18974	Imperial College London	ORGANIZATION	United Kingdom	Europe	Northern Europe
+gb	news.2010.179.html	RI	ORGANIZATION	United Kingdom	Europe	Northern Europe
+gb	news.2010.179.html	Queen Mary University London	ORGANIZATION	United Kingdom	Europe	Northern Europe
+gb	news.2010.179.html	University of Oxford	ORGANIZATION	United Kingdom	Europe	Northern Europe
+gb	news.2010.179.html	United Kingdom	COUNTRY	United Kingdom	Europe	Northern Europe
+gb	news.2010.404.html	University of Portsmouth	ORGANIZATION	United Kingdom	Europe	Northern Europe
+gb	news.2010.404.html	UK	COUNTRY	United Kingdom	Europe	Northern Europe
+gb	structural-biologist-named-president-of-uk-royal-society-1.17153	Royal Society	ORGANIZATION	United Kingdom	Europe	Northern Europe
+gb	structural-biologist-named-president-of-uk-royal-society-1.17153	Medical Research Council	ORGANIZATION	United Kingdom	Europe	Northern Europe
+gb	structural-biologist-named-president-of-uk-royal-society-1.17153	Laboratory for Molecular Biology	ORGANIZATION	United Kingdom	Europe	Northern Europe
+gb	structural-biologist-named-president-of-uk-royal-society-1.17153	Science Policy Centre	ORGANIZATION	United Kingdom	Europe	Northern Europe
+ge	news.2010.377.html	Republic of Georgia	COUNTRY	Georgia	Asia	Western Asia
+gt	news.2010.585.html	Guatemala	COUNTRY	Guatemala	Americas	Central America
+hn	d41586-020-01587-z	Honduras	COUNTRY	Honduras	Americas	Central America
+id	news.2010.377.html	Indonesia	COUNTRY	Indonesia	Asia	South-Eastern Asia
+id	news.2010.377.html	Institute of Technology Bandung	ORGANIZATION	Indonesia	Asia	South-Eastern Asia
+in	d41586-020-00941-5	India	COUNTRY	India	Asia	Southern Asia
+in	structural-biologist-named-president-of-uk-royal-society-1.17153	India	COUNTRY	India	Asia	Southern Asia
+it	d41586-020-00941-5	Italy	COUNTRY	Italy	Europe	Southern Europe
+it	d41586-020-01587-z	Italy	COUNTRY	Italy	Europe	Southern Europe
+it	d41586-020-01587-z	University of Padua	ORGANIZATION	Italy	Europe	Southern Europe
+it	quantum-technology-probes-ultimate-limits-of-vision-1.17731	University of Trieste	ORGANIZATION	Italy	Europe	Southern Europe
+it	quantum-technology-probes-ultimate-limits-of-vision-1.17731	Italy	COUNTRY	Italy	Europe	Southern Europe
+lr	ebola-experience-leaves-world-no-less-vulnerable-1.18844	Liberia	COUNTRY	Liberia	Africa	Western Africa
+mx	d41586-020-01756-0	National Autonomous University of Mexico	ORGANIZATION	Mexico	Americas	Central America
+mx	d41586-020-01756-0	Mexico	COUNTRY	Mexico	Americas	Central America
+mx	d41586-020-01756-0	Monterrey Institute of Technology and Higher Education	ORGANIZATION	Mexico	Americas	Central America
+mx	news.2010.585.html	Mexico	COUNTRY	Mexico	Americas	Central America
+mx	severe-weather-linked-more-strongly-to-global-warming-1.17828	Mexico	COUNTRY	Mexico	Americas	Central America
+ni	d41586-020-01587-z	Nicaragua	COUNTRY	Nicaragua	Americas	Central America
+ni	d41586-020-01587-z	University of Central America	ORGANIZATION	Nicaragua	Americas	Central America
+nl	4661029a.html	Leiden University	ORGANIZATION	Netherlands	Europe	Western Europe
+nl	4661029a.html	Netherlands	COUNTRY	Netherlands	Europe	Western Europe
+nl	d41586-020-01587-z	University of Groningen	ORGANIZATION	Netherlands	Europe	Western Europe
+nl	news.2010.377.html	Netherlands	COUNTRY	Netherlands	Europe	Western Europe
+nl	d41586-020-00365-1	Netherlands	COUNTRY	Netherlands	Europe	Western Europe
+nl	d41586-020-01587-z	Netherlands	COUNTRY	Netherlands	Europe	Western Europe
+nz	d41586-020-01587-z	University of Auckland	ORGANIZATION	New Zealand	Oceania	Australia and New Zealand
+nz	d41586-020-01587-z	New Zealand	COUNTRY	New Zealand	Oceania	Australia and New Zealand
+pe	d41586-020-01756-0	FARVET	ORGANIZATION	Peru	Americas	South America
+pe	d41586-020-01756-0	Cayetano Heredia University	ORGANIZATION	Peru	Americas	South America
+pe	d41586-020-01756-0	Peru	COUNTRY	Peru	Americas	South America
+ru	464472b.html	Russia	COUNTRY	Russia	Europe	Eastern Europe
+ru	news.2010.404.html	Greenpeace Russia	ORGANIZATION	Russia	Europe	Eastern Europe
+ru	news.2010.404.html	Russia	COUNTRY	Russia	Europe	Eastern Europe
+ru	news.2010.404.html	Russian Federation	COUNTRY	Russia	Europe	Eastern Europe
+ru	russian-secret-service-to-vet-research-papers-1.18602	A. N. Belozersky Institute of Physico-Chemical Biology	ORGANIZATION	Russia	Europe	Eastern Europe
+ru	russian-secret-service-to-vet-research-papers-1.18602	Federal Security Service	ORGANIZATION	Russia	Europe	Eastern Europe
+ru	russian-secret-service-to-vet-research-papers-1.18602	Belozersky Institute	ORGANIZATION	Russia	Europe	Eastern Europe
+ru	russian-secret-service-to-vet-research-papers-1.18602	First Department	ORGANIZATION	Russia	Europe	Eastern Europe
+ru	russian-secret-service-to-vet-research-papers-1.18602	Lomonosov Moscow State University	ORGANIZATION	Russia	Europe	Eastern Europe
+ru	russian-secret-service-to-vet-research-papers-1.18602	FSB	ORGANIZATION	Russia	Europe	Eastern Europe
+ru	russian-secret-service-to-vet-research-papers-1.18602	Russian Academy of Sciences	ORGANIZATION	Russia	Europe	Eastern Europe
+ru	russian-secret-service-to-vet-research-papers-1.18602	Skolkovo Institute of Science and Technology	ORGANIZATION	Russia	Europe	Eastern Europe
+ru	russian-secret-service-to-vet-research-papers-1.18602	Russia	COUNTRY	Russia	Europe	Eastern Europe
+ru	russian-secret-service-to-vet-research-papers-1.18602	MSU	ORGANIZATION	Russia	Europe	Eastern Europe
+th	d41586-020-00166-6	Thailand	COUNTRY	Thailand	Asia	South-Eastern Asia
+ua	russian-secret-service-to-vet-research-papers-1.18602	Ukraine	COUNTRY	Ukraine	Europe	Eastern Europe
+us	4641259a.html	National Center for Genome Resources in Santa Fe	ORGANIZATION	United States	Americas	Northern America
+us	4641259a.html	University of California	ORGANIZATION	United States	Americas	Northern America
+us	4641259a.html	Yale University	ORGANIZATION	United States	Americas	Northern America
+us	4641259a.html	US	COUNTRY	United States	Americas	Northern America
+us	4641259a.html	New Mexico	STATE_OR_PROVINCE	United States	Americas	Northern America
+us	4641259a.html	Connecticut	STATE_OR_PROVINCE	United States	Americas	Northern America
+us	464472b.html	Maryland	STATE_OR_PROVINCE	United States	Americas	Northern America
+us	464472b.html	Columbia University's Lamont-Doherty Earth Observatory	ORGANIZATION	United States	Americas	Northern America
+us	464472b.html	American Geophysical Union	ORGANIZATION	United States	Americas	Northern America
+us	464472b.html	NASA	ORGANIZATION	United States	Americas	Northern America
+us	464472b.html	Goddard Space Flight Center	ORGANIZATION	United States	Americas	Northern America
+us	464472b.html	Northern Illinois University in DeKalb	ORGANIZATION	United States	Americas	Northern America
+us	464472b.html	United States	COUNTRY	United States	Americas	Northern America
+us	464472b.html	US	COUNTRY	United States	Americas	Northern America
+us	464472b.html	New York	STATE_OR_PROVINCE	United States	Americas	Northern America
+us	4661029a.html	University of Georgia	ORGANIZATION	United States	Americas	Northern America
+us	4661029a.html	Ancora Pharmaceuticals	ORGANIZATION	United States	Americas	Northern America
+us	4661029a.html	American Chemical Society	ORGANIZATION	United States	Americas	Northern America
+us	4661029a.html	LuCella Biosciences	ORGANIZATION	United States	Americas	Northern America
+us	4661029a.html	Massachusetts	STATE_OR_PROVINCE	United States	Americas	Northern America
+us	4661029a.html	Iowa State University	ORGANIZATION	United States	Americas	Northern America
+us	4661029a.html	MASSACHUSETTS	STATE_OR_PROVINCE	United States	Americas	Northern America
+us	climatologists-to-physicists-your-planet-needs-you-1.17270	Maryland	STATE_OR_PROVINCE	United States	Americas	Northern America
+us	climatologists-to-physicists-your-planet-needs-you-1.17270	American Institute of Physics in College Park	ORGANIZATION	United States	Americas	Northern America
+us	climatologists-to-physicists-your-planet-needs-you-1.17270	United States	COUNTRY	United States	Americas	Northern America
+us	d41586-020-00166-6	Fred Hutchinson Cancer Research Center	ORGANIZATION	United States	Americas	Northern America
+us	d41586-020-00166-6	United States	COUNTRY	United States	Americas	Northern America
+us	d41586-020-00166-6	Washington	STATE_OR_PROVINCE	United States	Americas	Northern America
+us	d41586-020-00365-1	Florida	STATE_OR_PROVINCE	United States	Americas	Northern America
+us	d41586-020-00365-1	Maryland	STATE_OR_PROVINCE	United States	Americas	Northern America
+us	d41586-020-00365-1	Science Mission Directorate	ORGANIZATION	United States	Americas	Northern America
+us	d41586-020-00365-1	NASA	ORGANIZATION	United States	Americas	Northern America
+us	d41586-020-00365-1	Johns Hopkins University Applied Physics Laboratory	ORGANIZATION	United States	Americas	Northern America
+us	d41586-020-00889-6	Women's Hospital	ORGANIZATION	United States	Americas	Northern America
+us	d41586-020-00889-6	US National Institutes of Health	ORGANIZATION	United States	Americas	Northern America
+us	d41586-020-00889-6	US Food and Drug Administration	ORGANIZATION	United States	Americas	Northern America
+us	d41586-020-00889-6	US National Cancer Institute	ORGANIZATION	United States	Americas	Northern America
+us	d41586-020-00889-6	Oregon Health & Science University	ORGANIZATION	United States	Americas	Northern America
+us	d41586-020-00889-6	SWOG Cancer Research Network	ORGANIZATION	United States	Americas	Northern America
+us	d41586-020-00889-6	Yale University	ORGANIZATION	United States	Americas	Northern America
+us	d41586-020-00889-6	Connecticut	STATE_OR_PROVINCE	United States	Americas	Northern America
+us	d41586-020-00889-6	Harvard	ORGANIZATION	United States	Americas	Northern America
+us	d41586-020-00889-6	Yale	ORGANIZATION	United States	Americas	Northern America
+us	d41586-020-00889-6	Eli Lilly	ORGANIZATION	United States	Americas	Northern America
+us	d41586-020-00889-6	Massachusetts	STATE_OR_PROVINCE	United States	Americas	Northern America
+us	d41586-020-00889-6	Nebraska	STATE_OR_PROVINCE	United States	Americas	Northern America
+us	d41586-020-00889-6	Indiana	STATE_OR_PROVINCE	United States	Americas	Northern America
+us	d41586-020-00941-5	US Environmental Protection Agency	ORGANIZATION	United States	Americas	Northern America
+us	d41586-020-00941-5	Eurasia Group	ORGANIZATION	United States	Americas	Northern America
+us	d41586-020-00941-5	World Resources Institute	ORGANIZATION	United States	Americas	Northern America
+us	d41586-020-00941-5	US	COUNTRY	United States	Americas	Northern America
+us	d41586-020-00941-5	Environmental Defense Fund	ORGANIZATION	United States	Americas	Northern America
+us	d41586-020-00941-5	United States	COUNTRY	United States	Americas	Northern America
+us	d41586-020-01114-0	NASA	ORGANIZATION	United States	Americas	Northern America
+us	d41586-020-01114-0	California Institute of Technology	ORGANIZATION	United States	Americas	Northern America
+us	d41586-020-01587-z	Centers for Disease Control and Prevention	ORGANIZATION	United States	Americas	Northern America
+us	d41586-020-01587-z	Association of American Universities	ORGANIZATION	United States	Americas	Northern America
+us	d41586-020-01587-z	United States	COUNTRY	United States	Americas	Northern America
+us	d41586-020-01587-z	University of California	ORGANIZATION	United States	Americas	Northern America
+us	d41586-020-01587-z	America	COUNTRY	United States	Americas	Northern America
+us	d41586-020-01587-z	Yale University	ORGANIZATION	United States	Americas	Northern America
+us	d41586-020-01587-z	Connecticut	STATE_OR_PROVINCE	United States	Americas	Northern America
+us	d41586-020-01756-0	Duke University	ORGANIZATION	United States	Americas	Northern America
+us	d41586-020-01756-0	United States	COUNTRY	United States	Americas	Northern America
+us	d41586-020-01756-0	America	COUNTRY	United States	Americas	Northern America
+us	d41586-020-01756-0	Baylor College of Medicine	ORGANIZATION	United States	Americas	Northern America
+us	d41586-020-01756-0	Texas	STATE_OR_PROVINCE	United States	Americas	Northern America
+us	d41586-020-01756-0	North Carolina	STATE_OR_PROVINCE	United States	Americas	Northern America
+us	d41586-020-02821-4	Maryland	STATE_OR_PROVINCE	United States	Americas	Northern America
+us	d41586-020-02821-4	US National Institute of Allergy	ORGANIZATION	United States	Americas	Northern America
+us	d41586-020-02821-4	University of Maryland School of Medicine	ORGANIZATION	United States	Americas	Northern America
+us	d41586-020-02821-4	NIAID	ORGANIZATION	United States	Americas	Northern America
+us	d41586-020-02821-4	Rutgers University	ORGANIZATION	United States	Americas	Northern America
+us	d41586-020-02821-4	Lurie Children's Hospital and Northwestern University	ORGANIZATION	United States	Americas	Northern America
+us	d41586-020-02821-4	Colorado State University in Fort Collins	ORGANIZATION	United States	Americas	Northern America
+us	d41586-020-02821-4	New Jersey	STATE_OR_PROVINCE	United States	Americas	Northern America
+us	d41586-020-02821-4	Illinois	STATE_OR_PROVINCE	United States	Americas	Northern America
+us	d41586-020-03495-8	Senate	ORGANIZATION	United States	Americas	Northern America
+us	d41586-020-03495-8	Food and Drug Administration	ORGANIZATION	United States	Americas	Northern America
+us	d41586-020-03495-8	California	STATE_OR_PROVINCE	United States	Americas	Northern America
+us	d41586-020-03495-8	Department of Health and Human Services	ORGANIZATION	United States	Americas	Northern America
+us	d41586-020-03495-8	US Centers for Disease Control and Prevention	ORGANIZATION	United States	Americas	Northern America
+us	d41586-020-03495-8	CDC	ORGANIZATION	United States	Americas	Northern America
+us	d41586-020-03495-8	Yale School of Medicine	ORGANIZATION	United States	Americas	Northern America
+us	d41586-020-03495-8	Harvard T.H. Chan School of Public Health	ORGANIZATION	United States	Americas	Northern America
+us	d41586-020-03495-8	Massachusetts General Hospital	ORGANIZATION	United States	Americas	Northern America
+us	d41586-020-03495-8	Harvard Medical School	ORGANIZATION	United States	Americas	Northern America
+us	d41586-020-03495-8	Harris County Public Health	ORGANIZATION	United States	Americas	Northern America
+us	d41586-020-03495-8	Equity Task Force	ORGANIZATION	United States	Americas	Northern America
+us	d41586-020-03495-8	George Mason University	ORGANIZATION	United States	Americas	Northern America
+us	d41586-020-03495-8	Twitter	ORGANIZATION	United States	Americas	Northern America
+us	d41586-020-03495-8	Arizona	STATE_OR_PROVINCE	United States	Americas	Northern America
+us	d41586-020-03495-8	United States	COUNTRY	United States	Americas	Northern America
+us	d41586-020-03495-8	National Institutes of Health	ORGANIZATION	United States	Americas	Northern America
+us	d41586-020-03495-8	Massachusetts	STATE_OR_PROVINCE	United States	Americas	Northern America
+us	d41586-020-03495-8	Texas	STATE_OR_PROVINCE	United States	Americas	Northern America
+us	d41586-020-03495-8	US	COUNTRY	United States	Americas	Northern America
+us	d41586-020-03495-8	Connecticut	STATE_OR_PROVINCE	United States	Americas	Northern America
+us	d41586-020-03495-8	Washington	STATE_OR_PROVINCE	United States	Americas	Northern America
+us	ebola-experience-leaves-world-no-less-vulnerable-1.18844	US National Academy of Medicine	ORGANIZATION	United States	Americas	Northern America
+us	ebola-experience-leaves-world-no-less-vulnerable-1.18844	Harvard University	ORGANIZATION	United States	Americas	Northern America
+us	mosquitoes-engineered-to-pass-down-genes-that-would-wipe-out-their-species-1.18974	University of California	ORGANIZATION	United States	Americas	Northern America
+us	mosquitoes-engineered-to-pass-down-genes-that-would-wipe-out-their-species-1.18974	Harvard University	ORGANIZATION	United States	Americas	Northern America
+us	mosquitoes-engineered-to-pass-down-genes-that-would-wipe-out-their-species-1.18974	US	COUNTRY	United States	Americas	Northern America
+us	mosquitoes-engineered-to-pass-down-genes-that-would-wipe-out-their-species-1.18974	Massachusetts	STATE_OR_PROVINCE	United States	Americas	Northern America
+us	news.2010.278.html	NASA	ORGANIZATION	United States	Americas	Northern America
+us	news.2010.278.html	California Institute of Technology	ORGANIZATION	United States	Americas	Northern America
+us	news.2010.278.html	University of Arizona	ORGANIZATION	United States	Americas	Northern America
+us	news.2010.365.html	University of California	ORGANIZATION	United States	Americas	Northern America
+us	news.2010.377.html	Rutgers University	ORGANIZATION	United States	Americas	Northern America
+us	news.2010.377.html	University of Iowa	ORGANIZATION	United States	Americas	Northern America
+us	news.2010.377.html	University of Texas at Austin	ORGANIZATION	United States	Americas	Northern America
+us	news.2010.377.html	New Jersey	STATE_OR_PROVINCE	United States	Americas	Northern America
+us	news.2010.377.html	Georgia	STATE_OR_PROVINCE	United States	Americas	Northern America
+us	news.2010.377.html	United States	COUNTRY	United States	Americas	Northern America
+us	news.2010.402.html	MIT	ORGANIZATION	United States	Americas	Northern America
+us	news.2010.402.html	Harvard University	ORGANIZATION	United States	Americas	Northern America
+us	news.2010.402.html	Georgia Institute of Technology	ORGANIZATION	United States	Americas	Northern America
+us	news.2010.402.html	Massachusetts Institute of Technology	ORGANIZATION	United States	Americas	Northern America
+us	news.2010.585.html	US Environmental Protection Agency	ORGANIZATION	United States	Americas	Northern America
+us	news.2010.585.html	Pink Bollworm Rearing Facility	ORGANIZATION	United States	Americas	Northern America
+us	news.2010.585.html	University of Arizona	ORGANIZATION	United States	Americas	Northern America
+us	news.2010.585.html	North Carolina State University	ORGANIZATION	United States	Americas	Northern America
+us	news.2010.585.html	University of Minnesota	ORGANIZATION	United States	Americas	Northern America
+us	news.2010.585.html	United States	COUNTRY	United States	Americas	Northern America
+us	news.2010.585.html	America	COUNTRY	United States	Americas	Northern America
+us	news.2010.585.html	Arizona	STATE_OR_PROVINCE	United States	Americas	Northern America
+us	quantum-technology-probes-ultimate-limits-of-vision-1.17731	University of Illinois	ORGANIZATION	United States	Americas	Northern America
+us	quantum-technology-probes-ultimate-limits-of-vision-1.17731	Urbana-Champaign	ORGANIZATION	United States	Americas	Northern America
+us	quantum-technology-probes-ultimate-limits-of-vision-1.17731	American Physical Society	ORGANIZATION	United States	Americas	Northern America
+us	quantum-technology-probes-ultimate-limits-of-vision-1.17731	Ohio	STATE_OR_PROVINCE	United States	Americas	Northern America
+us	severe-weather-linked-more-strongly-to-global-warming-1.17828	California	STATE_OR_PROVINCE	United States	Americas	Northern America
+us	severe-weather-linked-more-strongly-to-global-warming-1.17828	Environmental Research	ORGANIZATION	United States	Americas	Northern America
+us	severe-weather-linked-more-strongly-to-global-warming-1.17828	US National Oceanic and Atmospheric Administration	ORGANIZATION	United States	Americas	Northern America
+us	severe-weather-linked-more-strongly-to-global-warming-1.17828	National Center for Atmospheric Research	ORGANIZATION	United States	Americas	Northern America
+us	severe-weather-linked-more-strongly-to-global-warming-1.17828	Stanford University	ORGANIZATION	United States	Americas	Northern America
+us	severe-weather-linked-more-strongly-to-global-warming-1.17828	United States	COUNTRY	United States	Americas	Northern America
+us	severe-weather-linked-more-strongly-to-global-warming-1.17828	US	COUNTRY	United States	Americas	Northern America
+us	severe-weather-linked-more-strongly-to-global-warming-1.17828	America	COUNTRY	United States	Americas	Northern America
+us	severe-weather-linked-more-strongly-to-global-warming-1.17828	Colorado	STATE_OR_PROVINCE	United States	Americas	Northern America
+us	severe-weather-linked-more-strongly-to-global-warming-1.17828	Massachusetts	STATE_OR_PROVINCE	United States	Americas	Northern America
+us	structural-biologist-named-president-of-uk-royal-society-1.17153	United States	COUNTRY	United States	Americas	Northern America
+us	us-precision-medicine-proposal-sparks-questions-1.16774	NIH	ORGANIZATION	United States	Americas	Northern America
+us	us-precision-medicine-proposal-sparks-questions-1.16774	House	ORGANIZATION	United States	Americas	Northern America
+us	us-precision-medicine-proposal-sparks-questions-1.16774	California	STATE_OR_PROVINCE	United States	Americas	Northern America
+us	us-precision-medicine-proposal-sparks-questions-1.16774	Congress	ORGANIZATION	United States	Americas	Northern America
+us	us-precision-medicine-proposal-sparks-questions-1.16774	House of Representatives' Energy & Commerce Committee	ORGANIZATION	United States	Americas	Northern America
+us	us-precision-medicine-proposal-sparks-questions-1.16774	US National Institutes of Health	ORGANIZATION	United States	Americas	Northern America
+us	us-precision-medicine-proposal-sparks-questions-1.16774	Genentech	ORGANIZATION	United States	Americas	Northern America
+us	us-precision-medicine-proposal-sparks-questions-1.16774	Biotechnology Industry Organization	ORGANIZATION	United States	Americas	Northern America
+us	us-precision-medicine-proposal-sparks-questions-1.16774	US Department of Veterans Affairs	ORGANIZATION	United States	Americas	Northern America
+us	us-precision-medicine-proposal-sparks-questions-1.16774	Million Veteran Program	ORGANIZATION	United States	Americas	Northern America
+us	us-precision-medicine-proposal-sparks-questions-1.16774	National Children's Study	ORGANIZATION	United States	Americas	Northern America
+us	us-precision-medicine-proposal-sparks-questions-1.16774	Geisinger Health System	ORGANIZATION	United States	Americas	Northern America
+us	us-precision-medicine-proposal-sparks-questions-1.16774	Pennsylvania	STATE_OR_PROVINCE	United States	Americas	Northern America
+us	us-precision-medicine-proposal-sparks-questions-1.16774	Boston University	ORGANIZATION	United States	Americas	Northern America
+us	us-precision-medicine-proposal-sparks-questions-1.16774	US	COUNTRY	United States	Americas	Northern America
+us	us-precision-medicine-proposal-sparks-questions-1.16774	White House	ORGANIZATION	United States	Americas	Northern America
+us	us-precision-medicine-proposal-sparks-questions-1.16774	Massachusetts	STATE_OR_PROVINCE	United States	Americas	Northern America
+us	us-science-academies-take-on-human-genome-editing-1.17581	National Academy of Medicine	ORGANIZATION	United States	Americas	Northern America
+us	us-science-academies-take-on-human-genome-editing-1.17581	NAS	ORGANIZATION	United States	Americas	Northern America
+us	us-science-academies-take-on-human-genome-editing-1.17581	NAM	ORGANIZATION	United States	Americas	Northern America
+us	us-science-academies-take-on-human-genome-editing-1.17581	California	STATE_OR_PROVINCE	United States	Americas	Northern America
+us	us-science-academies-take-on-human-genome-editing-1.17581	US National Academy of Sciences	ORGANIZATION	United States	Americas	Northern America
+us	us-science-academies-take-on-human-genome-editing-1.17581	Center for Genetics and Society	ORGANIZATION	United States	Americas	Northern America
+us	us-science-academies-take-on-human-genome-editing-1.17581	University of California, Berkeley	ORGANIZATION	United States	Americas	Northern America
+us	us-science-academies-take-on-human-genome-editing-1.17581	Stanford University	ORGANIZATION	United States	Americas	Northern America
+us	us-science-academies-take-on-human-genome-editing-1.17581	United States	COUNTRY	United States	Americas	Northern America
+us	us-science-academies-take-on-human-genome-editing-1.17581	US	COUNTRY	United States	Americas	Northern America
+NAN	d41586-020-00166-6	WHO	ORGANIZATION	NA	NA	NA
+NAN	d41586-020-00166-6	World Health Organization	ORGANIZATION	NA	NA	NA
+NAN	d41586-020-00365-1	European Space Agency	ORGANIZATION	NA	NA	NA
+NAN	d41586-020-00365-1	ESA	ORGANIZATION	NA	NA	NA
+NAN	d41586-020-00365-1	ESA's European Space Research and Technology Centre	ORGANIZATION	NA	NA	NA
+NAN	d41586-020-00941-5	Center for International Climate Research	ORGANIZATION	NA	NA	NA
+NAN	d41586-020-00941-5	ICAO	ORGANIZATION	NA	NA	NA
+NAN	d41586-020-00941-5	United Nations International Civil Aviation Organization	ORGANIZATION	NA	NA	NA
+NAN	d41586-020-01114-0	European Space Agency	ORGANIZATION	NA	NA	NA
+NAN	d41586-020-01114-0	ESA	ORGANIZATION	NA	NA	NA
+NAN	d41586-020-01587-z	WHO	ORGANIZATION	NA	NA	NA
+NAN	d41586-020-03495-8	Joint United Nations Programme	ORGANIZATION	NA	NA	NA
+NAN	d41586-020-03495-8	World Health Organization	ORGANIZATION	NA	NA	NA
+NAN	ebola-experience-leaves-world-no-less-vulnerable-1.18844	United Nations	ORGANIZATION	NA	NA	NA
+NAN	ebola-experience-leaves-world-no-less-vulnerable-1.18844	WHO	ORGANIZATION	NA	NA	NA
+NAN	ebola-experience-leaves-world-no-less-vulnerable-1.18844	World Health Organization	ORGANIZATION	NA	NA	NA
+NAN	structural-biologist-named-president-of-uk-royal-society-1.17153	European Union	ORGANIZATION	NA	NA	NA
+NAN	news.2010.404.html	ITAR TASS	ORGANIZATION	NA	NA	NA
+NAN	news.2010.404.html	GFMC	ORGANIZATION	NA	NA	NA

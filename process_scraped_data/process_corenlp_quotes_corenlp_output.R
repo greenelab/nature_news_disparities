@@ -3,9 +3,19 @@ require(data.table)
 require(here)
 
 proj_dir = here()
-source(paste(proj_dir, "/utils/scraper_processing_utils.R", sep=""))
+source(file.path(proj_dir, "/utils/scraper_processing_utils.R"))
 
-
+#' Get the gender of the speakers from the genderize.io cache
+#' 
+#' @param in_df, dataframe containing the speaker information
+#' it must have a column "gender", 
+#' "canonical_speaker", and "partial_name"
+#' Each row is assumed to be a speaker
+#' 
+#' @return list, full_gender_df: dataframe with the names and gender 
+#' information of those found in the cache.
+#' names_not_processed: dataframe of speaker information where they were 
+#' not found in the cache
 format_gender_canonical_speaker <- function(in_df){
 
 
@@ -45,9 +55,9 @@ format_gender_canonical_speaker <- function(in_df){
 
         names_missing = data.frame(first_name=unique(unknown_gendered_df$first_name))
 
-        gender_io_file = paste(proj_dir, "/data/reference_data/genderize.tsv", sep="")
+        gender_io_file = file.path(proj_dir, "/data/reference_data/genderize.tsv")
         names_processed = data.frame(fread(gender_io_file))
-        gender_io_file = paste(proj_dir, "/data/reference_data/genderize_update.tsv", sep="")
+        gender_io_file = file.path(proj_dir, "/data/reference_data/genderize_update.tsv")
         names_processed = rbind(names_processed, data.frame(fread(gender_io_file)))
 
         colnames(names_processed)[1] = "first_name"
@@ -76,6 +86,14 @@ format_gender_canonical_speaker <- function(in_df){
 
 }
 
+#' Read in coreNLP speaker information and query the gender information
+#' in the genderize.io cache. All names not found in the cache will 
+#' be written to a file for later querying in corenlp_output_dir
+#' named "missed_generize_io_names"
+#' 
+#' @param corenlp_output_dir, directory containing coreNLP JSON output 
+#' 
+#' @return dataframe, all_quotes_gender all gender information from speakers
 read_result_files <- function(corenlp_output_dir){
     
     json_res_files = list.files(corenlp_output_dir, pattern=".txt.json", full.names = TRUE)
@@ -140,7 +158,7 @@ read_result_files <- function(corenlp_output_dir){
 
     # write out any names that were not in the reference for batch update later
     unprocessed_names_gender = res[[2]]
-    outfile = paste(corenlp_output_dir, "/missed_generize_io_names.tsv", sep="")
+    outfile = file.path(corenlp_output_dir, "/missed_generize_io_names.tsv")
     if(file.exists(outfile)){
         prev_unprocessed = data.frame(fread(outfile))
         unprocessed_names_gender = rbind(unprocessed_names_gender, prev_unprocessed)

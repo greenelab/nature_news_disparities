@@ -25,6 +25,11 @@ gender = c(NA, NA, NA, NA, NA,
 
 pronouns_df = data.frame(pronouns, gender)
 
+#' Format string version of a name
+#'
+#' @param in_str, string; a name
+#' @return format_str, string; formatted name 
+#' (no white space, no non-letter characters)
 format_name_str <- function(in_str){
     require("stringr")
 
@@ -53,8 +58,16 @@ format_name_str <- function(in_str){
     # remove trailing white space
     format_str = trimws(format_str)
 
+    return(format_str)
+
 }
 
+#' Given a query string, return closest string in the
+#' vector of reference strings (no penalty for deletion)
+#'
+#' @param key_str, a query string 
+#' @param str_vec, a string vector
+#' @return string, a string from str_vec that has closest distance to key_str
 get_matched_string <- function(key_str, str_vec){
     require("stringdist")
 
@@ -66,6 +79,10 @@ get_matched_string <- function(key_str, str_vec){
 
 }
 
+#' get all named entities found in coreNLP output JSON
+#'
+#' @param json_res, JSON object that was output from coreNLP
+#' @return dataframe of all named entities in json_res
 get_ner <- function(json_res){
 
     # get named entities
@@ -77,154 +94,42 @@ get_ner <- function(json_res){
     return(ner_df)
 }
 
-get_ref_location_file <- function(){
+#' read in and return the reference country information
+#'
+#' @return dataframe of all reference country information
+get_country_info <- function(){
 
-    ref_file = paste(ref_data_dir, "nature_index_export.csv", sep="")
-    if(!file.exists(ref_file)){
-        stop("nature_index_export file not found, please run setup.sh to get it")
-    }
-
-    ref_df = data.frame(fread(ref_file))
-
-    # now split abbr
-    ref_split_df = separate(data = ref_df, col = Institution, into = c("Inst", "abbr"), sep = " \\(")
-    ref_split_df$abbr = gsub(")", "", ref_split_df$abbr)
-    return(ref_split_df)
-    
-}
-
-format_country_name <- function(ref_df, in_df){
-
-    if(!"country" %in% colnames(in_df)){
-        stop("input data frame must have a column named country")
-    }
-
-
-    full_loc_name = unique(unlist(ref_df$Country))
-    in_df$location = NA
-    for(idx in 1:nrow(in_df)){
-        curr_text = unlist(in_df$country[idx])
-
-        matched_country = grep(curr_text, full_loc_name, fixed = TRUE, value=T)
-        if(length(matched_country) == 0){
-            in_df$location[idx] = curr_text
-        }else if(length(matched_country) > 1){
-            in_df$location[idx] = "NOT_CLEAR"
-        }else{
-            in_df$location[idx] = matched_country
-        }
-        
-    }
-
-    return(in_df)
-
-}
-
-
-get_country_state_info <- function(){
-
-    ref_org_df = get_ref_location_file()
-
-    country_file = paste(ref_data_dir, "cdh_country_codes.txt", sep="")
+    # now get the UN region info
+    country_file = file.path(ref_data_dir, "cdh_country_codes.txt")
     if(!file.exists(country_file)){
         stop("cdh_country_codes file not found, please run setup.sh to get it")
     }
 
-    state_file = paste(ref_data_dir, "cdh_state_codes.txt", sep="")
-    if(!file.exists(state_file)){
-        stop("cdh_country_codes file not found, please run setup.sh to get it")
-    }
-
     # format country file
-    country_df = data.frame(fread(country_file))
+    country_df = data.frame(fread(country_file, skip=1))
+    colnames(country_df) = c("idx_name", "country_alt_name", "ISO.3166.1.COUNTRY.CHAR.2.CODE",
+                                "ISO.3166.1.COUNTRY.CHAR.3.CODE", "ISO.3166.1.COUNTRY.NUMBER.CODE", 
+                                "FIPS.COUNTRY.CODE", "FIPS.COUNTRY.NAME", "UN.REGION",
+                                "UN.SUB.REGION.NAME", "CDH.ID")
     colnames(country_df)[which(colnames(country_df) == "FIPS.COUNTRY.NAME")] = "country"
+    colnames(country_df)[which(colnames(country_df) == "ISO.3166.1.COUNTRY.CHAR.2.CODE")] = "address.country_code"
     colnames(country_df)[which(colnames(country_df) == "UN.REGION")] = "un_region"
     colnames(country_df)[which(colnames(country_df) == "UN.SUB.REGION.NAME")] = "un_subregion"
-    country_df = country_df[,c("country", "un_region", "un_subregion")]
+    country_df = country_df[,c( "country", "address.country_code", "un_region", "un_subregion")]
+    country_df$address.country_code = tolower(country_df$address.country_code)
 
-    # format state file
-    state_df = data.frame(fread(state_file))
-    colnames(state_df)[which(colnames(state_df) == "V1")] = "country"
-    colnames(state_df)[which(colnames(state_df) == "SUBDIVISION.STATE.ALTERNATE.NAMES")] = "province_state_alt"
-    colnames(state_df)[which(colnames(state_df) == "ISO.3166.2.SUBDIVISION.STATE.NAME")] = "province_state"
-    state_df = state_df[,c("country", "province_state_alt", "province_state")]
-
-    # now we have a location annotation file
-    full_loc_df = merge(country_df, state_df, by="country")
-
-    #make all province_state options into long form table
-    require("stringr")
-    max_num_names = grep(", ", full_loc_df$province_state_alt, value=T)
-    max_num_names = max(unlist(lapply(max_num_names, str_count, ",")))
-    into_vec = paste("vers", 1:max_num_names, sep="_")
-    full_loc_df = separate(data = full_loc_df, col = province_state, sep = ", ", into=into_vec)
-    full_loc_df = melt(full_loc_df, id.vars=c("country", "un_region", "un_subregion"))
-    full_loc_df = subset(full_loc_df, variable != "province_state_alt")
-    full_loc_df = full_loc_df[,c("country", "un_region", "un_subregion", "value")]
-    colnames(full_loc_df)[4] = "province_state"
-    full_loc_df = unique(full_loc_df)
-
-
-    # format the country name to match the organization style
-    full_loc_df_formatted = format_country_name(ref_org_df, full_loc_df)
-
-
-    return(full_loc_df_formatted[,2:5])
-
-
+    return(country_df)
 }
 
-get_org_country_inner <- function(org_name, ref_df){
-
-    substr_idx = which(grepl(tolower(org_name), tolower(ref_df$Inst), fixed=T))
-    country_found = unique(ref_df$Country[substr_idx])
-
-    if(length(country_found) > 1 ){
-        country_found = "NOT_CLEAR"
-    }
-
-    if(length(country_found) == 0 ){
-        country_found = "NOT_FOUND"
-    }
-
-    return(unique(country_found))
-
-}
-
-get_org_country <- function(ref_df, all_orgs){
-
-    return(lapply(all_orgs, get_org_country_inner, ref_df))
-
-
-}
-
-
-get_prov_country_inner <- function(prov_name, ref_df){
-
-    substr_idx = which(grepl(tolower(prov_name), tolower(ref_df$province_state), fixed=T))
-    country_found = unique(ref_df$location[substr_idx])
-
-    if(length(country_found) > 1 ){
-        country_found = "NOT_CLEAR"
-    }
-
-    if(length(country_found) == 0 ){
-        country_found = "NOT_FOUND"
-    }
-
-    return(unique(country_found))
-
-}
-
-get_prov_country <- function(ref_df, all_prov){
-
-    return(lapply(all_prov, get_prov_country_inner, ref_df))
-
-
-}
-
-
-get_locations <- function(json_res){
+#' get the OSM location information for all 
+#' organization, country, or state/province NERs 
+#' identified in corenLP JSON output.
+#' OSM location information first comes from the cache, 
+#' if not found it will query the online database
+#'
+#' @param json_res, JSON object that was output from coreNLP
+#' @return dataframe of all OSM information for each location NER
+get_osm_locations <- function(json_res){
 
     # get named entities --locations
     ner_df = get_ner(json_res)
@@ -233,85 +138,43 @@ get_locations <- function(json_res){
         return(NA)
     }
 
-    ner_locs_df = subset(ner_df, ner %in% c("ORGANIZATION"))
+    ner_locs_df = subset(ner_df, ner %in% 
+                        c("ORGANIZATION", "COUNTRY", "STATE_OR_PROVINCE"))
     ner_locs_df = unique(ner_locs_df)
 
-    ref_df = get_ref_location_file()
-    ner_locs_df$country = get_org_country(ref_df, ner_locs_df$text)
-    ner_locs_df$location = ner_locs_df$country
 
-    # accumulator
-    locs_df = NA
-
-    ### now do COUNTRY DISABIGUATION
-    ner_country_df = subset(ner_df, ner %in% c("COUNTRY"))
-    if(nrow(ner_country_df) != 0){
-
-        ner_country_df$country = ner_country_df$text
-        ner_country_df = format_country_name(ref_df, ner_country_df)
-
-        locs_df = rbind(ner_locs_df, ner_country_df)
-
-    }
-
-    ### now do state_province disambiguation 
-    ner_province_df = subset(ner_df, ner %in% c("STATE_OR_PROVINCE"))
-    ref_provence_df = get_country_state_info()
-    if(nrow(ner_province_df) != 0){
-
-        ner_province_df$province_state = ner_province_df$text
-        ner_province_df$location = unlist(get_prov_country(ref_provence_df, ner_province_df$province_state))
-        ner_province_df$country = ner_province_df$location
-        ner_province_df = ner_province_df[,c("text", "ner", "country", "location")]
-
-        if(is.na(locs_df)){
-            locs_df = rbind(ner_locs_df, ner_province_df)
-        }else{
-            locs_df = rbind(locs_df, ner_province_df)
-        }
-
-    }
-
-    if(is.na(locs_df) & nrow(ner_locs_df) != 0){
-        locs_df = ner_locs_df
-    }
-    if(is.na(locs_df)){
+    if(length(ner_locs_df) == 0){
         return(NA)
     }
 
+    if(all(is.na(ner_locs_df))){
+        return(NA)
+    }
 
-    locs_df$location = unlist(locs_df$location)
-    locs_df = unique(locs_df)
+    # now query open street map to get the country codes
+    ner_locs_df$text = tolower(ner_locs_df$text)
+    osm_res = batch_osm_query(unique(ner_locs_df$text))
+    colnames(osm_res)[which(colnames(osm_res) == "query")] = "text"
+    ner_locs_df = merge(ner_locs_df, 
+                        osm_res[,c("text", "address.country_code")],
+                        all=T)
+    ner_locs_df$address.country_code[
+        which(is.na(ner_locs_df$address.country_code))] = "NOT_FOUND"
 
-    locs_df = merge(locs_df, ref_provence_df[,c("location", "un_region", "un_subregion")], all.x=T)
-    locs_df = unique(locs_df)
+    locs_df = unique(ner_locs_df)
 
-    # post process for consistency
-    locs_df$un_region[locs_df$location != "NOT_FOUND" & 
-                        locs_df$location != "NOT_CLEAR" &
-                        is.na(locs_df$un_region)] = 
-                        
-                        locs_df$country[locs_df$location != "NOT_FOUND" & 
-                        locs_df$location != "NOT_CLEAR" &
-                        is.na(locs_df$un_region)]
-
-    locs_df$un_subregion[locs_df$location != "NOT_FOUND" & 
-                        locs_df$location != "NOT_CLEAR" &
-                        is.na(locs_df$un_subregion)] = 
-                        
-                        locs_df$country[locs_df$location != "NOT_FOUND" & 
-                        locs_df$location != "NOT_CLEAR" &
-                        is.na(locs_df$un_subregion)]
-
-    locs_df$un_region[locs_df$location == "NOT_FOUND" | locs_df$location == "NOT_CLEAR"] = NA
-    locs_df$un_subregion[locs_df$location == "NOT_FOUND" | locs_df$location == "NOT_CLEAR"] = NA
-
- 
     return(locs_df)
-
 
 }
 
+
+#' get all individual names from coreNLP output
+#' The names either come from NERs or coref.
+#' Partial names are also matched to full names
+#' using the function get_matched_string
+#' 
+#' @param json_res, JSON object that was output from coreNLP
+#' @return dataframe of all the name information and a first guess at gender
 get_persons <- function(json_res){
 
     # get named entities --names
@@ -393,7 +256,241 @@ get_persons <- function(json_res){
 
 }
 
+
+#' format query into OSM-appropriate URL query
+#' 
+#' @param single_query, string to query OSM
+#' @return string, url
+url_nominatim_search <- function(single_query) {
+    # this code is augmented from 
+    # https://towardsdatascience.com/breaking-down-geocoding-in-r-a-complete-guide-1d0f8acd0d4b
+    # load libraries
+    require(RCurl)
+    # nominatim search api url
+    url_nominatim_search_api <- "https://nominatim.openstreetmap.org/search/"
+
+
+    # percent-encode search request
+    single_query <- URLencode(single_query)
+    parameters_url <- paste0("?format=json",
+                             "&addressdetails=1&limit=1")
+    # construct search request for geocode
+    url_nominatim_search_call <- paste0(url_nominatim_search_api,
+                                        single_query, parameters_url)
+
+
+    return(url_nominatim_search_call)
+}
+
+
+#' private internal method that queries OSM
+#' 
+#' @param curr_q, string to query OSM
+#' @return OSM JSON response
+internal_osm_query <- function(curr_q){
+
+    url_search = url_nominatim_search(curr_q)
+
+    # block augmented from here: 
+    # https://stackoverflow.com/questions/12193779/how-to-write-trycatch-in-r
+    out <- tryCatch(
+        {
+            getURL(url_search, httpheader=c('User-Agent'="nature news scraper v0.1"))
+        },
+        error=function(cond) {
+            message(paste("query error:", curr_q))
+            # Choose a return value in case of error
+            return(NA)
+        }
+    )    
+    return(out)
+}
+
+
+#' public method that makes a single query to OSM.
+#' This method takes into account all OSM query guidelines
+#' It first checks the cache for the query,
+#' if it is not there then it will query OSM and 
+#' update the cache
+#' 
+#' @param curr_q, string to query OSM
+#' @return dataframe result from OSM with formatted location data
+single_osm_query <- function(curr_q){
+
+    # we need to follow OSM quidelines
+    # we MUST cache
+    # no parallel processes
+    # no more than one query per second
+
+    require(tmaptools)
+
+    # make sure query is not in cache
+    cache_file = file.path(ref_data_dir, "/osm_cache.tsv")
+    if(!file.exists(cache_file)){
+        stop("osm_cache file not found, file should be in git, 
+                you must download this before querying locations")
+    }
+
+    cache_df = data.frame(fread(cache_file))
+    if(tolower(curr_q) %in% tolower(cache_df$query)){
+        return(subset(cache_df, tolower(query) == tolower(curr_q)))
+    }
+    
+    #run query
+    print(paste("running query:", tolower(curr_q)))
+    resp = internal_osm_query(tolower(curr_q))
+    resp_df = data.frame("place_id" = NA,
+                            "osm_type" = NA, "display_name" = NA,
+                            "class" = NA, "type" = NA, "importance" = NA,
+                            "address.country" = NA, "address.country_code" = "NONE",
+                            "Freq" = NA, "hand_edited" = FALSE, "reviewed" = FALSE)
+
+    
+    if(resp != "[]"){
+        resp = unlist(fromJSON(resp,simplifyVector = FALSE))
+
+        # make sure its in a country
+        in_country = all(c("address.country", "address.country_code") %in% names(resp))
+        if(!in_country){
+            resp_df = data.frame(t(resp[c("place_id", "osm_type", 
+                                "display_name", "class", "type", 
+                                "importance")]))
+            resp_df$address.country = NA
+            resp_df$address.country_code = "NONE"
+        }
+        else{
+            resp_df = data.frame(t(resp[c("place_id", "osm_type", 
+                                "display_name", "class", "type", 
+                                "importance", "address.country", 
+                                "address.country_code")]))
+        }
+    }
+    
+    #process query info
+    resp_df$query = curr_q
+
+    # get metadata
+    query_date = as.Date(Sys.Date(), format = "%B %d %Y")
+    resp_df$query_date = query_date
+
+    ref_code_df = get_country_info()
+    resp_df = merge(resp_df, ref_code_df, all.x=T)
+    resp_df$Freq = NA
+    resp_df$hand_edited = FALSE
+    resp_df$reviewed = FALSE
+    
+
+    # format the data frame
+    resp_df = resp_df[,colnames(cache_df)]
+
+
+    # append to the cache
+    cache_df = rbind(cache_df, resp_df)
+    cache_file = file.path(ref_data_dir, "/osm_cache.tsv")
+    write.table(cache_df, cache_file, sep="\t", quote=F, row.names=F)
+
+    Sys.sleep(1)
+
+    return(resp_df)
+
+
+}
+
+#' public method that makes multiple queries to OSM.
+#' This method takes into account all OSM query guidelines
+#' It first checks the cache for the query,
+#' if it is not there then it will query OSM and 
+#' update the cache
+#' 
+#' @param query_vec, vector of strings to query OSM
+#' @return dataframe result from OSM with formatted location data
+batch_osm_query <- function(query_vec){
+
+    # query one at a time and append together
+    batch_resp = NA
+    for(curr_q in query_vec){
+
+        curr_resp = single_osm_query(curr_q)
+
+        batch_resp = rbind(batch_resp, curr_resp)
+
+    }
+    batch_resp = batch_resp[-1,]
+    return(batch_resp)
+
+}
+
+#' private method that runs the first population of the OSM
+#' cache. 
+#' This method should not be run by users since they 
+#' should always have a populated cache.
+#' 
+#' @param in_dir, full location of folder that contains all location tables
+#' from pipeline step 4. Files must contain the string location_table_raw
+#' in the name
+initial_osm_query <- function(in_dir) {
+
+    # this method will just populate the cache with any locations
+    # that are missing
+
+    # people should never use this method, this is only
+    # for me to run the first instance of the cache, others
+    # should already have a populated cache file from github
+
+    # find all files that unfound locations
+    all_loc_files = list.files(in_dir, 
+                                pattern="location_table_raw",
+                                recursive=F,
+                                full.names=T)
+    if(length(all_loc_files) == 0){
+        warn_str = "No location files found. Are you supplying the correct input dir?"
+        warning(warn_str)
+        return()
+    }
+
+    # read in location files
+    all_missing_locs = NA
+    for(curr_file in all_loc_files){
+        in_df = data.frame(fread(curr_file))
+        all_missing_locs = rbind(all_missing_locs, in_df[,c("file_id", "text")])
+    }
+    all_missing_locs = all_missing_locs[-1,]
+    query_locs = unique(tolower(all_missing_locs$text))
+
+
+    batch_resp = batch_osm_query(query_locs)
+
+    # write out the frequncies of organizations, 
+    # we want to make sure that the top ones are correct
+    freq_locs = as.data.frame(table(all_missing_locs$text))
+    colnames(freq_locs)[1] = "query"
+
+    cache_file = file.path(ref_data_dir, "/osm_cache.tsv")
+    cache_df = data.frame(fread(cache_file))
+    freq_locs = merge(freq_locs, cache_df)
+    freq_locs = freq_locs[order(freq_locs$Freq, decreasing=T),]
+    freq_locs$hand_edited = F
+
+    cache_edit_file = file.path(ref_data_dir, "/osm_cache_edited2.tsv")
+    write.table(freq_locs, cache_edit_file, sep="\t", quote=F, row.names=F)
+
+
+}
+
+#' private method that updates the gender cache. 
+#' This method should not be run by users since they 
+#' should always have a fully populated cache.
+#' 
+#' @param in_dir, full location of folder that contains all location tables
+#' from pipeline step 4. Files must contain the string missed_generize_io_names
+#' in the name
 query_genderize_io <- function(in_dir) {
+
+    # this method will just populate the cache with any locations
+    # that are missing
+
+    # people should never use this method, this is only
+    # for me to run once in a while if I scraped new articles
 
     # find all files that contain missed names
     missed_gender_files = list.files(in_dir, 
@@ -418,9 +515,9 @@ query_genderize_io <- function(in_dir) {
 
 
     # make sure names weren't missed in the already existing genderize reference files
-    reference_files = paste(ref_data_dir, "/genderize.tsv", sep="")
+    reference_files = file.path(ref_data_dir, "/genderize.tsv")
     ref_df = data.frame(fread(reference_files))
-    reference_files = paste(ref_data_dir, "/genderize_update.tsv", sep="")
+    reference_files = file.path(ref_data_dir, "/genderize_update.tsv")
     ref_update_df = data.frame(fread(reference_files))
     ref_df = rbind(ref_df, ref_update_df)
 
@@ -456,7 +553,7 @@ query_genderize_io <- function(in_dir) {
     ref_update_df = unique(ref_update_df)
 
     # now write it out
-    outfile = paste(ref_data_dir, "/genderize_update.tsv", sep="")
+    outfile = file.path(ref_data_dir, "/genderize_update.tsv")
     write.table(ref_update_df, outfile, sep="\t", quote=F, row.names=F)
 
     # now delete the files

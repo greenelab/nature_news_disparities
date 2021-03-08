@@ -9,7 +9,7 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 cd ${DIR}/nature_news_scraper
 
 # now crawl over the years of interest
-TARGET_YRS=( 2015 2016 2017 2018 2019 2020 )
+TARGET_YRS=( 2011 2012 2013 2014 )
 for TARGET_YEAR in "${TARGET_YRS[@]}"
 do
 	JSON_OUT_FILE="${DIR}/../data/scraped_data/downloads/links_crawled_${TARGET_YEAR}.json"

@@ -1,7 +1,11 @@
 library(jsonlite)
 library(data.table)
 
-
+#' read in JSON file and convert to dataframe
+#' 
+#' @param infile, JSON file path
+#' 
+#' @return json_res, dataframe version of JSON object
 read_json <- function(infile){
 
     json_res = fromJSON(infile)
@@ -10,6 +14,14 @@ read_json <- function(infile){
 
 }
 
+#' Format the body of the article to remove 
+#' have a unified encoding
+#' 
+#' @param in_df, data frame with a column "body"
+#' that contains all the text from the article.
+#' Each row is assumed to be an article
+#' 
+#' @return in_df, data frame where the "body" column is now formatted
 process_body <- function(in_df){
 
     library(stringr)
@@ -30,6 +42,14 @@ process_body <- function(in_df){
 
 }
 
+#' For coreNLP each article needs to be in its own file
+#' and we have to make a reference file (file_list.txt) containing all the 
+#' file names we would like coreNLP to look over
+#' 
+#' @param in_df, data frame with a column "body"
+#' that contains all the text from the article.
+#' Each row is assumed to be an article
+#' @param out_dir, directory path where the files should be written
 write_sep_files <- function(in_df, out_dir){
 
     # for easier processing with coreNLP write out the files
@@ -37,7 +57,7 @@ write_sep_files <- function(in_df, out_dir){
     all_files = c()
     for(curr_article_idx in 1:nrow(in_df)){
         curr_article = in_df[curr_article_idx,]
-        outfile = paste(outdir, curr_article$file_id, ".txt", sep="")
+        outfile = file.path(outdir, curr_article$file_id, ".txt")
         article_body = unlist(curr_article$body)
         if(nchar(article_body) == 0){
             next
@@ -46,7 +66,7 @@ write_sep_files <- function(in_df, out_dir){
         all_files = paste(all_files, outfile, "\n", sep="")
     }
 
-    outfile = paste(outdir, "file_list.txt", sep="")
+    outfile = file.path(outdir, "file_list.txt")
     writeLines(all_files, outfile)
 
 }
@@ -62,5 +82,5 @@ bm_data_df = process_body(bm_data_df)
 
 # write out the files for coreNLP
 write_sep_files(bm_data_df, outdir)
-id_year_file = paste(outdir, "/fileID_year.tsv", sep="")
+id_year_file = file.path(outdir, "/fileID_year.tsv")
 write.table(bm_data_df[,c("file_id", "year")], id_year_file, sep="\t", quote=F, row.names=F)
