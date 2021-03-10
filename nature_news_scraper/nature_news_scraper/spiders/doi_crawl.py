@@ -23,7 +23,7 @@ class NewsSpider(scrapy.Spider):
         # and finally produce a task for the next page, if it exists
 
         # here (and all other places) we are using attribute selectors in CSS 
-        articles = response.css('div[itemtype="http://schema.org/ScholarlyArticle"]')
+        articles = response.css('article[itemtype="http://schema.org/ScholarlyArticle"]')
 
         for article in articles:
             link = article.css('a[itemprop="url"]::attr(href)').get()
