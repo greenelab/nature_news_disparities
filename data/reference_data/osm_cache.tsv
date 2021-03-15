@@ -155,7 +155,7 @@ ligo	us	Americas	Northern America	TRUE	47	2021-02-03	1.2755294310287e-315	relati
 parliament	NONE	NA	NA	TRUE	47	2021-02-03	6.31541200314211e-316	way	Parliament, , Boe, Yaren, Naoero	office	government	0.531052870313343	Naoero	TRUE
 trump	NONE	NA	NA	TRUE	47	2021-02-03	2.20239148881007e-318	node	Trump, Baltimore County, Maryland, 21161, United States	place	hamlet	0.375244632729739	United States	TRUE
 australian national university	au	Oceania	Australia and New Zealand	FALSE	47	2021-02-03	7.82063630288066e-316	way	Australian National University, Lawson Crescent, Acton, Canberra, District of Canberra Central, Australian Capital Territory, 2601, Australia	amenity	university	0.846355606540819	Australia	TRUE
-university of maryland in college park	us	Americas	Northern America	FALSE	46	2021-02-03	9.8176823999233e-316	way	University of Maryland, College Park, Baltimore Avenue, Old Town, College Park, Prince George's County, Maryland, 20742, United States	amenity	university	1.15966453785279	United States	TRUE
+university of maryland in college park	us	Americas	Northern America	FALSE	46	2021-02-03	9.81768239992330e-316	way	University of Maryland, College Park, Baltimore Avenue, Old Town, College Park, Prince George's County, Maryland, 20742, United States	amenity	university	1.15966453785279	United States	TRUE
 karolinska institute	se	Europe	Northern Europe	FALSE	46	2021-02-03	1.48200066994593e-315	relation	Karolinska Institutet campus Flemingsberg, HÃ¤lsovÃ¤gen, BRF. Grantorp, VisÃ¤ttra, Flemingsberg, Huddinge kommun, Stockholms lÃ¤n, 14157, Sverige	amenity	university	0.679801406140393	Sverige	TRUE
 guinea	gn	Africa	Western Africa	FALSE	46	2021-02-03	1.2712404076319e-315	relation	GuinÃ©e	boundary	administrative	0.674714358349369	GuinÃ©e	TRUE
 broad institute of mit	us	Americas	Northern America	TRUE	45	2021-02-03	0	NA	NA	NA	NA	NA	NA	TRUE
@@ -265,7 +265,7 @@ new brunswick	ca	Americas	Northern America	FALSE	30	2021-02-03	1.27510462844575e
 baylor college of medicine	us	Americas	Northern America	FALSE	29	2021-02-03	7.17609209515425e-316	way	Baylor College of Medicine, 1, Baylor Plaza, Texas Medical Center, Houston, Harris County, Texas, 77030, United States	building	college	0.801517374360847	United States	TRUE
 george washington university	us	Americas	Northern America	FALSE	29	2021-02-03	5.28542628611813e-316	way	George Washington University, I Street Northwest, Golden Triangle, Washington, District of Columbia, 20006, United States	amenity	university	0.861031504404982	United States	TRUE
 scripps research institute	us	Americas	Northern America	FALSE	29	2021-02-03	1.42248515169866e-317	node	Scripps Research Institute, 10666, Coast Highway, Torrey Pines, San Diego, San Diego County, California, 92093-0068, United States	office	research	0.301	United States	TRUE
-university of maryland	us	Americas	Northern America	FALSE	29	2021-02-03	9.8176823999233e-316	way	University of Maryland, College Park, Baltimore Avenue, Old Town, College Park, Prince George's County, Maryland, 20742, United States	amenity	university	0.859664537852789	United States	TRUE
+university of maryland	us	Americas	Northern America	FALSE	29	2021-02-03	9.81768239992330e-316	way	University of Maryland, College Park, Baltimore Avenue, Old Town, College Park, Prince George's County, Maryland, 20742, United States	amenity	university	0.859664537852789	United States	TRUE
 federation of american societies for experimental biology	us	Americas	Northern America	TRUE	28	2021-02-03	0	NA	NA	NA	NA	NA	NA	TRUE
 new york times	us	Americas	Northern America	FALSE	28	2021-02-03	6.8554318804606e-316	way	The New York Times, Woodbridge Avenue, Bonhamtown, Edison, Middlesex County, New Jersey, 08818, United States	building	warehouse	0.301	United States	TRUE
 stanford	us	Americas	Northern America	FALSE	28	2021-02-03	1.27730124924781e-315	relation	Stanford, Palo Alto, Santa Clara County, California, United States	boundary	census	0.627221804640549	United States	TRUE
@@ -632,7 +632,7 @@ hubei	cn	Asia	Eastern Asia	FALSE	11	2021-02-03	1.27390918226841e-315	relation	æ
 sichuan	cn	Asia	Eastern Asia	FALSE	11	2021-02-03	1.27452362206821e-315	relation	å››å·<9d>çœ<81>, ä¸­å›½	boundary	administrative	0.711286195807749	ä¸­å›½	TRUE
 university of manitoba	ca	Americas	Northern America	FALSE	11	2021-02-03	1.28027828132208e-315	relation	University of Manitoba, Sifton Road, Montcalm, Winnipeg, Winnipeg (city), Manitoba, R3T 2N2, Canada	amenity	university	0.301	Canada	TRUE
 university of victoria	ca	Americas	Northern America	FALSE	11	2021-02-03	3.870729190008e-316	node	University of Victoria, Alumni Chip Trail, Cadboro Bay Village, Saanich, Capital Regional District, British Columbia, V8P 5C0, Canada	amenity	post_office	0.301	Canada	TRUE
-australian research council	au	Oceania	Australia and New Zealand	FALSE	11	2021-02-03	9.7897124049875e-316	way	Australian Cotton Research Institute, Kamilaroi Highway, Narrabri, Narrabri Shire Council, New South Wales, 2390, Australia	office	research	0.301	Australia	TRUE
+australian research council	au	Oceania	Australia and New Zealand	FALSE	11	2021-02-03	9.78971240498750e-316	way	Australian Cotton Research Institute, Kamilaroi Highway, Narrabri, Narrabri Shire Council, New South Wales, 2390, Australia	office	research	0.301	Australia	TRUE
 james cook university	au	Oceania	Australia and New Zealand	FALSE	11	2021-02-03	8.03893159988467e-316	way	James Cook University, 1, James Cook Drive, Douglas, Townsville, Townsville City, Queensland, 4811, Australia	amenity	university	0.72561814389347	Australia	TRUE
 venezuela	ve	Americas	South America	FALSE	10	2021-02-03	1.27573543169973e-315	relation	Venezuela	boundary	administrative	0.857303027661612	Venezuela	TRUE
 american society of human genetics	us	Americas	Northern America	TRUE	10	2021-02-03	0	NA	NA	NA	NA	NA	NA	TRUE
@@ -1390,7 +1390,7 @@ us state department	us	Americas	Northern America	FALSE	4	2021-02-03	3.4213531158
 wayne state university	us	Americas	Northern America	FALSE	4	2021-02-03	1.28146954770405e-315	relation	Wayne State University, Commonwealth Street, Woodbridge, Midtown, Detroit, Wayne County, Michigan, 48208, United States	amenity	university	0.805217009868445	United States	FALSE
 wellesley college	us	Americas	Northern America	FALSE	4	2021-02-03	5.90273270419587e-316	way	Wellesley College, Cross Street, College Heights, Wellesley, Norfolk County, Massachusetts, 02482, United States	amenity	college	0.70312816120194	United States	FALSE
 western university	us	Americas	Northern America	FALSE	4	2021-02-03	1.41467990262566e-317	node	Western University, Easthill Drive, Jamacha, San Diego, San Diego County, California, 91945, United States	amenity	school	0.201	United States	FALSE
-wilson center	us	Americas	Northern America	FALSE	4	2021-02-03	9.829910623471e-316	way	Wilson Center, 240, Nassau Street, Princeton, Mercer County, New Jersey, 08540, United States	building	yes	0.201	United States	FALSE
+wilson center	us	Americas	Northern America	FALSE	4	2021-02-03	9.82991062347100e-316	way	Wilson Center, 240, Nassau Street, Princeton, Mercer County, New Jersey, 08540, United States	building	yes	0.201	United States	FALSE
 anatolia	tr	Asia	Western Asia	FALSE	4	2021-02-03	2.8061951916001e-316	node	Asia Minor, PolatlÄ±, Ankara, Ä°Ã§ Anadolu BÃ¶lgesi, TÃ¼rkiye	place	peninsula	0.602668374396159	TÃ¼rkiye	FALSE
 jwst	tr	Asia	Western Asia	FALSE	4	2021-02-03	2.91204510013581e-316	node	Just inn Hotel, 18, Ibni-Kemal Caddesi, HocapaÅŸa Mahallesi, Ä°stanbul, Fatih, Ä°stanbul, Marmara BÃ¶lgesi, 34112, TÃ¼rkiye	tourism	hotel	0.001	TÃ¼rkiye	FALSE
 tencent	th	Asia	South-Eastern Asia	FALSE	4	2021-02-03	2.8410428767654e-316	node	Tencent, à¸–à¸™à¸™à¸£à¸±à¸Šà¸”à¸²à¸ à¸´à¹€à¸©à¸<81>, à¸£à¸±à¸Šà¸”à¸²à¸ à¸´à¹€à¸©à¸<81>, à¹<81>à¸‚à¸§à¸‡à¸£à¸±à¸Šà¸”à¸²à¸ à¸´à¹€à¸©à¸<81>, à¹€à¸‚à¸•à¸”à¸´à¸™à¹<81>à¸”à¸‡, à¸<81>à¸£à¸¸à¸‡à¹€à¸—à¸žà¸¡à¸«à¸²à¸™à¸„à¸£, 10400, à¸›à¸£à¸°à¹€à¸—à¸¨à¹„à¸—à¸¢	shop	computer	0.101	à¸›à¸£à¸°à¹€à¸—à¸¨à¹„à¸—à¸¢	FALSE
@@ -1637,7 +1637,7 @@ arianespace	us	Americas	Northern America	FALSE	3	2021-02-03	3.94500217736044e-31
 army corps of engineers	us	Americas	Northern America	FALSE	3	2021-02-03	9.10908529857462e-316	way	Army Corps of Engineers, Fort Street, Norfolk Redevelopment and Housing Authority, Norfolk, Virginia, 23510, United States	building	garage	0.401	United States	FALSE
 associated press	us	Americas	Northern America	FALSE	3	2021-02-03	7.51441357567665e-316	way	Associated Press, 1299, Broadway, Bushwick, Brooklyn, Kings County, New York, 11221, United States	shop	supermarket	0.201	United States	FALSE
 auburn university	us	Americas	Northern America	FALSE	3	2021-02-03	1.2802517499969e-315	relation	Auburn University, Lem Morrison Drive, Woodfield, Auburn, Lee County, Alabama, 36849, United States	amenity	university	0.726936083135026	United States	FALSE
-bell laboratories	us	Americas	Northern America	FALSE	3	2021-02-03	9.1410360792321e-317	node	Bell Laboratories, Berkeley Heights, Union County, New Jersey, 07974, United States	place	locality	0.325	United States	FALSE
+bell laboratories	us	Americas	Northern America	FALSE	3	2021-02-03	9.14103607923210e-317	node	Bell Laboratories, Berkeley Heights, Union County, New Jersey, 07974, United States	place	locality	0.325	United States	FALSE
 cabell	us	Americas	Northern America	FALSE	3	2021-02-03	1.97500765662455e-318	node	Cabell, Wayne County, Kentucky, United States	place	hamlet	0.35	United States	FALSE
 caltech submillimeter observatory	us	Americas	Northern America	FALSE	3	2021-02-03	5.13271138549364e-316	way	Caltech Submillimeter Observatory, Mauna Kea Access Road, HawaiÊ»i County, Hawaii, United States	man_made	observatory	0.662945678183792	United States	FALSE
 cambridge university	us	Americas	Northern America	FALSE	3	2021-02-03	4.69477431438101e-316	way	Cambridge Drive, University Park, Markham, Bremen Township, Cook County, Illinois, 60428, United States	highway	residential	0.3	United States	FALSE
@@ -2430,8 +2430,8 @@ university of california santa cruz	us	Americas	Northern America	FALSE	2	2021-02
 university of california, merced	us	Americas	Northern America	FALSE	2	2021-02-03	6.41194650155174e-316	way	University of California, Merced, 5200, Mineral King Road, Merced County, California, 95343, United States	amenity	university	0.813735597530124	United States	FALSE
 university of california, riverside	us	Americas	Northern America	FALSE	2	2021-02-03	1.66545369180346e-316	node	UCR ARTSblock, 3824, Main Street, Riverside, Riverside County, California, 92501, United States	tourism	museum	0.458218474293395	United States	FALSE
 university of denver	us	Americas	Northern America	FALSE	2	2021-02-03	7.21551897835146e-317	node	University of Denver, 1901, East Buchtel Boulevard, Denver, Denver County, Colorado, 80210, United States	railway	station	0.466903631515068	United States	FALSE
-university of maryland at college park	us	Americas	Northern America	FALSE	2	2021-02-03	9.8176823999233e-316	way	University of Maryland, College Park, Baltimore Avenue, Old Town, College Park, Prince George's County, Maryland, 20742, United States	amenity	university	1.15966453785279	United States	FALSE
-university of maryland, college park	us	Americas	Northern America	FALSE	2	2021-02-03	9.8176823999233e-316	way	University of Maryland, College Park, Baltimore Avenue, Old Town, College Park, Prince George's County, Maryland, 20742, United States	amenity	university	1.05966453785279	United States	FALSE
+university of maryland at college park	us	Americas	Northern America	FALSE	2	2021-02-03	9.81768239992330e-316	way	University of Maryland, College Park, Baltimore Avenue, Old Town, College Park, Prince George's County, Maryland, 20742, United States	amenity	university	1.15966453785279	United States	FALSE
+university of maryland, college park	us	Americas	Northern America	FALSE	2	2021-02-03	9.81768239992330e-316	way	University of Maryland, College Park, Baltimore Avenue, Old Town, College Park, Prince George's County, Maryland, 20742, United States	amenity	university	1.05966453785279	United States	FALSE
 university of massachusetts,	us	Americas	Northern America	FALSE	2	2021-02-03	3.74652251943388e-316	node	Cold Spring Orchard, 391, Sabin Street, Cold Spring, Belchertown, Hampshire County, Massachusetts, 01009, United States	shop	farm	0.101	United States	FALSE
 university of memphis	us	Americas	Northern America	FALSE	2	2021-02-03	5.10277258836572e-316	way	The University of Memphis, University, Normal, Memphis, Shelby County, Tennessee, 38152, United States	amenity	university	0.779389836000794	United States	FALSE
 university of minnesota duluth	us	Americas	Northern America	FALSE	2	2021-02-03	5.78057008201173e-316	way	University of Minnesota Duluth, West Saint Marie Street, Duluth, Saint Louis County, Minnesota, 55803, United States	amenity	university	0.808420514850446	United States	FALSE
@@ -4522,7 +4522,7 @@ us library of congress	us	Americas	Northern America	FALSE	1	2021-02-03	1.2745885
 us marine corps	us	Americas	Northern America	FALSE	1	2021-02-03	5.71047002251063e-317	node	US Marine Corps, 64, Kala Bagai Way, Downtown Berkeley, Berkeley, Alameda County, California, 94704, United States	office	government	0.301	United States	FALSE
 us massachusetts institute of technology	us	Americas	Northern America	FALSE	1	2021-02-03	1.27476966181918e-315	relation	Massachusetts Institute of Technology, Bishop Allen Drive, Central Square, Cambridgeport, Cambridge, Middlesex County, Massachusetts, 02139, United States	amenity	university	1.14674262776464	United States	FALSE
 us national football league	us	Americas	Northern America	FALSE	1	2021-02-03	6.96034607806965e-316	way	Bay Area Christian School Football Field, Oak Creek Drive, Oak Creek, League City, Galveston County, Texas, 77573, United States	leisure	pitch	0.201	United States	FALSE
-us national guard	us	Americas	Northern America	FALSE	1	2021-02-03	8.183297976852e-316	way	US National Guard, Montgomery County, Maryland, United States	landuse	military	0.5	United States	FALSE
+us national guard	us	Americas	Northern America	FALSE	1	2021-02-03	8.18329797685200e-316	way	US National Guard, Montgomery County, Maryland, United States	landuse	military	0.5	United States	FALSE
 us national hurricane center	us	Americas	Northern America	FALSE	1	2021-02-03	1.04995762906521e-315	way	National Hurricane Center, Miami-Dade County, Florida, 33199, United States	highway	service	0.375	United States	FALSE
 us national institute of aerospace	us	Americas	Northern America	FALSE	1	2021-02-03	8.94292790926464e-316	way	National Institute of Aerospace (NIA) and U.S. Representative Scott Rigell, 1100, Exploration Way, Hampton Roads Center - North Campus, Hampton, Virginia, 23666, United States	building	commercial	0.501	United States	FALSE
 us national marine fisheries service	us	Americas	Northern America	FALSE	1	2021-02-03	4.87723819211228e-316	way	National Marine Fisheries Service, Santa Cruz, Santa Cruz County, California, United States	boundary	administrative	0.525	United States	FALSE
@@ -4818,7 +4818,7 @@ vulcan	ro	Europe	Eastern Europe	FALSE	1	2021-02-03	1.28113965019101e-315	relatio
 anatolian	qa	Asia	Western Asia	FALSE	1	2021-02-03	2.76633990408138e-316	node	Anatolian, Ø§Ù„Ø·Ø±ÙŠÙ‚ Ø§Ù„Ø¯Ø§Ø¦Ø±ÙŠ Ø§Ù„Ø«Ø§Ù†ÙŠ, Ø§Ù„ØºØ§Ù†Ù… Ø§Ù„Ù‚Ø¯ÙŠÙ…, Ø§Ù„Ø¯ÙˆØ­Ø©, 37109, Ù‚Ø·Ø±	amenity	restaurant	0.101	Ù‚Ø·Ø±	FALSE
 east anatolian	qa	Asia	Western Asia	FALSE	1	2021-02-03	2.76633990408138e-316	node	Anatolian, Ø§Ù„Ø·Ø±ÙŠÙ‚ Ø§Ù„Ø¯Ø§Ø¦Ø±ÙŠ Ø§Ù„Ø«Ø§Ù†ÙŠ, Ø§Ù„ØºØ§Ù†Ù… Ø§Ù„Ù‚Ø¯ÙŠÙ…, Ø§Ù„Ø¯ÙˆØ­Ø©, 37109, Ù‚Ø·Ø±	amenity	restaurant	0.101	Ù‚Ø·Ø±	FALSE
 ministry of public health	qa	Asia	Western Asia	FALSE	1	2021-02-03	6.2463931074938e-316	way	Ministry of Public Health, Ø´Ø§Ø±Ø¹ Ø¹Ù†ÙŠØ²Ø©, Ø§Ù„Ø±Ù…ÙŠÙ„Ø©, Ø§Ù„Ø¯ÙˆØ­Ø©, 875, Ù‚Ø·Ø±	amenity	clinic	0.401	Ù‚Ø·Ø±	FALSE
-world data center	qa	Asia	Western Asia	FALSE	1	2021-02-03	2.7637637963974e-316	node	Data World, Ø§Ù… Ø§Ù„Ø¯ÙˆÙ…, Muaither North, Ø§Ù„Ø±ÙŠØ§Ù†, 945, Ù‚Ø·Ø±	shop	mobile_phone	0.201	Ù‚Ø·Ø±	FALSE
+world data center	qa	Asia	Western Asia	FALSE	1	2021-02-03	2.76376379639740e-316	node	Data World, Ø§Ù… Ø§Ù„Ø¯ÙˆÙ…, Muaither North, Ø§Ù„Ø±ÙŠØ§Ù†, 945, Ù‚Ø·Ø±	shop	mobile_phone	0.201	Ù‚Ø·Ø±	FALSE
 naoc	py	Americas	South America	FALSE	1	2021-02-03	2.7838089783739e-316	node	Naoc, Loma Plata, BoquerÃ³n, RegiÃ³n Occidental, Paraguay	place	village	0.375	Paraguay	FALSE
 republic of palau	pw	Oceania	Micronesia	FALSE	1	2021-02-03	1.27730994974384e-315	relation	Belau	boundary	administrative	0.62710039879367	Belau	FALSE
 adcs	pt	Europe	Southern Europe	FALSE	1	2021-02-03	8.22730613315684e-317	node	ADCS Aldeia de S. SebastiÃ£o, CM 1080, Aldeia de SÃ£o SebastiÃ£o, Castelo Bom, Almeida, Guarda, Beira Interior Norte, Centro, Portugal	leisure	swimming_pool	0.101	Portugal	FALSE
@@ -9393,7 +9393,7 @@ foxconn	in	Asia	Southern Asia	FALSE	1	2021-02-03	1.10400010053608e-315	way	Foxco
 genomics institute	in	Asia	Southern Asia	FALSE	1	2021-02-03	6.45361802379114e-316	way	CSIR-Institute of Genomics & Integrative Biology, Mathura Road, Pocket A, Govindpuri, Kalkaji Tehsil, South East Delhi, Delhi, 1243, India	office	government	0.462719188578863	India	FALSE
 glenmark pharmaceuticals	in	Asia	Southern Asia	FALSE	1	2021-02-03	8.24219509783365e-316	way	Glenmark Pharmaceuticals Ltd., Shendra MIDC, Aurangabad, Maharashtra, India	landuse	industrial	0.4	India	FALSE
 goa university	in	Asia	Southern Asia	FALSE	1	2021-02-03	1.49213031013767e-315	way	Goa University, Library, Dr. E Borges Road, Dona Paula, Tiswadi, North Goa, Goa, 403004, India	amenity	library	0.201	India	FALSE
-google maps	in	Asia	Southern Asia	FALSE	1	2021-02-03	9.1665284831737e-316	way	Vani Dahivi Road, Vani, Dindori, Nashik, Maharashtra, 422215, India	highway	tertiary	0.1	India	FALSE
+google maps	in	Asia	Southern Asia	FALSE	1	2021-02-03	9.16652848317370e-316	way	Vani Dahivi Road, Vani, Dindori, Nashik, Maharashtra, 422215, India	highway	tertiary	0.1	India	FALSE
 gslv	in	Asia	Southern Asia	FALSE	1	2021-02-03	3.52275351854616e-316	node	GSLV Mk II rocket model, Veli- Perumathura road, Veli, Thiruvananthapuram, Kerala, 695001, India	tourism	attraction	0.101	India	FALSE
 guru gobind singh indraprastha university	in	Asia	Southern Asia	FALSE	1	2021-02-03	6.14866282200154e-316	way	Guru Gobind Singh Indraprastha University, Road 205, Sector 17, Dwarka, Dwarka Tehsil, South West Delhi, Delhi, 110078, India	amenity	university	0.841762590849456	India	FALSE
 hindu rao hospital	in	Asia	Southern Asia	FALSE	1	2021-02-03	4.22606451273685e-316	node	Hindu Rao Hospital, Chhatra Marg, Delhi University (North Campus), Civil Lines Tehsil, Central Delhi, Delhi, 110007, India	amenity	hospital	0.301	India	FALSE
@@ -9539,7 +9539,7 @@ un refugee agency	hu	Europe	Eastern Europe	FALSE	1	2021-02-03	6.03430060704707e-
 university of szeged	hu	Europe	Eastern Europe	FALSE	1	2021-02-03	1.27552558225732e-315	relation	Szegedi TudomÃ¡nyegyetem, 13, Dugonics tÃ©r, BelvÃ¡ros, Szeged, Szegedi jÃ¡rÃ¡s, CsongrÃ¡d-CsanÃ¡d megye, DÃ©l-AlfÃ¶ld, AlfÃ¶ld Ã©s Ã‰szak, 6720, MagyarorszÃ¡g	building	university	0.577156057530702	MagyarorszÃ¡g	FALSE
 civil protection department	ht	Americas	Caribbean	FALSE	1	2021-02-03	1.04965788931919e-315	way	Protection Civil SMA, Saint Michel de lâ€™Attalaye, Commune de Saint Michel de l'Attalaye, Arrondissement de Marmelade, DÃ©partement de l'Artibonite, HT4520, Ayiti	landuse	residential	0.4	Ayiti	FALSE
 commerce department	ht	Americas	Caribbean	FALSE	1	2021-02-03	8.36134411720442e-316	way	Rue du Commerce, Grande Passe, 1re Paricot, Bois Marguerite, Commune Port-Ã -Piment, Arrondissement des CÃ´teaux, DÃ©partement du Sud, Ayiti	highway	unclassified	0.2	Ayiti	FALSE
-international medical corps	ht	Americas	Caribbean	FALSE	1	2021-02-03	8.0257821909403e-317	node	International Medical Corps, RC 700A, 1re Maniche, Maniche, Commune Maniche, Arrondissement des Cayes, DÃ©partement du Sud, Ayiti	amenity	doctors	0.301	Ayiti	FALSE
+international medical corps	ht	Americas	Caribbean	FALSE	1	2021-02-03	8.02578219094030e-317	node	International Medical Corps, RC 700A, 1re Maniche, Maniche, Commune Maniche, Arrondissement des Cayes, DÃ©partement du Sud, Ayiti	amenity	doctors	0.301	Ayiti	FALSE
 iscf	ht	Americas	Caribbean	FALSE	1	2021-02-03	1.05134620056285e-316	node	InstitutionScolaire Claire Fontaine, Ruelle Capois la mort, CitÃ© Blue Hills, 3e Petite Anse, Cap-HaÃ¯tien, Commune Cap-HaÃ¯tien, Arrondissement de Cap-HaÃ¯tien, DÃ©partement du Nord, HT1113, Ayiti	amenity	school	0.001	Ayiti	FALSE
 mandon	ht	Americas	Caribbean	FALSE	1	2021-02-03	2.80023512949462e-317	node	Mandon, Commune Cavaillon, Arrondissement dâ€™Aquin, DÃ©partement du Sud, Ayiti	place	village	0.375	Ayiti	FALSE
 time department	ht	Americas	Caribbean	FALSE	1	2021-02-03	3.53355641211217e-316	node	Break Time Bar Restaurant, 25, Rue Oreste Zamor, Les Lattes, 1re Juanaria, Hinche, Commune Hinche, Arrondissement de Hinche, DÃ©partement du Centre, 5110, Ayiti	amenity	restaurant	0.101	Ayiti	FALSE
@@ -10235,7 +10235,7 @@ cibus	cz	Europe	Eastern Europe	FALSE	1	2021-02-03	6.14484759767779e-318	node	Ä�
 ctvt	cz	Europe	Eastern Europe	FALSE	1	2021-02-03	5.3653806825518e-316	way	LesnÃ­ ÄŒtvÅ¥, VÃ¡pennÃ¡, okres JesenÃ­k, OlomouckÃ½ kraj, StÅ™ednÃ­ Morava, ÄŒesko	landuse	residential	0.2	ÄŒesko	FALSE
 czech academy of sciences	cz	Europe	Eastern Europe	FALSE	1	2021-02-03	4.79717050642603e-316	way	Akademie vÄ›d ÄŒeskÃ© republiky, DivadelnÃ­, StarÃ© MÄ›sto, HlavnÃ­ mÄ›sto Praha, Praha, 11665, ÄŒesko	building	yes	0.455436556781574	ÄŒesko	FALSE
 der spiegel	cz	Europe	Eastern Europe	FALSE	1	2021-02-03	2.21440098949635e-316	node	Zrcadlo, TisÃ¡, okres ÃšstÃ­ nad Labem, ÃšsteckÃ½ kraj, SeverozÃ¡pad, 40336, ÄŒesko	natural	peak	0.3	ÄŒesko	FALSE
-icos	cz	Europe	Eastern Europe	FALSE	1	2021-02-03	3.7378881788006e-316	node	ICOS, 251, 5. kvÄ›tna, PleÅ¡ivec, ÄŒeskÃ½ Krumlov, okres ÄŒeskÃ½ Krumlov, JihoÄ<8d>eskÃ½ kraj, JihozÃ¡pad, 381 01, ÄŒesko	amenity	social_facility	0.101	ÄŒesko	FALSE
+icos	cz	Europe	Eastern Europe	FALSE	1	2021-02-03	3.73788817880060e-316	node	ICOS, 251, 5. kvÄ›tna, PleÅ¡ivec, ÄŒeskÃ½ Krumlov, okres ÄŒeskÃ½ Krumlov, JihoÄ<8d>eskÃ½ kraj, JihozÃ¡pad, 381 01, ÄŒesko	amenity	social_facility	0.101	ÄŒesko	FALSE
 institute of anatomy	cz	Europe	Eastern Europe	FALSE	1	2021-02-03	1.27567371795991e-315	relation	Institute of Anatomy, U Nemocnice, NovÃ© MÄ›sto, HlavnÃ­ mÄ›sto Praha, Praha, 11121, ÄŒesko	building	civic	0.301	ÄŒesko	FALSE
 more aqua	cz	Europe	Eastern Europe	FALSE	1	2021-02-03	5.08019008285843e-316	way	MoÅ™e, RaÅ¡ovy, Turkovice, okres Pardubice, PardubickÃ½ kraj, SeverovÃ½chod, ÄŒesko	natural	water	0.2	ÄŒesko	FALSE
 rcp	cz	Europe	Eastern Europe	FALSE	1	2021-02-03	1.17832601220051e-315	way	RCP, Florenc, KarlÃ­n, HlavnÃ­ mÄ›sto Praha, Praha, ÄŒesko	landuse	construction	0.3	ÄŒesko	FALSE
@@ -10792,7 +10792,7 @@ harare institute of technology	zw	Africa	Eastern Africa	FALSE	NA	2021-02-12	9.03
 american society of plant biologists and cambridge university press	NONE	NA	NA	FALSE	NA	2021-02-12	0	NA	NA	NA	NA	NA	NA	FALSE
 altmetric (altmetric	NONE	NA	NA	FALSE	NA	2021-02-12	0	NA	NA	NA	NA	NA	NA	FALSE
 libreoffice	de	Europe	Western Europe	FALSE	NA	2021-02-12	1.19925310135484e-316	node	TDF - The Document Foundation (Stiftung) LibreOffice.org, 188, KurfÃ¼rstendamm, Charlottenburg, Charlottenburg-Wilmersdorf, Berlin, 10707, Deutschland	amenity	social_centre	0.101	Deutschland	FALSE
-openoffice	de	Europe	Western Europe	FALSE	NA	2021-02-12	9.5126568925923e-316	way	openOffice, Bullmannaue, Stoppenberg, Stadtbezirk VI, Essen, Nordrhein-Westfalen, 45327, Deutschland	building	office	0.101	Deutschland	FALSE
+openoffice	de	Europe	Western Europe	FALSE	NA	2021-02-12	9.51265689259230e-316	way	openOffice, Bullmannaue, Stoppenberg, Stadtbezirk VI, Essen, Nordrhein-Westfalen, 45327, Deutschland	building	office	0.101	Deutschland	FALSE
 high altitude observatory	us	Americas	Northern America	FALSE	NA	2021-02-12	2.88840568939893e-316	node	High Altitude Observatory, Foothills Parkway, Boulder, Boulder County, Colorado, 80303-1229, United States	office	research	0.565269858749528	United States	FALSE
 moscow institute of physics and technology	ru	Europe	Eastern Europe	FALSE	NA	2021-02-12	4.95404608207384e-316	way	ÐœÐ¾Ñ<81>ÐºÐ¾Ð²Ñ<81>ÐºÐ¸Ð¹ Ñ„Ð¸Ð·Ð¸ÐºÐ¾-Ñ‚ÐµÑ…Ð½Ð¸Ñ‡ÐµÑ<81>ÐºÐ¸Ð¹ Ð¸Ð½Ñ<81>Ñ‚Ð¸Ñ‚ÑƒÑ‚, 16, ÑƒÐ»Ð¸Ñ†Ð° Ð“Ð°Ð³Ð°Ñ€Ð¸Ð½Ð°, Ð“Ð°Ð³Ð°Ñ€Ð¸Ð½Ð°, Ð–ÑƒÐºÐ¾Ð²Ñ<81>ÐºÐ¸Ð¹, Ð³Ð¾Ñ€Ð¾Ð´Ñ<81>ÐºÐ¾Ð¹ Ð¾ÐºÑ€ÑƒÐ³ Ð–ÑƒÐºÐ¾Ð²Ñ<81>ÐºÐ¸Ð¹, ÐœÐ¾Ñ<81>ÐºÐ¾Ð²Ñ<81>ÐºÐ°Ñ<8f> Ð¾Ð±Ð»Ð°Ñ<81>Ñ‚ÑŒ, Ð¦ÐµÐ½Ñ‚Ñ€Ð°Ð»ÑŒÐ½Ñ‹Ð¹ Ñ„ÐµÐ´ÐµÑ€Ð°Ð»ÑŒÐ½Ñ‹Ð¹ Ð¾ÐºÑ€ÑƒÐ³, 140187, Ð Ð¾Ñ<81>Ñ<81>Ð¸Ñ<8f>	amenity	university	0.456193256272999	Ð Ð¾Ñ<81>Ñ<81>Ð¸Ñ<8f>	FALSE
 university of guam	us	Americas	Northern America	FALSE	NA	2021-02-12	1.38020202559627e-317	node	University of Guam, University Drive, Mangilau Municipality, Guam, 96921, United States	amenity	school	0.655707764255528	United States	FALSE
@@ -15636,7 +15636,7 @@ collaborative research and training experience program	NONE	NA	NA	FALSE	NA	2021-
 interdisciplinary biology	NONE	NA	NA	FALSE	NA	2021-02-13	0	NA	NA	NA	NA	NA	NA	FALSE
 center for orthopedic research and education	NONE	NA	NA	FALSE	NA	2021-02-13	0	NA	NA	NA	NA	NA	NA	FALSE
 core institute	us	Americas	Northern America	FALSE	NA	2021-02-13	7.59044469562982e-316	way	CORE Institute, 14520, West Granite Valley Drive, Sun City Grand, Maricopa County, Arizona, 85375, United States	amenity	clinic	0.201	United States	FALSE
-university of maryland university college	us	Americas	Northern America	FALSE	NA	2021-02-13	9.8176823999233e-316	way	University of Maryland, College Park, Baltimore Avenue, Old Town, College Park, Prince George's County, Maryland, 20742, United States	amenity	university	1.05966453785279	United States	FALSE
+university of maryland university college	us	Americas	Northern America	FALSE	NA	2021-02-13	9.81768239992330e-316	way	University of Maryland, College Park, Baltimore Avenue, Old Town, College Park, Prince George's County, Maryland, 20742, United States	amenity	university	1.05966453785279	United States	FALSE
 center for geogenetics	NONE	NA	NA	FALSE	NA	2021-02-13	0	NA	NA	NA	NA	NA	NA	FALSE
 max planck institute for evolutionary anthroplogy	NONE	NA	NA	FALSE	NA	2021-02-13	0	NA	NA	NA	NA	NA	NA	FALSE
 university of camerino	it	Europe	Southern Europe	FALSE	NA	2021-02-13	1.58241420125747e-317	node	Via Giacomo Venezian, Camerino, Macerata, Marche, 62032, Italia	amenity	university	0.101	Italia	FALSE
@@ -16727,7 +16727,7 @@ control & elimination	NONE	NA	NA	FALSE	NA	2021-02-14	0	NA	NA	NA	NA	NA	NA	FALSE
 ashdin publishing	NONE	NA	NA	FALSE	NA	2021-02-14	0	NA	NA	NA	NA	NA	NA	FALSE
 jesuit refugee service	ke	Africa	Eastern Africa	FALSE	NA	2021-02-14	9.17242802223756e-316	way	Jesuit Refugee Services Safe Haven, Kakuma, Turkana, Kenya	landuse	commercial	0.5	Kenya	FALSE
 solar influences data analysis center	NONE	NA	NA	FALSE	NA	2021-02-14	0	NA	NA	NA	NA	NA	NA	FALSE
-world data centre	qa	Asia	Western Asia	FALSE	NA	2021-02-14	2.7637637963974e-316	node	Data World, Ø§Ù… Ø§Ù„Ø¯ÙˆÙ…, Muaither North, Ø§Ù„Ø±ÙŠØ§Ù†, 945, Ù‚Ø·Ø±	shop	mobile_phone	0.201	Ù‚Ø·Ø±	FALSE
+world data centre	qa	Asia	Western Asia	FALSE	NA	2021-02-14	2.76376379639740e-316	node	Data World, Ø§Ù… Ø§Ù„Ø¯ÙˆÙ…, Muaither North, Ø§Ù„Ø±ÙŠØ§Ù†, 945, Ù‚Ø·Ø±	shop	mobile_phone	0.201	Ù‚Ø·Ø±	FALSE
 vesuvius observatory	NONE	NA	NA	FALSE	NA	2021-02-14	0	NA	NA	NA	NA	NA	NA	FALSE
 w. k. kellogg biological station	NONE	NA	NA	FALSE	NA	2021-02-14	0	NA	NA	NA	NA	NA	NA	FALSE
 us department of agriculture's long term agro-ecosystem research	NONE	NA	NA	FALSE	NA	2021-02-14	0	NA	NA	NA	NA	NA	NA	FALSE
@@ -18130,3 +18130,685 @@ federated states of micronesia	fm	Oceania	Micronesia	FALSE	NA	2021-03-02	2580757
 réunion	fr	Europe	Western Europe	FALSE	NA	2021-03-02	257742289	relation	La RÃ©union, France	boundary	administrative	0.746012367343427	France	FALSE
 republic of china taiwan	tw	Asia	Eastern Asia	FALSE	NA	2021-03-02	257930770	relation	è‡ºç<81>£	boundary	administrative	0.749419791781313	è‡ºç<81>£	FALSE
 republic of uganda	ug	Africa	Eastern Africa	FALSE	NA	2021-03-02	257547928	relation	Uganda	boundary	administrative	0.797020967844266	Uganda	FALSE
+office of resilience	br	Americas	South America	FALSE	NA	2021-03-09	52200657	node	Resilience, 119, Rua Rocha Pombo, Liberdade, SÃ£o Paulo, RegiÃ£o Imediata de SÃ£o Paulo, RegiÃ£o Metropolitana de SÃ£o Paulo, RegiÃ£o GeogrÃ¡fica IntermediÃ¡ria de SÃ£o Paulo, SÃ£o Paulo, RegiÃ£o Sudeste, 01525-010, Brasil	leisure	fitness_centre	0.101	Brasil	FALSE
+state water resources control board	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+alaska natives	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+department of environmental protection	us	Americas	Northern America	FALSE	NA	2021-03-09	100187821	way	Department of Environmental Protection, 401, East State Street, Mill Hill, Trenton, Mercer County, New Jersey, 08619, United States	building	yes	0.401	United States	FALSE
+yokum	us	Americas	Northern America	FALSE	NA	2021-03-09	408163	node	Yokum, Upshur County, West Virginia, United States	place	hamlet	0.380666359276252	United States	FALSE
+science and technology policy fellowships	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+university of oviedo	es	Europe	Southern Europe	FALSE	NA	2021-03-09	258951471	relation	Hospital Universitario Central de Asturias, Calle Fuente Pando, La Cadellada, La Corredoria y Ventanielles, Oviedo, 33010, EspaÃ±a	amenity	hospital	0.307534521399027	EspaÃ±a	FALSE
+institute for photonic sciences	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+autonomous university of barcelona	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+icfo	de	Europe	Western Europe	FALSE	NA	2021-03-09	104156887	way	ICFO, I-SÃ¼dstraÃŸe, Querenburg, Bochum-SÃ¼d, Nordrhein-Westfalen, 44801, Deutschland	building	university	0.101	Deutschland	FALSE
+american alliance of museums	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+uk museums association	gb	Europe	Northern Europe	FALSE	NA	2021-03-09	127148985	way	Museums Association, 24, Calvin Street, Spitalfields, Whitechapel, London Borough of Tower Hamlets, London, Greater London, England, E1 6NW, United Kingdom	office	ngo	0.480666359276252	United Kingdom	FALSE
+australian museum research institute	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+museums association	gb	Europe	Northern Europe	FALSE	NA	2021-03-09	127148985	way	Museums Association, 24, Calvin Street, Spitalfields, Whitechapel, London Borough of Tower Hamlets, London, Greater London, England, E1 6NW, United Kingdom	office	ngo	0.480666359276252	United Kingdom	FALSE
+institute of museum and library services	us	Americas	Northern America	FALSE	NA	2021-03-09	25629861	node	Institute of Museum and Library Services, 1800, M Street Northwest, Golden Triangle, Washington, District of Columbia, 20036, United States	office	government	0.601	United States	FALSE
+scripps college	us	Americas	Northern America	FALSE	NA	2021-03-09	158622045	way	Scripps College, East 9th Street, Claremont, Los Angeles County, California, 91711, United States	amenity	university	0.201	United States	FALSE
+collection center and center for molecular biodiversity research	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+national museum of nature	do	Americas	Caribbean	FALSE	NA	2021-03-09	156995285	way	Museo de la Naturaleza, Calle Francisco del Rosario SÃ¡nchez, Pueblo Abajo, Sabana de la Mar, Hato Mayor, 25000, RepÃºblica Dominicana	tourism	museum	0.001	RepÃºblica Dominicana	FALSE
+harvard universitys peabody museum of archaeology and ethnology	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+australian broadcasting corporations radio national	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+homeward bound	us	Americas	Northern America	FALSE	NA	2021-03-09	214660694	way	Homeward Bound, Coeur d'Alene, Kootenai County, Idaho, 83815, United States	highway	residential	0.3	United States	FALSE
+coral reef society	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+acrs	us	Americas	Northern America	FALSE	NA	2021-03-09	206851879	way	Dutch Acrs, Dutch Acres, Sussex County, Delaware, United States	landuse	residential	0.3	United States	FALSE
+great barrier reef marine park authority	au	Oceania	Australia and New Zealand	FALSE	NA	2021-03-09	787652	node	Reef HQ, 2-68, Flinders Street, Townsville City, Townsville, Townsville City, Queensland, 4810, Australia	tourism	aquarium	0.322549534893346	Australia	FALSE
+rfp	us	Americas	Northern America	FALSE	NA	2021-03-09	216697752	way	2434, RFP, Nixon, Augusta, Richmond County, Georgia, United States	landuse	industrial	0.3	United States	FALSE
+us department of energys advanced manufacturing office	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+cooperative research centre for mental health	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+edith cowan university	au	Oceania	Australia and New Zealand	FALSE	NA	2021-03-09	184519308	way	Edith Cowan University (Mount Lawley Campus), 2, Bradford Street, Mount Lawley, City Of Stirling, Western Australia, 6050, Australia	amenity	university	0.713510524610342	Australia	FALSE
+imperial college physics society	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+italian association of physics students	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+international association of physics students	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+iaps	it	Europe	Southern Europe	FALSE	NA	2021-03-09	304049406	relation	IAPS - Istituto di Astrofisica e Planetologia Spaziali, CNR/INAF Parking, Municipio Roma VI, Roma, Roma Capitale, Lazio, Italia	amenity	research_institute	0.101	Italia	FALSE
+aisf	ro	Europe	Eastern Europe	FALSE	NA	2021-03-09	181837054	way	PBM.SRL WOODWARD AISF, 1, Pod Poarta 4 SNC, È˜antierul Naval ConstanÈ›a, GarÄƒ, ConstanÈ›a, Zona MetropolitanÄƒ ConstanÈ›a, ConstanÈ›a, 900900, RomÃ¢nia	building	industrial	0.101	RomÃ¢nia	FALSE
+european gravitational observatory	it	Europe	Southern Europe	FALSE	NA	2021-03-09	258563667	relation	Interferometro VIRGO, Via Fossi Doppi, Chiesanuova, Cascina, Pisa, Toscana, 56021, Italia	amenity	research_institute	0.407763971764495	Italia	FALSE
+turin astrophysical observatory	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+sacra di san michele abbey	it	Europe	Southern Europe	FALSE	NA	2021-03-09	301530730	way	Sacra di San Michele, Via Ferrata Carlo Giorda, Sant'Ambrogio di Torino, Torino, Piemonte, 10057, Italia	historic	monastery	0.401	Italia	FALSE
+commonwealth science conference	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+cspc	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+british society for immunology	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+cal newport	tw	Asia	Eastern Asia	FALSE	NA	2021-03-09	59687898	node	ä¸­è<8f>¯èˆªç©º, 1, èˆªç«™å<8d>—è·¯, é•·æ¦®èˆªå¤ªç§‘æŠ€å…¬å<8f>¸, åŸ”å¿ƒé‡Œ, å¤§åœ’å<8d>€, æ¡ƒåœ’å¸‚, 33758, è‡ºç<81>£	office	company	0.521435440535847	è‡ºç<81>£	FALSE
+picasso	us	Americas	Northern America	FALSE	NA	2021-03-09	54544445	node	Picasso, South Las Vegas Boulevard, Hughes Center, Paradise, Clark County, Nevada, 89109, United States	amenity	restaurant	0.247788039106501	United States	FALSE
+national institutes of healths national research service	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+selection committee	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+pbs	us	Americas	Northern America	FALSE	NA	2021-03-09	141055740	way	Paul Brown Stadium, West Freedom Way, Cincinnati, Hamilton County, Ohio, 45202-2209, United States	leisure	stadium	0.443871382729321	United States	FALSE
+aig	in	Asia	Southern Asia	FALSE	NA	2021-03-09	83729626	node	Aig, Kakei, Chamba, Chamba district, Himachal Pradesh, India	place	hamlet	0.35	India	FALSE
+centre for science communication	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+university of the west	pk	Asia	Southern Asia	FALSE	NA	2021-03-09	152401459	way	University of ..., Canal Road, Ø¨Û<81>Ø§ÙˆÙ„Ù¾ÙˆØ±, Ù¾Ù†Ø¬Ø§Ø¨, 63100, Ø¢Ø²Ø§Ø¯ Ú©Ø´Ù…ÛŒØ±	amenity	university	0.201	Ø¢Ø²Ø§Ø¯ Ú©Ø´Ù…ÛŒØ±	FALSE
+quest university canada	ca	Americas	Northern America	FALSE	NA	2021-03-09	41480836	node	Quest University, University Boulevard, Garibaldi Highlands, Squamish, Squamish-Lillooet Regional District, British Columbia, V8B 0N8, Canada	amenity	university	0.301	Canada	FALSE
+pbs digital studios	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+paris sciences	fr	Europe	Western Europe	FALSE	NA	2021-03-09	83468922	node	Ã‰cole normale supÃ©rieure Paris-Saclay, 4, Avenue des Sciences, Campus Urbain de Paris-Saclay, Le Moulon, Gif-sur-Yvette, Palaiseau, Essonne, ÃŽle-de-France, France mÃ©tropolitaine, 91190, France	amenity	university	0.642712409139007	France	FALSE
+society for freshwater science	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+maori	cn	Asia	Eastern Asia	FALSE	NA	2021-03-09	49849122	node	à½ à½–à½ à¼‹à½Ÿà½²à¼<8d> æ¯›æ—¥ä¹¡, à½†à½´à¼‹à½†à½ºà½“à¼‹à½¢à¾«à½¼à½„ é‡‘å·<9d>åŽ¿, é˜¿å<9d><9d>è—<8f>æ—<8f>ç¾Œæ—<8f>è‡ªæ²»å·ž, å››å·<9d>çœ<81>, ä¸­å›½	place	town	0.21360161928091	ä¸­å›½	FALSE
+crown research institutes	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+embark veterinary	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+society for the prevention of cruelty to animals international	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+humane society international	us	Americas	Northern America	FALSE	NA	2021-03-09	78328148	node	Borderland Humane Society Holding Facility, Valley Pine Circle, International Falls, Koochiching County, Minnesota, 56679, United States	amenity	animal_shelter	0.301	United States	FALSE
+paws across the water	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+brown dog	us	Americas	Northern America	FALSE	NA	2021-03-09	98804123	way	Brown Dog, Alpine, Utah County, Utah, 84004, United States	highway	path	0.275	United States	FALSE
+café des sciences	fr	Europe	Western Europe	FALSE	NA	2021-03-09	66098601	node	CafÃ© des Sciences, 915, Avenue Centrale, Domaine universitaire de Grenoble, Saint-Martin-d'HÃ¨res, Grenoble, IsÃ¨re, Auvergne-RhÃ´ne-Alpes, France mÃ©tropolitaine, 38400, France	amenity	restaurant	0.301	France	FALSE
+rapid ecology	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+towknight center for entrepreneurial journalism	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+city university of new york graduate school of journalism	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+small pond science	ph	Asia	South-Eastern Asia	FALSE	NA	2021-03-09	246694941	way	Matingkis Small Water Impounding Project, MuÃ±oz, Nueva Ecija, Central Luzon, Luzon	natural	water	0.3	Luzon	FALSE
+north american laboratory freezer challenge	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+green lab	fr	Europe	Western Europe	FALSE	NA	2021-03-09	45476772	node	Green Lab, 2, Rue de l'UniversitÃ©, Centre Historique, Centre, Montpellier, HÃ©rault, Occitanie, France mÃ©tropolitaine, 34062, France	amenity	restaurant	0.201	France	FALSE
+joint congress	us	Americas	Northern America	FALSE	NA	2021-03-09	56617570	node	KC North Spine and Joint Center, 8303, North Congress Avenue, Kansas City, Platte County, Missouri, 64152, United States	amenity	doctors	0.201	United States	FALSE
+askcom	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+northwestern	us	Americas	Northern America	FALSE	NA	2021-03-09	48886544	node	Northwestern, Midland, Midland County, Texas, 79707-3166, United States	place	neighbourhood	0.35	United States	FALSE
+office for research safety	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+freezer protocol group	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+green labs program	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+photonics west	de	Europe	Western Europe	FALSE	NA	2021-03-09	306385131	way	Neubau Technology Center for High-Energy Photonics, Gewerbegebiet An der LÃ¤nde, Burk, Forchheim, Landkreis Forchheim, Bayern, 91301, Deutschland	landuse	construction	0.3	Deutschland	FALSE
+society of photooptical instrumentation engineers	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+high school students internship programme	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+dublin institute of technology	ie	Europe	Northern Europe	FALSE	NA	2021-03-09	104414780	way	Dublin Institute of Technology, Bailey's Row, Bailey's Court, Mountjoy A ED, Dublin, County Dublin, Leinster, D01 PT99, Ã‰ire / Ireland	amenity	university	0.401	Ã‰ire / Ireland	FALSE
+regeneron science talent search	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+university of minho	pt	Europe	Southern Europe	FALSE	NA	2021-03-09	53874788	node	University of Minho General Library, Rua da Universidade, Gualtar, Braga, CÃ¡vado, Norte, 4710-057, Portugal	amenity	library	0.301	Portugal	FALSE
+european council of doctoral candidates	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+cdl	br	Americas	South America	FALSE	NA	2021-03-09	259507450	relation	CDL, Lages, Santa Catarina, RegiÃ£o Sul, Brasil	boundary	administrative	0.35	Brasil	FALSE
+etique	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+from science to pharma	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+institute for stem cell biology	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+stallergenes greer	fr	Europe	Western Europe	FALSE	NA	2021-03-09	146264947	way	Stallergenes Greer, 6, Rue Alexis de Tocqueville, Antonypole, Antony, Hauts-de-Seine, ÃŽle-de-France, France mÃ©tropolitaine, 92160, France	building	office	0.201	France	FALSE
+industry mentoring network	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+imnis	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+biomed x	kh	Asia	South-Eastern Asia	FALSE	NA	2021-03-09	68972331	node	biomed, áž˜áž áž¶ážœáž·áž<90>áž¸ áž€áž˜áŸ’áž–áž»áž‡áž¶áž€áŸ’ážšáŸ„áž˜ (áŸ¡áŸ¢áŸ¨), ážŸáž„áŸ’áž€áž¶áž<8f>áŸ‹áž˜áž·áž<8f>áŸ’áž<8f>áž—áž¶áž–, áž<81>ážŽáŸ’ážŒáŸ§áž˜áž€ážšáž¶, ážšáž¶áž‡áž’áž¶áž“áž¸áž—áŸ’áž“áŸ†áž–áŸ<81>áž‰, 120306, áž–áŸ’ážšáŸ‡ážšáž¶áž‡áž¶ážŽáž¶áž…áž€áŸ’ážšâ€‹áž€áž˜áŸ’áž–áž»áž‡áž¶	amenity	clinic	0.111	áž–áŸ’ážšáŸ‡ážšáž¶áž‡áž¶ážŽáž¶áž…áž€áŸ’ážšâ€‹áž€áž˜áŸ’áž–áž»áž‡áž¶	FALSE
+youreka science	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+department of transport and london	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+atkins	us	Americas	Northern America	FALSE	NA	2021-03-09	258328604	relation	Atkins, Benton County, Iowa, United States	boundary	administrative	0.534995184408801	United States	FALSE
+caribou biosciences	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+almac diagnostics	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+almac group	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+kalorama information	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+parexel	gb	Europe	Northern Europe	FALSE	NA	2021-03-09	57424393	node	PAREXEL, Watford Road, North Wembley, London Borough of Brent, London, Greater London, England, HA1 3TU, United Kingdom	amenity	clinic	0.101	United Kingdom	FALSE
+association of clinical research organizations	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+acro	gr	Europe	Southern Europe	FALSE	NA	2021-03-09	67683117	node	Acro, 13, Î™ÎµÏ<81>Î¬ ÎŸÎ´ÏŒÏ‚, Î“ÎºÎ¬Î¶Î¹, Î£Ï…Î½Î¿Î¹ÎºÎ¯Î± Î¡Î¿Ï…Ï†, Î‘Î¸Î®Î½Î±, Î”Î®Î¼Î¿Ï‚ Î‘Î¸Î·Î½Î±Î¯Ï‰Î½, Î ÎµÏ<81>Î¹Ï†ÎµÏ<81>ÎµÎ¹Î±ÎºÎ® Î•Î½ÏŒÏ„Î·Ï„Î± ÎšÎµÎ½Ï„Ï<81>Î¹ÎºÎ¿Ï<8d> Î¤Î¿Î¼Î­Î± Î‘Î¸Î·Î½ÏŽÎ½, Î ÎµÏ<81>Î¹Ï†Î­Ï<81>ÎµÎ¹Î± Î‘Ï„Ï„Î¹ÎºÎ®Ï‚, Î‘Ï€Î¿ÎºÎµÎ½Ï„Ï<81>Ï‰Î¼Î­Î½Î· Î”Î¹Î¿Î¯ÎºÎ·ÏƒÎ· Î‘Ï„Ï„Î¹ÎºÎ®Ï‚, 10435, Î•Î»Î»Î¬Ï‚	amenity	nightclub	0.101	Î•Î»Î»Î¬Ï‚	FALSE
+university of san diego	us	Americas	Northern America	FALSE	NA	2021-03-09	127008405	way	University of San Diego, 5998, Alcala Park Way, San Diego, San Diego County, California, 92110, United States	amenity	university	0.854901284439884	United States	FALSE
+tufts universitys center for the study of drug development	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+linear clinical research	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+turtle island restoration network	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+purdue university fort wayne	us	Americas	Northern America	FALSE	NA	2021-03-09	97618954	way	Purdue University Fort Wayne, Campus Drive, Fort Wayne, Allen County, Indiana, 46805, United States	amenity	university	0.401	United States	FALSE
+belgian nuclear research centre	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+southern cross university	au	Oceania	Australia and New Zealand	FALSE	NA	2021-03-09	179978063	way	Southern Cross University, Southern Cross Drive, Bilinga, Gold Coast City, Queensland, 4225, Australia	amenity	university	0.301	Australia	FALSE
+cudgen nature reserve	au	Oceania	Australia and New Zealand	FALSE	NA	2021-03-09	258853760	relation	Cudgen Nature Reserve, Cabarita Beach, Tweed Shire Council, New South Wales, 2488, Australia	natural	wood	0.5	Australia	FALSE
+southern cross	au	Oceania	Australia and New Zealand	FALSE	NA	2021-03-09	99618567	way	Southern Cross, Collins Street, Batman's Hill, Docklands, South Wharf, Melbourne, City of Melbourne, Victoria, 3006, Australia	railway	station	0.636927065379306	Australia	FALSE
+cheeky scientist association	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+graduate engineering association	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+international association for landscape ecology	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+marie curie alumni association	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+health education statistics agency	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+university of southern california gould school of law	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+western universitys teaching support centre	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+rose window consulting	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+mid sweden university in sundsvall	se	Europe	Northern Europe	FALSE	NA	2021-03-09	111118082	way	Mittuniversitetet, Ã…kroken, VÃ¤stermalm, Centrum, Sundsvalls Gustav Adolfs distrikt, Sundsvalls kommun, VÃ¤sternorrlands lÃ¤n, 852 37, Sverige	highway	platform	0.2	Sverige	FALSE
+university of western ontario teaching support centre	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+visvesvaraya national institute of technology	in	Asia	Southern Asia	FALSE	NA	2021-03-09	97163236	way	Visvesvaraya National Institute of Technology, VNIT Campus, Ambazari Road, Nagpur Urban Taluka, Nagpur District, Maharashtra, 440010, India	amenity	university	0.820395845167649	India	FALSE
+microscoft	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+aws	de	Europe	Western Europe	FALSE	NA	2021-03-09	188364496	way	4, AWS-Zentrale, StÃ¶ckach, Stuttgart-Ost, Stuttgart, Baden-WÃ¼rttemberg, 70190, Deutschland	landuse	industrial	0.3	Deutschland	FALSE
+earth engine	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+digitalglobe foundation	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+dunlap institute	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+environmental fellows program	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+national technical school	bd	Asia	Southern Asia	FALSE	NA	2021-03-09	301213975	node	Technical School, à¦«à§‡à¦¨à§€-à¦¨à§‹à¦¯à¦¼à¦¾à¦–à¦¾à¦²à§€ à¦®à¦¹à¦¾à¦¸à¦¡à¦¼à¦•, à¦šà§Œà¦®à§<81>à¦¹à¦¨à§€, à¦¨à§‹à§Ÿà¦¾à¦–à¦¾à¦²à§€ à¦œà§‡à¦²à¦¾, à¦šà¦Ÿà§<8d>à¦Ÿà¦—à§<8d>à¦°à¦¾à¦® à¦¬à¦¿à¦­à¦¾à¦—, 0321, à¦¬à¦¾à¦‚à¦²à¦¾à¦¦à§‡à¦¶	amenity	school	0.201	à¦¬à¦¾à¦‚à¦²à¦¾à¦¦à§‡à¦¶	FALSE
+rit	de	Europe	Western Europe	FALSE	NA	2021-03-09	259124321	relation	Riet, Vaihingen an der Enz, VVG Vaihingen an der Enz, Landkreis Ludwigsburg, Baden-WÃ¼rttemberg, 71735, Deutschland	boundary	administrative	0.3	Deutschland	FALSE
+howard hughes medical institute inclusive excellence initiative	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+uk national institute for health research	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+international institute for qualitative methodology at the university of alberta	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+old dominion university	us	Americas	Northern America	FALSE	NA	2021-03-09	259338262	relation	Old Dominion University, Brunswick Avenue, Edgewater, Larchmont, Norfolk, Virginia, 23508, United States	amenity	university	0.764844712316064	United States	FALSE
+branco weiss fellowship	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+university of science	my	Asia	South-Eastern Asia	FALSE	NA	2021-03-09	259391231	relation	Universiti Sains Malaysia, Halaman Bukit Gambir 9, Taman Bukit Gambir, Gelugor, Timur Laut, Pulau Pinang, 11700, Malaysia	amenity	university	0.409150861243221	Malaysia	FALSE
+ministry of higher education	so	Africa	Eastern Africa	FALSE	NA	2021-03-09	51646205	node	Ministry of Higher Education, Wadada Afgooye / Ø·Ø±ÙŠÙ‚ Ø£Ù<81>Ø¬ÙˆÙŠ, Hodan Ø­ÙˆØ¯Ø§Ù†, Muqdisho Ù…Ù‚Ø¯ÙŠØ´Ùˆ, Mogadishu Ù…Ù‚Ø¯ÙŠØ´Ùˆ, Banaadir Ø¨Ù†Ø§Ø¯Ø±, 2561, Soomaaliya Ø§Ù„ØµÙˆÙ…Ø§Ù„	office	government	0.401	Soomaaliya Ø§Ù„ØµÙˆÙ…Ø§Ù„	FALSE
+us alzheimers association	us	Americas	Northern America	FALSE	NA	2021-03-09	77147548	node	Alzheimer's Association, 1600, University Avenue, St. Paul, Ramsey County, Minnesota, 55104, United States	office	association	0.101	United States	FALSE
+new lab startup program	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+seeding labs	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+natural products institute	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+center for genomic sciences	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+university of ibadan	ng	Africa	Western Africa	FALSE	NA	2021-03-09	32828196	node	University of Ibadan, Ibadan North, Oyo, 200284, Nigeria	place	neighbourhood	0.55	Nigeria	FALSE
+institute for mathematical sciences	sg	Asia	South-Eastern Asia	FALSE	NA	2021-03-09	172707433	way	Institute for Mathematical Sciences, 3, Prince George's Park, Pasir Panjang, Southwest, 119219, Singapore	building	yes	0.401	Singapore	FALSE
+florida center for inclusive communities	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+general directorate for cultural heritage rhinelandpalatinate	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+daphne jackson trust	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+bureau of fisheries and aquatic resources	ph	Asia	South-Eastern Asia	FALSE	NA	2021-03-09	14756352	node	Bureau of Fisheries and Aquatic Resources, Digos-Makar Road, General Santos, South Cotabato, Soccsksargen, 9500, Luzon	office	government	0.601	Luzon	FALSE
+green cross switzerland	ch	Europe	Western Europe	FALSE	NA	2021-03-09	82765989	node	Cross, 10B, Stadthausstrasse, Altstadt, Stadt, Winterthur, Bezirk Winterthur, ZÃ¼rich, 8400, Schweiz/Suisse/Svizzera/Svizra	amenity	restaurant	0.101	Schweiz/Suisse/Svizzera/Svizra	FALSE
+hong kong shanghai banking corporation	au	Oceania	Australia and New Zealand	FALSE	NA	2021-03-09	16914478	node	HSBC, Boas Avenue, Joondalup, City Of Joondalup, Western Australia, 6027, Australia	amenity	bank	0.001	Australia	FALSE
+cocacola company	tz	Africa	Eastern Africa	FALSE	NA	2021-03-09	73839229	node	COCACOLA COMPANY, Malawi Road, Bububu, Unguja Mjini Magharibi, Zanzibar Ø²Ù†Ø¬Ø¨Ø§Ø±, 71103, Tanzania	amenity	social_facility	0.201	Tanzania	FALSE
+petroleum trust development fund	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+university of kinshasa	cd	Africa	Middle Africa	FALSE	NA	2021-03-09	299067210	node	American University of Kinshasa, Boulevard du 30 Juin, Golf, Gombe, Kinshasa, 012, RÃ©publique dÃ©mocratique du Congo	office	educational_institution	0.301	RÃ©publique dÃ©mocratique du Congo	FALSE
+max planck institute for coal research	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+academy of research and higher education	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+ares	es	Europe	Southern Europe	FALSE	NA	2021-03-09	258423855	relation	Ares, Ferrol, A CoruÃ±a, Galicia, EspaÃ±a	boundary	administrative	0.56012624965149	EspaÃ±a	FALSE
+korea international cooperation agency	kr	Asia	Eastern Asia	FALSE	NA	2021-03-09	216969885	way	êµ­ì œí˜‘ë ¥ë‹¨, 825, ëŒ€ì™•íŒ<90>êµ<90>ë¡œ, íŒ<90>êµ<90>í…Œí<81>¬ë…¸ë°¸ë¦¬, ë¶„ë‹¹êµ¬, ì‹œí<9d>¥ë<8f>™, 13106, ëŒ€í•œë¯¼êµ­	building	public	0.267719150556049	ëŒ€í•œë¯¼êµ­	FALSE
+united nations relief and works agency	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+unrwa	ps	Asia	Western Asia	FALSE	NA	2021-03-09	3635197	node	UNRWA, Al-Mokhayam Street, Ù…Ø®ÙŠÙ… Ø·ÙˆÙ„ÙƒØ±Ù…, Ø·ÙˆÙ„ÙƒØ±Ù…, Ù…Ù†Ø·Ù‚Ø© Ø£, Ø§Ù„Ø¶Ù<81>Ø© Ø§Ù„ØºØ±Ø¨ÙŠØ©, 302, Palestinian Territory	amenity	public_building	0.101	Palestinian Territory	FALSE
+un habitat	lk	Asia	Southern Asia	FALSE	NA	2021-03-09	59083486	node	UN Habitat, 33/9, De Fonseka Place, Bambalapitiya, Milagiriya, Colombo, à¶¶à·ƒà·Šà¶±à·<8f>à·„à·’à¶» à¶´à·…à·<8f>à¶­, 00400, à·<81>à·Šâ€<8d>à¶»à·“ à¶½à¶‚à¶šà·<8f>à·€ à®‡à®²à®™à¯<8d>à®•à¯ˆ	office	ngo	0.201	à·<81>à·Šâ€<8d>à¶»à·“ à¶½à¶‚à¶šà·<8f>à·€ à®‡à®²à®™à¯<8d>à®•à¯ˆ	FALSE
+institute of cellular medicine	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+uk academy of medical sciences springboard	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+w radio	us	Americas	Northern America	FALSE	NA	2021-03-09	242378374	way	West Radio, Longview, Gregg County, Texas, United States	landuse	residential	0.4	United States	FALSE
+twitter and facebook	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+bbc news	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+yachay tech university	ec	Americas	South America	FALSE	NA	2021-03-09	190109351	way	Universidad Yachay Tech, Proyecto Yachay, Urcuqui, San JosÃ©, San Miguel de UrcuquÃ­, Imbabura, 100115, Ecuador	amenity	university	0.366903631515068	Ecuador	FALSE
+shanghai institute for biological sciences	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+uk science council	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+soochow university	tw	Asia	Eastern Asia	FALSE	NA	2021-03-09	258657057	relation	æ<9d>±å<90>³å¤§å­¸, 70, è‡¨æºªè·¯, ç¦<8f>æž—é‡Œ, å£«æž—å<8d>€, çŸ³è§’, è‡ºåŒ—å¸‚, 111, è‡ºç<81>£	amenity	university	0.423673347037508	è‡ºç<81>£	FALSE
+draper	us	Americas	Northern America	FALSE	NA	2021-03-09	257873678	relation	Draper, Salt Lake County, Utah, United States	boundary	administrative	0.534995184408801	United States	FALSE
+roche innovation center	us	Americas	Northern America	FALSE	NA	2021-03-09	168764300	way	Ventana Medical Systems, Inc., 1910, East Innovation Park Drive, Ventana Medical Systems Inc., Oro Valley, Pima County, Arizona, 85755, United States	building	manufacture	0.101	United States	FALSE
+akcea therapeutics	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+university of tasmanias centre for marine socioecology	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+parliamentary research service	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+lucile packard foundation	us	Americas	Northern America	FALSE	NA	2021-03-09	117656828	way	David and Lucile Packard Foundation, 343, 2nd Street, Los Altos, Santa Clara County, California, 94022, United States	building	yes	0.301	United States	FALSE
+northeast association of fish and wildlife agencies	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+campbell collaboration	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+american institute for biological sciences	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+niwa	pl	Europe	Eastern Europe	FALSE	NA	2021-03-09	18519619	node	Niwa, gmina DzierzÄ…Å¼nia, powiat pÅ‚oÅ„ski, wojewÃ³dztwo mazowieckie, 09-164, Polska	place	village	0.401403950541444	Polska	FALSE
+ministry of business	nz	Oceania	Australia and New Zealand	FALSE	NA	2021-03-09	154499876	way	Ministry of Business, Innovation, and Employment, 15, Stout Street, Wellington Central, Wellington, Wellington City, Wellington, 6140, New Zealand / Aotearoa	office	government	0.301	New Zealand / Aotearoa	FALSE
+cawthron institute	nz	Oceania	Australia and New Zealand	FALSE	NA	2021-03-09	62932042	node	Cawthron Institute, 98, Halifax Street East, The Wood, Nelson, 7010, New Zealand / Aotearoa	office	research	0.201	New Zealand / Aotearoa	FALSE
+antarctic research centre	in	Asia	Southern Asia	FALSE	NA	2021-03-09	46103222	node	National Centre for Antarctic and Ocean Research(NCAOR), NH366, MormugÃ£o Port, Mormugao, Vasco da Gama, Mormugao, South Goa, 403804, India	office	research	0.367710111330712	India	FALSE
+rocket lab	nz	Oceania	Australia and New Zealand	FALSE	NA	2021-03-09	144566014	way	Rocket Lab, Airpark Drive, Airport Oaks, MÄ<81>ngere-ÅŒtÄ<81>huhu, Auckland, 2022, New Zealand / Aotearoa	building	yes	0.559793334348643	New Zealand / Aotearoa	FALSE
+customs	ss			FALSE	NA	2021-03-09	48519445	node	Customs, Juba, Central Equatoria, PRIVATE BAG, South Sudan	place	neighbourhood	0.35	South Sudan	FALSE
+oceans initiative	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+yarmouk university	jo	Asia	Western Asia	FALSE	NA	2021-03-09	114377757	way	Ø¬Ø§Ù…Ø¹Ø© Ø§Ù„ÙŠØ±Ù…ÙˆÙƒ, Ù<81>ÙˆØ²ÙŠ Ø§Ù„Ù…Ù„Ù‚ÙŠ, Ø­ÙŠ Ø§Ù„Ø¬Ø§Ù…Ø¹Ø©, Ø¥Ø±Ø¨Ø¯â€Ž, Ø¥Ø±Ø¨Ø¯, 21110, Ø§Ù„Ø£Ø±Ø¯Ù†	amenity	university	0.362945678183792	Ø§Ù„Ø£Ø±Ø¯Ù†	FALSE
+wsu	us	Americas	Northern America	FALSE	NA	2021-03-09	258940577	relation	Washington State University, Northeast Reaney Way, Pullman, Whitman County, Washington, 99164, United States	amenity	university	0.51377697632841	United States	FALSE
+experimental psychology society	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+wellcome trust sir henry dale fellowship	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+new college	gb	Europe	Northern Europe	FALSE	NA	2021-03-09	121083118	way	New College, St Helen's Passage, St Ebbes, City Centre, Oxford, Oxfordshire, South East, England, OX1 3SU, United Kingdom	amenity	university	0.696984724852259	United Kingdom	FALSE
+cheeky scientist	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+biomedical institute for global health research and technology	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+sense about science usa	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+geology adventures in ravensdale	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+united nations world tourism organization	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+atlas obscura	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+silversea	sg	Asia	South-Eastern Asia	FALSE	NA	2021-03-09	131148341	way	Silversea, Marine Parade, Southeast, Singapore	landuse	residential	0.3	Singapore	FALSE
+pbs newshour	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+gondwana dreaming	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+use committee	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+ornithological council	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+thurber engineering	ca	Americas	Northern America	FALSE	NA	2021-03-09	71099777	node	Thurber Engineering, 2460, Lancaster Road, Sheffield Glen, Alta Vista, (Old) Ottawa, Ottawa, Eastern Ontario, Ontario, K1B 4L5, Canada	office	company	0.201	Canada	FALSE
+university of munster	de	Europe	Western Europe	FALSE	NA	2021-03-09	258955070	relation	WestfÃ¤lische Wilhelms-UniversitÃ¤t, Eupener Weg, Sentruper HÃ¶he, MÃ¼nster-West, MÃ¼nster, Nordrhein-Westfalen, 48149, Deutschland	amenity	university	0.55844573834098	Deutschland	FALSE
+international institute of information technology	in	Asia	Southern Asia	FALSE	NA	2021-03-09	97537005	way	International Institute of Information Technology, Hyderabad, ISB Road, Anjaiah Nagar, Ward 105 Gachibowli, Hyderabad, Serilingampalle mandal, Rangareddy, Telangana, 500032, India	amenity	university	0.842480646342894	India	FALSE
+nonhodgkin lymphoma	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+don harrington discover center	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+fort worth museum of science and history	us	Americas	Northern America	FALSE	NA	2021-03-09	259162538	relation	Fort Worth Museum of Science and History, 1600, Gendy Street, Fort Worth, Tarrant County, Texas, 76107, United States	tourism	museum	0.981950414040809	United States	FALSE
+jrcs air	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+university of tor vegata	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+san francisco conservatory of music	us	Americas	Northern America	FALSE	NA	2021-03-09	152872979	way	San Francisco Conservatory of Music, 50, Oak Street, Hayes Valley, San Francisco, San Francisco City and County, California, 94102, United States	building	civic	0.856849137603517	United States	FALSE
+university of cádiz	ph	Asia	South-Eastern Asia	FALSE	NA	2021-03-09	253470513	way	Philippine Normal University, Gustilo Boulevard, Daga, Cadiz, Negros Occidental, Western Visayas, 6121, Luzon	amenity	university	0.101	Luzon	FALSE
+center for music	us	Americas	Northern America	FALSE	NA	2021-03-09	104792527	way	Music Hall Center for the Performing Arts, 350, Madison Street, Greektown, Detroit, Wayne County, Michigan, 48226, United States	amenity	theatre	0.654934934074513	United States	FALSE
+royal academy of music	gb	Europe	Northern Europe	FALSE	NA	2021-03-09	108816658	way	Royal Academy of Music, 1, Marylebone Road, Marylebone, City of Westminster, London, Greater London, England, NW1 5JD, United Kingdom	amenity	university	0.933151043574805	United Kingdom	FALSE
+trinity laban conservatoire of music	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+centre of research excellence	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+bioentrepreneurship core	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+london fly club	rs	Europe	Southern Europe	FALSE	NA	2021-03-09	72362722	node	Fly London, 4, Ð‘ÑƒÐ»ÐµÐ²Ð°Ñ€ ÑƒÐ¼ÐµÑ‚Ð½Ð¾Ñ<81>Ñ‚Ð¸, Ð¤Ð¾Ð½Ñ‚Ð°Ð½Ð°, Ð‘ÐµÐ¾Ð³Ñ€Ð°Ð´ (Ð<9d>Ð¾Ð²Ð¸ Ð‘ÐµÐ¾Ð³Ñ€Ð°Ð´), Ð“Ñ€Ð°Ð´Ñ<81>ÐºÐ° Ð¾Ð¿ÑˆÑ‚Ð¸Ð½Ð° Ð<9d>Ð¾Ð²Ð¸ Ð‘ÐµÐ¾Ð³Ñ€Ð°Ð´, Ð‘ÐµÐ¾Ð³Ñ€Ð°Ð´, Ð“Ñ€Ð°Ð´ Ð‘ÐµÐ¾Ð³Ñ€Ð°Ð´, Ð¦ÐµÐ½Ñ‚Ñ€Ð°Ð»Ð½Ð° Ð¡Ñ€Ð±Ð¸Ñ˜Ð°, 11000, Ð¡Ñ€Ð±Ð¸Ñ˜Ð°	shop	shoes	0.201	Ð¡Ñ€Ð±Ð¸Ñ˜Ð°	FALSE
+food and drink federation	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+mondelēz international	de	Europe	Western Europe	FALSE	NA	2021-03-09	197608138	way	MondelÄ“z International, HÃ¤schenstraÃŸe, Alte Neustadt, Neustadt, Stadtbezirk Bremen-SÃ¼d, Bremen, 28199, Deutschland	office	company	0.680919254414476	Deutschland	FALSE
+cadbury	gb	Europe	Northern Europe	FALSE	NA	2021-03-09	97112253	way	Cadbury, Bournville, Birmingham, West Midlands Combined Authority, West Midlands, England, B30 2LU, United Kingdom	landuse	industrial	0.557200283083601	United Kingdom	FALSE
+committee for economic development	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+conference board	ca	Americas	Northern America	FALSE	NA	2021-03-09	167181339	way	Conference Board of Canada, 255, Smyth Road, Faircrest Heights, Alta Vista, (Old) Ottawa, Ottawa, Eastern Ontario, Ontario, K1H 8M7, Canada	office	association	0.446981559290857	Canada	FALSE
+institute of food technologists	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+reading scientific services ltd	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+city university londons centre for food policy	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+cadbury dairy milk	gb	Europe	Northern Europe	FALSE	NA	2021-03-09	241076901	way	Cadbury House, Milk Hill, Cadbury, Mid Devon, Devon, South West England, England, EX5 5LB, United Kingdom	building	house	0.201	United Kingdom	FALSE
+mckinsey global institute	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+institute of genetics and animal breeding of the polish academy of sciences	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+riken cbs summer program	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+riken cbs	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+national research service	au	Oceania	Australia and New Zealand	FALSE	NA	2021-03-09	301252280	node	Research, Melbourne, Shire of Nillumbik, Victoria, 3095, Australia	place	town	0.4	Australia	FALSE
+copenhagen business school	dk	Europe	Northern Europe	FALSE	NA	2021-03-09	124782089	way	Copenhagen Business School, PorcelÃ¦nshaven, Frederiksberg, Frederiksberg Kommune, Region Hovedstaden, 2000, Danmark	building	school	0.738750342445518	Danmark	FALSE
+economist books	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+us national laboratories	ie	Europe	Northern Europe	FALSE	NA	2021-03-09	258340569	relation	Laboratories, Seamus Quirke Road, Shantalla, Galway Municipal District, Cathair na Gaillimhe, County Galway, Connacht, H91 CF90, Ã‰ire / Ireland	building	yes	0.201	Ã‰ire / Ireland	FALSE
+institute of arctic and alpine research	us	Americas	Northern America	FALSE	NA	2021-03-09	54148096	node	Institute of Arctic and Alpine Research, 4001, Discovery Drive, Boulder, Boulder County, Colorado, 80303, United States	office	research	0.601	United States	FALSE
+carlsberg foundation scholarship	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+carlsberg	de	Europe	Western Europe	FALSE	NA	2021-03-09	258149605	relation	Carlsberg, Leiningerland, Landkreis Bad DÃ¼rkheim, Rheinland-Pfalz, 67316, Deutschland	boundary	administrative	0.508338828424476	Deutschland	FALSE
+carlsberg foundation	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+aecom	cn	Asia	Eastern Asia	FALSE	NA	2021-03-09	233587826	way	AECOM, è<8d>ƒç<81>£å<8d>€ Tsuen Wan District, æ–°ç•Œ New Territories, é¦™æ¸¯ Hong Kong, ä¸­å›½	landuse	industrial	0.3	ä¸­å›½	FALSE
+stata	ru	Europe	Eastern Europe	FALSE	NA	2021-03-09	155606811	way	1, ÐœÐ¾Ñ<81>ÐºÐ¾Ð²Ñ<81>ÐºÐ¸Ð¹ Ð³Ð¾Ñ<81>ÑƒÐ´Ð°Ñ€Ñ<81>Ñ‚Ð²ÐµÐ½Ð½Ñ‹Ð¹ ÑƒÐ½Ð¸Ð²ÐµÑ€Ñ<81>Ð¸Ñ‚ÐµÑ‚ Ð¸Ð¼.Â Ðœ.Â Ð’.Â Ð›Ð¾Ð¼Ð¾Ð½Ð¾Ñ<81>Ð¾Ð²Ð°, Ñ€Ð°Ð¹Ð¾Ð½ Ð Ð°Ð¼ÐµÐ½ÐºÐ¸, ÐœÐ¾Ñ<81>ÐºÐ²Ð°, Ð¦ÐµÐ½Ñ‚Ñ€Ð°Ð»ÑŒÐ½Ñ‹Ð¹ Ñ„ÐµÐ´ÐµÑ€Ð°Ð»ÑŒÐ½Ñ‹Ð¹ Ð¾ÐºÑ€ÑƒÐ³, 119991, Ð Ð¾Ñ<81>Ñ<81>Ð¸Ñ<8f>	place	neighbourhood	0.589514102962792	Ð Ð¾Ñ<81>Ñ<81>Ð¸Ñ<8f>	FALSE
+africa research excellence fund	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+toefl	pk	Asia	Southern Asia	FALSE	NA	2021-03-09	59338143	node	IELTS TOEFL PREPARATION INSTITUTE CLASSESS COURSE TRAINING CENTRE TEST, North Nazimabad Block E, North Nazimabad, Ú©Ø±Ø§Ú†ÛŒ, Ø³Ù†ÚŒ, 74700, Ø¢Ø²Ø§Ø¯ Ú©Ø´Ù…ÛŒØ±	office	educational_institution	0.101	Ø¢Ø²Ø§Ø¯ Ú©Ø´Ù…ÛŒØ±	FALSE
+bbc tv	gb	Europe	Northern Europe	FALSE	NA	2021-03-09	4265599	node	BBC TV Centre, Hunter's Road, Spital Tongues, Newcastle upon Tyne, Tyne and Wear, North East England, England, NE2 4NS, United Kingdom	highway	bus_stop	0.201	United Kingdom	FALSE
+nhs practitioner health programme	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+us national comprehensive cancer network	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+nccn	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+facetime	ru	Europe	Eastern Europe	FALSE	NA	2021-03-09	59520791	node	FaceTime, 7, ÐšÐ°Ð·Ð°Ð½Ñ<81>ÐºÐ°Ñ<8f> ÑƒÐ»Ð¸Ñ†Ð°, Ð<90>Ð¿Ñ€Ð°ÐºÑ<81>Ð¸Ð½ Ð´Ð²Ð¾Ñ€, Ð¾ÐºÑ€ÑƒÐ³ â„– 78, Ð¡Ð°Ð½ÐºÑ‚-ÐŸÐµÑ‚ÐµÑ€Ð±ÑƒÑ€Ð³, Ð¡ÐµÐ²ÐµÑ€Ð¾-Ð—Ð°Ð¿Ð°Ð´Ð½Ñ‹Ð¹ Ñ„ÐµÐ´ÐµÑ€Ð°Ð»ÑŒÐ½Ñ‹Ð¹ Ð¾ÐºÑ€ÑƒÐ³, 190000, Ð Ð¾Ñ<81>Ñ<81>Ð¸Ñ<8f>	amenity	training	0.101	Ð Ð¾Ñ<81>Ñ<81>Ð¸Ñ<8f>	FALSE
+mentoring academy	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+poznań university of technology	pl	Europe	Eastern Europe	FALSE	NA	2021-03-09	258993345	relation	Politechnika PoznaÅ„ska (Kampus Piotrowo), Piotrowo, Miasteczko, ÅšwiÄ™ty Roch, Rataje, PoznaÅ„, wojewÃ³dztwo wielkopolskie, 60-965, Polska	amenity	university	0.101	Polska	FALSE
+walter a haas school of business	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+water energy resilience research institute at berkeley lab	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+haas school of business	us	Americas	Northern America	FALSE	NA	2021-03-09	96169715	way	Haas School of Business, Piedmont Avenue, Southside, Berkeley, Alameda County, California, 94720-1076, United States	amenity	college	0.773294131216185	United States	FALSE
+splunk	us	Americas	Northern America	FALSE	NA	2021-03-09	58571789	node	Splunk, 270, Brannan Street, West SoMa, San Francisco, San Francisco City and County, California, 90103, United States	office	company	0.101	United States	FALSE
+pax water technologies	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+bae systems applied intelligence	gb	Europe	Northern Europe	FALSE	NA	2021-03-09	105753771	way	BAE Systems Applied Intelligence, 170, Priestley Road, Surrey Research Park, Worplesdon, Wood Street, Guildford, Surrey, South East, England, GU2 7RQ, United Kingdom	office	company	0.401	United Kingdom	FALSE
+poznań school of banking	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+luton	gb	Europe	Northern Europe	FALSE	NA	2021-03-09	18189056	node	Luton, East of England, England, LU1 2YN, United Kingdom	place	town	0.634916343390733	United Kingdom	FALSE
+proud science alliance	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+royal society university research fellowship	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+harvard kennedy school	us	Americas	Northern America	FALSE	NA	2021-03-09	3035506	node	Harvard Kennedy School Library, John F. Kennedy Street, Old Cambridge, Cambridgeport, Cambridge, Middlesex County, Massachusetts, 02138-2903, United States	amenity	library	0.301	United States	FALSE
+health sciences graduate students association	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+florey institute of neuroscience and mental health	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+racing analytical services	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+arabidopsis research	ca	Americas	Northern America	FALSE	NA	2021-03-09	247240904	way	Arabidopsis Research, University of British Columbia, Electoral Area A, British Columbia, Canada	landuse	farmland	0.4	Canada	FALSE
+arctic university of norway	no	Europe	Northern Europe	FALSE	NA	2021-03-09	95993572	way	Universitetet i TromsÃ¸ - Norges arktiske universitet, Lidskjalvvegen, Breivika, TromsÃ¸, Troms og Finnmark, 9019, Norge	amenity	university	0.434301779265404	Norge	FALSE
+western norway university of applied sciences	no	Europe	Northern Europe	FALSE	NA	2021-03-09	258834779	relation	HÃ¸gskulen pÃ¥ Vestlandet, Campus Kronstad, Inndalsveien, Fridalen, Ã…rstad, Bergen, Vestland, 5063, Norge	building	university	0.329555066820797	Norge	FALSE
+young academy of europe	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+nba	in	Asia	Southern Asia	FALSE	NA	2021-03-09	81522253	node	Nabagram, Durgapur Expressway, Jamalpur, Purba Bardhaman, West Bengal, 713166, India	railway	station	0.322075306013723	India	FALSE
+national basketball association	ph	Asia	South-Eastern Asia	FALSE	NA	2021-03-09	210500956	way	Basketball Cort, Phase 9, Eucalyptus, Highway 2000 Taytay Rizal Community Association, San Juan, Taytay, Rizal, Calabarzon, 1920, Luzon	leisure	pitch	0.201	Luzon	FALSE
+obafemi awolowo university in ileife	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+university of york phd	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+sdm	ye	Asia	Western Asia	FALSE	NA	2021-03-09	12517594	node	Ø³Ø¯Ù…, Ù…Ø¯ÙŠØ±ÙŠØ© Ø¬Ø­Ø§Ù†Ø©, Ù…Ø­Ø§Ù<81>Ø¸Ø© ØµÙ†Ø¹Ø§Ø¡, Ø§Ù„ÙŠÙ…Ù†	place	village	0.29190327427879	Ø§Ù„ÙŠÙ…Ù†	FALSE
+monmouth university	us	Americas	Northern America	FALSE	NA	2021-03-09	199259664	way	Monmouth University, 400, Cedar Avenue, West Long Branch, Monmouth County, New Jersey, 07764, United States	amenity	university	0.605751306412585	United States	FALSE
+us southwest	cz	Europe	Eastern Europe	FALSE	NA	2021-03-09	257897601	relation	ÃšsteckÃ½ kraj, SeverozÃ¡pad, ÄŒesko	boundary	administrative	0.572461411579259	ÄŒesko	FALSE
+european medical writers association	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+medical writing organization	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+nuclear amrc	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+marie curie research institute	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+wellcome wing	cn	Asia	Eastern Asia	FALSE	NA	2021-03-09	18784206	node	Wellcome, 520-530, ç¦<8f>æ¦®è¡— Fuk Wing Street, è˜‡å±‹ So Uk, é•·æ²™ç<81>£ Cheung Sha Wan, æ·±æ°´åŸ—å<8d>€ Sham Shui Po District, ä¹<9d>é¾<8d> Kowloon, é¦™æ¸¯ Hong Kong, 000000, ä¸­å›½	shop	supermarket	0.201	ä¸­å›½	FALSE
+science museum	gb	Europe	Northern Europe	FALSE	NA	2021-03-09	97239747	way	Science Museum, Museum Lane, Brompton, Royal Borough of Kensington and Chelsea, London, Greater London, England, SW7 1WZ, United Kingdom	tourism	museum	0.684227690824593	United Kingdom	FALSE
+cu green labs program	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+national football league	us	Americas	Northern America	FALSE	NA	2021-03-09	140878974	way	Bay Area Christian School Football Field, Oak Creek Drive, Oak Creek, League City, Galveston County, Texas, 77573, United States	leisure	pitch	0.201	United States	FALSE
+horrid voice of science	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+spl	br	Americas	South America	FALSE	NA	2021-03-09	258069302	relation	SÃ£o Paulo, RegiÃ£o Sudeste, Brasil	boundary	administrative	0.673841318708166	Brasil	FALSE
+gesisel school of medicine	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+behavior foundation	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+mozilla	fr	Europe	Western Europe	FALSE	NA	2021-03-09	81510968	node	Mozilla Paris, 117, Quai de Valmy, Quartier de la Porte-Saint-Martin, Paris 10e Arrondissement, Paris, ÃŽle-de-France, France mÃ©tropolitaine, 75010, France	office	company	0.101	France	FALSE
+ocean health index	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+nceas	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+wellcome trust research programme	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+global biotech revolution	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+economist intelligence unit	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+royal society of engineering global	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+st gallen symposium	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+leaders of today	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+sv health investors	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+bactevo	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+nanna therapeutics	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+mckinsey  company	co	Americas	South America	FALSE	NA	2021-03-09	71959843	node	McKinsey & company, Avenida Carrera 7, UPZ ChicÃ³ Lago, Localidad Chapinero, BogotÃ¡, BogotÃ¡ Distrito Capital, RegiÃ³n Andina, 110231, Colombia	office	company	0.679903870668353	Colombia	FALSE
+digital india	in	Asia	Southern Asia	FALSE	NA	2021-03-09	80262786	node	Digital India, Karuvatta highschool-Kumarakody road, Karthikappally, Alappuzha, Kerala, 690517, India	office	government	0.201	India	FALSE
+north carolina museum of natural science	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+american thoracic society	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+thoracic society of australia	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+henry wellcome postdoctoral fellowship	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+university of cambridge school of biological sciences	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+cayman chemical	us	Americas	Northern America	FALSE	NA	2021-03-09	47632699	node	Cayman Chemical Research and Development, 1180, East Ellsworth Road, Ann Arbor, Washtenaw County, Michigan, 48108, United States	place	house	0.201	United States	FALSE
+wolfson college	gb	Europe	Northern Europe	FALSE	NA	2021-03-09	87303436	way	Wolfson College, Linton Road, New Marston, Marston, Oxford, Oxfordshire, South East, England, OX2 6UD, United Kingdom	amenity	college	0.623737049781549	United Kingdom	FALSE
+british society for haematology	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+keystone symposia	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+university of ghanalegon	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+epic systems	us	Americas	Northern America	FALSE	NA	2021-03-09	108084155	way	Epic Pond, Epic Systems Corporation, Verona, Dane County, Wisconsin, 53593, United States	natural	water	0.4	United States	FALSE
+louisiana tech university	us	Americas	Northern America	FALSE	NA	2021-03-09	237524043	way	Louisiana Tech University, Stadium Boulevard, Ruston, Lincoln Parish, Louisiana, 71270, United States	amenity	university	0.301	United States	FALSE
+utep	us	Americas	Northern America	FALSE	NA	2021-03-09	170270087	way	The University of Texas at El Paso, East Baltimore Drive, Mission Hills, El Paso, El Paso County, Texas, 79902, United States	amenity	university	0.460090960558415	United States	FALSE
+aspb	bo	Americas	South America	FALSE	NA	2021-03-09	54712703	node	AdministraciÃ³n de Servicios Portuarios - Bolivia (ASP-B), 342, Calle Lisimaco Gutierrez, Centro, La Paz, Pedro Domingo Murillo, La Paz, 3816, Bolivia	office	government	0.001	Bolivia	FALSE
+first create the media ltd	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+london metropolitan police	cl	Americas	South America	FALSE	NA	2021-03-09	112843843	way	London, Malloco, PeÃ±aflor, Provincia de Talagante, RegiÃ³n Metropolitana de Santiago, 9710000, Chile	highway	living_street	0.3	Chile	FALSE
+personal finance	fr	Europe	Western Europe	FALSE	NA	2021-03-09	22302933	node	BNP Paribas Personal Finance, 16, Avenue Alsace Lorraine, Hyper Centre, Secteur 2, Grenoble, IsÃ¨re, Auvergne-RhÃ´ne-Alpes, France mÃ©tropolitaine, 38000, France	amenity	bank	0.201	France	FALSE
+biochemical society	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+genetics society	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+marburger stem center	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+lawrence technological university	us	Americas	Northern America	FALSE	NA	2021-03-09	259044471	relation	Lawrence Technological University, Evans, Southfield, Oakland County, Michigan, 48037, United States	amenity	university	0.665944602680225	United States	FALSE
+charles h wright museum of african american history	us	Americas	Northern America	FALSE	NA	2021-03-09	107280512	way	Charles H. Wright Museum of African-American History, 315, East Warren Avenue, Midtown, Detroit, Wayne County, Michigan, 48201, United States	tourism	museum	1.1612143171614	United States	FALSE
+visual attention lab	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+teachers insurance and annuity association of america	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+tiaa institute	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+tiaa	eg	Africa	Northern Africa	FALSE	NA	2021-03-09	10455235	node	KV32, Ø·Ø±ÙŠÙ‚ ÙˆØ§Ø¯ÙŠ Ø§Ù„Ù…Ù„ÙˆÙƒ, Ù…Ø¯ÙŠÙ†Ù‡ Ø§Ù„Ù‚Ø±Ù†Ø© Ø§Ù„Ø¬Ø¯ÙŠØ¯Ø©, Ø§Ù„Ø£Ù‚ØµØ±, 81693, Ù…ØµØ±	historic	tomb	0.427022409876486	Ù…ØµØ±	FALSE
+hechinger	de	Europe	Western Europe	FALSE	NA	2021-03-09	136456302	way	Hechinger, 138, HauptstraÃŸe, Oberhausen, SÃ¤ndlehof, Oberhausen, Rheinhausen, Verwaltungsverband Kenzingen-Herbolzheim, Landkreis Emmendingen, Baden-WÃ¼rttemberg, 79365, Deutschland	amenity	restaurant	0.101	Deutschland	FALSE
+black women in science and engineering	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+initiative for sustainable energy policy	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+intel labs	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+google location	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+polytechnique montréal	ca	Americas	Northern America	FALSE	NA	2021-03-09	76938927	node	Polytechnique MontrÃ©al, 2500, Chemin de Polytechnique, Ã‰douard-Montpetit, CÃ´te-des-Neigesâ€“Notre-Dame-de-GrÃ¢ce, MontrÃ©al, AgglomÃ©ration de MontrÃ©al, MontrÃ©al (06), QuÃ©bec, H3T 1J4, Canada	amenity	university	0.201	Canada	FALSE
+india alliance	in	Asia	Southern Asia	FALSE	NA	2021-03-09	187662988	way	Alliance Streeet, Mannuthy, Thrissur, Thrissur district, Kerala, 680651, India	highway	residential	0.3	India	FALSE
+indian department of science and technology	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+metu	tr	Asia	Western Asia	FALSE	NA	2021-03-09	259201298	relation	Orta DoÄŸu Teknik Ãœniversitesi, 1, Muhsin YazÄ±cÄ±oÄŸlu Caddesi, Ä°ÅŸÃ§i BloklarÄ± Mahallesi, Ankara, Ã‡ankaya, Ankara, Ä°Ã§ Anadolu BÃ¶lgesi, 06800, TÃ¼rkiye	amenity	university	0.473631673098451	TÃ¼rkiye	FALSE
+turkish atomic energy agency	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+sarayköy nuclear research and training center	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+institute for innovation and technology	sc	Africa	Eastern Africa	FALSE	NA	2021-03-09	191245800	way	National Institute for Science Technology & Innovation, Bel Ombre Road, Bel Ombre, MahÃ©, Sesel	office	research	0.401	Sesel	FALSE
+university of nottingham malaysia	my	Asia	South-Eastern Asia	FALSE	NA	2021-03-09	194830770	way	Universiti Nottingham Malaysia, Jalan Broga, Taman Tasik Semenyih, Semenyih, Majlis Perbandaran Kajang, Selangor, 43500, Malaysia	amenity	university	0.540053860433783	Malaysia	FALSE
+cancer research malaysia	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+subang jaya	my	Asia	South-Eastern Asia	FALSE	NA	2021-03-09	306771801	relation	Subang Jaya, Petaling, Selangor, Malaysia	boundary	administrative	0.658590271478121	Malaysia	FALSE
+gorgas memorial institute for health studies	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+panamanian ministry of foreign affairs	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+pontifical bolivarian university	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+biovex	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+markestrat	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+engender technologies	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+cambridge enterprise	us	Americas	Northern America	FALSE	NA	2021-03-09	84932788	way	Cambridge Road, Fairfield Estates, Enterprise, Coffee County, Alabama, 36330, United States	highway	residential	0.3	United States	FALSE
+auramerbio	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+luminicell	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+ketita labs	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+ivy league	za	Africa	Southern Africa	FALSE	NA	2021-03-09	220001773	way	Ivy League, 6, Cluver Road, Simonswyk, Stellenbosch Ward 7, Bo-Dalsig, Stellenbosch, Cape Winelands District Municipality, Western Cape, 7599, South Africa	building	dormitory	0.201	South Africa	FALSE
+society for advancement of chicanoshispanics	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+black women in science	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+department of computer and information science and engineering	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+us national center for women and information technology	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+anitaborg	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+grace hopper	de	Europe	Western Europe	FALSE	NA	2021-03-09	17746081	node	Grace-Hopper-StraÃŸe, Hochschulstadtteil, Strecknitz, Sankt JÃ¼rgen, LÃ¼beck, Schleswig-Holstein, 23562, Deutschland	highway	bus_stop	0.201	Deutschland	FALSE
+graduate research education and development	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+interdisciplinary center of infection biology and immunity	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+humboldt university of	us	Americas	Northern America	FALSE	NA	2021-03-09	209573488	way	William Howard Taft Road, University Village Business District, Mount Auburn, Cincinnati, Hamilton County, Ohio, 45219, United States	highway	secondary	0.2	United States	FALSE
+zibi	ca	Americas	Northern America	FALSE	NA	2021-03-09	259252368	relation	Zibi, Lebreton Flats, Somerset, (Old) Ottawa, Ottawa, Eastern Ontario, Ontario, Canada	landuse	construction	0.3	Canada	FALSE
+japan national agriculture and food research organization	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+bill  melinda gates foundation grand challenges	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+annual international biomedical students	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+centre for women in science at wilfrid laurier university	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+ted fellows program	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+bbc horizon	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+pbs nova	us	Americas	Northern America	FALSE	NA	2021-03-09	72416024	node	WYES-TV, Navarre Avenue, New Orleans, Orleans Parish, Louisiana, 70124, United States	man_made	mast	0.299997827209804	United States	FALSE
+mogilev state a kuleshov university	by	Europe	Eastern Europe	FALSE	NA	2021-03-09	259515482	relation	ÐœÐ¾Ð³Ð¸Ð»Ñ‘Ð²Ñ<81>ÐºÐ¸Ð¹ Ð³Ð¾Ñ<81>ÑƒÐ´Ð°Ñ€Ñ<81>Ñ‚Ð²ÐµÐ½Ð½Ñ‹Ð¹ ÑƒÐ½Ð¸Ð²ÐµÑ€Ñ<81>Ð¸Ñ‚ÐµÑ‚ Ð¸Ð¼ÐµÐ½Ð¸ Ð<90>. Ð<90>. ÐšÑƒÐ»ÐµÑˆÐ¾Ð²Ð°, ÐŸÐµÑ€Ð²Ð¾Ð¼Ð°Ð¹Ñ<81>ÐºÐ°Ñ<8f> ÑƒÐ»Ð¸Ñ†Ð°, Ð›ÐµÐ´ÐºÐ¾Ð²Ð¾, Ð›ÐµÐ½Ð¸Ð½Ñ<81>ÐºÐ¸Ð¹ Ñ€Ð°Ð¹Ð¾Ð½, ÐœÐ¾Ð³Ð¸Ð»Ñ‘Ð², ÐœÐ¾Ð³Ð¸Ð»Ñ‘Ð²Ñ<81>ÐºÐ°Ñ<8f> Ð¾Ð±Ð»Ð°Ñ<81>Ñ‚ÑŒ, 212005, Ð‘ÐµÐ»Ð°Ñ€ÑƒÑ<81>ÑŒ	amenity	university	0.319711033684734	Ð‘ÐµÐ»Ð°Ñ€ÑƒÑ<81>ÑŒ	FALSE
+amazon ecopark jungle lodge	br	Americas	South America	FALSE	NA	2021-03-09	82307039	node	Amazon EcoPark Jungle Lodge, Rua AcuÃ£, TarumÃ£-AÃ§Ãº, Manaus, MicrorregiÃ£o de Manaus, RegiÃ£o GeogrÃ¡fica IntermediÃ¡ria de Manaus, Amazonas, RegiÃ£o Norte, 69000-000, Brasil	leisure	resort	0.401	Brasil	FALSE
+shark research and conservation program	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+field school	us	Americas	Northern America	FALSE	NA	2021-03-09	2915286	node	The Field School, Foxhall Road Northwest, Foxhall Crescent, Washington, District of Columbia, 20007:20016, United States	amenity	school	0.470074815609084	United States	FALSE
+north carolina division of marine fisheries	us	Americas	Northern America	FALSE	NA	2021-03-09	251545995	way	North Carolina Division of Marine Fisheries, 3441, Arendell Street, Carolina City, Morehead City, Carteret County, North Carolina, 28557, United States	building	yes	0.601	United States	FALSE
+element ai	gb	Europe	Northern Europe	FALSE	NA	2021-03-09	16073389	node	Element, 112-114, Rose Street, New Town, New Town/Broughton, City of Edinburgh, Scotland, EH2 3JF, United Kingdom	amenity	pub	0.101	United Kingdom	FALSE
+fusemachines	np	Asia	Southern Asia	FALSE	NA	2021-03-09	57607129	node	Fusemachines Inc., Shrim Nidhi Marg, Kamalpokhari, Baghbazar, à¤•à¤¾à¤ à¤®à¤¾à¤¡à¥Œà¤‚, Kathmandu, à¤•à¤¾à¤ à¤®à¤¾à¤¡à¥Œà¤‚, à¤µà¤¾à¤—à¥<8d>à¤®à¤¤à¥€ à¤ªà¥<8d>à¤°à¤¦à¥‡à¤¶, 46600, à¤¨à¥‡à¤ªà¤¾à¤²	office	company	0.101	à¤¨à¥‡à¤ªà¤¾à¤²	FALSE
+fmla	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+denison university	us	Americas	Northern America	FALSE	NA	2021-03-09	188047295	way	Denison University, Linden Place, Granville Historic District, Granville, Granville Township, Licking County, Ohio, 43023, United States	amenity	university	0.624997469973527	United States	FALSE
+american society for radiation oncology	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+astro	my	Asia	South-Eastern Asia	FALSE	NA	2021-03-09	121030840	way	Astro, Sungai Besi, Kuala Lumpur, Malaysia	landuse	commercial	0.3	Malaysia	FALSE
+global forest biodiversity initiative	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+federal university of southern bahia	ru	Europe	Eastern Europe	FALSE	NA	2021-03-09	111120411	way	Ð¢Ð°Ð²Ñ€Ð¸Ñ‡ÐµÑ<81>ÐºÐ°Ñ<8f> Ð°ÐºÐ°Ð´ÐµÐ¼Ð¸Ñ<8f> ÐšÑ€Ñ‹Ð¼Ñ<81>ÐºÐ¾Ð³Ð¾ Ñ„ÐµÐ´ÐµÑ€Ð°Ð»ÑŒÐ½Ð¾Ð³Ð¾ ÑƒÐ½Ð¸Ð²ÐµÑ€Ñ<81>Ð¸Ñ‚ÐµÑ‚Ð° Ð¸Ð¼ÐµÐ½Ð¸ Ð’. Ð˜. Ð’ÐµÑ€Ð½Ð°Ð´Ñ<81>ÐºÐ¾Ð³Ð¾, 4, Ð¿Ñ€Ð¾Ñ<81>Ð¿ÐµÐºÑ‚ Ð’ÐµÑ€Ð½Ð°Ð´Ñ<81>ÐºÐ¾Ð³Ð¾, Ð ÐµÑ<81>Ð¿ÑƒÐ±Ð»Ð¸ÐºÐ° ÐšÑ€Ñ‹Ð¼, Ð®Ð¶Ð½Ñ‹Ð¹ Ñ„ÐµÐ´ÐµÑ€Ð°Ð»ÑŒÐ½Ñ‹Ð¹ Ð¾ÐºÑ€ÑƒÐ³, 295017, Ð Ð¾Ñ<81>Ñ<81>Ð¸Ñ<8f>	amenity	university	0.001	Ð Ð¾Ñ<81>Ñ<81>Ð¸Ñ<8f>	FALSE
+data observation network	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+hodeidah university	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+university of siegen	de	Europe	Western Europe	FALSE	NA	2021-03-09	38681398	node	E, Walter-Flex-StraÃŸe, Siegen, Kreis Siegen-Wittgenstein, Nordrhein-Westfalen, 57072, Deutschland	amenity	university	0.101	Deutschland	FALSE
+university of mauritius	mu	Africa	Eastern Africa	FALSE	NA	2021-03-09	47081438	node	University of Mauritius, , Moka, 80813, Mauritius	highway	bus_stop	0.301	Mauritius	FALSE
+humboldt foundation	de	Europe	Western Europe	FALSE	NA	2021-03-09	23075739	node	Insektenhotel, Jean-Paul-StraÃŸe, Villenviertel, Bad Godesberg, Bonn, Nordrhein-Westfalen, 53173, Deutschland	tourism	guest_house	0.001	Deutschland	FALSE
+centre for brain and disease research	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+flanders institute for biotechnology	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+federation of european biochemical societies	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+german academic exchange service	ae	Asia	Western Asia	FALSE	NA	2021-03-09	176025000	way	German International School Dubai, Pompidou Road, Ø§Ù„Ù…Ø¯ÙŠÙ†Ø© Ø§Ù„Ø£ÙƒØ§Ø¯ÙŠÙ…ÙŠØ©, Ø¯Ø¨ÙŠ, 97717, Ø§Ù„Ø¥Ù…Ø§Ø±Ø§Øª Ø§Ù„Ø¹Ø±Ø¨ÙŠØ© Ø§Ù„Ù…ØªØ­Ø¯Ø©	amenity	school	0.101	Ø§Ù„Ø¥Ù…Ø§Ø±Ø§Øª Ø§Ù„Ø¹Ø±Ø¨ÙŠØ© Ø§Ù„Ù…ØªØ­Ø¯Ø©	FALSE
+alexander von humboldt foundation	de	Europe	Western Europe	FALSE	NA	2021-03-09	23075739	node	Insektenhotel, Jean-Paul-StraÃŸe, Villenviertel, Bad Godesberg, Bonn, Nordrhein-Westfalen, 53173, Deutschland	tourism	guest_house	0.001	Deutschland	FALSE
+university of colombo	lk	Asia	Southern Asia	FALSE	NA	2021-03-09	131730920	way	University of Colombo, Cumaratunga Munidasa Mawatha, Cinnamon Gardens, Colombo, à¶¶à·ƒà·Šà¶±à·<8f>à·„à·’à¶» à¶´à·…à·<8f>à¶­, 0007, à·<81>à·Šâ€<8d>à¶»à·“ à¶½à¶‚à¶šà·<8f>à·€ à®‡à®²à®™à¯<8d>à®•à¯ˆ	amenity	university	0.697752393332003	à·<81>à·Šâ€<8d>à¶»à·“ à¶½à¶‚à¶šà·<8f>à·€ à®‡à®²à®™à¯<8d>à®•à¯ˆ	FALSE
+stuttgart media university	de	Europe	Western Europe	FALSE	NA	2021-03-09	174855409	way	Hochschule der Medien, NobelstraÃŸe, Pfaffenwald, Vaihingen, Stuttgart, Baden-WÃ¼rttemberg, 70569, Deutschland	amenity	university	0.441762590849456	Deutschland	FALSE
+nivien therapeutics	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+five alarm bio	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+macdiarmid institute	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+reduse	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+pace university	us	Americas	Northern America	FALSE	NA	2021-03-09	157989108	way	Pace University, Beekman Street, Financial District, Manhattan Community Board 1, Manhattan, New York County, New York, 10000, United States	amenity	university	0.630084056292374	United States	FALSE
+giant angstrom	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+funding information network	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+foundation directory online	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+national organization of research development professionals	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+higher education research and development	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+broegelmann foundation	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+university of carthage	us	Americas	Northern America	FALSE	NA	2021-03-09	90258828	way	University Drive, Carthage, Panola County, Texas, 75633, United States	highway	residential	0.3	United States	FALSE
+central scientific instruments organisation	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+leona m	us	Americas	Northern America	FALSE	NA	2021-03-09	257792721	relation	Leona, Doniphan County, Kansas, United States	boundary	administrative	0.516589120302114	United States	FALSE
+harry b helmsley charitable trust	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+helmsley trust	us	Americas	Northern America	FALSE	NA	2021-03-09	83852006	node	The Leona M. and Harry B. Helmsley Charitable Trust Center for Electrophysiology, 1190, 5th Avenue, Manhattan Community Board 11, Manhattan, New York County, New York, 10029, United States	amenity	clinic	0.201	United States	FALSE
+national institution for academic degrees	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+european school of management and technology	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+university of girona	es	Europe	Southern Europe	FALSE	NA	2021-03-09	6856847	node	Insitut de CiÃ¨ncies Religioses, Carrer del Portal Nou, Barri Vell, Girona, GironÃ¨s, Girona, Catalunya, 17004, EspaÃ±a	amenity	university	0.101	EspaÃ±a	FALSE
+save the children	cf	Africa	Middle Africa	FALSE	NA	2021-03-09	42217087	node	Save the Children, RN 2, BangÃ® - Bangui, KÃ¶dÃ¶rÃ¶sÃªse tÃ® BÃªafrÃ®ka - RÃ©publique Centrafricaine	office	ngo	0.301	KÃ¶dÃ¶rÃ¶sÃªse tÃ® BÃªafrÃ®ka - RÃ©publique Centrafricaine	FALSE
+returnees affairs	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+western ecological research center	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+usgs western ecological research center	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+firc institute of molecular oncology	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+école normale supérieure	ne	Africa	Western Africa	FALSE	NA	2021-03-09	150675686	way	Ã‰cole Normale SupÃ©rieure, NogarÃ©, Niamey, Niger	landuse	residential	0.4	Niger	FALSE
+cica	hu	Europe	Eastern Europe	FALSE	NA	2021-03-09	258160503	relation	HernÃ¡dcÃ©ce, GÃ¶nci jÃ¡rÃ¡s, Borsod-AbaÃºj-ZemplÃ©n megye, Ã‰szak-MagyarorszÃ¡g, AlfÃ¶ld Ã©s Ã‰szak, 3887, MagyarorszÃ¡g	boundary	administrative	0.500031489847124	MagyarorszÃ¡g	FALSE
+faculty of medicine and health sciences	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+research school of astronomy and astrophysics	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+australian astronomical observatory	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+school of urban	ua	Europe	Eastern Europe	FALSE	NA	2021-03-09	168274369	way	school, Ð”Ð¾Ð±Ñ€Ð¾Ñ‚Ñ–Ð², Ð›Ð°Ð½Ñ‡Ð¸Ð½Ñ<81>ÑŒÐºÐ° Ñ<81>ÐµÐ»Ð¸Ñ‰Ð½Ð° Ð³Ñ€Ð¾Ð¼Ð°Ð´Ð°, Ð<9d>Ð°Ð´Ð²Ñ–Ñ€Ð½Ñ<8f>Ð½Ñ<81>ÑŒÐºÐ¸Ð¹ Ñ€Ð°Ð¹Ð¾Ð½, Ð†Ð²Ð°Ð½Ð¾-Ð¤Ñ€Ð°Ð½ÐºÑ–Ð²Ñ<81>ÑŒÐºÐ° Ð¾Ð±Ð»Ð°Ñ<81>Ñ‚ÑŒ, 78454, Ð£ÐºÑ€Ð°Ñ—Ð½Ð°	landuse	commercial	0.31	Ð£ÐºÑ€Ð°Ñ—Ð½Ð°	FALSE
+protein dynamic solutions	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+netcare	za	Africa	Southern Africa	FALSE	NA	2021-03-09	245640916	way	NetCare, Swemmer Street, Gezina, Tshwane Ward 53, Pretoria, City of Tshwane Metropolitan Municipality, Gauteng, 0084, South Africa	amenity	hospital	0.101	South Africa	FALSE
+rev1 ventures	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+technology innovation agency	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+tia	al	Europe	Southern Europe	FALSE	NA	2021-03-09	136702704	way	Aeroporti NdÃ«rkombÃ«tar i TiranÃ«s NÃ«nÃ« Tereza, Rruga Regjimentit, Rinas, NikÃ«l, Bashkia KrujÃ«, Qarku i DurrÃ«sit, ShqipÃ«ria veriore, 1504, ShqipÃ«ria	aeroway	aerodrome	0.437744076837915	ShqipÃ«ria	FALSE
+sosv	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+social capital	ca	Americas	Northern America	FALSE	NA	2021-03-09	52196564	node	The Social Capital, Danforth Avenue, Playter Estates, Torontoâ€”Danforth, Old Toronto, Toronto, Golden Horseshoe, Ontario, M4K 1N1, Canada	amenity	pub	0.201	Canada	FALSE
+boston consulting group	us	Americas	Northern America	FALSE	NA	2021-03-09	68779413	node	Boston Consulting Group, State Street, Dock Square, Financial District, Boston, Suffolk County, Massachusetts, 02109, United States	office	company	0.737489922253541	United States	FALSE
+africa initiative for planetary and space sciences	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+alex ekwueme federal university ndufualike	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+max planck institute for iron research	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+center for translational neuroscience	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+van de weghe	fr	Europe	Western Europe	FALSE	NA	2021-03-09	158197940	way	CitÃ© Van de Weghe, Faubourg de BÃ©thune, Lille, Nord, Hauts-de-France, France mÃ©tropolitaine, 59037, France	highway	service	0.375	France	FALSE
+centre for microscopy	au	Oceania	Australia and New Zealand	FALSE	NA	2021-03-09	86966170	way	Monash Centre for Electron Microscopy, 10, Innovation Walk, Clayton, Oakleigh East, Melbourne, City of Monash, Victoria, 3800, Australia	building	university	0.301	Australia	FALSE
+characterisation and analysis	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+cbsm	br	Americas	South America	FALSE	NA	2021-03-09	200267209	way	CBSM - Clube Beneficente dos Sargentos da Marinha, 55, Rua Professora Paula Aquiles, Vila da Penha, Zona Norte do Rio de Janeiro, Rio de Janeiro, RegiÃ£o GeogrÃ¡fica Imediata do Rio de Janeiro, RegiÃ£o Metropolitana do Rio de Janeiro, RegiÃ£o GeogrÃ¡fica IntermediÃ¡ria do Rio de Janeiro, Rio de Janeiro, RegiÃ£o Sudeste, 21221410, Brasil	leisure	sports_centre	0.101	Brasil	FALSE
+green labs	cy	Asia	Western Asia	FALSE	NA	2021-03-09	145941969	way	Labs, Thessalias Street, Lykavitos, Î›ÎµÏ…ÎºÏ‰ÏƒÎ¯Î±, Î”Î®Î¼Î¿Ï‚ Î›ÎµÏ…ÎºÏ‰ÏƒÎ¯Î±Ï‚, Î›ÎµÏ…ÎºÏ‰ÏƒÎ¯Î± - LefkoÅŸa, Î›ÎµÏ…ÎºÏ‰ÏƒÎ¯Î±, ÎšÏ<8d>Ï€Ï<81>Î¿Ï‚, 1048, ÎšÏ<8d>Ï€Ï<81>Î¿Ï‚ - KÄ±brÄ±s	amenity	university	0.101	ÎšÏ<8d>Ï€Ï<81>Î¿Ï‚ - KÄ±brÄ±s	FALSE
+biocore	us	Americas	Northern America	FALSE	NA	2021-03-09	139264025	way	Biocore Prairie, Madison, Dane County, Wisconsin, United States	landuse	meadow	0.3	United States	FALSE
+usb	br	Americas	South America	FALSE	NA	2021-03-09	113164891	way	UESB - Universidade Estadual do Sudoeste da Bahia, Rua Humberto Barros, Caminho da Universidade, Candeias, VitÃ³ria da Conquista, RegiÃ£o GeogrÃ¡fica Imediata de VitÃ³ria da Conquista, RegiÃ£o GeogrÃ¡fica IntermediÃ¡ria de VitÃ³ria da Conquista, Bahia, RegiÃ£o Nordeste, 45029-102, Brasil	amenity	university	0.37720861480317	Brasil	FALSE
+university of glamorgan	ca	Americas	Northern America	FALSE	NA	2021-03-09	22309782	node	Mount Royal University Terminal, Mount Royal Circle SW, Lincoln Park, Calgary, Alberta, T3E 7C9, Canada	highway	bus_stop	0.101	Canada	FALSE
+findauniversity	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+sierra	us	Americas	Northern America	FALSE	NA	2021-03-09	258282153	relation	Sierra County, California, United States	boundary	administrative	0.642640930795966	United States	FALSE
+physical sciences research and application	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+kayser italia	it	Europe	Southern Europe	FALSE	NA	2021-03-09	127173186	way	Kayser Italia Srl, Livorno, Toscana, Italia	landuse	industrial	0.4	Italia	FALSE
+ethnological society of london	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+british astronomical association	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+liverpool astronomical society	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+royal holloway college	gb	Europe	Northern Europe	FALSE	NA	2021-03-09	4473732	node	Royal Holloway College, Egham Hill, Englefield Green, Runnymede, Surrey, South East, England, TW20 0BN, United Kingdom	highway	bus_stop	0.301	United Kingdom	FALSE
+newnham college	gb	Europe	Northern Europe	FALSE	NA	2021-03-09	85448877	way	Newnham College (University of Cambridge), Sidgwick Avenue, Newnham, Cambridge, Cambridgeshire, East of England, England, CB3 9DF, United Kingdom	amenity	university	0.653738374479683	United Kingdom	FALSE
+royal observatory in greenwich	gb	Europe	Northern Europe	FALSE	NA	2021-03-09	156694701	way	Royal Observatory Greenwich, Blackheath Avenue, East Greenwich, Royal Borough of Greenwich, London, Greater London, England, SE10 8XJ, United Kingdom	tourism	museum	0.896673547671832	United Kingdom	FALSE
+royal agricultural society	ps	Asia	Western Asia	FALSE	NA	2021-03-09	3596136	node	Agricultural Society, Kofur Ra'i, ÙƒÙ<81>Ø± Ø±Ø§Ø¹ÙŠ, Ù…Ù†Ø·Ù‚Ø© Ø£, Ø§Ù„Ø¶Ù<81>Ø© Ø§Ù„ØºØ±Ø¨ÙŠØ©, 072, Palestinian Territory	amenity	public_building	0.201	Palestinian Territory	FALSE
+royal society hughes medal	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+central institution	nz	Oceania	Australia and New Zealand	FALSE	NA	2021-03-09	113476603	way	The Institution, New Regent Street, New Regent Street Precinct, Central City, Christchurch, Linwood-Central-Heathcote Community, Christchurch City, Canterbury, 8011, New Zealand / Aotearoa	amenity	pub	0.201	New Zealand / Aotearoa	FALSE
+balfour biological laboratory for women	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+galton laboratory	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+manchester high school for girls	gb	Europe	Northern Europe	FALSE	NA	2021-03-09	159456766	way	Manchester High School for Girls, Grangethorpe Road, Fallowfield, Manchester, Greater Manchester, North West England, England, M14 6JA, United Kingdom	amenity	school	0.80277870789687	United Kingdom	FALSE
+mosely education commission	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+industrial research department	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+air ministry	gb	Europe	Northern Europe	FALSE	NA	2021-03-09	98588582	way	Ministry of Defence, Horse Guards Avenue, Westminster, Covent Garden, City of Westminster, London, Greater London, England, SW1A 2HB, United Kingdom	military	office	0.631875732226719	United Kingdom	FALSE
+british science	gb	Europe	Northern Europe	FALSE	NA	2021-03-09	65100520	node	British American Tobacco, 210-211, Cambridge Science Park, Chesterton, Cambridge, Cambridgeshire, East of England, England, CB4 0WA, United Kingdom	office	company	0.201	United Kingdom	FALSE
+royal institute of chemistry	br	Americas	South America	FALSE	NA	2021-03-09	99764035	way	Instituto de QuÃ­mica, 748, Avenida Professor Lineu Prestes, ButantÃ£, SÃ£o Paulo, RegiÃ£o Imediata de SÃ£o Paulo, RegiÃ£o Metropolitana de SÃ£o Paulo, RegiÃ£o GeogrÃ¡fica IntermediÃ¡ria de SÃ£o Paulo, SÃ£o Paulo, RegiÃ£o Sudeste, 05508-000, Brasil	amenity	college	0.405003945962319	Brasil	FALSE
+royal aircraft establishment	gb	Europe	Northern Europe	FALSE	NA	2021-03-09	163958451	way	Royal Aircraft Establishment, Southern Transit, Greenland Camp, Orcheston, Wiltshire, South West England, England, SP4 8QD, United Kingdom	military	barracks	0.301	United Kingdom	FALSE
+hawker aircraft company	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+girton college	gb	Europe	Northern Europe	FALSE	NA	2021-03-09	126451731	way	Girton College (University of Cambridge), Wellbrook Way, Girton, Cambridge, Cambridgeshire, East of England, England, CB3 0JG, United Kingdom	amenity	university	0.655207723352706	United Kingdom	FALSE
+british european airways	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+ministry of labour and national service	lk	Asia	Southern Asia	FALSE	NA	2021-03-09	184701343	way	Ministry of Labour, Kirula Road, Narahenpita, Kirula, Colombo, à¶¶à·ƒà·Šà¶±à·<8f>à·„à·’à¶» à¶´à·…à·<8f>à¶­, 050000, à·<81>à·Šâ€<8d>à¶»à·“ à¶½à¶‚à¶šà·<8f>à·€ à®‡à®²à®™à¯<8d>à®•à¯ˆ	office	government	0.301	à·<81>à·Šâ€<8d>à¶»à·“ à¶½à¶‚à¶šà·<8f>à·€ à®‡à®²à®™à¯<8d>à®•à¯ˆ	FALSE
+glaxo	es	Europe	Southern Europe	FALSE	NA	2021-03-09	137500531	way	GlaxoSmithKline, Calle Salamanca, PolÃ­gono Industrial Allende Duero, Aranda de Duero, Burgos, Castilla y LeÃ³n, 09400, EspaÃ±a	man_made	works	0.101	EspaÃ±a	FALSE
+imperial chemical industries	gb	Europe	Northern Europe	FALSE	NA	2021-03-09	65011918	node	IMPERIAL CHEMICAL INDUSTRIES LIMITED, Station Road, Billingham, Stockton-on-Tees, North East England, England, TS23 1, United Kingdom	historic	memorial	0.301	United Kingdom	FALSE
+royal ordnance factory	gb	Europe	Northern Europe	FALSE	NA	2021-03-09	144438761	way	BAE Systems Land Systems Munitions, Alsager, Cheshire East, North West England, England, CW2 5PJ, United Kingdom	landuse	industrial	0.2	United Kingdom	FALSE
+telecommunications research establishment	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+weapons department	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+uk public health laboratory service	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+chemistry department	in	Asia	Southern Asia	FALSE	NA	2021-03-09	180543103	way	Chemistry Department, Chinna Waltair Road, Chinna Waltair, Pedda Waltair, Visakhapatnam, Visakhapatnam (Urban), Visakhapatnam, Andhra Pradesh, 530001, India	building	yes	0.201	India	FALSE
+post office research station	us	Americas	Northern America	FALSE	NA	2021-03-09	44303920	node	United States Post Office Bayview Station, Boston Avenue, Bridgeport, Fairfield County, Connecticut, 06610, United States	amenity	post_office	0.301	United States	FALSE
+un conference	gb	Europe	Northern Europe	FALSE	NA	2021-03-09	66240072	node	Conference, M4, London Borough of Hillingdon, London, Greater London, England, UB3 4LL, United Kingdom	natural	tree	0.201	United Kingdom	FALSE
+european economic community	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+careers community	us	Americas	Northern America	FALSE	NA	2021-03-09	185608133	way	Murry Bergtraum High School for Business Careers, Avenue of the Finest, Civic Center, Manhattan Community Board 1, Manhattan, New York County, New York, 10038, United States	amenity	school	0.458218474293395	United States	FALSE
+google doc	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+universities and colleges admissions services	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+lincoln trails college	us	Americas	Northern America	FALSE	NA	2021-03-09	92955910	way	Lincoln Avenue, Lincoln Park, Wapakoneta, Auglaize County, Ohio, 45895, United States	highway	secondary	0.2	United States	FALSE
+depaul	us	Americas	Northern America	FALSE	NA	2021-03-09	150712112	way	DePaul, Benson Avenue, Violetville, Baltimore, Maryland, 21227, United States	building	yes	0.101	United States	FALSE
+formerlyincarcerated college graduate network	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+lindenwood university	us	Americas	Northern America	FALSE	NA	2021-03-09	126708073	way	Lindenwood University, Droste Road, Saint Charles, Saint Charles County, Missouri, 63301, United States	amenity	university	0.201	United States	FALSE
+columbia basin college	us	Americas	Northern America	FALSE	NA	2021-03-09	96201938	way	Columbia Basin College, 20th Avenue, Tri-Cities, Franklin County, Washington, 99301, United States	amenity	college	0.59190327427879	United States	FALSE
+snitch program	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+university of novi sad	rs	Europe	Southern Europe	FALSE	NA	2021-03-09	186386618	way	Ð£Ð½Ð¸Ð²ÐµÑ€Ð·Ð¸Ñ‚ÐµÑ‚ Ñƒ Ð<9d>Ð¾Ð²Ð¾Ð¼ Ð¡Ð°Ð´Ñƒ Ð¢ÐµÑ…Ð½Ð¸Ñ‡ÐºÐ¸ Ñ„Ð°ÐºÑƒÐ»Ñ‚ÐµÑ‚ "ÐœÐ¸Ñ…Ð°Ñ˜Ð»Ð¾ ÐŸÑƒÐ¿Ð¸Ð½", Ð‘Ð‘, Ð‚ÑƒÑ€Ðµ Ð‚Ð°ÐºÐ¾Ð²Ð¸Ñ›Ð°, ÐœÐ°Ð»Ð° Ð<90>Ð¼ÐµÑ€Ð¸ÐºÐ°, Ð—Ñ€ÐµÑšÐ°Ð½Ð¸Ð½, Ð“Ñ€Ð°Ð´ Ð—Ñ€ÐµÑšÐ°Ð½Ð¸Ð½, Ð¡Ñ€ÐµÐ´ÑšÐ¾Ð±Ð°Ð½Ð°Ñ‚Ñ<81>ÐºÐ¸ ÑƒÐ¿Ñ€Ð°Ð²Ð½Ð¸ Ð¾ÐºÑ€ÑƒÐ³, Ð’Ð¾Ñ˜Ð²Ð¾Ð´Ð¸Ð½Ð°, 23000, Ð¡Ñ€Ð±Ð¸Ñ˜Ð°	amenity	university	0.001	Ð¡Ñ€Ð±Ð¸Ñ˜Ð°	FALSE
+ensenada center for scientific research and higher education	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+ejw solutions	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+us national superconducting cyclotron laboratory	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+jain university	in	Asia	Southern Asia	FALSE	NA	2021-03-09	127268628	way	Jain University, 22nd Main Road, Marenahalli, Pattabhiram Nagar, South Zone, Bengaluru, Bangalore South, Bangalore Urban, Karnataka, 560041, India	amenity	university	0.512019878936673	India	FALSE
+national superconducting cyclotron laboratory	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+institute of advanced materials and technology	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+environmental biology	pk	Asia	Southern Asia	FALSE	NA	2021-03-09	57077299	node	Environmental Biology Lab, Nurpur Road, Nurpur Shahan, ÙˆÙ<81>Ø§Ù‚ÛŒ Ø¯Ø§Ø±Ø§Ù„Ø­Ú©ÙˆÙ…Øª Ø§Ø³Ù„Ø§Ù… Ø¢Ø¨Ø§Ø¯, 53720, Ø¢Ø²Ø§Ø¯ Ú©Ø´Ù…ÛŒØ±	amenity	university	0.201	Ø¢Ø²Ø§Ø¯ Ú©Ø´Ù…ÛŒØ±	FALSE
+wilburforce foundation	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+yukon conservation initiative	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+message box workbook	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+story collider	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+diabetes australia research program	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+stanfords molecular imaging program	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+scottish oceans institute	gb	Europe	Northern Europe	FALSE	NA	2021-03-09	98288848	way	Gatty Marine Laboratory Scottish Oceans Institute, Woodburn Place, St Andrews, Fife, Scotland, KY16 8AY, United Kingdom	amenity	university	0.301	United Kingdom	FALSE
+wef	cn	Asia	Eastern Asia	FALSE	NA	2021-03-09	114532703	way	æ½<8d>å<9d>Šå<8d>—è‹‘æœºåœº, æ°‘èˆªè¡—, å<8d>—è‹‘ç¤¾åŒº, å¥Žæ–‡åŒº, æ½<8d>å<9d>Šå¸‚, å±±ä¸œçœ<81>, 261206, ä¸­å›½	aeroway	aerodrome	0.436824173202867	ä¸­å›½	FALSE
+sears tower	us	Americas	Northern America	FALSE	NA	2021-03-09	103673983	way	Willis Tower, 233, South Wacker Drive, Printer's Row, Loop, Chicago, Cook County, Illinois, 60606, United States	building	commercial	0.594510785434716	United States	FALSE
+wings	cn	Asia	Eastern Asia	FALSE	NA	2021-03-09	119596338	way	8, å¤©æ™‰ The Wings, å°‡è»<8d>æ¾³å¸‚ä¸­å¿ƒ Tseung Kwan O Town Centre, å°‡è»<8d>æ¾³ Tseung Kwan O, è¥¿è²¢å<8d>€ Sai Kung District, æ–°ç•Œ New Territories, é¦™æ¸¯ Hong Kong, ä¸­å›½	landuse	residential	0.458338814941197	ä¸­å›½	FALSE
+global warmings six americas	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+university of the azores	pt	Europe	Southern Europe	FALSE	NA	2021-03-09	216780017	way	Universidade dos AÃ§ores - Departamento de Oceanografia e Pescas, Rua Professor Doutor Frederico Machado, Matriz, Horta, Horta (Matriz), Horta, Faial, AÃ§ores, 9901-862, Portugal	amenity	university	0.247788039106501	Portugal	FALSE
+chiapas autonomous university	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+mexican national science and technology council	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+la rochelle	fr	Europe	Western Europe	FALSE	NA	2021-03-09	258135674	relation	La Rochelle, Charente-Maritime, Nouvelle-Aquitaine, France mÃ©tropolitaine, 17000, France	boundary	administrative	0.801483709687457	France	FALSE
+contemporary ceramics	gb	Europe	Northern Europe	FALSE	NA	2021-03-09	208928859	way	Contemporary Ceramics Centre, 63, Great Russell Street, St Giles, Bloomsbury, London Borough of Camden, London, Greater London, England, WC1B 3BL, United Kingdom	shop	art	0.201	United Kingdom	FALSE
+interuniversity laboratory of atmospheric systems	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+office of water	sl	Africa	Western Africa	FALSE	NA	2021-03-09	53985981	node	office, 23, Pultney Street, GOVERNMENT WHARF, Tower Hill, Freetown, Western Area Urban, Western Area, 223, Sierra Leone	amenity	office	0.211	Sierra Leone	FALSE
+center for global discovery	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+european geosciences union general assembly	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+indian institute of technology guwahati	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+bodega marine laboratory	us	Americas	Northern America	FALSE	NA	2021-03-09	189753542	way	Bodega Marine Laboratory, Dorm Trail, Sonoma County, California, 94923, United States	amenity	university	0.301	United States	FALSE
+bml	se	Europe	Northern Europe	FALSE	NA	2021-03-09	338399	node	BromÃ¶lla, Ã…gatan, BromÃ¶lla, BromÃ¶lla kommun, SkÃ¥ne lÃ¤n, 295 39, Sverige	railway	station	0.266097151699424	Sverige	FALSE
+webex	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+haipeng xiao at sun yatsen university	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+uk research excellence framework	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+us embassy	af	Asia	Southern Asia	FALSE	NA	2021-03-09	102516718	way	US Embassy, Street 13, Schaschdarak, Ú©Ø§Ø¨Ù„, Ú©Ø§Ø¨Ù„ ÙˆÙ„Ø³ÙˆØ§Ù„Û<8d>, ÙˆÙ„Ø§ÛŒØª ÙƒØ§Ø¨Ù„, 101, Ø§Ù<81>ØºØ§Ù†Ø³ØªØ§Ù†	office	diplomatic	0.524352223496241	Ø§Ù<81>ØºØ§Ù†Ø³ØªØ§Ù†	FALSE
+azteca tucson	us	Americas	Northern America	FALSE	NA	2021-03-09	222786147	way	Azteca Bail Bonds LLC, 1235, West Silverlake Road, Tucson, Pima County, Arizona, 85713, United States	office	bail_bond_agent	0.201	United States	FALSE
+ulm university	us	Americas	Northern America	FALSE	NA	2021-03-09	194582287	way	ULM Hanna Hall, University Avenue, Breard, Monroe, Ouachita Parish, Louisiana, 71203, United States	building	university	0.201	United States	FALSE
+wiswb	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+loréal	gb	Europe	Northern Europe	FALSE	NA	2021-03-09	162304086	way	L'OrÃ©al, Gigg, Hollins, Bury, Greater Manchester, North West England, England, United Kingdom	landuse	industrial	0.2	United Kingdom	FALSE
+international science council	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+pwc	na	NA	NA	FALSE	NA	2021-03-09	211466209	way	PwC, Moltke Street, Windhoek Central / CBD, Windhoek, Khomas Region, 10000, Namibia	amenity	parking	0.101	Namibia	FALSE
+st mary	fr	Europe	Western Europe	FALSE	NA	2021-03-09	258002822	relation	Saint-Mary, Confolens, Charente, Nouvelle-Aquitaine, France mÃ©tropolitaine, 16260, France	boundary	administrative	0.616888056909011	France	FALSE
+oasis	us	Americas	Northern America	FALSE	NA	2021-03-09	348884	node	Oasis, Riverside County, California, 92274, United States	place	hamlet	0.472859588409935	United States	FALSE
+vsco	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+shanghai jiao tong university school of medicine	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+british society for immunologys congress	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+cambridge stem cell institute	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+group of research on organizations	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+católica lisbon school of business and economics	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+nature careers	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+london business school	gb	Europe	Northern Europe	FALSE	NA	2021-03-09	228117875	way	London Business School, Park Road, Marylebone, City of Westminster, London, Greater London, England, NW1 6BH, United Kingdom	amenity	university	0.769742733732668	United Kingdom	FALSE
+university of cambridge seed funds	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+merck  co	us	Americas	Northern America	FALSE	NA	2021-03-09	299016689	node	Merck & Co., 4633, Merck Road, Finch Mill, Wilson County, North Carolina, 27893, United States	amenity	pharmacy	0.201	United States	FALSE
+north china electric power university	cn	Asia	Eastern Asia	FALSE	NA	2021-03-09	20679796	node	å<8d>ŽåŒ—ç”µåŠ›å¤§å­¦, æ°¸å<8d>ŽåŒ—å¤§è¡—, å’Œå¹³é‡Œè¡—é<81>“, èŽ²æ± åŒº, ä¿<9d>å®šå¸‚, æ²³åŒ—çœ<81>, 071000, ä¸­å›½	amenity	university	0.001	ä¸­å›½	FALSE
+department of life  environmental sciences	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+university of orléans	us	Americas	Northern America	FALSE	NA	2021-03-09	101199928	way	University of New Orleans, Lakeshore Drive, Pontchartrain Beach, New Orleans, Orleans Parish, Louisiana, 70122, United States	amenity	university	0.637285841274447	United States	FALSE
+african diaspora scientists federation	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+career path exchange	us	Americas	Northern America	FALSE	NA	2021-03-09	185459037	way	Career Path, Park Rapids, Hubbard County, Minnesota, 56470, United States	highway	residential	0.3	United States	FALSE
+adsf	bg	Europe	Eastern Europe	FALSE	NA	2021-03-09	165866492	way	aDSF, Ð‘ÐµÐ»ÐµÐ½Ðµ, ÐŸÐ»ÐµÐ²ÐµÐ½, Ð‘ÑŠÐ»Ð³aÑ€Ð¸Ñ<8f>	landuse	industrial	0.3	Ð‘ÑŠÐ»Ð³aÑ€Ð¸Ñ<8f>	FALSE
+sub saharan open university	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+weill cornell	us	Americas	Northern America	FALSE	NA	2021-03-09	2627269	node	Weill Cornell Medical College, 1300, York Avenue, Lenox Hill, Manhattan Community Board 8, Manhattan, New York County, New York, 10128, United States	amenity	university	0.573868796445932	United States	FALSE
+society for advancement of chicanoshispanics	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+annual biomedical research conference for minority students	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+leadership alliance	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+research careers	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+bame	np	Asia	Southern Asia	FALSE	NA	2021-03-09	258790735	relation	Bame, Bangad Kupinde, à¤¸à¤²à¥<8d>à¤¯à¤¾à¤¨, à¤®à¤§à¥<8d>à¤¯-à¤ªà¤¶à¥<8d>à¤šà¤¿à¤®à¤¾à¤žà¥<8d>à¤šà¤² à¤µà¤¿à¤•à¤¾à¤¸ à¤•à¥<8d>à¤·à¥‡à¤¤à¥<8d>à¤°, à¤•à¤°à¥<8d>à¤£à¤¾à¤²à¥€ à¤ªà¥<8d>à¤°à¤¦à¥‡à¤¶, à¤¨à¥‡à¤ªà¤¾à¤²	boundary	administrative	0.40799018260571	à¤¨à¥‡à¤ªà¤¾à¤²	FALSE
+society for the study of evolution	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+kalwant bhopal	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+vjh	be	Europe	Western Europe	FALSE	NA	2021-03-09	46135414	node	Bed Muzet - Lier, 65, Volmolenstraat, Lier, Mechelen, Antwerpen, Vlaanderen, 2500, BelgiÃ« / Belgique / Belgien	tourism	hostel	0.001	BelgiÃ« / Belgique / Belgien	FALSE
+danish society for women in science	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+southern denmark	dk	Europe	Northern Europe	FALSE	NA	2021-03-09	258086665	relation	Region Syddanmark, Danmark	boundary	administrative	0.537099707651646	Danmark	FALSE
+independent research fund denmark	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+lundbeck foundation	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+danish national commission	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+danish ministry of higher education and science	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+villum experiment programme	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+danwise	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+international levels of employment	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+canadian national institute for the blind	ca	Americas	Northern America	FALSE	NA	2021-03-09	115952626	way	Canadian National Institute for the Blind, 1929, Bayview Avenue, Don Valley West, North York, Toronto, Golden Horseshoe, Ontario, M4G0A7, Canada	building	public	0.870840445322848	Canada	FALSE
+department of social policy and intervention	gb	Europe	Northern Europe	FALSE	NA	2021-03-09	22686190	node	Department of Social Policy and Intervention, 32-42, Wellington Square, St Thomas', Jericho, Oxford, Oxfordshire, South East, England, OX1 2ER, United Kingdom	amenity	university	0.601	United Kingdom	FALSE
+research england	gb	Europe	Northern Europe	FALSE	NA	2021-03-09	175592054	way	Institute of Cancer Research, 237, Fulham Road, The Boltons, Brompton, Royal Borough of Kensington and Chelsea, London, Greater London, England, SW3 6HS, United Kingdom	building	hospital	0.610743518323823	United Kingdom	FALSE
+alberta ministry of agriculture and forestry	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+guarani	br	Americas	South America	FALSE	NA	2021-03-09	257769322	relation	Guarani, MicrorregiÃ£o UbÃ¡, RegiÃ£o GeogrÃ¡fica IntermediÃ¡ria de Juiz de Fora, Minas Gerais, RegiÃ£o Sudeste, Brasil	boundary	administrative	0.601796956117178	Brasil	FALSE
+brazilian institute of geography and statistics	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+ibge	br	Americas	South America	FALSE	NA	2021-03-09	168421482	way	Instituto Brasileiro de Geografia e EstatÃ­stica, 93, Rua UrussuÃ­, Vila OlÃ­mpia, Itaim Bibi, SÃ£o Paulo, RegiÃ£o Imediata de SÃ£o Paulo, RegiÃ£o Metropolitana de SÃ£o Paulo, RegiÃ£o GeogrÃ¡fica IntermediÃ¡ria de SÃ£o Paulo, SÃ£o Paulo, RegiÃ£o Sudeste, 04542-050, Brasil	office	advertising_agency	0.632971390262712	Brasil	FALSE
+european research and innovation days	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+msca	us	Americas	Northern America	FALSE	NA	2021-03-09	140878641	way	MSCA, 91, Burrill Avenue, Bridgewater, Plymouth County, Massachusetts, 02324, United States	office	union	0.101	United States	FALSE
+european council of doctoral candidates and junior researchers	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+friends of the erc	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+yoda	bf	Africa	Western Africa	FALSE	NA	2021-03-09	7962693	node	Yoda, Namentenga, Centre-Nord, Burkina Faso	place	village	0.375	Burkina Faso	FALSE
+career conversations	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+palestinian neuroscience initiative	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+center for molecular and behavioral neuroscience	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+jpk nanowizard	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+british society for immunology congress	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+american physician scientists association	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+apsa	it	Europe	Southern Europe	FALSE	NA	2021-03-09	19821227	node	Apsa, Macerata Feltria, Pesaro e Urbino, Marche, 61023, Italia	place	hamlet	0.35	Italia	FALSE
+nsf engineering directorate	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+sanfilippo childrens foundation	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+tilbury	gb	Europe	Northern Europe	FALSE	NA	2021-03-09	140336	node	Tilbury, Thurrock, East of England, England, RM18 8XR, United Kingdom	place	town	0.546567106841251	United Kingdom	FALSE
+indiaalliance	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+epidemiological surveillance and research laboratory network	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+mexican institute for social security	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+association for biosafety and biosecurity	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+okinawa institute for science of technology graduate university	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+austrian academy of sciences research center for molecular medicine	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+anschutz medical campus of the university of colorado denver	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+national jewish health	us	Americas	Northern America	FALSE	NA	2021-03-09	196224436	way	National Jewish Health, 1400, Jackson Street, Denver, Denver County, Colorado, 80206, United States	amenity	hospital	0.566097151699424	United States	FALSE
+cleveland clinics lerner research institute	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+patientcentred outcomes research institute	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+university of san francisco de quito	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+writing partners	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+peta freestone	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+google group	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+google sheet	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+cisco webex	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+center for immunology	us	Americas	Northern America	FALSE	NA	2021-03-09	147574343	way	Modell Center for Immunology, Longwood Avenue, Roxbury, Boston, Suffolk County, Massachusetts, 02120, United States	building	university	0.301	United States	FALSE
+mnd	us	Americas	Northern America	FALSE	NA	2021-03-09	106331352	way	Mount Notre Dame High School, East Columbia Avenue, Reading, Hamilton County, Ohio, 45215, United States	amenity	school	0.31689306175332	United States	FALSE
+focus on microscopy	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+mastercard	dj	Africa	Eastern Africa	FALSE	NA	2021-03-09	18791773	node	MasterCard Ù…Ø§Ø³ØªØ±ÙƒØ§Ø±Ø¯, Rue Marchand Ø´Ø§Ø±Ø¹ Ø§Ù„ØªØ¬Ø§Ø±ÙŠ, Place Lagarde Ø³Ø§Ø­Ø© Ù„Ø§ØºØ§Ø±Ø¯, La Plaine Ø§Ù„Ø³Ù‡Ù„, Djibouti Ø¬ÙŠØ¨ÙˆØªÙŠ, Ø­ÙŠ 3, Djibouti Ø¬ÙŠØ¨ÙˆØªÙŠ	amenity	atm	0.101	Djibouti Ø¬ÙŠØ¨ÙˆØªÙŠ	FALSE
+center for an informed public	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+taiwan media watch	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+association for quality journalism	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+infowars	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+facta	de	Europe	Western Europe	FALSE	NA	2021-03-09	55274357	node	facta, 1, GoÃŸlerstraÃŸe, Humboldtallee, Nordstadt, GÃ¶ttingen, Landkreis GÃ¶ttingen, Niedersachsen, 37073, Deutschland	office	company	0.111	Deutschland	FALSE
+royal college of paediatrics  child health	gb	Europe	Northern Europe	FALSE	NA	2021-03-09	125153782	way	Royal College of Paediatrics and Child Health, 5, Theobalds Road, Gray's Inn, Holborn, London Borough of Camden, London, Greater London, England, WC1R 4EH, United Kingdom	office	ngo	0.601	United Kingdom	FALSE
+university of regina	ca	Americas	Northern America	FALSE	NA	2021-03-09	124832321	way	University of Regina, Wascana Parkway, Regina, Saskatchewan, S4S 5W4, Canada	amenity	university	0.734889013151929	Canada	FALSE
+san raffaele university	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+fort hays state university	us	Americas	Northern America	FALSE	NA	2021-03-09	199170114	way	Fort Hays State University, 600, Park Street, Hays, Ellis County, Kansas, 67601, United States	amenity	university	0.782897820037288	United States	FALSE
+tuskegee university	us	Americas	Northern America	FALSE	NA	2021-03-09	195939052	way	Tuskegee University, 1200, West Montgomery Road, Tuskegee, Macon County, Alabama, 36088, United States	amenity	university	0.643871382729321	United States	FALSE
+roma	it	Europe	Southern Europe	FALSE	NA	2021-03-09	258403814	relation	Roma, Roma Capitale, Lazio, Italia	boundary	administrative	0.889610718068952	Italia	FALSE
+uk higher education statistics agency	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+center for science technology  economic policy	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+the university of texas at austin	us	Americas	Northern America	FALSE	NA	2021-03-09	303772192	relation	University of Texas at Austin, 1, Austin, Travis County, Texas, 78712, United States	amenity	university	1.08852928829777	United States	FALSE
+alliant international university	us	Americas	Northern America	FALSE	NA	2021-03-09	2885253	node	Alliant International University, East Clinton Way, Fresno, Fresno County, California, 93727, United States	amenity	school	0.301	United States	FALSE
+london economics	gb	Europe	Northern Europe	FALSE	NA	2021-03-09	258598818	relation	London School of Economics and Political Science, Houghton Street, St Clement Danes, Covent Garden, City of Westminster, London, Greater London, England, WC2A 2AE, United Kingdom	amenity	university	0.788176875647945	United Kingdom	FALSE
+us national academy of sciences committee	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+research workforce	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+international journal of urban	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+alzheimers association	us	Americas	Northern America	FALSE	NA	2021-03-09	77147548	node	Alzheimer's Association, 1600, University Avenue, St. Paul, Ramsey County, Minnesota, 55104, United States	office	association	0.101	United States	FALSE
+aps council	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+immersive vr education	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+federal university of goiás	br	Americas	South America	FALSE	NA	2021-03-09	25085633	node	Instituto Federal Goiano - Campus Rio Verde, KM 01, Avenida Sul GoiÃ¢nia, Rio Verde, RegiÃ£o GeogrÃ¡fica Imediata de Rio Verde, RegiÃ£o GeogrÃ¡fica IntermediÃ¡ria de Rio Verde, GoiÃ¡s, RegiÃ£o Centro-Oeste, 75901-970, Brasil	amenity	university	0.507151633624485	Brasil	FALSE
+national association of graduate students	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+national organization for the professional advancement of black chemists and chemical engineers	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+australian academy of sciences rapid research information forum	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+erasmus student network	it	Europe	Southern Europe	FALSE	NA	2021-03-09	72193757	node	Erasmus Student Network, 25, Via Don Giovanni VeritÃ , Bovisa, Municipio 9, Milano, Lombardia, 20158, Italia	office	yes	0.301	Italia	FALSE
+australia gender equity	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+covid	it	Europe	Southern Europe	FALSE	NA	2021-03-09	257089937	way	Covid, Sant'Antonio (Piasco), Piasco, Cuneo, Piemonte, 12026, Italia	highway	path	0.175	Italia	FALSE
+st petersburg state university	ru	Europe	Eastern Europe	FALSE	NA	2021-03-09	258895654	relation	Ð¡Ð°Ð½ÐºÑ‚-ÐŸÐµÑ‚ÐµÑ€Ð±ÑƒÑ€Ð³Ñ<81>ÐºÐ¸Ð¹ Ð³Ð¾Ñ<81>ÑƒÐ´Ð°Ñ€Ñ<81>Ñ‚Ð²ÐµÐ½Ð½Ñ‹Ð¹ ÑƒÐ½Ð¸Ð²ÐµÑ€Ñ<81>Ð¸Ñ‚ÐµÑ‚, 1-Ñ<8f> Ð»Ð¸Ð½Ð¸Ñ<8f> Ð’.Ðž., Ð¾ÐºÑ€ÑƒÐ³ â„– 7, Ð¡Ð°Ð½ÐºÑ‚-ÐŸÐµÑ‚ÐµÑ€Ð±ÑƒÑ€Ð³, Ð¡ÐµÐ²ÐµÑ€Ð¾-Ð—Ð°Ð¿Ð°Ð´Ð½Ñ‹Ð¹ Ñ„ÐµÐ´ÐµÑ€Ð°Ð»ÑŒÐ½Ñ‹Ð¹ Ð¾ÐºÑ€ÑƒÐ³, 199034, Ð Ð¾Ñ<81>Ñ<81>Ð¸Ñ<8f>	amenity	university	0.540437858085033	Ð Ð¾Ñ<81>Ñ<81>Ð¸Ñ<8f>	FALSE
+swiss federal institute of technology lausanne	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+escarpment laboratories	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+brewers association	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+randolph college	us	Americas	Northern America	FALSE	NA	2021-03-09	109464156	way	Randolph College, Diuguid Lane, Lynchburg, Lynchburg (city), Virginia, 24503, United States	amenity	college	0.201	United States	FALSE
+south australian health and medical research institute	au	Oceania	Australia and New Zealand	FALSE	NA	2021-03-09	146009680	way	South Australian Health and Medical Research Institute, North Terrace, Adelaide, Adelaide City Council, South Australia, 5000, Australia	office	research	0.701	Australia	FALSE
+shift learning	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+tampere university	fi	Europe	Northern Europe	FALSE	NA	2021-03-09	87439614	way	Tampereen yliopisto - Keskustakampus, 4, Kalevantie, Iidesranta, Tulli, Tampere, Tampereen seutukunta, Pirkanmaa, LÃ¤nsi- ja SisÃ¤-Suomen aluehallintovirasto, Manner-Suomi, 33100, Suomi / Finland	amenity	university	0.550731319596144	Suomi / Finland	FALSE
+national cancer research centre	us	Americas	Northern America	FALSE	NA	2021-03-09	113118891	way	Cancer Research Center, 1, Discovery Drive, Clinton Heights, Town of East Greenbush, Rensselaer County, New York, 12144, United States	building	yes	0.201	United States	FALSE
+warren alpert medical school	us	Americas	Northern America	FALSE	NA	2021-03-09	259282365	relation	Warren Alpert Medical School, 222, Richmond Street, Jewelry District, Providence, Providence County, Rhode Island, 02903, United States	building	office	0.401	United States	FALSE
+elmhurst university	us	Americas	Northern America	FALSE	NA	2021-03-09	135481033	way	Elmhurst University, South Prospect Avenue, Elmhurst, DuPage County, Illinois, 60126, United States	amenity	university	0.574011629416864	United States	FALSE
+cal academy	us	Americas	Northern America	FALSE	NA	2021-03-09	17800078	node	CAL FIRE/Fresno County Fire Department Headquarters, South Academy Avenue, Fresno County, California, 93657, United States	amenity	fire_station	0.201	United States	FALSE
+university of texas heath sciences center	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+intramural research training awards	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+rio de janeiro state university	br	Americas	South America	FALSE	NA	2021-03-09	258939817	relation	Universidade do Estado do Rio de Janeiro - Campus MaracanÃ£, 524, Rua SÃ£o Francisco Xavier, MaracanÃ£, Zona Norte do Rio de Janeiro, Rio de Janeiro, RegiÃ£o GeogrÃ¡fica Imediata do Rio de Janeiro, RegiÃ£o Metropolitana do Rio de Janeiro, RegiÃ£o GeogrÃ¡fica IntermediÃ¡ria do Rio de Janeiro, Rio de Janeiro, RegiÃ£o Sudeste, 20550-900, Brasil	amenity	university	0.728572242394511	Brasil	FALSE
+university of texas health sciences center	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+cactus communications	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+adolphe merkle institute	ch	Europe	Western Europe	FALSE	NA	2021-03-09	134553643	way	Adolphe Merkle Institute (AMI) - PER 18 A&B, 4, Chemin des Verdiers, PÃ©rolles, Fribourg - Freiburg, District de la Sarine, Fribourg/Freiburg, 1700, Schweiz/Suisse/Svizzera/Svizra	building	university	0.301	Schweiz/Suisse/Svizzera/Svizra	FALSE
+merkle institute	ch	Europe	Western Europe	FALSE	NA	2021-03-09	134553643	way	Adolphe Merkle Institute (AMI) - PER 18 A&B, 4, Chemin des Verdiers, PÃ©rolles, Fribourg - Freiburg, District de la Sarine, Fribourg/Freiburg, 1700, Schweiz/Suisse/Svizzera/Svizra	building	university	0.201	Schweiz/Suisse/Svizzera/Svizra	FALSE
+bbstem	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+black caribbean	nl	Europe	Western Europe	FALSE	NA	2021-03-09	7410387	node	Black Durgon Inn, Kaya Gob. N. Debrot, Perla Boneriano, Hato, Kralendijk, Bonaire, Nederland, 1234AB, Nederland	tourism	hotel	0.101	Nederland	FALSE
+institute for climate and atmospheric science	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+africancaribbean research collective	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+amandine gamble	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+gamble	us	Americas	Northern America	FALSE	NA	2021-03-09	386360	node	Gamble, Walker County, Alabama, United States	place	hamlet	0.35	United States	FALSE
+ben gurion university of the negev	il	Asia	Western Asia	FALSE	NA	2021-03-09	121961822	way	×<90>×•× ×™×‘×¨×¡×™×˜×ª ×‘×Ÿ ×’×•×¨×™×•×Ÿ ×‘× ×’×‘, ×¤×¨×•×¤×¡×•×¨ ×—×™×™×<9d> ×—× × ×™, Be'er Sheva Innovation District, ×©×›×•× ×” ×“, ×‘×<90>×¨ ×©×‘×¢, × ×¤×ª ×‘×<90>×¨ ×©×‘×¢, ×ž×—×•×– ×”×“×¨×•×<9d>, no, ×™×©×¨×<90>×œ	amenity	university	0.487026464500426	×™×©×¨×<90>×œ	FALSE
+uva	nl	Europe	Western Europe	FALSE	NA	2021-03-09	52872396	node	UvA, 21, Spui, Centrum, Amsterdam, Noord-Holland, Nederland, 1012WX, Nederland	amenity	university	0.653701872189125	Nederland	FALSE
+wastewaterbased epidemiology collaborative	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+federal university of ceara	br	Americas	South America	FALSE	NA	2021-03-09	149098396	way	Universidade Federal do Cariri, Avenida Tentente Raimundo Rocha, Cidade UniversitÃ¡ria, Juazeiro do Norte, MicrorregiÃ£o de Cariri, RegiÃ£o GeogrÃ¡fica IntermediÃ¡ria de Juazeiro do Norte, CearÃ¡, RegiÃ£o Nordeste, 63040-270, Brasil	amenity	university	0.439556822261162	Brasil	FALSE
+argos laboratory	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+partnership for maternal newborn and child health	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+global womens research society	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+sanyu sisters	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+singapore eye research institute	us	Americas	Northern America	FALSE	NA	2021-03-09	3035359	node	Eye Research Institute, 20, Staniford Street, Downtown Crossing, West End, Boston, Suffolk County, Massachusetts, 02133, United States	building	yes	0.301	United States	FALSE
+nature reviews	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+us national postdoctoral association	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+yale black postdoctoral association at yale university	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+lia lis university college london	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+zero point motion	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+institute for atmospheric and climate science	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+materials research science and engineering center	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+associated black lives matter	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+arizona trail	us	Americas	Northern America	FALSE	NA	2021-03-09	163578921	way	Arizona Trail, Coconino County, Arizona, United States	highway	track	0.3	United States	FALSE
+higher institute of aeronautics and space	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+broad institute clinical research sequencing platform	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+mathematician jude kong at york university in toronto	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+canadian black scientist network	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+climate change canada	ca	Americas	Northern America	FALSE	NA	2021-03-09	52331688	node	Environment and Climate Change Canada, 401, Burrard Street, Downtown, Vancouver, District of North Vancouver, British Columbia, V6E 0C4, Canada	office	government	0.301	Canada	FALSE
+her research matters	NONE	NA	NA	FALSE	NA	2021-03-09	NA	NA	NA	NA	NA	NA	NA	FALSE
+future of computing academy	NONE	NA	NA	FALSE	NA	2021-03-10	NA	NA	NA	NA	NA	NA	NA	FALSE
