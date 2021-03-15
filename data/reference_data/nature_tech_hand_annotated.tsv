@@ -1,0 +1,93 @@
+Pub_date	Year	Type	Title	Author	Sources	Female	Europe	Asia	Oceania	SCAmerica	USA	Canada	NAME	SSAfrica	NonUS	URL
+2018-01-03	2018	Toolbox	The research hardware in your videogame system	Anna Nowogrodzki	10	5	3	1	0	0	6	0	0	0	"CHN,DNK,GBR,NLD"	https://www.nature.com/articles/d41586-017-08968-x
+2018-01-24	2018	TechFeat	Technology to watch in 2018	Kendall Powell	6	4	1	0	0	0	5	0	0	0	CHE	https://www.nature.com/articles/d41586-018-01021-5
+2018-01-30	2018	Toolbox	Data visualization tools drive interactivity and reproducibility in online publishing	Jeffrey Perkel	13	2	3	0	1	0	8	0	1	0	"ISR,DEU,AUS,CHE,GBR"	https://www.nature.com/articles/d41586-018-01322-9
+2018-02-20	2018	TechFeat	Deep learning for biology	Sarah Webb	8	3	0	0	0	0	7	1	0	0	CAN	https://www.nature.com/articles/d41586-018-02174-z
+2018-02-27	2018	Toolbox	The mazes with minds of their own	Charles Q. Choi	9	3	2	0	0	0	5	2	0	0	"CAN(2),CHE,DEU"	https://www.nature.com/articles/d41586-018-02403-5
+2018-03-20	2018	TechFeat	How atomic imaging is being pushed to its limit	Andy Extance	13	1	8	2	0	0	3	0	0	0	"AUT,CHE,CHN,CZE,FIN,GBR(3),DEU,JPN"	https://www.nature.com/articles/d41586-018-03305-2
+2018-04-03	2018	Toolbox	Ecology's remote-sensing revolution	Roberta Kwok	8	4	3	0	1	0	4	0	0	0	"AUS,AUT,CHE,DEU"	https://www.nature.com/articles/d41586-018-03924-9
+2018-04-10	2018	TechFeat	Cancer research with a human touch	Mike May	14	7	3	1	0	0	10	0	0	0	"FRA,GBR,DEU,KOR"	https://www.nature.com/articles/d41586-018-04161-w
+2018-05-01	2018	Toolbox	Virtual-reality applications give science a new dimension	David Matthews	8	0	1	0	0	0	7	0	0	0	DEU	https://www.nature.com/articles/d41586-018-04997-2
+2018-05-22	2018	TechFeat	Single-cell approaches to immune profiling	Esther Landhuis	9	2	1	0	0	0	7	0	1	0	"DEU,ISR"	https://www.nature.com/articles/d41586-018-05214-w
+2018-06-05	2018	Toolbox	Map-making on a budget	Jeffrey Perkel	13	3	4	0	0	0	9	0	0	0	"NOR(2),DEU,AUT"	https://www.nature.com/articles/d41586-018-05331-6
+2018-06-11	2018	TechFeat	Stem-cell culture moves to the third dimension	Chris Tachibana	9	3	2	1	0	0	5	1	0	0	"JPN,GBR,NLD,CAN"	https://www.nature.com/articles/d41586-018-05380-x
+2018-07-03	2018	Toolbox	Speaking in code: How to program by voice	Anna Nowogrodzki	4	1	1	0	0	0	3	0	0	0	GBR	https://www.nature.com/articles/d41586-018-05588-x
+2018-07-26	2018	TechFeat	The hackers teaching old DNA sequencers new tricks	Jeffrey Perkel	13	2	1	0	0	0	12	0	0	0	GBR	https://www.nature.com/articles/d41586-018-05769-8
+2018-08-06	2018	Toolbox	How to pick an electronic laboratory notebook	Roberta Kwok	10	3	5	0	0	0	5	0	0	0	"DEU(3),GBR,NLD"	https://www.nature.com/articles/d41586-018-05895-3
+2018-08-20	2018	Toolbox	Software training in Antarctica	Jeffrey Perkel	1	1	0	0	0	0	1	0	0	0	NA	https://www.nature.com/articles/d41586-018-06011-1
+2018-08-20	2018	TechFeat	A toolkit for data transparency takes shape	Jeffrey Perkel	13	7	2	0	1	0	10	0	0	0	"GBR(2),AUS"	https://www.nature.com/articles/d41586-018-05990-5
+2018-09-10	2018	Toolbox	How AI technology can tame the scientific literature	Andy Extance	8	2	6	0	0	0	2	0	0	0	"SWE,DEU(2),GBR,NLD(2)"	https://www.nature.com/articles/d41586-018-06617-5
+2018-09-24	2018	Toolbox	Machine learning gets to grips with plankton challenge	Jeffrey Perkel	1	1	0	0	0	0	1	0	0	0	NA	https://www.nature.com/articles/d41586-018-06792-5
+2018-09-25	2018	TechFeat	Cryo-electron microscopy shapes up	Monya Baker	11	2	7	0	0	0	4	0	0	0	"GBR(4),DEU(2),CHE"	https://www.nature.com/articles/d41586-018-06791-6
+2018-10-02	2018	Toolbox	Supercharge your data wrangling with a graphics card	David Matthews	7	2	4	0	0	0	3	0	0	0	"ESP,NLD,ITA,CHE"	https://www.nature.com/articles/d41586-018-06870-8
+2018-10-08	2018	TechFeat	The clinical code-breakers	Michael Eisenstein	10	7	1	0	1	0	7	1	0	0	"AUS,GBR,CAN"	https://www.nature.com/articles/d41586-018-06958-1
+2018-10-30	2018	Toolbox	Why Jupyter is data scientists' computational notebook of choice	Jeffrey Perkel	9	3	0	0	0	0	9	0	0	0	NA	https://www.nature.com/articles/d41586-018-07196-1
+2018-10-30	2018	Toolbox	Web service makes big data available to neuroscientists	Jeffrey Perkel	4	0	0	0	0	0	4	0	0	0	NA	https://www.nature.com/articles/d41586-018-07195-2
+2018-10-31	2018	TechFeat	Tapping into the brain's star power	Esther Landhuis	6	2	1	0	0	0	5	0	0	0	SWE	https://www.nature.com/articles/d41586-018-07197-0
+2018-12-04	2018	TechFeat	Transparent tissues bring cells into focus for microscopy	Michael Eisenstein	8	1	2	1	0	0	5	0	0	0	"JPN,FRA,DEU"	https://www.nature.com/articles/d41586-018-07593-6
+2018-12-10	2018	Toolbox	The automatic-design tools that are changing synthetic biology	Anna Nowogrodzki	6	1	0	0	0	0	6	0	0	0	NA	https://www.nature.com/articles/d41586-018-07662-w
+2019-01-02	2019	Toolbox	Five innovative ways to use 3D printing in the laboratory	Andrew Silver	8	1	2	3	1	0	2	0	0	0	"RUS,AUS,CHN(3),GBR"	https://www.nature.com/articles/d41586-018-07853-5
+2019-01-23	2019	TechFeat	Technologies to watch in 2019	Marissa Fessenden	7	3	2	1	0	0	4	0	0	0	"KOR,GBR(2)"	https://www.nature.com/articles/d41586-019-00218-6
+2019-02-04	2019	Toolbox	Bitcoin for the biological literature	Will Douglas Heaven	9	3	4	0	1	0	3	1	0	0	"AUS,CHE(2),GBR(2),CAN"	https://www.nature.com/articles/d41586-019-00447-9
+2019-02-25	2019	Toolbox	The race for enzymatic DNA synthesis heats up	Jeffrey Perkel	5	1	1	0	0	0	4	0	0	0	FRA	https://www.nature.com/articles/d41586-019-00682-0
+2019-02-26	2019	TechFeat	Matrix mimics shape cell studies	Jyoti Madhusoodanan	9	7	1	0	0	0	7	1	0	0	"DEU,CAN"	https://www.nature.com/articles/d41586-019-00681-1
+2019-03-04	2019	Toolbox	AI empowers conservation biology	Roberta Kwok	9	3	2	0	0	0	7	0	0	0	"GBR,SWE"	https://www.nature.com/articles/d41586-019-00746-1
+2019-03-26	2019	TechFeat	Cellular censuses to guide cancer care	Michael Eisenstein	8	3	3	0	0	0	5	0	0	0	"CHE,FRA,SWE"	https://www.nature.com/articles/d41586-019-00904-5
+2019-04-01	2019	Toolbox	11 ways to avert a data-storage disaster	Jeffrey Perkel	8	6	0	0	1	0	7	0	0	0	AUS	https://www.nature.com/articles/d41586-019-01040-w
+2019-04-23	2019	Toolbox	A simple approach to dating bones	Jeffrey Perkel	1	1	0	0	0	0	1	0	0	0	NA	https://www.nature.com/articles/d41586-019-01247-x
+2019-04-23	2019	TechFeat	Automation: Chemistry shoots for the moon	Katharine Sanderson	13	3	10	0	0	0	3	0	0	0	"DEU,CHE(2),GBR(7)"	https://www.nature.com/articles/d41586-019-01246-y
+2019-05-01	2019	Toolbox	Seven ways scientists handle technology challenges in resource-poor settings	Charles Q. Choi	7	2	1	0	0	2	1	0	0	3	"ARG,ESP,ZAF,ZWE(2),URY"	https://www.nature.com/articles/d41586-019-01314-3
+2019-05-06	2019	TechFeat	The new techniques revealing the varied shapes of chromatin	Jeffrey Perkel	8	3	0	1	0	0	7	0	0	0	CHN	https://www.nature.com/articles/d41586-019-01426-w
+2019-05-06	2019	Toolbox	Web annotation tool Hypothesis hits a milestone	Rina Shaikh-Lesko	2	1	1	0	0	0	1	0	0	0	GBR	https://www.nature.com/articles/d41586-019-01427-9
+2019-05-20	2019	TechFeat	A DIY approach to automating your lab	Mike May	6	0	2	0	0	0	4	0	0	0	SWE(2)	https://www.nature.com/articles/d41586-019-01590-z
+2019-06-11	2019	Toolbox	Craft beautiful equations in Word with LaTeX	David Matthews	11	3	6	0	0	0	4	1	0	0	"CAN,GBR(5),RUS"	https://www.nature.com/articles/d41586-019-01796-1
+2019-06-25	2019	Toolbox	Drone takes to the skies to image offshore reefs	Andrew Silver	2	1	0	0	1	0	1	0	0	0	GUM	https://www.nature.com/articles/d41586-019-01988-9
+2019-06-25	2019	TechFeat	Turning discarded DNA into ecology gold	Sandeep Ravindran	9	3	4	0	1	2	2	0	0	0	"DNK(2),GBR(2),AUS,PER(2)"	https://www.nature.com/articles/d41586-019-01987-w
+2019-07-01	2019	Toolbox	How to support open-source software and stay sane	Anna Nowogrodzki	5	2	1	0	0	0	4	0	0	0	DEU	https://www.nature.com/articles/d41586-019-02046-0
+2019-07-23	2019	TechFeat	The computational protein designers	Jeffrey Perkel	13	7	3	0	0	0	10	0	0	0	"GBR(2),CHE"	https://www.nature.com/articles/d41586-019-02251-x
+2019-07-30	2019	Toolbox	"Julia: Come for the syntax, stay for the speed"	Jeffrey Perkel	8	2	1	0	1	0	6	0	0	0	"AUS,DNK"	https://www.nature.com/articles/d41586-019-02310-3
+2019-08-19	2019	TechFeat	Starfish enterprise: Finding RNA patterns in single cells	Jeffrey Perkel	15	2	5	0	0	0	10	0	0	0	"GBR(3),SWE(2)"	https://www.nature.com/articles/d41586-019-02477-9
+2019-09-02	2019	Toolbox	Workflow systems turn raw data into scientific knowledge	Jeffrey Perkel	8	2	3	0	1	0	4	0	0	0	"AUS,GBR(2),SWE"	https://www.nature.com/articles/d41586-019-02619-z
+2019-09-09	2019	TechFeat	Animal registries aim to reduce bias	Monya Baker	10	3	5	0	1	0	2	2	0	0	"AUS,CAN(2),GBR,DEU(2),NLD,NOR"	https://www.nature.com/articles/d41586-019-02676-4
+2019-09-24	2019	TechFeat	Microbial chemistry gains fresh focus	Esther Landhuis	7	2	1	0	0	0	6	0	0	0	DEU	https://www.nature.com/articles/d41586-019-02853-5
+2019-09-30	2019	Toolbox	Deep learning powers a motion-tracking revolution	Roberta Kwok	11	3	4	0	0	0	7	0	0	0	"CHE,DEU,PRT,SWE"	https://www.nature.com/articles/d41586-019-02942-5
+2019-10-14	2019	TechFeat	Genetic light bulbs illuminate the brain	Jyoti Madhusoodanan	8	1	0	2	0	0	4	2	0	0	"CAN(2),JPN(2)"	https://www.nature.com/articles/d41586-019-03064-8
+2019-11-05	2019	Toolbox	Make code accessible with these cloud services	Jeffrey Perkel	12	4	3	0	0	0	8	1	0	0	"CAN,GBR(2),DEU"	https://www.nature.com/articles/d41586-019-03366-x
+2019-11-18	2019	TechFeat	Got mutation? ‘Base editors’ fix genomes one nucleotide at a time	Sandeep Ravindran	7	3	0	4	0	0	3	0	0	0	"CHN(3),KOR"	https://www.nature.com/articles/d41586-019-03536-x
+2019-11-26	2019	TechFeat	The microscope makers putting ever-larger biological samples under the spotlight	Jeffrey Perkel	8	4	1	1	0	0	6	0	0	0	"CHN,GBR"	https://www.nature.com/articles/d41586-019-03632-y
+2019-12-02	2019	Toolbox	A picture is worth a thousand base pairs	Anna Nowogrodzki	10	2	1	0	0	0	9	0	0	0	GBR	https://www.nature.com/articles/d41586-019-03705-y
+2020-01-13	2020	Toolbox	Eleven tips for working with large data sets	Anna Nowogrodzki	11	3	2	0	0	0	8	1	0	0	"DNK(2),CAN"	https://www.nature.com/articles/d41586-020-00062-z
+2020-01-21	2020	TechFeat	Technologies to watch in 2020	Esther Landhuis	7	3	0	1	0	0	5	0	1	0	"CHN,ISR"	https://www.nature.com/articles/d41586-020-00114-4
+2020-02-03	2020	Toolbox	Tech tools to make research more open and inclusive	Kendall Powell	10	8	6	0	0	0	4	0	0	0	"GBR(3),FIN(2),NLD"	https://www.nature.com/articles/d41586-020-00216-z
+2020-02-24	2020	TechFeat	How to build a genome	Michael Eisenstein	8	3	3	1	0	0	4	0	0	0	"GBR(3),CHN"	https://www.nature.com/articles/d41586-020-00511-9
+2020-03-02	2020	Toolbox	Find a home for every imaging data set	Amber Dance	10	2	5	1	0	0	4	0	0	0	"GBR(4),DEU,JPN"	https://www.nature.com/articles/d41586-020-00594-4
+2020-03-16	2020	TechFeat	Exposed: Cells' sugary secrets	Jyoti Madhusoodanan	8	4	1	1	1	0	4	1	0	0	"IND,CAN,DNK,AUS"	https://www.nature.com/articles/d41586-020-00769-z
+2020-03-17	2020	Toolbox	Mischief-making bots attacked my scientific survey	Jeffrey Perkel	1	1	0	0	0	0	1	0	0	0	NA	https://www.nature.com/articles/d41586-020-00768-0
+2020-03-26	2020	Other	Science-ing from home	Kendall Powell	5	4	3	0	0	0	2	0	0	0	"ITA(2),GBR"	https://www.nature.com/articles/d41586-020-00935-3
+2020-03-31	2020	Toolbox	Synchronized editing: The future of collaborative writing	Jeffrey Perkel	11	3	3	0	1	0	7	0	0	0	"CHE,FIN,GBR,NZL"	https://www.nature.com/articles/d41586-020-00916-6
+2020-04-21	2020	TechFeat	Deep learning takes on tumours	Esther Landhuis	9	2	4	0	0	0	5	0	0	0	"FIN,SWE,GBR(2)"	https://www.nature.com/articles/d41586-020-01128-8
+2020-04-24	2020	Toolbox	Open science takes on the coronavirus pandemic	Mark Zastrow	5	1	1	0	0	0	3	0	0	1	"CHE,NGA"	https://www.nature.com/articles/d41586-020-01246-3
+2020-05-01	2020	Toolbox	Coronavirus in context: Scite.ai tracks positive and negative citations for COVID-19 literature	Roxanne Khamsi	6	2	1	0	0	0	5	0	0	0	NLD	https://www.nature.com/articles/d41586-020-01324-6
+2020-05-08	2020	Toolbox	The software that powers scientific illustration	Jeffrey Perkel	9	5	1	0	1	0	6	1	0	0	"AUS,NOR,CAN"	https://www.nature.com/articles/d41586-020-01404-7
+2020-05-11	2020	TechFeat	What can you do to make your lab greener?	Jyoti Madhusoodanan	7	4	2	1	0	0	4	0	0	0	"PRT,GBR,IND"	https://www.nature.com/articles/d41586-020-01368-8
+2020-05-12	2020	Toolbox	Sound bytes: Sightless coding	Constance Clare	3	1	2	1	0	0	0	0	0	0	"GBR,NLD,IND"	https://www.nature.com/articles/d41586-020-01369-7
+2020-05-19	2020	Toolbox	Coronavirus contact-tracing apps: can they slow the spread of COVID-19?	Mark Zastrow	5	1	1	1	0	0	3	0	0	0	"CHE,SGP"	https://www.nature.com/articles/d41586-020-01514-2
+2020-05-26	2020	TechFeat	Microbial matters: modelling the complex web of host–microbiome interactions	Michael Eisenstein	5	1	2	0	0	0	2	0	1	0	"IRL,SWE,ISR"	https://www.nature.com/articles/d41586-020-01472-9
+2020-06-01	2020	Toolbox	African scientists leverage open hardware	Abdullahi Tsanni	2	0	1	0	0	0	0	0	0	1	"GHA,GBR"	https://www.nature.com/articles/d41586-020-01606-z
+2020-06-05	2020	TechFeat	Frozen cells and empty cages: researchers struggle to revive stalled experiments after the lockdown	Jyoti Madhusoodanan	11	6	2	2	0	0	6	1	0	0	"CHN(2),FRA,CAN,DEU"	https://www.nature.com/articles/d41586-020-01704-y
+2020-06-08	2020	TechFeat	The search for microbial dark matter	Amber Dance	9	2	3	2	0	0	4	0	0	0	"FRA,DEU(2),JPN(2)"	https://www.nature.com/articles/d41586-020-01684-z
+2020-06-09	2020	Toolbox	"Alexa, do science! Voice-activated assistants hit the lab bench"	Jeffrey Perkel	8	2	3	0	0	0	5	0	0	0	DEU(3)	https://www.nature.com/articles/d41586-020-01683-0
+2020-06-09	2020	Toolbox	Artificial-intelligence tools aim to tame the coronavirus literature	Matthew Hutson	12	3	1	0	0	0	10	0	1	0	"GBR,ISR"	https://www.nature.com/articles/d41586-020-01733-7
+2020-06-29	2020	Toolbox	Four tools that help researchers working in collaborations to see the big picture	Anna Nowogrodzki	6	4	1	0	0	0	5	0	0	0	GBR	https://www.nature.com/articles/d41586-020-01918-0
+2020-07-21	2020	TechFeat	Coronavirus vaccines get a biotech boost	Amber Dance	10	3	2	1	1	2	4	0	0	0	"GBR,IND,DEU,NZL,BRA(2)"	https://www.nature.com/articles/d41586-020-02154-2
+2020-08-03	2020	Toolbox	Migrating big astronomy data to the cloud	Charles Q. Choi	10	4	0	0	0	0	10	0	0	0	NA	https://www.nature.com/articles/d41586-020-02284-7
+2020-08-24	2020	TechFeat	Challenge to scientists: does your ten-year-old code still run?	Jeffrey Perkel	13	4	10	0	0	0	3	0	0	0	"FRA(6),GBR(3),ITA"	https://www.nature.com/articles/d41586-020-02462-7
+2020-09-01	2020	Toolbox	Streamline your writing — and collaborations — with these reference managers	Jeffrey Perkel	10	6	2	0	0	1	5	0	1	1	"GBR,BRA,ISR,UGA,LUX"	https://www.nature.com/articles/d41586-020-02491-2
+2020-09-07	2020	TechFeat	When antibodies mislead: the quest for validation	Monya Baker	6	2	2	0	0	0	2	2	0	0	"CAN(2),SWE,DEU"	https://www.nature.com/articles/d41586-020-02549-1
+2020-09-22	2020	TechFeat	A menagerie of stem-cell models	Jyoti Madhusoodanan	7	3	1	2	0	0	4	0	0	0	"CHN,RUS,JPN"	https://www.nature.com/articles/d41586-020-02682-x
+2020-09-28	2020	Toolbox	How to digitize your lab notebooks	Anna Nowogrodzki	5	2	1	0	1	0	3	0	0	0	"GBR,AUS"	https://www.nature.com/articles/d41586-020-02728-0
+2020-10-19	2020	TechFeat	Probing fine-scale connections in the brain	Esther Landhuis	9	4	2	0	0	0	6	1	0	0	"CAN,DEU,GBR"	https://www.nature.com/articles/d41586-020-02947-5
+2020-11-02	2020	Toolbox	Studying life at the extremes	Amber Dance	6	3	1	0	1	0	4	0	0	0	"AUS,GBR"	https://www.nature.com/articles/d41586-020-03055-0
+2020-11-17	2020	TechFeat	How DIY technologies are democratizing science	Sandeep Ravindran	13	3	6	2	0	2	1	0	0	2	"BRA,GBR(5),CMR,CHL,IND(2),ZWE,DEU"	https://www.nature.com/articles/d41586-020-03193-5
+2020-12-03	2020	Toolbox	Why scientists are turning to Rust	Jeffrey Perkel	10	2	3	0	0	0	7	0	0	0	"DEU,SWE,IRL"	https://www.nature.com/articles/d41586-020-03382-2
+2020-12-03	2020	TechFeat	Core curriculum: learning to manage a shared microscopy facility	Sandeep Ravindran	10	4	5	2	0	0	3	0	0	0	"IND,GBR(2),SGP,DEU(3)"	https://www.nature.com/articles/d41586-020-03466-z

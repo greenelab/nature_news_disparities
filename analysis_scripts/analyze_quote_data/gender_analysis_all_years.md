@@ -69,12 +69,12 @@ Now we read in the full data for the same years.
 ``` r
 # read in the full year quote table for 2010, 2015, and 2020
 full_quote_df = NA
-for(curr_year in c(2010, 2015, 2020)){
-    quote_file = paste(proj_dir, 
-                    "/data/scraped_data/quote_table_raw_", curr_year, ".tsv", 
-                    sep="")
+quote_files = list.files(paste(proj_dir,"/data/scraped_data/", sep=""), full.names = T)
+quote_files = grep("quote_table_raw_", quote_files, value=T)
+for(quote_file in quote_files){
+    
     quote_df = read_corenlp_quote_files(quote_file)
-    quote_df$year = curr_year
+    quote_df$year = str_extract(quote_file, "[1-9][0-9]+") # curr_year
 
     full_quote_df = rbind(full_quote_df, quote_df)
 }
@@ -83,34 +83,27 @@ full_quote_df = full_quote_df[-1,]
 head(full_quote_df)
 ```
 
-    ##              file_id       est_speaker est_gender canonical_speaker
-    ## 2       463722a.html Aaron Ciechanover       MALE        biochemist
-    ## 3 news.2010.122.html    Aaron Krochmal       MALE    Aaron Krochmal
-    ## 4      4631004a.html      Aaron Kelley       MALE      Aaron Kelley
-    ## 5       463722a.html Aaron Ciechanover       MALE        biochemist
-    ## 6 news.2010.122.html    Aaron Krochmal       MALE    Aaron Krochmal
-    ## 7 news.2010.370.html       Abass Alavi       MALE       Abass Alavi
-    ##        partial_name
-    ## 2 Aaron Ciechanover
-    ## 3    Aaron Krochmal
-    ## 4      Aaron Kelley
-    ## 5 Aaron Ciechanover
-    ## 6    Aaron Krochmal
-    ## 7       Abass Alavi
-    ##                                                                                                                                                                                    quote
-    ## 2                                                                                                                                It would be a terrible mistake to go in this direction,
-    ## 3                                                             The authors used elegant molecular techniques to confirm an idea long substantiated by physiological and behavioural data,
-    ## 4                                                                                                                                  Enzyme costs are not the number-one concern any more,
-    ## 5                                                           It's the only programme that brings together people speaking so many different languages and gets them to work productively.
-    ## 6 Although aspects of the findings contradict known behavioural and physiological work, the use of molecular genetic techniques is a new step in understanding how the facial pits work.
-    ## 7                                                                     This is a big lesson for all the major institutions that they are going to have to tighten their internal reviews.
+    ##   file_id       est_speaker est_gender canonical_speaker     partial_name
+    ## 2 434970a Arnold Sommerfeld       MALE     Edward Teller       Sommerfeld
+    ## 3 438567a      Arthur Smith       MALE   Arthur E. Smith  Arthur E. Smith
+    ## 4 437634a  Bertrand Russell       MALE  Bertrand Russell Bertrand Russell
+    ## 5 434029a             Boxma     NO_EST           Unknown            Boxma
+    ## 6 438031a           Bradley       MALE     F. H. Bradley    F. H. Bradley
+    ## 7 435748a            Brooks       MALE   C. E. P. Brooks  C. E. P. Brooks
+    ##                                                                                          quote
+    ## 2     as if I was born in Germany only by mistake, and only came to my true homeland at age 28
+    ## 3                                                                                       tongue
+    ## 4 If ever these evils are eradicated, his name should stand very high indeed among the heroes.
+    ## 5                                                                            true missing link
+    ## 6                                          Finding bad reasons for what we believe on instinct
+    ## 7                                                                                 Fog and Soot
     ##   year
-    ## 2 2010
-    ## 3 2010
-    ## 4 2010
-    ## 5 2010
-    ## 6 2010
-    ## 7 2010
+    ## 2 2005
+    ## 3 2005
+    ## 4 2005
+    ## 5 2005
+    ## 6 2005
+    ## 7 2005
 
 Now we join the tables together for comparison.
 

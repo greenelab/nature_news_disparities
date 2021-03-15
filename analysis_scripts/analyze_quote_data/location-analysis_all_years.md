@@ -69,12 +69,12 @@ Now we read in the full data for the same years.
 ``` r
 # read in the full year quote table for 2010, 2015-2020
 full_loc_df = NA
-for(curr_year in c(2005:2006, 2008, 2010:2020)){
-    loc_file = paste(proj_dir, 
-                    "/data/scraped_data/location_table_raw_", curr_year, ".tsv", 
-                    sep="")
+loc_files = list.files(paste(proj_dir,"/data/scraped_data/", sep=""), full.names = T)
+loc_files = grep("location_table_raw_", loc_files, value=T)
+for(loc_file in loc_files){
+
     loc_df = read_corenlp_location_files(loc_file)
-    loc_df$year = curr_year
+    loc_df$year = str_extract(loc_file, "[1-9][0-9]+") # curr_year
 
     full_loc_df = rbind(full_loc_df, loc_df)
 }
@@ -88,20 +88,20 @@ full_loc_df = subset(full_loc_df, est_un_region != "" &
 head(full_loc_df)
 ```
 
-    ##   est_country_code            file_id        text     ner est_country
-    ## 2               af            437302a afghanistan COUNTRY Afghanistan
-    ## 3               af     050228-17.html afghanistan COUNTRY Afghanistan
-    ## 4               am     050221-17.html     armenia COUNTRY     Armenia
-    ## 5               ao     050531-12.html      angola COUNTRY      Angola
-    ## 6               ao  news050627-9.html      angola COUNTRY      Angola
-    ## 7               ao news050328-11.html      angola COUNTRY      Angola
+    ##   est_country_code  file_id   text          ner          est_country
+    ## 2               ae  437043a    ias ORGANIZATION United Arab Emirates
+    ## 3               ae  433471a    dgc ORGANIZATION United Arab Emirates
+    ## 4               af  433208a    pka ORGANIZATION          Afghanistan
+    ## 5               ao 4351173a    mpi ORGANIZATION               Angola
+    ## 6               ar  433114a subaru ORGANIZATION            Argentina
+    ## 7               ar  433369a müller ORGANIZATION            Argentina
     ##   est_un_region est_un_subregion year
-    ## 2          Asia    Southern Asia 2005
-    ## 3          Asia    Southern Asia 2005
-    ## 4          Asia     Western Asia 2005
+    ## 2          Asia     Western Asia 2005
+    ## 3          Asia     Western Asia 2005
+    ## 4          Asia    Southern Asia 2005
     ## 5        Africa    Middle Africa 2005
-    ## 6        Africa    Middle Africa 2005
-    ## 7        Africa    Middle Africa 2005
+    ## 6      Americas    South America 2005
+    ## 7      Americas    South America 2005
 
 Now we join the tables together for comparison.
 

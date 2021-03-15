@@ -50,9 +50,20 @@ Count the number of words in each article to compare down the entire pipeline.
 
 read_json <- function(infile){
 
-    json_res = fromJSON(infile)
+    json_res <- tryCatch(
+        {
+           fromJSON(infile)
+        },
+        error=function(cond) {
+            message(paste("JSON file empty or error:", infile))
+            message("The original error message:")
+            message(cond)
+            return(NA)
+        }
+    )
     json_res = data.frame(json_res)
     return(json_res)
+    
 
 }
 
@@ -71,16 +82,23 @@ for(curr_file in pipeline_1_files){
     
     curr_df = read_json(curr_file)
     
+    # if the json file was empty, skip
+    if(all(is.na(curr_df))){
+        next
+    }
+    
     # get year level stats: check the year
     curr_year = unique(curr_df$year)
-    file_name_year = substring(curr_file, 
-                            nchar(curr_file)-9+1,  
-                            nchar(curr_file)-6+1)
+    file_name_year = substring(basename(curr_file), 
+                            15, 18)
+    
     if(length(curr_year) != 1 | file_name_year != curr_year){
         error_msg = paste(curr_file, "has inconsistent year definitions")
         stop(error_msg)
     }
     # get year level stats: check the articles
+    file_name_type = substring(basename(curr_file), 
+                            20, nchar(basename(curr_file))-5)
     article_ids = curr_df$file_id
     num_articles = length(article_ids)
     num_duplicated_file_names = sum(duplicated(article_ids))
@@ -91,7 +109,7 @@ for(curr_file in pipeline_1_files){
     article_bodies = curr_df$body
     num_empty_files = sum(article_bodies == "")
     
-    year_level_vec = c(curr_year, num_articles, 
+    year_level_vec = c(curr_year, num_articles, file_name_type,
                        num_duplicated_file_names, num_empty_files)
     year_stats_df = rbind(year_stats_df, year_level_vec)
     
@@ -113,9 +131,17 @@ year_stats_df = year_stats_df[-1,]
 article_stats_df = article_stats_df[-1,]
 year_stats_df = data.frame(year_stats_df)
 article_stats_df = data.frame(article_stats_df)
-colnames(year_stats_df) = c("year", "num_articles", 
+colnames(year_stats_df) = c("year", "num_articles", "article_type",
                             "num_duplicated_ids", "num_empty_files")
 colnames(article_stats_df) = c("year", "article_ids", "num_words")
+
+year_stats_df$year = as.numeric(year_stats_df$year)
+year_stats_df$num_articles = as.numeric(year_stats_df$num_articles)
+year_stats_df$num_empty_files = as.numeric(year_stats_df$num_empty_files)
+year_stats_df$num_duplicated_ids = as.numeric(year_stats_df$num_duplicated_ids)
+
+article_stats_df$year = as.numeric(article_stats_df$year)
+article_stats_df$num_words = as.numeric(article_stats_df$num_words)
 ```
 
 #### plotting year level stats
@@ -125,18 +151,21 @@ processing any of the years, or to identify trends in the data
 ```{r fig.align='center', echo=FALSE, warning=FALSE, message=F}
 
 # now plot the stats
-ggplot(year_stats_df, aes(x=as.factor(year), y=num_articles)) +
-    geom_col() + theme_bw() +
+ggplot(year_stats_df, aes(x=as.factor(year), y=num_articles, 
+                          fill=article_type)) +
+    geom_bar(stat="identity", position="stack") + theme_bw() +
     xlab("Year of Article") + ylab("# articles") +
         ggtitle("# Articles Over Time")
 
-ggplot(year_stats_df, aes(x=as.factor(year), y=num_duplicated_ids)) +
-    geom_col() + theme_bw() +
+ggplot(year_stats_df, aes(x=as.factor(year), y=num_duplicated_ids, 
+                          fill=article_type)) +
+    geom_bar(stat="identity", position="stack") + theme_bw() +
     xlab("Year of Article") + ylab("# duplicated article ids") +
         ggtitle("# Duplicated Articles Over Time")
 
-ggplot(year_stats_df, aes(x=as.factor(year), y=num_empty_files)) +
-    geom_col() + theme_bw() +
+ggplot(year_stats_df, aes(x=as.factor(year), y=num_empty_files, 
+                          fill=article_type)) +
+    geom_bar(stat="identity", position="stack") + theme_bw() +
     xlab("Year of Article") + ylab("# Empty files") +
         ggtitle("# empty files")
 
@@ -181,6 +210,11 @@ for(curr_dir in pipeline_2_dir){
     
     # now get the text files
     pipeline_2_files = list.files(curr_dir, full.names = T)
+    
+    # if the folder is empty, continue
+    if(length(pipeline_2_files) == 0){
+        next
+    }
     pipeline_2_files_body = grep("*fileID*|*file_list*", pipeline_2_files, value=T,
                                  invert=T)
 
@@ -192,19 +226,26 @@ for(curr_dir in pipeline_2_dir){
     file_list_df = data.frame(fread(file_list_ref, header=F))
     file_list_df = subset(file_list_df, V1 != "")
     
-    file_name_year = substring(curr_dir, 
-                            nchar(curr_dir)-4+1,  
-                            nchar(curr_dir))
+    file_name_year = substring(basename(curr_dir), 
+                            15, 18)
+    file_name_type = substring(basename(curr_dir), 
+                            20, nchar(basename(curr_dir)))
     
     if(length(pipeline_2_files_body) != nrow(file_list_df) ){
         error_msg = paste(curr_dir, "\n reference files do not match")
         stop(error_msg)
     }
     expected_num_files = year_stats_df$num_articles[
-                                year_stats_df$year == file_name_year]
+                                year_stats_df$year == file_name_year &
+                                year_stats_df$article_type == file_name_type]
     empty_files = year_stats_df$num_empty_files[
-                                year_stats_df$year == file_name_year]
+                                year_stats_df$year == file_name_year &
+                                year_stats_df$article_type == file_name_type]
 
+    # if there are no articles of this type, for this year, skip
+    if(length(expected_num_files) == 0 | length(empty_files) == 0){
+        next
+    }
     
     if( expected_num_files != nrow(fileID_df) ){
         error_msg = paste(curr_dir, "\n expected num files not found")
@@ -222,11 +263,12 @@ for(curr_dir in pipeline_2_dir){
     # now read all files, and check word stats
     text_df = data.frame(file_id=rep(NA,length(pipeline_2_files_body)),
                         body=rep(NA,length(pipeline_2_files_body)),
-                        year=file_name_year)
+                        year=file_name_year,
+                        file_type=rep(file_name_type,length(pipeline_2_files_body)))
     idx = 1
     for(curr_file in pipeline_2_files_body){
         in_text = read_lines(curr_file)
-        text_df[idx,] = c(curr_file, in_text, file_name_year)
+        text_df[idx,] = c(curr_file, in_text, file_name_year, file_type=file_name_type)
         idx = idx+1
     }
     text_df$num_words = unlist(lapply(text_df$body, 
@@ -275,20 +317,29 @@ article_stats_step3_df = NA
 for(curr_dir in pipeline_3_dir){
     
     # get the year
-    file_name_year = substring(curr_dir, 
-                            nchar(curr_dir)-4+1,  
-                            nchar(curr_dir))
+    file_name_year = substring(basename(curr_dir), 
+                            16, 19)
     print(file_name_year)
+
+    file_name_type = substring(basename(curr_dir), 
+                            21, nchar(basename(curr_dir)))
 
     # now get the json output files
     pipeline_3_all_files = list.files(curr_dir, full.names = T)
     pipeline_3_json_files = grep(".txt.json", pipeline_3_all_files, value=T)
     
+    # if the folder is empty, continue
+    if(length(pipeline_3_json_files) == 0){
+        next
+    }
+    
     # make sure number of files are consistent with the previous pipeline step
     expected_num_files = year_stats_df$num_articles[
-                                year_stats_df$year == file_name_year]
+                                year_stats_df$year == file_name_year &
+                                year_stats_df$article_type == file_name_type]
     empty_files = year_stats_df$num_empty_files[
-                                year_stats_df$year == file_name_year]
+                                year_stats_df$year == file_name_year &
+                                year_stats_df$article_type == file_name_type]
      if( (expected_num_files - empty_files) != length(pipeline_3_json_files) ){
         error_msg = paste(curr_dir, "\n num files missing beyond empty+duplicates")
         stop(error_msg)
@@ -470,9 +521,8 @@ quote_stats_df = NA
 for(curr_file in quote_files){
     
     # get the year
-    file_name_year = substring(curr_file, 
-                            nchar(curr_file)-8+1,  
-                            nchar(curr_file)-5+1)
+    file_name_year = substring(basename(curr_file), 
+                            17, 20)
     
     # read the contents
     curr_df = read_tsv(curr_file)
@@ -496,9 +546,8 @@ loc_stats_df = NA
 for(curr_file in loc_files){
     
     # get the year
-    file_name_year = substring(curr_file, 
-                            nchar(curr_file)-8+1,  
-                            nchar(curr_file)-5+1)
+    file_name_year = substring(basename(curr_file), 
+                            20, 23)
     
     # read the contents
     curr_df = read_tsv(curr_file)

@@ -335,6 +335,10 @@ single_osm_query <- function(curr_q){
     if(tolower(curr_q) %in% tolower(cache_df$query)){
         return(subset(cache_df, tolower(query) == tolower(curr_q)))
     }
+
+    # strip out any URL specific characters 
+    curr_q = tolower(curr_q)
+    curr_q = gsub("[[:punct:]]", "", curr_q)
     
     #run query
     print(paste("running query:", tolower(curr_q)))
@@ -366,6 +370,11 @@ single_osm_query <- function(curr_q){
         }
     }
     
+    # if no OSM type, make sure its null
+    if(!"osm_type" %in% colnames(resp_df)){
+        resp_df$osm_type = NA
+    }
+
     #process query info
     resp_df$query = curr_q
 
@@ -481,7 +490,7 @@ initial_osm_query <- function(in_dir) {
 #' This method should not be run by users since they 
 #' should always have a fully populated cache.
 #' 
-#' @param in_dir, full location of folder that contains all location tables
+#' @param in_dir, full location of folder that contains all quote_table_raw tables
 #' from pipeline step 4. Files must contain the string missed_generize_io_names
 #' in the name
 query_genderize_io <- function(in_dir) {
@@ -538,7 +547,9 @@ query_genderize_io <- function(in_dir) {
     # be CARFEUL only 1000 a day!
     ## if gender is still unknown, make a best guess
     require("genderizeR")
-    names_processed = data.frame(findGivenNames(all_names))
+    max_len = min(1000, length(all_names))
+    query_names = sample(all_names)[1:max_len]
+    names_processed = data.frame(findGivenNames(query_names, textPrepare=F))
     names_processed = unique(names_processed)
     
 
@@ -551,6 +562,16 @@ query_genderize_io <- function(in_dir) {
                             "probability_male")]
     ref_update_df = rbind(ref_update_df, names_processed)
     ref_update_df = unique(ref_update_df)
+
+    # get all the names that were not found, so we don't check them again
+    missing_names = setdiff(query_names, names_processed$fore_name_simple)
+    missing_df = data.frame(fore_name_simple = missing_names,
+                            n_authors = NA, genderize_sample_size = NA,
+                            query_date = as.Date(Sys.Date(), format = "%B %d %Y"),
+                            probability_male = NA)
+    ref_update_df = rbind(ref_update_df, missing_df)
+    ref_update_df = unique(ref_update_df)
+
 
     # now write it out
     outfile = file.path(ref_data_dir, "/genderize_update.tsv")

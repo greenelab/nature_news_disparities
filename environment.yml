@@ -117,5 +117,12 @@ dependencies:
   - zlib=1.2.11=h7795811_1010
   - zope.interface=5.2.0=py38h7e3306e_0
   - zstd=1.4.5=h289c70a_2
+  - pip:
+    - chardet==4.0.0
+    - pbr==5.5.1
+    - pybliometrics==2.9.0
+    - requests==2.25.1
+    - simplejson==3.17.2
+    - urllib3==1.26.3
 prefix: /Users/natalie/miniconda3/envs/nature_news_disparities
 
