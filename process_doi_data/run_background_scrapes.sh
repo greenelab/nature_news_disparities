@@ -17,24 +17,23 @@ else
     echo ${SPRINGER_API_KEY}
 
     echo "running API calls"
-    RScript ${DIR}/background_author_scrape.R ${SPRINGER_API_KEY}
-    RScript ${DIR}/cite_author_doi_scrape.R ${SPRINGER_API_KEY} ${REF_DIR}
-    RScript ${DIR}/country_doi_scrape.R ${SPRINGER_API_KEY}
+    RScript ${DIR}/springer_scripts/background_author_scrape.R ${SPRINGER_API_KEY}
+    RScript ${DIR}/springer_scripts/cite_author_doi_scrape.R ${SPRINGER_API_KEY} ${REF_DIR}
+    RScript ${DIR}/springer_scripts/country_doi_scrape.R ${SPRINGER_API_KEY}
 
     # this APi call must come AFTER cite_author_doi_scrape.R
     # it assumes that springer_cited_author_cache.tsv is fully populated 
-    RScript ${DIR}/cite_author_country_doi_scrape.R ${SPRINGER_API_KEY} ${REF_DIR}
+    RScript ${DIR}/springer_scripts/cite_author_country_doi_scrape.R ${SPRINGER_API_KEY} ${REF_DIR}
 
 
     echo "processing Springer/Nature API calls"
     RScript ${DIR}/process_author_gender.R ${SPRINGER_API_KEY}
     RScript ${DIR}/process_author_country.R ${SPRINGER_API_KEY}
 
+    echo "get number of springer article per year"
+    RScript ${DIR}/springer_scripts/get_springer_articles_per_year.R ${SPRINGER_API_KEY}
+
 
 
 fi
 
-
-cited_dois_dir="/Users/natalie/Documents/projects/greenelab/checkouts/nature_news_disparities/data/doi_data/downloads/"
-nature_dir="/Users/natalie/Documents/projects/greenelab/checkouts/nature_news_disparities/data/author_data/downloads"
-outdir="/Users/natalie/Documents/projects/greenelab/checkouts/nature_news_disparities/data/author_data/"

@@ -7,7 +7,7 @@ require(here)
 proj_dir = here()
 ref_data_dir = paste(proj_dir, "/data/reference_data/", sep = "")
 source(file.path(proj_dir, "/utils/scraper_processing_utils.R"))
-source(file.path(proj_dir, "/process_doi_data/springer_scrape_utils.R"))
+source(file.path(proj_dir, "/process_doi_data/springer_scripts/springer_scrape_utils.R"))
 
 ## initialize reading in data frame for use in querying
 springer_country_file = file.path(ref_data_dir, "springer_country_map.tsv")
