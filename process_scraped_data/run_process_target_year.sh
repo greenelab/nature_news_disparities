@@ -34,18 +34,20 @@ if [ ! -d ${CORENLP_OUTPUT}  ]; then
     fi
 
     ## now run coreNLP
-    java -Xmx5g edu.stanford.nlp.pipeline.StanfordCoreNLP \
-        -fileList  ${CORENLP_INPUT} \
-        -coref.algorithm statistical \
-        -annotators tokenize,ssplit,pos,lemma,ner,parse,coref,quote \
-        -outputDirectory ${CORENLP_OUTPUT} \
-        -outputFormat json
+    if [ -s ${CORENLP_INPUT} ]; then
+        java -Xmx5g edu.stanford.nlp.pipeline.StanfordCoreNLP \
+            -fileList  ${CORENLP_INPUT} \
+            -coref.algorithm statistical \
+            -annotators tokenize,ssplit,pos,lemma,ner,parse,coref,quote \
+            -outputDirectory ${CORENLP_OUTPUT} \
+            -outputFormat json
+    fi
 
 fi
 
 ## process the results, we do this always since this code is likely to change
-#QUOTE_RES_FILE="${DIR}/../data/scraped_data/quote_table_raw_${TARGET_YEAR}_${TARGET_TYPE}.tsv"
-#RScript ${DIR}/process_corenlp_quotes_corenlp_output.R ${CORENLP_OUTPUT} ${QUOTE_RES_FILE}
+QUOTE_RES_FILE="${DIR}/../data/scraped_data/quote_table_raw_${TARGET_YEAR}_${TARGET_TYPE}.tsv"
+RScript ${DIR}/process_corenlp_quotes_corenlp_output.R ${CORENLP_OUTPUT} ${QUOTE_RES_FILE}
 
 LOC_RES_FILE="${DIR}/../data/scraped_data/location_table_raw_${TARGET_YEAR}_${TARGET_TYPE}.tsv"
 RScript ${DIR}/process_corenlp_locations_corenlp_output.R ${CORENLP_OUTPUT} ${LOC_RES_FILE}

@@ -8,9 +8,8 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
 # process each year individually
 TARGET_YRS=($( seq 2005 2020 ))
-TARGET_YRS=(2007)
-TARGET_TYPES=("news" "news-and-views" "news-feature" "toolbox" "technology-feature")
-TARGET_TYPES=("news")
+TARGET_TYPES=("news" "news-and-views" "news-feature" "toolbox" "technology-feature" "career-column" "career-feature")
+TARGET_TYPES=("career-column" "career-feature")
 
 for TARGET_YEAR in "${TARGET_YRS[@]}"
 do
