@@ -164,7 +164,7 @@ ggplot(num_art_foreground, aes(x=as.numeric(year), y=tot_articles,
 
 Let's first compare different UN subregions to one another in the two cohorts.
 
-```{r fig.align='center', fig.width = 15, fig.height = 15, echo=FALSE, warning=FALSE, message=F}
+```{r fig.align='center', fig.width = 10, fig.height = 10, echo=FALSE, warning=FALSE, message=F}
 
 mentioned_df = get_aggr_region(country_df, num_art_df, 
                                curr_corpus="nature_news", "un_subregion")
@@ -181,7 +181,8 @@ ggplot(mentioned_df, aes(x=as.numeric(year), y=prop,
     geom_text_repel() + 
     xlab("Year of Article") + ylab("Comparison of UN Subregion mention rates") +
     ggtitle("Percentage articles with mention of a UN Subregion locations") + 
-    scale_fill_brewer(palette="Set2")
+    scale_fill_brewer(palette="Set2") +
+    theme(legend.position = "none")
 
 ggplot(cited_df,  aes(x=as.numeric(year), y=prop,
                         fill=un_subregion, color=un_subregion,
@@ -190,14 +191,15 @@ ggplot(cited_df,  aes(x=as.numeric(year), y=prop,
     geom_text_repel() + 
     xlab("Year of Article") + ylab("Comparison of UN Subregion citation rates") +
     ggtitle("Percentage articles with atleast one author affiliation in a UN Subregion") + 
-    scale_fill_brewer(palette="Set2")
+    scale_fill_brewer(palette="Set2") +
+    theme(legend.position = "none")
 
 
 ```
 
 Let's subset the UN subregions and remove Northern America, Northern Europe, Western Europe, and Eastern Asia.
 
-```{r fig.align='center', fig.width = 15, fig.height = 15, echo=FALSE, warning=FALSE, message=F}
+```{r fig.align='center', fig.width = 10, fig.height = 10, echo=FALSE, warning=FALSE, message=F}
 
 mentioned_df = subset(mentioned_df, 
                       !un_subregion %in% 
@@ -219,7 +221,8 @@ ggplot(mentioned_df, aes(x=as.numeric(year), y=prop,
     geom_text_repel() + 
     xlab("Year of Article") + ylab("Comparison of UN Subregion mention rates") +
     ggtitle("Percentage articles with mention of a UN Subregion locations") + 
-    scale_fill_brewer(palette="Set2")
+    scale_fill_brewer(palette="Set2") +
+    theme(legend.position = "none")
 
 ggplot(cited_df, aes(x=as.numeric(year), y=prop,
                         fill=un_subregion, color=un_subregion,
@@ -228,7 +231,8 @@ ggplot(cited_df, aes(x=as.numeric(year), y=prop,
     geom_text_repel() + 
     xlab("Year of Article") + ylab("Comparison of UN Subregion citation rates") +
     ggtitle("Percentage articles with atleast one author affiliation in a UN Subregion") + 
-    scale_fill_brewer(palette="Set2")
+    scale_fill_brewer(palette="Set2") +
+    theme(legend.position = "none")
 
 
 ```
@@ -430,7 +434,7 @@ ggplot(subset(compare_df, country == "United States"), aes(x=as.numeric(year), y
     geom_point() + geom_line() + theme_bw() + 
     xlab("Year of Article") + 
     ylab("Percentage articles with at least one author with US affiliation") +
-    ggtitle("Percentage articles with mention/citation of US locations") + 
+    ggtitle("Percentage articles with citation of US locations") + 
     scale_fill_brewer(palette="Set2")
 
 
@@ -439,7 +443,7 @@ ggplot(subset(compare_df, country == "United Kingdom"), aes(x=as.numeric(year), 
     geom_point() + geom_line() + theme_bw() + 
     xlab("Year of Article") + 
     ylab("Percentage articles with at least one author with UK affiliation") +
-    ggtitle("Percentage articles with mention/citation of UK locations") + 
+    ggtitle("Percentage articles with citation of UK locations") + 
     scale_fill_brewer(palette="Set2")
 
 
@@ -448,7 +452,7 @@ ggplot(subset(compare_df, country == "People's Republic of China"), aes(x=as.num
     geom_point() + geom_line() + theme_bw() + 
     xlab("Year of Article") + 
     ylab("Percentage articles with at least one author with Chinese affiliation") +
-    ggtitle("Percentage articles with mention/citation of Chinese locations") + 
+    ggtitle("Percentage articles with citation of Chinese locations") + 
     scale_fill_brewer(palette="Set2")
 
 
@@ -512,5 +516,57 @@ pheatmap(sub_matr, cluster_rows = T,
                 (Authors - Citation) Proportions, 
                 Only showning Mean(Nature Authors - Citation) < -0.001 countries",
          color = color_pmap, breaks = breaks)
+
+```
+
+
+Now lets compare nature news mentions rate against Springer and Nature articles for a few countries.
+
+```{r out.width="50%", echo=FALSE, warning=FALSE, message=F}
+
+nature_bg_df = get_aggr_region(country_df, num_art_df, 
+                               curr_corpus="nature_articles", "country")
+springer_bg_df = get_aggr_region(country_df, num_art_df, 
+                                 curr_corpus="springer", "country")
+cited_df = get_aggr_region(country_df, num_art_df, 
+                           curr_corpus="nature_news", "country")
+
+compare_df = rbind(nature_bg_df, springer_bg_df, cited_df)
+
+ggplot(subset(compare_df, country == "United States"), aes(x=as.numeric(year), y=prop,
+                              fill=corpus, color=corpus)) +
+    geom_point() + geom_line() + theme_bw() + 
+    xlab("Year of Article") + 
+    ylab("Percentage articles with at least one author with US affiliation") +
+    ggtitle("Percentage articles with mention of US locations") + 
+    scale_fill_brewer(palette="Set2")
+
+
+ggplot(subset(compare_df, country == "United Kingdom"), aes(x=as.numeric(year), y=prop,
+                              fill=corpus, color=corpus)) +
+    geom_point() + geom_line() + theme_bw() + 
+    xlab("Year of Article") + 
+    ylab("Percentage articles with at least one author with UK affiliation") +
+    ggtitle("Percentage articles with mention of UK locations") + 
+    scale_fill_brewer(palette="Set2")
+
+
+ggplot(subset(compare_df, country == "People's Republic of China"), aes(x=as.numeric(year), y=prop,
+                              fill=corpus, color=corpus)) +
+    geom_point() + geom_line() + theme_bw() + 
+    xlab("Year of Article") + 
+    ylab("Percentage articles with at least one author with Chinese affiliation") +
+    ggtitle("Percentage articles with mention of Chinese locations") + 
+    scale_fill_brewer(palette="Set2")
+
+
+ggplot(subset(compare_df, country == "India"), aes(x=as.numeric(year), y=prop,
+                              fill=corpus, color=corpus)) +
+    geom_point() + geom_line() + theme_bw() + 
+    xlab("Year of Article") + 
+    ylab("Percentage articles with at least one author with Indian affiliation") +
+    ggtitle("Percentage articles with mention of Indian locations") + 
+    scale_fill_brewer(palette="Set2")
+
 
 ```

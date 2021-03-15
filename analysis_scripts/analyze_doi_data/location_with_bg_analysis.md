@@ -185,3 +185,7 @@ Now lets compare nature news citations rate against Springer and Nature articles
 Now lets take the Nature authorship - Nature News citation proportion for each country. This will help us understand if Nature News focuses more on research from a specific country.
 
 <img src="location_with_bg_analysis_files/figure-markdown_github/unnamed-chunk-10-1.png" style="display: block; margin: auto;" /><img src="location_with_bg_analysis_files/figure-markdown_github/unnamed-chunk-10-2.png" style="display: block; margin: auto;" />
+
+Now lets compare nature news mentions rate against Springer and Nature articles for a few countries.
+
+<img src="location_with_bg_analysis_files/figure-markdown_github/unnamed-chunk-11-1.png" width="50%" /><img src="location_with_bg_analysis_files/figure-markdown_github/unnamed-chunk-11-2.png" width="50%" /><img src="location_with_bg_analysis_files/figure-markdown_github/unnamed-chunk-11-3.png" width="50%" /><img src="location_with_bg_analysis_files/figure-markdown_github/unnamed-chunk-11-4.png" width="50%" />

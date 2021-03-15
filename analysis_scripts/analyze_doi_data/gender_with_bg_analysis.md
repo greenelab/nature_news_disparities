@@ -57,7 +57,9 @@ for(quote_file in quote_files){
     
     quote_df = read_corenlp_quote_files(quote_file)
     quote_df$year = str_extract(quote_file, "[1-9][0-9]+") # curr_year
-
+    quote_df$type = substring(basename(quote_file), 
+                            22, nchar(basename(quote_file))-4)
+    
     full_quote_df = rbind(full_quote_df, quote_df)
 }
 full_quote_df = full_quote_df[-1,]
@@ -79,13 +81,13 @@ head(full_quote_df)
     ## 5                                                                            true missing link
     ## 6                                          Finding bad reasons for what we believe on instinct
     ## 7                                                                                 Fog and Soot
-    ##   year
-    ## 2 2005
-    ## 3 2005
-    ## 4 2005
-    ## 5 2005
-    ## 6 2005
-    ## 7 2005
+    ##   year           type
+    ## 2 2005 news-and-views
+    ## 3 2005 news-and-views
+    ## 4 2005 news-and-views
+    ## 5 2005 news-and-views
+    ## 6 2005 news-and-views
+    ## 7 2005 news-and-views
 
 ### compare proportions over all years
 
@@ -142,3 +144,7 @@ Since the number of articles in Nature are small and the resulting proportion of
 Now we will compare the identified quotes and cited authors from Nature News and compare the proportions of male speakers/authors against the previously shown background set of Springer articles.
 
 <img src="gender_with_bg_analysis_files/figure-markdown_github/unnamed-chunk-5-1.png" width="50%" /><img src="gender_with_bg_analysis_files/figure-markdown_github/unnamed-chunk-5-2.png" width="50%" /><img src="gender_with_bg_analysis_files/figure-markdown_github/unnamed-chunk-5-3.png" width="50%" />
+
+Now breakdown the quotes into the different submagazines.
+
+<img src="gender_with_bg_analysis_files/figure-markdown_github/unnamed-chunk-6-1.png" width="50%" /><img src="gender_with_bg_analysis_files/figure-markdown_github/unnamed-chunk-6-2.png" width="50%" /><img src="gender_with_bg_analysis_files/figure-markdown_github/unnamed-chunk-6-3.png" width="50%" />
