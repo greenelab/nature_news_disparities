@@ -87,6 +87,11 @@ format_authors <- function(author_df, is_nature=T){
                                 author_pos = "last",
                                 author = last_authors)
 
+    if(length(grep("file_id", colnames(author_df))) != 0){
+        first_author_df$file_id = author_df$file_id
+        last_author_df$file_id = author_df$file_id
+    }
+
     author_df = rbind(first_author_df, last_author_df)
 
     # if only one author counted twice.... needs a fix
@@ -154,8 +159,9 @@ process_all_author_gender <- function(nature_dir, cited_dois_dir, outdir){
                                     "/data/reference_data/springer_cited_author_cache.tsv")
     cited_author_df = data.frame(fread(cited_author_file))
     cited_author_df = subset(cited_author_df, !is.na(authors))
+    cited_author_df = subset(cited_author_df, select=-c(year))
     cited_doi_df = get_ref_dois(cited_dois_dir)
-    cited_author_df = merge(cited_author_df, cited_doi_df[,c("doi", "year")], by="doi", all.x=T)
+    cited_author_df = merge(cited_author_df, cited_doi_df[,c("doi", "year", "file_id")], by=c("doi"), all.x=T)
 
     # then all the nature articles
     nature_author_df = read_nature_author_json_files(nature_dir)

@@ -176,7 +176,7 @@ get_nature_bg <- function(nature_dir){
 
 }
 
-get_nature_news_cited <- function(){
+get_nature_news_cited <- function(ref_dir){
 
     # all the cited articles
     cited_country_file = file.path(proj_dir, 
@@ -265,7 +265,7 @@ get_springer_bg <- function(){
 #' the nature background authors
 #' @param nature_dir, directory containing scraped nature JSON output 
 #' 
-process_all_author_country <- function(nature_dir, outdir){
+process_all_author_country <- function(nature_dir, cited_dois_dir, outdir){
 
     # we have 3 source files and 1 sourcwe folder that needs to be processed for author country info
 
@@ -279,7 +279,7 @@ process_all_author_country <- function(nature_dir, outdir){
     num_files_nature = nature_bg_res[[2]]
 
     # foreground files are Nature mentions and citations
-    nn_cited_res = get_nature_news_cited()
+    nn_cited_res = get_nature_news_cited(cited_dois_dir)
     cited_country_df_formatted = nn_cited_res[[1]]
     num_files_cited = nn_cited_res[[2]]
 
@@ -307,7 +307,8 @@ process_all_author_country <- function(nature_dir, outdir){
 ### read in arguments
 args = commandArgs(trailingOnly=TRUE)
 nature_dir = args[1]
-outdir = args[2]
+cited_dois_dir = args[2]
+outdir = args[3]
 
-process_all_author_country(nature_dir, outdir)
+process_all_author_country(nature_dir, cited_dois_dir, outdir)
 

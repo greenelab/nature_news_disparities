@@ -176,8 +176,6 @@ get_ref_authors <- function(api_key, ref_dir){
     doi_vec = unique(ref_dois_df$doi)
     batch_resp = batch_springer_doi_query(doi_vec, api_key)
 
-    return(batch_resp)
-
 }
 
 

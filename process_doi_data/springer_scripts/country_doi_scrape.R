@@ -165,7 +165,6 @@ initialize_springer_country_query <- function(api_key){
     country_vec = unique(country_info$country)
     batch_resp = batch_springer_country_query(year_vec, country_vec, api_key)
 
-    return(batch_resp)
 
 }
 

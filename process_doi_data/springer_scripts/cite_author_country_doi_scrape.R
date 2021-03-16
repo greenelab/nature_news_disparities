@@ -1,6 +1,7 @@
 require(tidyr)
 require(jsonlite)
 require(data.table)
+require(dplyr)
 
 require(here)
 
@@ -112,7 +113,7 @@ get_ref_authors <- function(api_key, ref_dir, outdir){
     cache_df = unique(na.omit(cache_df[,c("doi", "publisher")]))
     dois_found_df = merge(ref_dois_df, cache_df)
 
-    batch_resp = batch_springer_doi_query(dois_found_df, api_key)
+    batch_resp = year_batch_springer_doi_query(dois_found_df, api_key)
 
     # summarize further in case multiple queries per year
     batch_summ_df = batch_resp
@@ -125,8 +126,6 @@ get_ref_authors <- function(api_key, ref_dir, outdir){
 
     outfile = file.path(outdir, "cited_author_country.tsv")
     write.table(batch_summ_df, file=outfile, sep="\t", quote=F, row.names=F)
-
-    return(batch_summ_df)
 
 }
 

@@ -6,6 +6,7 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
 ## set up paths
 REF_DIR="${DIR}/../data/doi_data/downloads/"
+NATURE_DIR="${DIR}/../data/author_data/downloads/"
 OUT_DIR="${DIR}/../data/author_data/"
 
 ## check if the API_KEY is set
@@ -23,12 +24,12 @@ else
 
     # this APi call must come AFTER cite_author_doi_scrape.R
     # it assumes that springer_cited_author_cache.tsv is fully populated 
-    RScript ${DIR}/springer_scripts/cite_author_country_doi_scrape.R ${SPRINGER_API_KEY} ${REF_DIR}
+    RScript ${DIR}/springer_scripts/cite_author_country_doi_scrape.R ${SPRINGER_API_KEY} ${REF_DIR} ${OUT_DIR}
 
 
     echo "processing Springer/Nature API calls"
-    RScript ${DIR}/process_author_gender.R ${SPRINGER_API_KEY}
-    RScript ${DIR}/process_author_country.R ${SPRINGER_API_KEY}
+    RScript ${DIR}/process_author_gender.R ${NATURE_DIR} ${REF_DIR} ${OUT_DIR}
+    RScript ${DIR}/process_author_country.R ${NATURE_DIR} ${REF_DIR} ${OUT_DIR}
 
     echo "get number of springer article per year"
     RScript ${DIR}/springer_scripts/get_springer_articles_per_year.R ${SPRINGER_API_KEY}
@@ -36,4 +37,3 @@ else
 
 
 fi
-
