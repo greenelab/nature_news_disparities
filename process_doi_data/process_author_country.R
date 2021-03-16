@@ -193,7 +193,7 @@ get_nature_news_cited <- function(){
     # count citations
     cited_country_df_formatted = aggregate(cited_country_df_formatted$num_entries, 
                             by=cited_country_df_formatted[,c("year", "address.country_code")],
-                            FUN=sum)                     
+                           FUN=sum)                     
     colnames(cited_country_df_formatted)[3] = "num_entries"
 
     cited_country_df_formatted$corpus = "news_citation"
