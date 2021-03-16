@@ -517,6 +517,9 @@ query_genderize_io <- function(in_dir) {
     all_names = NA
     for(curr_file in missed_gender_files){
         in_df = data.frame(fread(curr_file))
+        if(nrow(in_df) == 0){
+            next
+        }
         all_names = rbind(all_names, in_df)
     }
     all_names = all_names[-1,]
@@ -565,11 +568,13 @@ query_genderize_io <- function(in_dir) {
 
     # get all the names that were not found, so we don't check them again
     missing_names = setdiff(query_names, names_processed$fore_name_simple)
-    missing_df = data.frame(fore_name_simple = missing_names,
-                            n_authors = NA, genderize_sample_size = NA,
-                            query_date = as.Date(Sys.Date(), format = "%B %d %Y"),
-                            probability_male = NA)
-    ref_update_df = rbind(ref_update_df, missing_df)
+    if(length(missing_names) > 0){
+        missing_df = data.frame(fore_name_simple = missing_names,
+                                n_authors = NA, genderize_sample_size = NA,
+                                query_date = as.Date(Sys.Date(), format = "%B %d %Y"),
+                                probability_male = NA)
+        ref_update_df = rbind(ref_update_df, missing_df)
+    }
     ref_update_df = unique(ref_update_df)
 
 
