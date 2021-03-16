@@ -99,6 +99,7 @@ single_springer_year_query <- function(curr_year, api_key){
     cache_file = file.path(ref_data_dir, "/springer_year_cache.tsv")
     write.table(cache_df, cache_file, sep="\t", quote=F, row.names=F)
 
+    # sleep because we are limited in API requests per second
     Sys.sleep(1)
 
     return(resp_df)
