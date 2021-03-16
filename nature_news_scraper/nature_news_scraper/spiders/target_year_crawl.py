@@ -11,8 +11,9 @@ class NewsSpider(scrapy.Spider):
     def start_requests(self):
 
         year = int(self.target_year)
+        type_article = self.target_type
  
-        url = 'https://www.nature.com/nature/articles?type=news&year=%d' % year
+        url = 'https://www.nature.com/nature/articles?type=%s&year=%d' % (type_article, year)
 
         yield scrapy.Request(url=url, callback=self.parse_article_list, cb_kwargs=dict(year=year), dont_filter=True)
 
@@ -21,7 +22,7 @@ class NewsSpider(scrapy.Spider):
         # and finally produce a task for the next page, if it exists
 
         # here (and all other places) we are using attribute selectors in CSS 
-        articles = response.css('div[itemtype="http://schema.org/ScholarlyArticle"]')
+        articles = response.css('article[itemtype="http://schema.org/ScholarlyArticle"]')
 
         for article in articles:
             link = article.css('a[itemprop="url"]::attr(href)').get()
@@ -53,6 +54,11 @@ class NewsSpider(scrapy.Spider):
             article_body = response.css('div#content div.entry-content > p *::text')
 
         
+        ## 2006
+        if not article_body:
+            article_body = response.css('div#content > main > article > div.c-article-body div.c-article-section__content > p *::text')
+
+
         # format the articles
         article_body = " ".join(article_body.getall())
         article_body = article_body.strip("\xa0")

@@ -49,15 +49,15 @@ process_body <- function(in_df){
 #' @param in_df, data frame with a column "body"
 #' that contains all the text from the article.
 #' Each row is assumed to be an article
-#' @param out_dir, directory path where the files should be written
-write_sep_files <- function(in_df, out_dir){
+#' @param outdir, directory path where the files should be written
+write_sep_files <- function(in_df, outdir){
 
     # for easier processing with coreNLP write out the files
     # individually
     all_files = c()
     for(curr_article_idx in 1:nrow(in_df)){
         curr_article = in_df[curr_article_idx,]
-        outfile = file.path(outdir, curr_article$file_id, ".txt")
+        outfile = file.path(outdir, paste(curr_article$file_id, ".txt", sep=""))
         article_body = unlist(curr_article$body)
         if(nchar(article_body) == 0){
             next

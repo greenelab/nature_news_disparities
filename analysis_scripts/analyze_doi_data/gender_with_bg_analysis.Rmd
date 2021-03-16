@@ -1,0 +1,394 @@
+---
+title: "background_gender_analysis"
+author: "Natalie Davidson"
+date: "3/01/2021"
+output: rmarkdown::github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+require(data.table)
+require(here)
+require(ggplot2)
+require(ggrepel)
+require(stringr)
+
+
+proj_dir = here()
+source(paste(proj_dir, "/analysis_scripts/analysis_utils.R", sep=""))
+source(paste(proj_dir, "/utils/plotting_utils.R", sep=""))
+```
+
+## Data Description
+
+This document compares two "foreground" datasets (gender of quoted authors and gender of cited authors) and compares it to two possible "background" datasets (random sampling of 36K Springer articles, and all nature articles)
+
+Foreground files:
+
+1) `./data/author_data/cited_author_gender.tsv` has the gender for each first and last authors that were cited in any nature news article between 2005-2020. Only articles that are indexed by Springer are included in this analysis.
+
+2) `./data/scraped_data/quote_table_raw_20*.tsv` has all quotes with estimated gender for the speaker. It is generated  after scraping all articles from a year between 2005-2020 (`./nature_news_scraper/run_scrape_benchmark.sh`) then running it through coreNLP with additional processing (`./process_scraped_data/run_process_target_year.sh`)
+
+Background files:
+
+1) `./data/author_data/springer_author_gender.tsv` has the gender of first and last authors from a randomly selected 36K Springer articles from 2005-2020.
+
+2) `./data/scraped_data/nature_author_gender.tsv` has the gender of first and last authors from all Nature articles from 2005-2020.
+
+
+## Foreground Gender Breakdown
+
+
+Read in the quote and citation data from Nature News.
+```{r}
+# get the project directory, everything is set relative to this
+proj_dir = here()
+
+cited_file = file.path(proj_dir, "/data/author_data/cited_author_gender.tsv")
+cited_df = read_gender_files(cited_file)
+head(cited_df)
+
+
+# read in the all quotes for all news articles and all years 
+full_quote_df = NA
+quote_files = list.files(file.path(proj_dir,"/data/scraped_data/", sep=""), full.names = T)
+quote_files = grep("quote_table_raw_", quote_files, value=T)
+for(quote_file in quote_files){
+    
+    quote_df = read_corenlp_quote_files(quote_file)
+    quote_df$year = str_extract(quote_file, "[1-9][0-9]+") # curr_year
+    quote_df$type = substring(basename(quote_file), 
+                            22, nchar(basename(quote_file))-4)
+    
+    full_quote_df = rbind(full_quote_df, quote_df)
+}
+full_quote_df = full_quote_df[-1,]
+
+head(full_quote_df)
+
+
+```
+
+### compare proportions over all years
+
+From the Nature News corpus, we predict the gender of quoted speakers and cited (first and last) authors.
+Now lets plot the trend of predicted proportion of Male speakers/authors over time
+```{r out.width="50%", echo=FALSE, warning=FALSE, message=F}
+    
+
+# get bootstrap estimates for cited data 
+first_cited_df = subset(cited_df, author_pos == "first")
+last_cited_df = subset(cited_df, author_pos == "last")
+
+first_cited_prop_df = compute_bootstrap_gender(first_cited_df, 
+                                               year_col_id = "year", 
+                                               article_col_id = "file_id",
+                                               conf_int=0.95)
+
+last_cited_prop_df = compute_bootstrap_gender(last_cited_df, 
+                                               year_col_id = "year", 
+                                               article_col_id = "file_id",
+                                               conf_int=0.95)
+first_cited_prop_df$corpus = "citation_first"
+last_cited_prop_df$corpus = "citation_last"
+
+
+# get bootstrap estimates for quote data 
+quote_prop_df = compute_bootstrap_gender(full_quote_df, 
+                                           year_col_id = "year", 
+                                           article_col_id = "file_id",
+                                           conf_int=0.95)
+quote_prop_df$corpus = "quote"
+
+# now put the all the data frames together
+foreground_df = rbind(first_cited_prop_df[,colnames(quote_prop_df)],
+                      last_cited_prop_df[,colnames(quote_prop_df)],
+                      quote_prop_df)
+
+
+ggplot(foreground_df, aes(x=as.numeric(year), y=mean,
+                          ymin=bottom_CI, ymax=top_CI,
+                          fill=corpus)) +
+    geom_point() + geom_ribbon(alpha=0.5) + geom_line(alpha=0.5) + 
+    theme_bw() + 
+    xlab("Year of Article") + ylab("Male Quote/Citation Percentage") +
+    ggtitle("Male Proportion of Quotes and Citations Over Time") + 
+    scale_fill_brewer(palette="Set2") +
+    geom_hline(yintercept=0.5, color="red")
+
+# now lets add a QC plot 
+tot_prop_cited = last_cited_df %>% 
+                group_by(year) %>% 
+                summarise(n()) 
+tot_prop_cited$corpus = "citation_last"
+tot_prop_quote = full_quote_df %>% 
+                group_by(year) %>% 
+                summarise(n()) 
+tot_prop_quote$corpus = "quote"
+
+tot_prop = rbind(tot_prop_cited, tot_prop_quote)
+colnames(tot_prop) = c("year", "num_total", "corpus")
+
+ggplot(tot_prop, aes(x=as.numeric(year), y=num_total, 
+                     fill=corpus, color=corpus)) +
+    geom_point() + geom_line() + theme_bw() + 
+    xlab("Year of Article") + ylab("Total number of Elements") +
+    ggtitle("Total number of Quotes or Cited papers") + 
+    scale_fill_brewer(palette="Set2")
+# 
+# ggplot(subset(foreground_df, corpus %in% c("citation_last", "citation_first")), 
+#        aes(x=as.numeric(year), y=num_total, fill=corpus, color=corpus)) +
+#     geom_point() + geom_line() + theme_bw() + 
+#     xlab("Year of Article") + ylab("Total number of Articles") +
+#     ggtitle("Total number of Articles with gender prediction for Citations") + 
+#     scale_fill_brewer(palette="Set2")
+
+
+```
+
+
+## Background Gender Breakdown
+
+
+Now we read in the background data: random sampling of Springer articles and all Nature articles.
+```{r}
+# get the project directory, everything is set relative to this
+proj_dir = here()
+
+
+# read in the springer author data
+springer_file = file.path(proj_dir, "/data/author_data/springer_author_gender.tsv")
+springer_df = read_gender_files(springer_file)
+head(springer_df)
+
+# read in the nature author data
+nature_file = file.path(proj_dir, "/data/author_data/nature_author_gender.tsv")
+nature_df = read_gender_files(nature_file)
+head(nature_df)
+
+
+
+```
+
+
+### compare gender authorship proportions over all years
+
+Now lets look at all author publication gender and plot the trend over time.
+We see that the Springer corpus has many more articles sampled from it than the Nature corpus.
+We also see that there is an increase in Springer articles from 2005-2020; this is caused by name format changes.
+In this analysis, an article is only considered if it has a name where the gender is able to be guessed.
+In 2005, more journals were shortening the name such that only initials were used, thus reducing the number of articles able to be analyzed.
+
+
+Since the number of articles in Nature are small and the resulting proportion of male authors noisy, we will use the Springer background in the following comparison. 
+
+```{r out.width="50%", echo=FALSE, warning=FALSE, message=F}
+
+# make the df into proportions
+springer_first_prop_df = compute_bootstrap_gender(subset(springer_df, author_pos == "first"), 
+                                           year_col_id = "year", 
+                                           article_col_id = "doi",
+                                           conf_int=0.95)
+springer_last_prop_df = compute_bootstrap_gender(subset(springer_df, author_pos == "last"), 
+                                           year_col_id = "year", 
+                                           article_col_id = "doi",
+                                           conf_int=0.95)
+nature_first_prop_df = compute_bootstrap_gender(subset(nature_df, author_pos == "first"), 
+                                           year_col_id = "year", 
+                                           article_col_id = "doi",
+                                           conf_int=0.95)
+nature_last_prop_df = compute_bootstrap_gender(subset(nature_df, author_pos == "last"), 
+                                           year_col_id = "year", 
+                                           article_col_id = "doi",
+                                           conf_int=0.95)
+
+# now put the all data frames together
+springer_first_prop_df$corpus = "springer_first"
+springer_last_prop_df$corpus = "springer_last"
+nature_first_prop_df$corpus = "nature_first"
+nature_last_prop_df$corpus = "nature_last"
+
+
+background_df = rbind(springer_first_prop_df, 
+                      springer_last_prop_df,
+                      nature_first_prop_df,
+                      nature_last_prop_df)
+
+ggplot(background_df, aes(x=as.numeric(year), y=mean,
+                          ymin=bottom_CI, ymax=top_CI,
+                          fill=corpus)) +
+    geom_point() + geom_ribbon(alpha=0.5) + geom_line(alpha=0.5) +
+    theme_bw() + 
+    xlab("Year of Article") + ylab("Male Author Percentage") +
+    ggtitle("Male Proportion of Authorship Over Time") + 
+    scale_fill_brewer(palette="Set2") +
+    geom_hline(yintercept=0.5, color="red")
+
+
+# now lets add a QC plot 
+tot_prop_springer = springer_df %>% 
+                group_by(year) %>% 
+                summarise(n()) 
+tot_prop_springer$corpus = "springer"
+tot_prop_nature = nature_df %>% 
+                group_by(year) %>% 
+                summarise(n()) 
+tot_prop_nature$corpus = "nature"
+
+tot_prop_bg = rbind(tot_prop_springer, tot_prop_nature)
+colnames(tot_prop_bg) = c("year", "num_total", "corpus")
+
+
+ggplot(tot_prop_bg, aes(x=as.numeric(year), y=num_total, 
+                        fill=corpus, color=corpus)) +
+    geom_point() + geom_line() + theme_bw() + 
+    xlab("Year of Article") + ylab("Total number of Articles") +
+    ggtitle("Total number of Articles per Corpus") + 
+    scale_fill_brewer(palette="Set2")
+
+
+```
+
+## Compare Foreground and Background
+
+Now we will compare the identified quotes and cited authors from Nature News and compare the proportions of male speakers/authors against the previously shown background set of Springer articles.
+
+```{r out.width="50%", echo=FALSE, warning=FALSE, message=F}
+    
+# compare foreground and background
+compare_df = rbind(springer_first_prop_df,
+                   springer_last_prop_df,
+                   foreground_df[,colnames(springer_last_prop_df)])
+
+
+ggplot(subset(compare_df, corpus %in% c("springer_first", "citation_first")), 
+       aes(x=as.numeric(year), y=mean,
+                          ymin=bottom_CI, ymax=top_CI,
+                          fill=corpus)) +
+    geom_point() + geom_ribbon(alpha=0.5) + geom_line(alpha=0.5) + theme_bw() + 
+    xlab("Year of Article") + ylab("Male First Author Citation Percentage") +
+    ggtitle("Comparison of Male First Author Citations Over Time") + 
+    scale_fill_brewer(palette="Set2") + ylim(c(0.5, 1)) +
+    geom_hline(yintercept=0.5, color="red")
+
+ggplot(subset(compare_df, corpus %in% c("springer_last", "citation_last")), 
+      aes(x=as.numeric(year), y=mean,
+                          ymin=bottom_CI, ymax=top_CI,
+                          fill=corpus)) +
+    geom_point() + geom_ribbon(alpha=0.5) + geom_line(alpha=0.5) + theme_bw() + 
+    xlab("Year of Article") + ylab("Male Last Author Citation Percentage") +
+    ggtitle("Comparison of Male Last Author Citations Over Time") + 
+    scale_fill_brewer(palette="Set2") + ylim(c(0.5, 1)) +
+    geom_hline(yintercept=0.5, color="red")
+
+
+
+ggplot(subset(compare_df, corpus %in% c("springer_last", "springer_first", "quote")), 
+      aes(x=as.numeric(year), y=mean,
+                          ymin=bottom_CI, ymax=top_CI,
+                          fill=corpus)) +
+    geom_point() + geom_ribbon(alpha=0.5) + geom_line(alpha=0.5) + theme_bw() + 
+    xlab("Year of Article") + ylab("Male Percentage") +
+    ggtitle("Comparison of Nature News Quotes vs First+Last Author Citations Over Time") + 
+    scale_fill_brewer(palette="Set2") + ylim(c(0.5, 1)) +
+    geom_hline(yintercept=0.5, color="red")
+
+
+quote_prop_df = full_quote_df %>% 
+                group_by(year) %>% 
+                summarise(sum(est_gender=="MALE")) 
+quote_total_df = full_quote_df %>% 
+                group_by(year) %>% 
+                summarise(n()) 
+quote_prop_df = merge(quote_prop_df, quote_total_df)
+colnames(quote_prop_df)[2:3] = c("num_male", "num_total")
+
+# now put the two data frames together
+quote_prop_df$corpus = "quote"
+quote_prop_df$author_pos = NA
+
+```
+
+
+Now breakdown the quotes into the different submagazines.
+
+```{r out.width="50%", echo=FALSE, warning=FALSE, message=F}
+
+
+quote_prop_df = full_quote_df %>% 
+                group_by(year, type) %>% 
+                summarise(sum(est_gender=="MALE")) 
+quote_total_df = full_quote_df %>% 
+                group_by(year, type) %>% 
+                summarise(n()) 
+quote_prop_df = merge(quote_prop_df, quote_total_df)
+colnames(quote_prop_df)[3:4] = c("num_male", "num_total")
+
+# now put the two data frames together
+quote_prop_df$corpus = quote_prop_df$type
+quote_prop_df$author_pos = NA
+quote_prop_df$male_prop = quote_prop_df$num_male / 
+                            quote_prop_df$num_total
+
+    
+# compare foreground and background
+compare_df = quote_prop_df
+
+ggplot(quote_prop_df, aes(x=as.numeric(year), y=male_prop,
+                              fill=corpus, color=corpus)) +
+    geom_point() + geom_line() + theme_bw() + 
+    xlab("Year of Article") + ylab("Male Quote Percentage") +
+    ggtitle("Comparison of Male Quotes Over Time") + 
+    scale_fill_brewer(palette="Set2") + ylim(c(0.3, 1)) +
+    geom_hline(yintercept=0.5, color="red")
+
+tech_feature = file.path(proj_dir, "/data/reference_data/nature_tech_hand_annotated.tsv")
+tech_df = data.frame(fread(tech_feature))
+tech_df = tech_df[,c("Year", "Type", "Sources", "Female")]
+tech_df$num_male = tech_df$Sources - tech_df$Female
+colnames(tech_df)[1:3] = c("year", "type", "num_sources")
+tech_prop_df = tech_df %>% 
+                group_by(year, type) %>% 
+                summarise(sum(num_male)) 
+tech_total_df = tech_df %>% 
+                group_by(year, type) %>% 
+                summarise(sum(num_sources)) 
+tech_prop_df = merge(tech_prop_df, tech_total_df)
+colnames(tech_prop_df)[3:4] = c("num_male", "num_total")
+tech_prop_df = subset(tech_prop_df, type != "Other")
+tech_prop_df$type = paste("jeff_annot_", tech_prop_df$type, sep="")
+
+# now put the two data frames together
+tech_prop_df$corpus = tech_prop_df$type
+tech_prop_df$author_pos = NA
+tech_prop_df$male_prop = tech_prop_df$num_male / 
+                            tech_prop_df$num_total
+tech_prop_df = tech_prop_df[,colnames(quote_prop_df)]
+
+compare_df = rbind(tech_prop_df, quote_prop_df)
+compare_df = subset(compare_df, year > 2017 & 
+                    corpus %in% c("jeff_annot_TechFeat", 
+                                "jeff_annot_Toolbox",
+                                "technology-feature",
+                                "toolbox"))
+ggplot(compare_df, aes(x=as.numeric(year), y=male_prop,
+                              fill=corpus, color=corpus)) +
+    geom_point() + geom_line() + theme_bw() + 
+    xlab("Year of Article") + ylab("Male Quote Percentage") +
+    ggtitle("Comparison of Male Quotes Over Time with Jeff's Hand Annotation") + 
+    scale_fill_brewer(palette="Set2") + ylim(c(0.5, 1)) +
+    geom_hline(yintercept=0.5, color="red")
+
+
+compare_df = subset(compare_df, year > 2017 )
+ggplot(compare_df, aes(x=as.numeric(year), y=male_prop,
+                              fill=corpus, color=corpus)) +
+    geom_point() + geom_line() + theme_bw() + 
+    xlab("Year of Article") + ylab("Male Quote Percentage") +
+    ggtitle("Comparison of Male Quotes Over Time with Jeff's Hand Annotation") + 
+    scale_fill_brewer(palette="Set2") + ylim(c(0.5, 1)) +
+    geom_hline(yintercept=0.5, color="red")
+
+
+```

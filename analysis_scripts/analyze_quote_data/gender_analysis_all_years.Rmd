@@ -12,6 +12,8 @@ require(data.table)
 require(here)
 require(ggplot2)
 require(caret)
+require(stringr)
+
 
 proj_dir = here()
 source(paste(proj_dir, "/analysis_scripts/analysis_utils.R", sep=""))
@@ -67,12 +69,12 @@ Now we read in the full data for the same years.
 
 # read in the full year quote table for 2010, 2015, and 2020
 full_quote_df = NA
-for(curr_year in c(2010, 2015, 2020)){
-    quote_file = paste(proj_dir, 
-                    "/data/scraped_data/quote_table_raw_", curr_year, ".tsv", 
-                    sep="")
+quote_files = list.files(paste(proj_dir,"/data/scraped_data/", sep=""), full.names = T)
+quote_files = grep("quote_table_raw_", quote_files, value=T)
+for(quote_file in quote_files){
+    
     quote_df = read_corenlp_quote_files(quote_file)
-    quote_df$year = curr_year
+    quote_df$year = str_extract(quote_file, "[1-9][0-9]+") # curr_year
 
     full_quote_df = rbind(full_quote_df, quote_df)
 }
@@ -97,7 +99,8 @@ bm_full_quote_df = rbind(full_quote_df, bm_quote_df)
 ```{r fig.align='center', echo=FALSE, warning=FALSE, message=F}
 
 
-    ggplot(bm_full_quote_df, aes(x=is_benchmark, fill=est_gender)) +
+    ggplot(subset(bm_full_quote_df, year %in% c(2010, 2015, 2020)), 
+           aes(x=is_benchmark, fill=est_gender)) +
         geom_bar(position="fill") + facet_grid(~year) + theme_bw() + 
         xlab("Year of Article") + ylab("Male Quote Percentage") +
         ggtitle("Male Quote Percentage Over Time") + 
@@ -112,16 +115,16 @@ Now lets look at all years quote information and plot the trend over time
 ```{r fig.align='center', echo=FALSE, warning=FALSE, message=F}
     
     # read in the additional years and append to `full_suote_df`
-    for(curr_year in c(2016:2019)){
-        quote_file = paste(proj_dir, 
-                        "/data/scraped_data/quote_table_raw_", curr_year, ".tsv", 
-                        sep="")
-        quote_df = read_corenlp_quote_files(quote_file)
-        quote_df$year = curr_year
-        quote_df$is_benchmark = "full_data"
-    
-        full_quote_df = rbind(full_quote_df, quote_df)
-    }
+    # for(curr_year in c(2016:2019)){
+    #     quote_file = paste(proj_dir, 
+    #                     "/data/scraped_data/quote_table_raw_", curr_year, ".tsv", 
+    #                     sep="")
+    #     quote_df = read_corenlp_quote_files(quote_file)
+    #     quote_df$year = curr_year
+    #     quote_df$is_benchmark = "full_data"
+    # 
+    #     full_quote_df = rbind(full_quote_df, quote_df)
+    # }
 
     ggplot(full_quote_df, aes(x=as.factor(year), fill=est_gender)) +
         geom_bar(position="fill") + theme_bw() + 
