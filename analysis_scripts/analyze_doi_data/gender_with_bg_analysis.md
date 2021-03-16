@@ -40,13 +40,20 @@ cited_df = read_gender_files(cited_file)
 head(cited_df)
 ```
 
-    ##   author                           doi year author_pos est_gender gender
-    ## 1    a k         doi:10.1038/nphys4240 2019       last       MALE   MALE
-    ## 2  aaron doi:10.1038/s41586-020-2944-y 2020      first       MALE   MALE
-    ## 3  aaron    doi:10.1186/1744-8603-9-43 2019      first       MALE   MALE
-    ## 4  aaron doi:10.1038/s41586-018-0202-3 2018       last       MALE   MALE
-    ## 5  aaron           doi:10.1038/419895a 2010       last       MALE   MALE
-    ## 6  aaron doi:10.1038/s41586-019-0953-5 2019      first       MALE   MALE
+    ##   author                            doi year author_pos
+    ## 1    a k          doi:10.1038/nphys4240 2019       last
+    ## 2  aaron        doi:10.1038/nature10921 2012      first
+    ## 3  aaron        doi:10.1038/nature25760 2018      first
+    ## 4  aaron     doi:10.1186/1744-8603-9-43 2019      first
+    ## 5  aaron doi:10.1038/s41467-019-09848-w 2020      first
+    ## 6  aaron doi:10.1038/s41467-019-13176-4 2020       last
+    ##                                    file_id est_gender gender
+    ## 1                       d41586-019-03702-1       MALE   MALE
+    ## 2 influenza-five-questions-on-h5n1-1.10874       MALE   MALE
+    ## 3                       d41586-018-02096-w       MALE   MALE
+    ## 4                       d41586-019-00210-0       MALE   MALE
+    ## 5                       d41586-020-02461-8       MALE   MALE
+    ## 6                       d41586-020-00094-5       MALE   MALE
 
 ``` r
 # read in the all quotes for all news articles and all years 
@@ -71,7 +78,7 @@ head(full_quote_df)
     ## 2 434970a Arnold Sommerfeld       MALE     Edward Teller       Sommerfeld
     ## 3 438567a      Arthur Smith       MALE   Arthur E. Smith  Arthur E. Smith
     ## 4 437634a  Bertrand Russell       MALE  Bertrand Russell Bertrand Russell
-    ## 5 434029a             Boxma     NO_EST           Unknown            Boxma
+    ## 5 434029a             Boxma       MALE           Unknown            Boxma
     ## 6 438031a           Bradley       MALE     F. H. Bradley    F. H. Bradley
     ## 7 435748a            Brooks       MALE   C. E. P. Brooks  C. E. P. Brooks
     ##                                                                                          quote
@@ -123,13 +130,20 @@ nature_df = read_gender_files(nature_file)
 head(nature_df)
 ```
 
-    ##   author                            doi year author_pos est_gender gender
-    ## 1 aakash doi:10.1038/s41586-020-03052-3 2020      first       MALE   MALE
-    ## 2  aaron        doi:10.1038/nature13124 2014      first       MALE   MALE
-    ## 3  aaron        doi:10.1038/nature25760 2018      first       MALE   MALE
-    ## 4  aaron  doi:10.1038/s41586-020-2944-y 2020      first       MALE   MALE
-    ## 5  aaron        doi:10.1038/nature13790 2014      first       MALE   MALE
-    ## 6  aaron        doi:10.1038/nature23912 2017      first       MALE   MALE
+    ##   author                            doi year author_pos            file_id
+    ## 1 aakash doi:10.1038/s41586-020-03052-3 2020      first s41586-020-03052-3
+    ## 2  aaron        doi:10.1038/nature13124 2014      first        nature13124
+    ## 3  aaron        doi:10.1038/nature25760 2018      first        nature25760
+    ## 4  aaron  doi:10.1038/s41586-020-2944-y 2020      first  s41586-020-2944-y
+    ## 5  aaron        doi:10.1038/nature13790 2014      first        nature13790
+    ## 6  aaron        doi:10.1038/nature23912 2017      first        nature23912
+    ##   est_gender gender
+    ## 1       MALE   MALE
+    ## 2       MALE   MALE
+    ## 3       MALE   MALE
+    ## 4       MALE   MALE
+    ## 5       MALE   MALE
+    ## 6       MALE   MALE
 
 ### compare gender authorship proportions over all years
 
