@@ -71,12 +71,12 @@ head(country_df)
 ```
 
     ##   address.country_code year num_entries          corpus country un_region
-    ## 1                   ad 2017           0     nature_news Andorra    Europe
-    ## 2                   ad 2005           0   news_citation Andorra    Europe
-    ## 3                   ad 2018           0 nature_articles Andorra    Europe
-    ## 4                   ad 2018           0   news_citation Andorra    Europe
-    ## 5                   ad 2006           0     nature_news Andorra    Europe
-    ## 6                   ad 2005           0     nature_news Andorra    Europe
+    ## 1                   ad 2015           0     nature_news Andorra    Europe
+    ## 2                   ad 2017           0 nature_articles Andorra    Europe
+    ## 3                   ad 2016           0 nature_articles Andorra    Europe
+    ## 4                   ad 2016           0   news_citation Andorra    Europe
+    ## 5                   ad 2018           0   news_citation Andorra    Europe
+    ## 6                   ad 2017           0   news_citation Andorra    Europe
     ##      un_subregion
     ## 1 Southern Europe
     ## 2 Southern Europe
@@ -146,25 +146,21 @@ From the Nature News corpus, lets compare the countries of locations mentioned i
 
 Here lets first look at the total number of articles considered (number of nature news articles per year, and the number of articles cited by Nature News and indexed by Springer)
 
-<img src="location_with_bg_analysis_files/figure-markdown_github/unnamed-chunk-2-1.png" style="display: block; margin: auto;" />
+<img src="location_with_bg_analysis_files/figure-markdown_github/foreground_analysis-1.png" style="display: block; margin: auto;" />
 
 Let's first compare different UN subregions to one another in the two cohorts.
 
-<img src="location_with_bg_analysis_files/figure-markdown_github/unnamed-chunk-3-1.png" style="display: block; margin: auto;" /><img src="location_with_bg_analysis_files/figure-markdown_github/unnamed-chunk-3-2.png" style="display: block; margin: auto;" />
-
-Let's subset the UN subregions and remove Northern America, Northern Europe, Western Europe, and Eastern Asia.
-
-<img src="location_with_bg_analysis_files/figure-markdown_github/unnamed-chunk-4-1.png" style="display: block; margin: auto;" /><img src="location_with_bg_analysis_files/figure-markdown_github/unnamed-chunk-4-2.png" style="display: block; margin: auto;" />
+<img src="location_with_bg_analysis_files/figure-markdown_github/compare_cite_v_mention_un_subregion-1.png" style="display: block; margin: auto;" /><img src="location_with_bg_analysis_files/figure-markdown_github/compare_cite_v_mention_un_subregion-2.png" style="display: block; margin: auto;" />
 
 Now lets look at the proportion of articles with atleast 1 country mention or atleast 1 authors' affiliate country cited by Nature News.
 
 We first look at individual countries.
 
-<img src="location_with_bg_analysis_files/figure-markdown_github/unnamed-chunk-5-1.png" width="50%" /><img src="location_with_bg_analysis_files/figure-markdown_github/unnamed-chunk-5-2.png" width="50%" /><img src="location_with_bg_analysis_files/figure-markdown_github/unnamed-chunk-5-3.png" width="50%" /><img src="location_with_bg_analysis_files/figure-markdown_github/unnamed-chunk-5-4.png" width="50%" />
+<img src="location_with_bg_analysis_files/figure-markdown_github/four_countries_mention_or_citation-1.png" width="50%" /><img src="location_with_bg_analysis_files/figure-markdown_github/four_countries_mention_or_citation-2.png" width="50%" /><img src="location_with_bg_analysis_files/figure-markdown_github/four_countries_mention_or_citation-3.png" width="50%" /><img src="location_with_bg_analysis_files/figure-markdown_github/four_countries_mention_or_citation-4.png" width="50%" />
 
 Now lets take the mention proportion - citation proportion for each country. This will help us understand if some countries are studied more or publish more, or its equal.
 
-<img src="location_with_bg_analysis_files/figure-markdown_github/unnamed-chunk-6-1.png" style="display: block; margin: auto;" /><img src="location_with_bg_analysis_files/figure-markdown_github/unnamed-chunk-6-2.png" style="display: block; margin: auto;" />
+<img src="location_with_bg_analysis_files/figure-markdown_github/mention_minus_citation-1.png" style="display: block; margin: auto;" /><img src="location_with_bg_analysis_files/figure-markdown_github/mention_minus_citation-2.png" style="display: block; margin: auto;" />
 
 ## Background location Breakdown
 
@@ -172,20 +168,20 @@ Now aggregate the background data: all Springer articles and all Nature articles
 
 Here lets first look at the total number of articles considered (number of nature articles per year, and the number of Springer articles)
 
-<img src="location_with_bg_analysis_files/figure-markdown_github/unnamed-chunk-7-1.png" width="50%" />
+<img src="location_with_bg_analysis_files/figure-markdown_github/qc_num_article_foreground-1.png" width="50%" />
 
 So Springer has many more articles than Nature. Let's look comparatively at different countries to check their frequencies. We see that Nature is very biased towards US/UK in comparison to springer. I believe springer has non-english journals, but needs to be checked.
 
-<img src="location_with_bg_analysis_files/figure-markdown_github/unnamed-chunk-8-1.png" width="50%" /><img src="location_with_bg_analysis_files/figure-markdown_github/unnamed-chunk-8-2.png" width="50%" /><img src="location_with_bg_analysis_files/figure-markdown_github/unnamed-chunk-8-3.png" width="50%" /><img src="location_with_bg_analysis_files/figure-markdown_github/unnamed-chunk-8-4.png" width="50%" />
+<img src="location_with_bg_analysis_files/figure-markdown_github/springer_v_nature-1.png" width="50%" /><img src="location_with_bg_analysis_files/figure-markdown_github/springer_v_nature-2.png" width="50%" /><img src="location_with_bg_analysis_files/figure-markdown_github/springer_v_nature-3.png" width="50%" /><img src="location_with_bg_analysis_files/figure-markdown_github/springer_v_nature-4.png" width="50%" />
 
 Now lets compare nature news citations rate against Springer and Nature articles for a few countries. We see that the citation rate mostly tracks the Nature article rate.
 
-<img src="location_with_bg_analysis_files/figure-markdown_github/unnamed-chunk-9-1.png" width="50%" /><img src="location_with_bg_analysis_files/figure-markdown_github/unnamed-chunk-9-2.png" width="50%" /><img src="location_with_bg_analysis_files/figure-markdown_github/unnamed-chunk-9-3.png" width="50%" /><img src="location_with_bg_analysis_files/figure-markdown_github/unnamed-chunk-9-4.png" width="50%" />
+<img src="location_with_bg_analysis_files/figure-markdown_github/citation_v_springer_v_nature-1.png" width="50%" /><img src="location_with_bg_analysis_files/figure-markdown_github/citation_v_springer_v_nature-2.png" width="50%" /><img src="location_with_bg_analysis_files/figure-markdown_github/citation_v_springer_v_nature-3.png" width="50%" /><img src="location_with_bg_analysis_files/figure-markdown_github/citation_v_springer_v_nature-4.png" width="50%" />
 
 Now lets take the Nature authorship - Nature News citation proportion for each country. This will help us understand if Nature News focuses more on research from a specific country.
 
-<img src="location_with_bg_analysis_files/figure-markdown_github/unnamed-chunk-10-1.png" style="display: block; margin: auto;" /><img src="location_with_bg_analysis_files/figure-markdown_github/unnamed-chunk-10-2.png" style="display: block; margin: auto;" />
+<img src="location_with_bg_analysis_files/figure-markdown_github/authorship_minus_citation-1.png" style="display: block; margin: auto;" /><img src="location_with_bg_analysis_files/figure-markdown_github/authorship_minus_citation-2.png" style="display: block; margin: auto;" />
 
 Now lets compare nature news mentions rate against Springer and Nature articles for a few countries.
 
-<img src="location_with_bg_analysis_files/figure-markdown_github/unnamed-chunk-11-1.png" width="50%" /><img src="location_with_bg_analysis_files/figure-markdown_github/unnamed-chunk-11-2.png" width="50%" /><img src="location_with_bg_analysis_files/figure-markdown_github/unnamed-chunk-11-3.png" width="50%" /><img src="location_with_bg_analysis_files/figure-markdown_github/unnamed-chunk-11-4.png" width="50%" />
+<img src="location_with_bg_analysis_files/figure-markdown_github/four_countries_v_springer_v_nature-1.png" width="50%" /><img src="location_with_bg_analysis_files/figure-markdown_github/four_countries_v_springer_v_nature-2.png" width="50%" /><img src="location_with_bg_analysis_files/figure-markdown_github/four_countries_v_springer_v_nature-3.png" width="50%" /><img src="location_with_bg_analysis_files/figure-markdown_github/four_countries_v_springer_v_nature-4.png" width="50%" />

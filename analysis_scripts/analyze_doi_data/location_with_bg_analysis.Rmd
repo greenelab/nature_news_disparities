@@ -148,7 +148,7 @@ From the Nature News corpus, lets compare the countries of locations mentioned i
 Here lets first look at the total number of articles considered (number of nature news articles per year, and the number of articles cited by Nature News and indexed by Springer)
 
 
-```{r fig.align='center', echo=FALSE, warning=FALSE, message=F}
+```{r foreground_analysis, fig.align='center', echo=FALSE, warning=FALSE, message=F}
 
 num_art_foreground = subset(num_art_df, 
                             corpus %in% c("nature_news", "news_citation"))
@@ -164,85 +164,55 @@ ggplot(num_art_foreground, aes(x=as.numeric(year), y=tot_articles,
 
 Let's first compare different UN subregions to one another in the two cohorts.
 
-```{r fig.align='center', fig.width = 10, fig.height = 10, echo=FALSE, warning=FALSE, message=F}
+```{r compare_cite_v_mention_un_subregion, fig.align='center', fig.width = 10, fig.height = 10, echo=FALSE, warning=FALSE, message=F}
 
-mentioned_df = get_aggr_region(country_df, num_art_df, 
-                               curr_corpus="nature_news", "un_subregion")
+top_un_subregions = c("Northern America", "Western Europe", "Northern Europe", "Eastern Asia")
+top_un_subregions = subset(country_df, un_subregion %in% top_un_subregions)
+top_un_subregions = top_un_subregions$country
+mentioned_df = get_aggr_region(country_df,
+                               num_art_df, 
+                               curr_corpus = "nature_news", 
+                               aggr_col_id = "country")
 
-cited_df = get_aggr_region(country_df, num_art_df, 
-                           curr_corpus="news_citation", "un_subregion")
-mentioned_df = subset(mentioned_df, un_subregion != "")
-cited_df = subset(cited_df, un_subregion != "")
+mentioned_df = subset(mentioned_df, country %in% top_un_subregions)
+
+cited_df = get_aggr_region(country_df,
+                               num_art_df, 
+                               curr_corpus = "news_citation", 
+                               aggr_col_id = "country")
+
+cited_df = subset(cited_df, country %in% top_un_subregions)
 
 ggplot(mentioned_df, aes(x=as.numeric(year), y=prop,
-                        fill=un_subregion, color=un_subregion,
+                        fill=country, color=country,
                          label = label)) +
     geom_point() + geom_line() + theme_bw() + 
     geom_text_repel() + 
-    xlab("Year of Article") + ylab("Comparison of UN Subregion mention rates") +
-    ggtitle("Percentage articles with mention of a UN Subregion locations") + 
+    xlab("Year of Article") + ylab("Comparison of Countries in top UN Subregion mention rates") +
+    ggtitle("Proportion articles with mention of a Top UN Subregion locations") + 
     scale_fill_brewer(palette="Set2") +
     theme(legend.position = "none")
 
 ggplot(cited_df,  aes(x=as.numeric(year), y=prop,
-                        fill=un_subregion, color=un_subregion,
+                        fill=country, color=country,
                          label = label)) +
     geom_point() + geom_line() + theme_bw() + 
     geom_text_repel() + 
-    xlab("Year of Article") + ylab("Comparison of UN Subregion citation rates") +
-    ggtitle("Percentage articles with atleast one author affiliation in a UN Subregion") + 
+    xlab("Year of Article") + ylab("Comparison of Countries in top UN Subregion citation rates") +
+    ggtitle("Proportion articles with atleast one author affiliation in a UN Subregion") + 
     scale_fill_brewer(palette="Set2") +
     theme(legend.position = "none")
 
 
 ```
 
-Let's subset the UN subregions and remove Northern America, Northern Europe, Western Europe, and Eastern Asia.
-
-```{r fig.align='center', fig.width = 10, fig.height = 10, echo=FALSE, warning=FALSE, message=F}
-
-mentioned_df = subset(mentioned_df, 
-                      !un_subregion %in% 
-                          c("Northern America", 
-                            "Northern Europe",
-                            "Western Europe",
-                            "Eastern Asia"))
-cited_df = subset(cited_df, 
-                      !un_subregion %in% 
-                          c("Northern America", 
-                            "Northern Europe",
-                            "Western Europe",
-                            "Eastern Asia"))
-
-ggplot(mentioned_df, aes(x=as.numeric(year), y=prop,
-                        fill=un_subregion, color=un_subregion,
-                        label = label)) +
-    geom_point() + geom_line() + theme_bw() + 
-    geom_text_repel() + 
-    xlab("Year of Article") + ylab("Comparison of UN Subregion mention rates") +
-    ggtitle("Percentage articles with mention of a UN Subregion locations") + 
-    scale_fill_brewer(palette="Set2") +
-    theme(legend.position = "none")
-
-ggplot(cited_df, aes(x=as.numeric(year), y=prop,
-                        fill=un_subregion, color=un_subregion,
-                        label = label)) +
-    geom_point() + geom_line() + theme_bw() + 
-    geom_text_repel() + 
-    xlab("Year of Article") + ylab("Comparison of UN Subregion citation rates") +
-    ggtitle("Percentage articles with atleast one author affiliation in a UN Subregion") + 
-    scale_fill_brewer(palette="Set2") +
-    theme(legend.position = "none")
-
-
-```
 
 
 Now lets look at the proportion of articles with atleast 1 country mention or atleast 1 authors' affiliate country cited by Nature News. 
 
 We first look at individual countries.
 
-```{r out.width="50%", echo=FALSE, warning=FALSE, message=F}
+```{r four_countries_mention_or_citation, out.width="50%", echo=FALSE, warning=FALSE, message=F}
 
 
 mentioned_df = get_aggr_region(country_df, num_art_df, 
@@ -288,7 +258,7 @@ ggplot(subset(foreground_df, country == "India"), aes(x=as.numeric(year), y=prop
 Now lets take the mention proportion - citation proportion for each country. 
 This will help us understand if some countries are studied more or publish more, or its equal.
 
-```{r fig.align='center', fig.width = 15, fig.height = 10, echo=FALSE, warning=FALSE, message=F}
+```{r mention_minus_citation, fig.align='center', fig.width = 15, fig.height = 10, echo=FALSE, warning=FALSE, message=F}
 
 
 mentioned_df = get_aggr_region(country_df, num_art_df, 
@@ -322,7 +292,7 @@ pheatmap(sub_matr, cluster_rows = T,
                 Only showning Mean(Mention - Citation) > 0.02 countries",
          color = color_pmap, breaks = breaks)
 
-bottom_diff_country_idx = which(apply(foreground_matr, 1, mean) < -0.00001)
+bottom_diff_country_idx = which(apply(foreground_matr, 1, mean) < -0.01)
 sub_matr = foreground_matr[bottom_diff_country_idx,]
 max_val = max(abs(sub_matr))
 breaks = c(seq(-1*max_val, max_val, by = 0.01))
@@ -346,7 +316,7 @@ Now aggregate the background data: all Springer articles and all Nature articles
 Here lets first look at the total number of articles considered (number of nature articles per year, and the number of Springer articles)
 
 
-```{r  out.width="50%", echo=FALSE, warning=FALSE, message=F}
+```{r qc_num_article_foreground, out.width="50%", echo=FALSE, warning=FALSE, message=F}
 
 num_art_foreground = subset(num_art_df, 
                             corpus %in% c("nature_articles", "springer"))
@@ -367,7 +337,7 @@ We see that Nature is very biased towards US/UK in comparison to springer.
 I believe springer has non-english journals, but needs to be checked.
 
 
-```{r out.width="50%", echo=FALSE, warning=FALSE, message=F}
+```{r springer_v_nature, out.width="50%", echo=FALSE, warning=FALSE, message=F}
 
 nature_bg_df = get_aggr_region(country_df, num_art_df, 
                                curr_corpus="nature_articles", "country")
@@ -418,7 +388,7 @@ ggplot(subset(background_df, country == "India"), aes(x=as.numeric(year), y=prop
 Now lets compare nature news citations rate against Springer and Nature articles for a few countries.
 We see that the citation rate mostly tracks the Nature article rate.
 
-```{r out.width="50%", echo=FALSE, warning=FALSE, message=F}
+```{r citation_v_springer_v_nature, out.width="50%", echo=FALSE, warning=FALSE, message=F}
 
 nature_bg_df = get_aggr_region(country_df, num_art_df, 
                                curr_corpus="nature_articles", "country")
@@ -472,7 +442,7 @@ Now lets take the Nature authorship - Nature News citation proportion for each c
 This will help us understand if Nature News focuses more on research from a specific country.
 
 
-```{r fig.align='center', fig.width = 15, fig.height = 10, echo=FALSE, warning=FALSE, message=F}
+```{r authorship_minus_citation, fig.align='center', fig.width = 15, fig.height = 10, echo=FALSE, warning=FALSE, message=F}
 
 
 nature_bg_df = get_aggr_region(country_df, num_art_df, 
@@ -493,7 +463,7 @@ compare_matr = compare_df %>%
 row.names(compare_matr) = compare_matr$country
 compare_matr = compare_matr[,-1]
 
-top_diff_country_idx = which(apply(compare_matr, 1, mean) > 0.001)
+top_diff_country_idx = which(apply(compare_matr, 1, mean) > 0)
 sub_matr = compare_matr[top_diff_country_idx,]
 max_val = max(abs(sub_matr))
 breaks = c(seq(-1*max_val, max_val, by = 0.01))
@@ -522,7 +492,7 @@ pheatmap(sub_matr, cluster_rows = T,
 
 Now lets compare nature news mentions rate against Springer and Nature articles for a few countries.
 
-```{r out.width="50%", echo=FALSE, warning=FALSE, message=F}
+```{r four_countries_v_springer_v_nature,  out.width="50%", echo=FALSE, warning=FALSE, message=F}
 
 nature_bg_df = get_aggr_region(country_df, num_art_df, 
                                curr_corpus="nature_articles", "country")

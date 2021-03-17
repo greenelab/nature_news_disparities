@@ -182,13 +182,23 @@ get_nature_news_cited <- function(ref_dir){
     cited_country_file = file.path(proj_dir, 
                                     "/data/author_data/cited_author_country.tsv")
     cited_country_df = data.frame(fread(cited_country_file))
-    colnames(cited_country_df)[3] = "num_entries"
     cited_country_df = subset(cited_country_df, country != "")
     cited_country_df$country = format_country_names(cited_country_df$country)
+
+    # get the year from the gender file
+    cited_gender_file = file.path(proj_dir, 
+                                    "/data/author_data/cited_author_gender.tsv")
+    cited_gender_df = data.frame(fread(cited_gender_file))
+    cited_gender_df = unique(cited_gender_df[,c("file_id", "year")])
+    cited_country_df = merge(cited_country_df, cited_gender_df)
 
     # format the countries
     cited_country_df_formatted = get_author_country(cited_country_df)
     cited_country_df_formatted = unique(cited_country_df_formatted)
+
+    # we only care about if a country was cited in an article, 
+    # not how many times it was cited
+    cited_country_df_formatted$num_entries = 1
 
     # count citations
     cited_country_df_formatted = aggregate(cited_country_df_formatted$num_entries, 
@@ -200,16 +210,8 @@ get_nature_news_cited <- function(ref_dir){
 
 
     # get the number of total number of cited articles
-    # get the doi info
-    ref_dois_df = get_ref_dois(ref_dir)
-
-    # already cached springer dataframe
-    cache_file = file.path(ref_data_dir, "/springer_cited_author_cache.tsv")
-    cache_df = data.frame(fread(cache_file))
-    cache_df = unique(na.omit(cache_df[,c("doi", "publisher")]))
-    dois_found_df = merge(ref_dois_df, cache_df)
-    dois_found_df = unique(dois_found_df)
-    num_files_cited = unique(dois_found_df[,c("year", "file_id")]) %>% 
+    
+    num_files_cited = unique(cited_country_df[,c("year", "file_id")]) %>% 
                         group_by(year) %>% 
                         summarise(n()) 
     num_files_cited = data.frame(num_files_cited)
