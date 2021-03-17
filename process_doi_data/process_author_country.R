@@ -209,7 +209,7 @@ get_nature_news_cited <- function(ref_dir){
     cache_df = unique(na.omit(cache_df[,c("doi", "publisher")]))
     dois_found_df = merge(ref_dois_df, cache_df)
     dois_found_df = unique(dois_found_df)
-    num_files_cited = unique(dois_found_df[,c("year", "doi")]) %>% 
+    num_files_cited = unique(dois_found_df[,c("year", "file_id")]) %>% 
                         group_by(year) %>% 
                         summarise(n()) 
     num_files_cited = data.frame(num_files_cited)
