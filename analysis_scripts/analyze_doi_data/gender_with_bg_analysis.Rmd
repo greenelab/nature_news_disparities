@@ -64,6 +64,7 @@ for(quote_file in quote_files){
     full_quote_df = rbind(full_quote_df, quote_df)
 }
 full_quote_df = full_quote_df[-1,]
+full_quote_df = full_quote_df[full_quote_df$est_gender %in% c("FEMALE", "MALE"), ]
 
 head(full_quote_df)
 
@@ -74,7 +75,7 @@ head(full_quote_df)
 
 From the Nature News corpus, we predict the gender of quoted speakers and cited (first and last) authors.
 Now lets plot the trend of predicted proportion of Male speakers/authors over time
-```{r out.width="50%", echo=FALSE, warning=FALSE, message=F}
+```{r compare_quotes_vs_citations, out.width="50%", echo=FALSE, warning=FALSE, message=F}
     
 
 # get bootstrap estimates for cited data 
@@ -136,14 +137,6 @@ ggplot(tot_prop, aes(x=as.numeric(year), y=num_total,
     xlab("Year of Article") + ylab("Total number of Elements") +
     ggtitle("Total number of Quotes or Cited papers") + 
     scale_fill_brewer(palette="Set2")
-# 
-# ggplot(subset(foreground_df, corpus %in% c("citation_last", "citation_first")), 
-#        aes(x=as.numeric(year), y=num_total, fill=corpus, color=corpus)) +
-#     geom_point() + geom_line() + theme_bw() + 
-#     xlab("Year of Article") + ylab("Total number of Articles") +
-#     ggtitle("Total number of Articles with gender prediction for Citations") + 
-#     scale_fill_brewer(palette="Set2")
-
 
 ```
 
@@ -183,7 +176,7 @@ In 2005, more journals were shortening the name such that only initials were use
 
 Since the number of articles in Nature are small and the resulting proportion of male authors noisy, we will use the Springer background in the following comparison. 
 
-```{r out.width="50%", echo=FALSE, warning=FALSE, message=F}
+```{r compare_authorship, out.width="50%", echo=FALSE, warning=FALSE, message=F}
 
 # make the df into proportions
 springer_first_prop_df = compute_bootstrap_gender(subset(springer_df, author_pos == "first"), 
@@ -254,7 +247,7 @@ ggplot(tot_prop_bg, aes(x=as.numeric(year), y=num_total,
 
 Now we will compare the identified quotes and cited authors from Nature News and compare the proportions of male speakers/authors against the previously shown background set of Springer articles.
 
-```{r out.width="50%", echo=FALSE, warning=FALSE, message=F}
+```{r foreground_background_comparison, out.width="50%", echo=FALSE, warning=FALSE, message=F}
     
 # compare foreground and background
 compare_df = rbind(springer_first_prop_df,
@@ -313,81 +306,62 @@ quote_prop_df$author_pos = NA
 
 Now breakdown the quotes into the different submagazines.
 
-```{r out.width="50%", echo=FALSE, warning=FALSE, message=F}
+```{r quote_analysis_by_article_type, out.width="50%", echo=FALSE, warning=FALSE, message=F}
 
 
-quote_prop_df = full_quote_df %>% 
-                group_by(year, type) %>% 
-                summarise(sum(est_gender=="MALE")) 
-quote_total_df = full_quote_df %>% 
-                group_by(year, type) %>% 
-                summarise(n()) 
-quote_prop_df = merge(quote_prop_df, quote_total_df)
-colnames(quote_prop_df)[3:4] = c("num_male", "num_total")
+# make the df into proportions for each article type
+get_subboot <- function(type_id, type_names, in_df){
+    bootstrap_res = compute_bootstrap_gender(subset(in_df, type %in% type_id), 
+                                           year_col_id = "year", 
+                                           article_col_id = "file_id",
+                                           conf_int=0.95)
+    bootstrap_res$corpus = type_names
+    return(bootstrap_res)
 
-# now put the two data frames together
-quote_prop_df$corpus = quote_prop_df$type
-quote_prop_df$author_pos = NA
-quote_prop_df$male_prop = quote_prop_df$num_male / 
-                            quote_prop_df$num_total
+}
 
-    
-# compare foreground and background
-compare_df = quote_prop_df
 
-ggplot(quote_prop_df, aes(x=as.numeric(year), y=male_prop,
-                              fill=corpus, color=corpus)) +
-    geom_point() + geom_line() + theme_bw() + 
+type_df = NA
+for(curr_type in unique(full_quote_df$type)){
+    res = get_subboot(curr_type, curr_type, full_quote_df)
+    type_df = rbind(type_df, res)
+}
+type_df = type_df[-1,]
+
+ggplot(type_df, aes(x=as.numeric(year), y=mean,
+                          ymin=bottom_CI, ymax=top_CI,
+                          fill=corpus)) +
+    geom_point() + geom_ribbon(alpha=0.5) + geom_line(alpha=0.5) +
+    theme_bw() + 
     xlab("Year of Article") + ylab("Male Quote Percentage") +
-    ggtitle("Comparison of Male Quotes Over Time") + 
-    scale_fill_brewer(palette="Set2") + ylim(c(0.3, 1)) +
-    geom_hline(yintercept=0.5, color="red")
-
-tech_feature = file.path(proj_dir, "/data/reference_data/nature_tech_hand_annotated.tsv")
-tech_df = data.frame(fread(tech_feature))
-tech_df = tech_df[,c("Year", "Type", "Sources", "Female")]
-tech_df$num_male = tech_df$Sources - tech_df$Female
-colnames(tech_df)[1:3] = c("year", "type", "num_sources")
-tech_prop_df = tech_df %>% 
-                group_by(year, type) %>% 
-                summarise(sum(num_male)) 
-tech_total_df = tech_df %>% 
-                group_by(year, type) %>% 
-                summarise(sum(num_sources)) 
-tech_prop_df = merge(tech_prop_df, tech_total_df)
-colnames(tech_prop_df)[3:4] = c("num_male", "num_total")
-tech_prop_df = subset(tech_prop_df, type != "Other")
-tech_prop_df$type = paste("jeff_annot_", tech_prop_df$type, sep="")
-
-# now put the two data frames together
-tech_prop_df$corpus = tech_prop_df$type
-tech_prop_df$author_pos = NA
-tech_prop_df$male_prop = tech_prop_df$num_male / 
-                            tech_prop_df$num_total
-tech_prop_df = tech_prop_df[,colnames(quote_prop_df)]
-
-compare_df = rbind(tech_prop_df, quote_prop_df)
-compare_df = subset(compare_df, year > 2017 & 
-                    corpus %in% c("jeff_annot_TechFeat", 
-                                "jeff_annot_Toolbox",
-                                "technology-feature",
-                                "toolbox"))
-ggplot(compare_df, aes(x=as.numeric(year), y=male_prop,
-                              fill=corpus, color=corpus)) +
-    geom_point() + geom_line() + theme_bw() + 
-    xlab("Year of Article") + ylab("Male Quote Percentage") +
-    ggtitle("Comparison of Male Quotes Over Time with Jeff's Hand Annotation") + 
-    scale_fill_brewer(palette="Set2") + ylim(c(0.5, 1)) +
+    ggtitle("Male Proportion of Quotes Over Time") + 
+    scale_fill_brewer(palette="Set2") +
     geom_hline(yintercept=0.5, color="red")
 
 
-compare_df = subset(compare_df, year > 2017 )
-ggplot(compare_df, aes(x=as.numeric(year), y=male_prop,
-                              fill=corpus, color=corpus)) +
-    geom_point() + geom_line() + theme_bw() + 
+# lets look deeper at career articles
+career_df = NA
+non_career = setdiff(unique(full_quote_df$type), c("career-column", "career-feature"))
+career_type = list("career-column", "career-feature", non_career)
+career_name = c("career-column", "career-feature", "non_career")
+for(curr_type_idx in 1:length(career_type)){
+    curr_type = unlist(career_type[curr_type_idx])
+    curr_name = career_name[curr_type_idx]
+    res = get_subboot(curr_type, 
+                      curr_name,
+                      full_quote_df)
+    career_df = rbind(career_df, res)
+}
+career_df = career_df[-1,]
+
+ggplot(career_df, aes(x=as.numeric(year), y=mean,
+                          ymin=bottom_CI, ymax=top_CI,
+                          fill=corpus)) +
+    geom_point() + geom_ribbon(alpha=0.5) + geom_line(alpha=0.5) +
+    theme_bw() + ylim(c(0,1)) +
     xlab("Year of Article") + ylab("Male Quote Percentage") +
-    ggtitle("Comparison of Male Quotes Over Time with Jeff's Hand Annotation") + 
-    scale_fill_brewer(palette="Set2") + ylim(c(0.5, 1)) +
+    ggtitle("Male Proportion of Quotes Over Time") + 
+    scale_fill_brewer(palette="Set2") +
     geom_hline(yintercept=0.5, color="red")
 
 

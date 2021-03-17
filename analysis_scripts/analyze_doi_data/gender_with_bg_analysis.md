@@ -27,14 +27,6 @@ Read in the quote and citation data from Nature News.
 # get the project directory, everything is set relative to this
 proj_dir = here()
 
-# read in the cited author data
-read_gender_files <- function(in_file){
-    in_df = data.frame(fread(in_file))
-    colnames(in_df)[which(colnames(in_df) == "guessed_gender")] = "est_gender"
-    in_df = subset(in_df, !is.na(year))
-    return(in_df)
-}
-
 cited_file = file.path(proj_dir, "/data/author_data/cited_author_gender.tsv")
 cited_df = read_gender_files(cited_file)
 head(cited_df)
@@ -70,6 +62,7 @@ for(quote_file in quote_files){
     full_quote_df = rbind(full_quote_df, quote_df)
 }
 full_quote_df = full_quote_df[-1,]
+full_quote_df = full_quote_df[full_quote_df$est_gender %in% c("FEMALE", "MALE"), ]
 
 head(full_quote_df)
 ```
@@ -98,7 +91,7 @@ head(full_quote_df)
 
 ### compare proportions over all years
 
-From the Nature News corpus, we predict the gender of quoted speakers and cited (first and last) authors. Now lets plot the trend of predicted proportion of Male speakers/authors over time <img src="gender_with_bg_analysis_files/figure-markdown_github/unnamed-chunk-2-1.png" width="50%" /><img src="gender_with_bg_analysis_files/figure-markdown_github/unnamed-chunk-2-2.png" width="50%" />
+From the Nature News corpus, we predict the gender of quoted speakers and cited (first and last) authors. Now lets plot the trend of predicted proportion of Male speakers/authors over time <img src="gender_with_bg_analysis_files/figure-markdown_github/compare_quotes_vs_citations-1.png" width="50%" /><img src="gender_with_bg_analysis_files/figure-markdown_github/compare_quotes_vs_citations-2.png" width="50%" />
 
 ## Background Gender Breakdown
 
@@ -151,14 +144,14 @@ Now lets look at all author publication gender and plot the trend over time. We 
 
 Since the number of articles in Nature are small and the resulting proportion of male authors noisy, we will use the Springer background in the following comparison.
 
-<img src="gender_with_bg_analysis_files/figure-markdown_github/unnamed-chunk-4-1.png" width="50%" /><img src="gender_with_bg_analysis_files/figure-markdown_github/unnamed-chunk-4-2.png" width="50%" />
+<img src="gender_with_bg_analysis_files/figure-markdown_github/compare_authorship-1.png" width="50%" /><img src="gender_with_bg_analysis_files/figure-markdown_github/compare_authorship-2.png" width="50%" />
 
 ## Compare Foreground and Background
 
 Now we will compare the identified quotes and cited authors from Nature News and compare the proportions of male speakers/authors against the previously shown background set of Springer articles.
 
-<img src="gender_with_bg_analysis_files/figure-markdown_github/unnamed-chunk-5-1.png" width="50%" /><img src="gender_with_bg_analysis_files/figure-markdown_github/unnamed-chunk-5-2.png" width="50%" /><img src="gender_with_bg_analysis_files/figure-markdown_github/unnamed-chunk-5-3.png" width="50%" />
+<img src="gender_with_bg_analysis_files/figure-markdown_github/foreground_background_comparison-1.png" width="50%" /><img src="gender_with_bg_analysis_files/figure-markdown_github/foreground_background_comparison-2.png" width="50%" /><img src="gender_with_bg_analysis_files/figure-markdown_github/foreground_background_comparison-3.png" width="50%" />
 
 Now breakdown the quotes into the different submagazines.
 
-<img src="gender_with_bg_analysis_files/figure-markdown_github/unnamed-chunk-6-1.png" width="50%" /><img src="gender_with_bg_analysis_files/figure-markdown_github/unnamed-chunk-6-2.png" width="50%" /><img src="gender_with_bg_analysis_files/figure-markdown_github/unnamed-chunk-6-3.png" width="50%" />
+<img src="gender_with_bg_analysis_files/figure-markdown_github/quote_analysis_by_article_type-1.png" width="50%" /><img src="gender_with_bg_analysis_files/figure-markdown_github/quote_analysis_by_article_type-2.png" width="50%" />
