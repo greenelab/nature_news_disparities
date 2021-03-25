@@ -108,13 +108,13 @@ springer_df = read_gender_files(springer_file)
 head(springer_df)
 ```
 
-    ##     author                            doi year author_pos est_gender gender
-    ## 1      a s  doi:10.1007/s10586-017-1181-0 2017      first       MALE   MALE
-    ## 2       aa  doi:10.1007/s00059-013-3953-5 2013      first       MALE   MALE
-    ## 3       aa  doi:10.1007/s10751-012-0610-y 2012       last       MALE   MALE
-    ## 4    aadil  doi:10.1007/s12591-015-0244-z 2015      first       MALE   MALE
-    ## 5 aadithya  doi:10.1007/s12663-013-0500-0 2013       last       MALE   MALE
-    ## 6    aafke doi:10.1007/s00204-020-02953-6 2020      first       MALE   MALE
+    ##      author                            doi year author_pos est_gender gender
+    ## 1       a s  doi:10.1007/s10586-017-1181-0 2017      first       MALE   MALE
+    ## 2        aa  doi:10.1007/s00059-013-3953-5 2013      first       MALE   MALE
+    ## 3        aa  doi:10.1007/s10751-012-0610-y 2012       last       MALE   MALE
+    ## 4     aadil  doi:10.1007/s12591-015-0244-z 2015      first       MALE   MALE
+    ## 5  aadithya  doi:10.1007/s12663-013-0500-0 2013       last       MALE   MALE
+    ## 6 aakanksha doi:10.1007/s40609-019-00149-0 2019      first     FEMALE FEMALE
 
 ``` r
 # read in the nature author data
@@ -123,16 +123,16 @@ nature_df = read_gender_files(nature_file)
 head(nature_df)
 ```
 
-    ##   author                            doi year author_pos            file_id
-    ## 1 aakash doi:10.1038/s41586-020-03052-3 2020      first s41586-020-03052-3
-    ## 2  aaron        doi:10.1038/nature13124 2014      first        nature13124
-    ## 3  aaron        doi:10.1038/nature25760 2018      first        nature25760
-    ## 4  aaron  doi:10.1038/s41586-020-2944-y 2020      first  s41586-020-2944-y
-    ## 5  aaron        doi:10.1038/nature13790 2014      first        nature13790
-    ## 6  aaron        doi:10.1038/nature23912 2017      first        nature23912
+    ##       author                            doi year author_pos            file_id
+    ## 1     aakash doi:10.1038/s41586-020-03052-3 2020      first s41586-020-03052-3
+    ## 2 aanindeeta        doi:10.1038/nature17185 2016      first        nature17185
+    ## 3      aaron        doi:10.1038/nature07084 2008      first        nature07084
+    ## 4      aaron        doi:10.1038/nature03831 2005       last        nature03831
+    ## 5      aaron  doi:10.1038/s41586-020-2288-7 2020      first  s41586-020-2288-7
+    ## 6      aaron        doi:10.1038/nature06830 2008      first        nature06830
     ##   est_gender gender
     ## 1       MALE   MALE
-    ## 2       MALE   MALE
+    ## 2       <NA>   <NA>
     ## 3       MALE   MALE
     ## 4       MALE   MALE
     ## 5       MALE   MALE

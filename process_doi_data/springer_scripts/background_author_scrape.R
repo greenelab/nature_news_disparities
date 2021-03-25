@@ -28,7 +28,7 @@ url_springer_bg_author_search <- function(year, month, page_start, api_key) {
     date_str = paste(year, month, "*", sep="-")
 
     # nominatim search api url
-    url_springer_search_api <- "http://api.springernature.com/metadata/json?q=(type:Journal AND "
+    url_springer_search_api <- "http://api.springernature.com/metadata/json?q=(type:Journal AND language:en AND "
     query_str <- paste(url_springer_search_api, 
                         "onlinedate:", date_str, ")",
                         "&p=50",
@@ -174,7 +174,7 @@ initialize_springer_bg_author_query <- function(api_key){
     month_vec = 1:12
     page_vec = 1:4
 
-    batch_resp = batch_springer_bg_author_query(year_vec, month_vec, api_key)
+    batch_resp = batch_springer_bg_author_query(year_vec, month_vec, page_vec, api_key)
 
     return(batch_resp)
 
@@ -184,4 +184,4 @@ initialize_springer_bg_author_query <- function(api_key){
 ### read in arguments
 args = commandArgs(trailingOnly=TRUE)
 api_key = args[1]
-initialize_springer_bg_author_query(api_key)
+resp = initialize_springer_bg_author_query(api_key)

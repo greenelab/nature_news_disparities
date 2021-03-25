@@ -59,84 +59,8 @@ proj_dir = here()
 country_file = file.path(proj_dir, "/data/author_data/all_author_country.tsv")
 country_df = data.frame(fread(country_file))
 
-# get country info
-country_info = get_country_info()
-
-# add in NA's before merging for any country-year pairs that are missing
-# beautify this code later
-country_vec = unique(country_info$address.country_code)
-corpus_vec = unique(country_df$corpus)
-year_vec = 2005:2020
-for(curr_country in country_vec){
-    for(curr_year in year_vec){
-        for(curr_corpus in corpus_vec){
-            sub_matr = subset(country_df, 
-                                year == curr_year & 
-                                address.country_code == curr_country &
-                                corpus == curr_corpus)
-            if(nrow(sub_matr) == 0){
-                new_entry = data.frame(year = curr_year,
-                                       address.country_code = curr_country,
-                                       num_entries = 0,
-                                       corpus = curr_corpus)
-                
-                country_df = rbind(country_df, new_entry)
-            }
-        }
-    }
-}
-country_df = subset(country_df, address.country_code != "")
-country_df = merge(country_df, country_info)
-country_df = subset(country_df, country != "")
-
-# make all NAs 0
-country_df$num_entries[is.na(country_df$num_entries)] = 0
-head(country_df)
-
-# read in the reference data
-num_art_file = file.path(proj_dir, "/data/author_data/total_num_articles_per_corpus.tsv")
-num_art_df = data.frame(fread(num_art_file))
-
-head(num_art_df)
-
-#' this is the main function we will be using for aggregations for each plot
-#' it aggregates over the region of interest (aggr_col_id),
-#' denoted by the appropriate column name
-#' from in_df.
-#' 
-#' @param in_df, data frame to aggregate over
-#' @param num_art_df, data frame with total number of articles per year, per corpus
-#' @param curr_corpus, corpus of interest
-#' @param aggr_col_id, the column to aggregate over. Must be in in_df.
-#' @return aggregated data frame, the aggregates will be in the column num_(aggr_col_id)
-get_aggr_region <- function(in_df, num_art_df, curr_corpus, aggr_col_id){
-    
-    curr_df = subset(in_df, corpus == curr_corpus)
-    curr_art_df = subset(num_art_df, corpus == curr_corpus)
-    
-    colnames(curr_df)[colnames(curr_df) == aggr_col_id] = "aggr_col"
-    
-    country_prop_df = curr_df %>% 
-                        group_by(year, aggr_col) %>% 
-                        summarise(sum(num_entries)) 
-    aggr_num_id = paste("num", aggr_col_id, sep="_")
-    colnames(country_prop_df)[3] = aggr_num_id
-    
-    country_prop_df = merge(country_prop_df, curr_art_df)
-    
-    country_prop_df$prop = country_prop_df[,aggr_num_id] / country_prop_df$tot_articles
-    
-    # plotting labels
-    country_prop_df$label = country_prop_df$aggr_col
-    country_prop_df$label[country_prop_df$year != 2020] = ""
-    
-    colnames(country_prop_df)[colnames(country_prop_df) == "aggr_col"] = aggr_col_id
-
-
-    return(country_prop_df)
-
-}
-
+un_info = get_country_info()
+country_df = merge(country_df, un_info)
 
 
 ```
@@ -150,8 +74,22 @@ Here lets first look at the total number of articles considered (number of natur
 
 ```{r foreground_analysis, fig.align='center', echo=FALSE, warning=FALSE, message=F}
 
-num_art_foreground = subset(num_art_df, 
-                            corpus %in% c("nature_news", "news_citation"))
+# now lets add a QC plot 
+mention_total = unique(subset(country_df, corpus == "naturenews_mentions", select=c(file_id, year)) )
+tot_prop_mention = mention_total %>% 
+                group_by(year) %>% 
+                summarise(n()) 
+tot_prop_mention$corpus = "naturenews_mentions"
+
+citation_total = unique(subset(country_df, corpus == "naturenews_citations", select=c(file_id, year)) )
+tot_prop_citation = citation_total %>% 
+                group_by(year) %>% 
+                summarise(n()) 
+tot_prop_citation$corpus = "naturenews_citations"
+
+num_art_foreground = rbind(tot_prop_mention, tot_prop_citation)
+num_art_foreground = data.frame(num_art_foreground)
+colnames(num_art_foreground)[2] = "tot_articles"
  
 ggplot(num_art_foreground, aes(x=as.numeric(year), y=tot_articles,
                               fill=corpus, color=corpus)) +
@@ -168,40 +106,75 @@ Let's first compare different UN subregions to one another in the two cohorts.
 
 top_un_subregions = c("Northern America", "Western Europe", "Northern Europe", "Eastern Asia")
 top_un_subregions = subset(country_df, un_subregion %in% top_un_subregions)
-top_un_subregions = top_un_subregions$country
-mentioned_df = get_aggr_region(country_df,
-                               num_art_df, 
-                               curr_corpus = "nature_news", 
-                               aggr_col_id = "country")
+top_un_subregions = unique(top_un_subregions$country)
+top_un_subregions = top_un_subregions[c(33,13, 6,7,12, 4, 5, 29, 20)]
+top_un_subregions = c(top_un_subregions, "India")
 
-mentioned_df = subset(mentioned_df, country %in% top_un_subregions)
+# make the df into proportions for eachcountry
+get_subboot <- function(country_id, curr_corpus, in_df){
+    bootstrap_res = compute_bootstrap_location(subset(in_df, corpus==curr_corpus), 
+                                              year_col_id = "year", 
+                                              article_col_id = "file_id", 
+                                              country_col_id = "country",
+                                              country_agg = country_id, 
+                                              conf_int = 0.95)
+    bootstrap_res$country = country_id
+    return(bootstrap_res)
 
-cited_df = get_aggr_region(country_df,
-                               num_art_df, 
-                               curr_corpus = "news_citation", 
-                               aggr_col_id = "country")
+}
 
-cited_df = subset(cited_df, country %in% top_un_subregions)
 
-ggplot(mentioned_df, aes(x=as.numeric(year), y=prop,
-                        fill=country, color=country,
-                         label = label)) +
-    geom_point() + geom_line() + theme_bw() + 
-    geom_text_repel() + 
+mention_country_df = NA
+for(curr_country in top_un_subregions){
+    print(curr_country)
+    res = get_subboot(curr_country, 
+                      curr_corpus="naturenews_mentions", 
+                      country_df)
+    mention_country_df = rbind(mention_country_df, res)
+}
+mention_country_df = mention_country_df[-1,]
+
+
+citation_country_df = NA
+for(curr_country in top_un_subregions){
+    print(curr_country)
+    res = get_subboot(curr_country, 
+                      curr_corpus="naturenews_citations", 
+                      country_df)
+    citation_country_df = rbind(citation_country_df, res)
+}
+citation_country_df = citation_country_df[-1,]
+
+
+mention_country_df$label = ""
+mention_country_df$label[mention_country_df$year == 2020] = 
+    mention_country_df$country[mention_country_df$year == 2020]
+    
+citation_country_df$label = ""
+citation_country_df$label[citation_country_df$year == 2020] = 
+    citation_country_df$country[citation_country_df$year == 2020]
+
+ggplot(mention_country_df, aes(x=as.numeric(year), y=mean,
+                          ymin=bottom_CI, ymax=top_CI,
+                          fill=country, label=label)) +
+    geom_point() + geom_ribbon(alpha=0.5) + geom_line(alpha=0.5) +
+    theme_bw() + geom_text_repel() + xlim(c(2005,2021))  +
     xlab("Year of Article") + ylab("Comparison of Countries in top UN Subregion mention rates") +
     ggtitle("Proportion articles with mention of a Top UN Subregion locations") + 
-    scale_fill_brewer(palette="Set2") +
+    scale_fill_brewer(palette="Set3") +
     theme(legend.position = "none")
 
-ggplot(cited_df,  aes(x=as.numeric(year), y=prop,
-                        fill=country, color=country,
-                         label = label)) +
-    geom_point() + geom_line() + theme_bw() + 
-    geom_text_repel() + 
+ggplot(citation_country_df, aes(x=as.numeric(year), y=mean,
+                          ymin=bottom_CI, ymax=top_CI,
+                          fill=country, label=label)) +
+    geom_point() + geom_ribbon(alpha=0.5) + geom_line(alpha=0.5) +
+    theme_bw() + geom_text_repel()  + xlim(c(2005,2021)) + 
     xlab("Year of Article") + ylab("Comparison of Countries in top UN Subregion citation rates") +
     ggtitle("Proportion articles with atleast one author affiliation in a UN Subregion") + 
-    scale_fill_brewer(palette="Set2") +
+    scale_fill_brewer(palette="Set3") +
     theme(legend.position = "none")
+
+
 
 
 ```
@@ -215,42 +188,53 @@ We first look at individual countries.
 ```{r four_countries_mention_or_citation, out.width="50%", echo=FALSE, warning=FALSE, message=F}
 
 
-mentioned_df = get_aggr_region(country_df, num_art_df, 
-                               curr_corpus="nature_news", "country")
-
-cited_df = get_aggr_region(country_df, num_art_df, 
-                           curr_corpus="news_citation", "country")
-
-foreground_df = rbind(mentioned_df, cited_df)
+mention_country_df$corpus = "naturenews_mentions"
+citation_country_df$corpus = "naturenews_citations"
+foreground_df = rbind(mention_country_df, citation_country_df)
 
 
-ggplot(subset(foreground_df, country == "United States"), aes(x=as.numeric(year), y=prop,
-                              fill=corpus, color=corpus)) +
-    geom_point() + geom_line() + theme_bw() + 
+ggplot(subset(foreground_df, country == "United States"), 
+       aes(x=as.numeric(year), y=mean,
+                          ymin=bottom_CI, ymax=top_CI,
+                          fill=corpus)) +
+    geom_point() + geom_ribbon(alpha=0.5) + geom_line(alpha=0.5) +
+    theme_bw() + 
     xlab("Year of Article") + ylab("Percentage articles with mention/citation of US locations") +
     ggtitle("Percentage articles with mention/citation of US locations") + 
     scale_fill_brewer(palette="Set2")
 
-ggplot(subset(foreground_df, country == "United Kingdom"), aes(x=as.numeric(year), y=prop,
-                              fill=corpus, color=corpus)) +
-    geom_point() + geom_line() + theme_bw() + 
+ggplot(subset(foreground_df, country == "United Kingdom"), 
+       aes(x=as.numeric(year), y=mean,
+                          ymin=bottom_CI, ymax=top_CI,
+                          fill=corpus)) +
+    geom_point() + geom_ribbon(alpha=0.5) + geom_line(alpha=0.5) +
+    theme_bw() + 
     xlab("Year of Article") + ylab("Percentage articles with mention/citation of UK locations") +
     ggtitle("Percentage articles with mention/citation of UK locations") + 
     scale_fill_brewer(palette="Set2")
 
-ggplot(subset(foreground_df, country == "People's Republic of China"), aes(x=as.numeric(year), y=prop,
-                              fill=corpus, color=corpus)) +
-    geom_point() + geom_line() + theme_bw() + 
+ggplot(subset(foreground_df, country == "People's Republic of China"), 
+       aes(x=as.numeric(year), y=mean,
+                          ymin=bottom_CI, ymax=top_CI,
+                          fill=corpus)) +
+    geom_point() + geom_ribbon(alpha=0.5) + geom_line(alpha=0.5) +
+    theme_bw() + 
     xlab("Year of Article") + ylab("Percentage articles with mention/citation of Chinese locations") +
     ggtitle("Percentage articles with mention/citation of Chinese locations") + 
     scale_fill_brewer(palette="Set2")
 
-ggplot(subset(foreground_df, country == "India"), aes(x=as.numeric(year), y=prop,
-                              fill=corpus, color=corpus)) +
-    geom_point() + geom_line() + theme_bw() + 
+
+ggplot(subset(foreground_df, country == "India"), 
+       aes(x=as.numeric(year), y=mean,
+                          ymin=bottom_CI, ymax=top_CI,
+                          fill=corpus)) +
+    geom_point() + geom_ribbon(alpha=0.5) + geom_line(alpha=0.5) +
+    theme_bw() + 
     xlab("Year of Article") + ylab("Percentage articles with mention/citation of Indian locations") +
     ggtitle("Percentage articles with mention/citation of Indian locations") + 
     scale_fill_brewer(palette="Set2")
+
+
 
 ```
 
@@ -261,16 +245,13 @@ This will help us understand if some countries are studied more or publish more,
 ```{r mention_minus_citation, fig.align='center', fig.width = 15, fig.height = 10, echo=FALSE, warning=FALSE, message=F}
 
 
-mentioned_df = get_aggr_region(country_df, num_art_df, 
-                               curr_corpus="nature_news", "country")
+mention_mean_df = mention_country_df
+citation_mean_df = citation_country_df
 
-cited_df = get_aggr_region(country_df, num_art_df, 
-                           curr_corpus="news_citation", "country")
-
-colnames(mentioned_df)[6] = "mention_prop"
-colnames(cited_df)[6] = "citation_prop"
-foreground_df = merge(mentioned_df[,c("year", "country", "mention_prop")], 
-                      cited_df[,c("year", "country", "citation_prop")])
+colnames(mention_mean_df)[4] = "mention_prop"
+colnames(citation_mean_df)[4] = "citation_prop"
+foreground_df = merge(mention_mean_df[,c("year", "country", "mention_prop")], 
+                      citation_mean_df[,c("year", "country", "citation_prop")])
 
 foreground_df$diff = foreground_df$mention_prop - foreground_df$citation_prop
 
@@ -316,12 +297,29 @@ Now aggregate the background data: all Springer articles and all Nature articles
 Here lets first look at the total number of articles considered (number of nature articles per year, and the number of Springer articles)
 
 
-```{r qc_num_article_foreground, out.width="50%", echo=FALSE, warning=FALSE, message=F}
+```{r qc_num_article_background, out.width="50%", echo=FALSE, warning=FALSE, message=F}
 
-num_art_foreground = subset(num_art_df, 
-                            corpus %in% c("nature_articles", "springer"))
+# nature bg
+nature_total = unique(subset(country_df, corpus == "nature_articles", select=c(file_id, year)) )
+tot_prop_naturebg = nature_total %>% 
+                group_by(year) %>% 
+                summarise(n()) 
+tot_prop_naturebg$corpus = "nature_articles"
+colnames(tot_prop_naturebg)[2] = "num_entries"
+
+# springer bg
+springer_total = unique(subset(country_df, corpus == "springer_articles", select=c(file_id, year)) )
+tot_prop_springerbg = springer_total %>% 
+                group_by(year) %>% 
+                summarise(n()) 
+tot_prop_springerbg$corpus = "springer_articles"
+colnames(tot_prop_springerbg)[2] = "num_entries"
+tot_prop_springerbg$corpus = "springer_articles"
+
+num_art_background = rbind(tot_prop_naturebg, 
+                           tot_prop_springerbg[,colnames(tot_prop_naturebg)])
  
-ggplot(num_art_foreground, aes(x=as.numeric(year), y=tot_articles,
+ggplot(num_art_background, aes(x=as.numeric(year), y=num_entries,
                               fill=corpus, color=corpus)) +
     geom_point() + geom_line() + theme_bw() + 
     xlab("Year of Article") + ylab("Number of Total Articles") +
@@ -339,44 +337,83 @@ I believe springer has non-english journals, but needs to be checked.
 
 ```{r springer_v_nature, out.width="50%", echo=FALSE, warning=FALSE, message=F}
 
-nature_bg_df = get_aggr_region(country_df, num_art_df, 
-                               curr_corpus="nature_articles", "country")
-springer_bg_df = get_aggr_region(country_df, num_art_df, 
-                                 curr_corpus="springer", "country")
+nature_country_df = NA
+for(curr_country in top_un_subregions){
+    print(curr_country)
+    res = get_subboot(curr_country, 
+                      curr_corpus="nature_articles", 
+                      country_df)
+    nature_country_df = rbind(nature_country_df, res)
+}
+nature_country_df = nature_country_df[-1,]
 
+nature_country_df$label = ""
+nature_country_df$label[nature_country_df$year == 2020] = 
+    nature_country_df$country[nature_country_df$year == 2020]
+nature_country_df$corpus = "nature_articles"
 
-background_df = rbind(nature_bg_df, springer_bg_df)
+# springer bg
+springer_country_df = NA
+for(curr_country in top_un_subregions){
+    print(curr_country)
+    res = get_subboot(curr_country, 
+                      curr_corpus="springer_articles", 
+                      country_df)
+    springer_country_df = rbind(springer_country_df, res)
+}
+springer_country_df = springer_country_df[-1,]
 
-ggplot(subset(background_df, country == "United States"), aes(x=as.numeric(year), y=prop,
-                              fill=corpus, color=corpus)) +
-    geom_point() + geom_line() + theme_bw() + 
+springer_country_df$corpus = "springer_articles"
+springer_country_df$label = ""
+springer_country_df$label[springer_country_df$year == 2020] = 
+    springer_country_df$country[springer_country_df$year == 2020]
+
+background_df = rbind(nature_country_df, 
+                           springer_country_df[,colnames(nature_country_df)])
+ 
+
+ggplot(subset(background_df, country == "United States"), 
+       aes(x=as.numeric(year), y=mean,
+                          ymin=bottom_CI, ymax=top_CI,
+                          fill=corpus)) +
+    geom_point() + geom_ribbon(alpha=0.5) + geom_line(alpha=0.5) +
+    theme_bw() + 
     xlab("Year of Article") + 
     ylab("Percentage articles with at least one author with US affiliation") +
     ggtitle("Percentage articles with mention/citation of US locations") + 
     scale_fill_brewer(palette="Set2")
 
 
-ggplot(subset(background_df, country == "United Kingdom"), aes(x=as.numeric(year), y=prop,
-                              fill=corpus, color=corpus)) +
-    geom_point() + geom_line() + theme_bw() + 
+ggplot(subset(background_df, country == "United Kingdom"), 
+       aes(x=as.numeric(year), y=mean,
+                          ymin=bottom_CI, ymax=top_CI,
+                          fill=corpus)) +
+    geom_point() + geom_ribbon(alpha=0.5) + geom_line(alpha=0.5) +
+    theme_bw() + 
     xlab("Year of Article") + 
     ylab("Percentage articles with at least one author with UK affiliation") +
     ggtitle("Percentage articles with mention/citation of UK locations") + 
     scale_fill_brewer(palette="Set2")
 
 
-ggplot(subset(background_df, country == "People's Republic of China"), aes(x=as.numeric(year), y=prop,
-                              fill=corpus, color=corpus)) +
-    geom_point() + geom_line() + theme_bw() + 
+ggplot(subset(background_df, country == "People's Republic of China"),
+       aes(x=as.numeric(year), y=mean,
+                          ymin=bottom_CI, ymax=top_CI,
+                          fill=corpus)) +
+    geom_point() + geom_ribbon(alpha=0.5) + geom_line(alpha=0.5) +
+    theme_bw() + 
     xlab("Year of Article") + 
     ylab("Percentage articles with at least one author with Chinese affiliation") +
     ggtitle("Percentage articles with mention/citation of Chinese locations") + 
     scale_fill_brewer(palette="Set2")
 
 
-ggplot(subset(background_df, country == "India"), aes(x=as.numeric(year), y=prop,
-                              fill=corpus, color=corpus)) +
-    geom_point() + geom_line() + theme_bw() + 
+ggplot(subset(background_df, country == "India"), 
+       aes(x=as.numeric(year), y=mean,
+                          ymin=bottom_CI, ymax=top_CI,
+                          fill=corpus)) +
+    geom_point() + geom_ribbon(alpha=0.5) + geom_line(alpha=0.5) +
+    theme_bw() + 
     xlab("Year of Article") + 
     ylab("Percentage articles with at least one author with Indian affiliation") +
     ggtitle("Percentage articles with mention/citation of Indian locations") + 

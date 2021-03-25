@@ -31,8 +31,8 @@ else
     RScript ${DIR}/process_author_gender.R ${NATURE_DIR} ${REF_DIR} ${OUT_DIR}
     RScript ${DIR}/process_author_country.R ${NATURE_DIR} ${REF_DIR} ${OUT_DIR}
 
-    echo "get number of springer article per year"
-    RScript ${DIR}/springer_scripts/get_springer_articles_per_year.R ${SPRINGER_API_KEY}
+    #echo "get number of springer article per year"
+    #RScript ${DIR}/springer_scripts/get_springer_articles_per_year.R ${SPRINGER_API_KEY}
 
 
 

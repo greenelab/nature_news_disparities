@@ -24,7 +24,7 @@ url_springer_year_search <- function(year, api_key) {
 
 
     # nominatim search api url
-    url_springer_search_api <- "http://api.springernature.com/metadata/json?q=(type:Journal AND "
+    url_springer_search_api <- "http://api.springernature.com/metadata/json?q=(type:Journal AND pub:Nature AND language:en AND "
     query_str <- paste(url_springer_search_api, 
                         "year:", year, ")",
                         "&api_key=", api_key,
