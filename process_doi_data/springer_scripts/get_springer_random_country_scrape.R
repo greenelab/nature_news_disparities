@@ -108,19 +108,20 @@ batch_springer_doi_rand_query <- function(author_dois_df, api_key){
 
     # query one at a time and append together
     batch_resp = NA
-    for(curr_year in 2011:2020){ #unique(author_dois_df$year)
+    for(curr_year in unique(author_dois_df$year)){ #
+        print(curr_year)
+
         curr_df = subset(author_dois_df, year == curr_year)
         doi_vec = unique(curr_df$doi)
         # we can only do 5000 queries, so we will randomly choose 250 to query
         set.seed(5)
-        doi_vec = sample(doi_vec, 250)
+        doi_vec = sample(doi_vec, 500)
         idx = 1
-        for(chunk in doi_vec[1:250]){
+        for(chunk in doi_vec[251:500]){
             curr_resp = springer_doi_rand_query(chunk, curr_year, api_key)
             if(!is.na(curr_resp)){
                 batch_resp = rbind(batch_resp, curr_resp)
             }
-            print(idx)
             idx = idx +1 
         }
 
@@ -154,4 +155,4 @@ get_ref_authors <- function(api_key, author_file){
 args = commandArgs(trailingOnly=TRUE)
 api_key = args[1]
 author_file = args[2]
-get_ref_authors(api_key, nature_dir)
+get_ref_authors(api_key, author_file)

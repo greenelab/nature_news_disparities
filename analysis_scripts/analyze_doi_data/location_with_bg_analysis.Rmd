@@ -427,152 +427,120 @@ We see that the citation rate mostly tracks the Nature article rate.
 
 ```{r citation_v_springer_v_nature, out.width="50%", echo=FALSE, warning=FALSE, message=F}
 
-nature_bg_df = get_aggr_region(country_df, num_art_df, 
-                               curr_corpus="nature_articles", "country")
-springer_bg_df = get_aggr_region(country_df, num_art_df, 
-                                 curr_corpus="springer", "country")
-cited_df = get_aggr_region(country_df, num_art_df, 
-                           curr_corpus="news_citation", "country")
 
-compare_df = rbind(nature_bg_df, springer_bg_df, cited_df)
+compare_df = rbind(citation_country_df, 
+                   springer_country_df,
+                   nature_country_df)
 
-ggplot(subset(compare_df, country == "United States"), aes(x=as.numeric(year), y=prop,
-                              fill=corpus, color=corpus)) +
-    geom_point() + geom_line() + theme_bw() + 
-    xlab("Year of Article") + 
+ggplot(subset(compare_df, country == "United States"),
+       aes(x=as.numeric(year), y=mean,
+                          ymin=bottom_CI, ymax=top_CI,
+                          fill=corpus)) +
+    geom_point() + geom_ribbon(alpha=0.5) + geom_line(alpha=0.5) +
+    theme_bw() +
+    xlab("Year of Article") +
     ylab("Percentage articles with at least one author with US affiliation") +
-    ggtitle("Percentage articles with citation of US locations") + 
+    ggtitle("Comparison of US citation rate vs US authorship rate") +
     scale_fill_brewer(palette="Set2")
 
 
-ggplot(subset(compare_df, country == "United Kingdom"), aes(x=as.numeric(year), y=prop,
-                              fill=corpus, color=corpus)) +
-    geom_point() + geom_line() + theme_bw() + 
-    xlab("Year of Article") + 
+ggplot(subset(compare_df, country == "United Kingdom"),
+       aes(x=as.numeric(year), y=mean,
+                          ymin=bottom_CI, ymax=top_CI,
+                          fill=corpus)) +
+    geom_point() + geom_ribbon(alpha=0.5) + geom_line(alpha=0.5) +
+    theme_bw() +
+    xlab("Year of Article") +
     ylab("Percentage articles with at least one author with UK affiliation") +
-    ggtitle("Percentage articles with citation of UK locations") + 
+    ggtitle("Comparison of UK citation rate vs UK authorship rate") +
     scale_fill_brewer(palette="Set2")
 
 
-ggplot(subset(compare_df, country == "People's Republic of China"), aes(x=as.numeric(year), y=prop,
-                              fill=corpus, color=corpus)) +
-    geom_point() + geom_line() + theme_bw() + 
-    xlab("Year of Article") + 
-    ylab("Percentage articles with at least one author with Chinese affiliation") +
-    ggtitle("Percentage articles with citation of Chinese locations") + 
+ggplot(subset(compare_df, country == "People's Republic of China"),
+       aes(x=as.numeric(year), y=mean,
+                          ymin=bottom_CI, ymax=top_CI,
+                          fill=corpus)) +
+    geom_point() + geom_ribbon(alpha=0.5) + geom_line(alpha=0.5) +
+    theme_bw() +
+    xlab("Year of Article") +
+    ylab("Percentage articles with at least one author with PRC affiliation") +
+    ggtitle("Comparison of PRC citation rate vs PRC authorship rate") +
     scale_fill_brewer(palette="Set2")
 
 
-ggplot(subset(compare_df, country == "India"), aes(x=as.numeric(year), y=prop,
-                              fill=corpus, color=corpus)) +
-    geom_point() + geom_line() + theme_bw() + 
-    xlab("Year of Article") + 
+ggplot(subset(compare_df, country == "India"),
+       aes(x=as.numeric(year), y=mean,
+                          ymin=bottom_CI, ymax=top_CI,
+                          fill=corpus)) +
+    geom_point() + geom_ribbon(alpha=0.5) + geom_line(alpha=0.5) +
+    theme_bw() +
+    xlab("Year of Article") +
     ylab("Percentage articles with at least one author with Indian affiliation") +
-    ggtitle("Percentage articles with mention/citation of Indian locations") + 
+    ggtitle("Comparison of India citation rate vs India authorship rate") +
     scale_fill_brewer(palette="Set2")
 
 
 ```
 
 
-Now lets take the Nature authorship - Nature News citation proportion for each country. 
-This will help us understand if Nature News focuses more on research from a specific country.
-
-
-```{r authorship_minus_citation, fig.align='center', fig.width = 15, fig.height = 10, echo=FALSE, warning=FALSE, message=F}
-
-
-nature_bg_df = get_aggr_region(country_df, num_art_df, 
-                               curr_corpus="nature_articles", "country")
-
-cited_df = get_aggr_region(country_df, num_art_df, 
-                           curr_corpus="news_citation", "country")
-
-colnames(nature_bg_df)[6] = "nature_prop"
-colnames(cited_df)[6] = "citation_prop"
-compare_df = merge(nature_bg_df[,c("year", "country", "nature_prop")], 
-                      cited_df[,c("year", "country", "citation_prop")])
-
-compare_df$diff = compare_df$nature_prop - compare_df$citation_prop
-
-compare_matr = compare_df %>%
-                    dcast(country ~ year, value.var="diff")
-row.names(compare_matr) = compare_matr$country
-compare_matr = compare_matr[,-1]
-
-top_diff_country_idx = which(apply(compare_matr, 1, mean) > 0)
-sub_matr = compare_matr[top_diff_country_idx,]
-max_val = max(abs(sub_matr))
-breaks = c(seq(-1*max_val, max_val, by = 0.01))
-color_pmap <- colorRampPalette(c("yellow", "white", "blue"))(length(breaks))
-pheatmap(sub_matr, cluster_rows = T, 
-         cluster_cols = F, display_numbers = T, 
-         main = "Authored More than Cited \n
-                (Authors - Citation) Proportions, 
-                Only showning Mean(Nature Authors - Citation) > 0.001 countries",
-         color = color_pmap, breaks = breaks)
-
-bottom_diff_country_idx = which(apply(compare_matr, 1, mean) < -0.001)
-sub_matr = compare_matr[bottom_diff_country_idx,]
-max_val = max(abs(sub_matr))
-breaks = c(seq(-1*max_val, max_val, by = 0.01))
-color_pmap <- colorRampPalette(c("yellow", "white", "blue"))(length(breaks))
-pheatmap(sub_matr, cluster_rows = T, 
-         cluster_cols = F, display_numbers = T, 
-         main = "Cited more than Authored \n
-                (Authors - Citation) Proportions, 
-                Only showning Mean(Nature Authors - Citation) < -0.001 countries",
-         color = color_pmap, breaks = breaks)
-
-```
 
 
 Now lets compare nature news mentions rate against Springer and Nature articles for a few countries.
 
 ```{r four_countries_v_springer_v_nature,  out.width="50%", echo=FALSE, warning=FALSE, message=F}
 
-nature_bg_df = get_aggr_region(country_df, num_art_df, 
-                               curr_corpus="nature_articles", "country")
-springer_bg_df = get_aggr_region(country_df, num_art_df, 
-                                 curr_corpus="springer", "country")
-cited_df = get_aggr_region(country_df, num_art_df, 
-                           curr_corpus="nature_news", "country")
+compare_df = rbind(mention_country_df, 
+                   springer_country_df,
+                   nature_country_df)
 
-compare_df = rbind(nature_bg_df, springer_bg_df, cited_df)
-
-ggplot(subset(compare_df, country == "United States"), aes(x=as.numeric(year), y=prop,
-                              fill=corpus, color=corpus)) +
-    geom_point() + geom_line() + theme_bw() + 
-    xlab("Year of Article") + 
-    ylab("Percentage articles with at least one author with US affiliation") +
-    ggtitle("Percentage articles with mention of US locations") + 
+ggplot(subset(compare_df, country == "United States"),
+       aes(x=as.numeric(year), y=mean,
+                          ymin=bottom_CI, ymax=top_CI,
+                          fill=corpus)) +
+    geom_point() + geom_ribbon(alpha=0.5) + geom_line(alpha=0.5) +
+    theme_bw() +
+    xlab("Year of Article") +
+    ylab("Percentage articles with at least one mention of the US") +
+    ggtitle("Comparison of US mention rate vs US authorship rate") +
     scale_fill_brewer(palette="Set2")
 
 
-ggplot(subset(compare_df, country == "United Kingdom"), aes(x=as.numeric(year), y=prop,
-                              fill=corpus, color=corpus)) +
-    geom_point() + geom_line() + theme_bw() + 
-    xlab("Year of Article") + 
-    ylab("Percentage articles with at least one author with UK affiliation") +
-    ggtitle("Percentage articles with mention of UK locations") + 
+ggplot(subset(compare_df, country == "United Kingdom"),
+       aes(x=as.numeric(year), y=mean,
+                          ymin=bottom_CI, ymax=top_CI,
+                          fill=corpus)) +
+    geom_point() + geom_ribbon(alpha=0.5) + geom_line(alpha=0.5) +
+    theme_bw() +
+    xlab("Year of Article") +
+    ylab("Percentage articles with at least one mention of the UK") +
+    ggtitle("Comparison of UK mention rate vs UK authorship rate") +
+
     scale_fill_brewer(palette="Set2")
 
 
-ggplot(subset(compare_df, country == "People's Republic of China"), aes(x=as.numeric(year), y=prop,
-                              fill=corpus, color=corpus)) +
-    geom_point() + geom_line() + theme_bw() + 
-    xlab("Year of Article") + 
-    ylab("Percentage articles with at least one author with Chinese affiliation") +
-    ggtitle("Percentage articles with mention of Chinese locations") + 
+ggplot(subset(compare_df, country == "People's Republic of China"),
+       aes(x=as.numeric(year), y=mean,
+                          ymin=bottom_CI, ymax=top_CI,
+                          fill=corpus)) +
+    geom_point() + geom_ribbon(alpha=0.5) + geom_line(alpha=0.5) +
+    theme_bw() +
+    xlab("Year of Article") +
+    ylab("Percentage articles with at least one mention of the PRC") +
+    ggtitle("Comparison of PRC mention rate vs PRC authorship rate") +
+
     scale_fill_brewer(palette="Set2")
 
 
-ggplot(subset(compare_df, country == "India"), aes(x=as.numeric(year), y=prop,
-                              fill=corpus, color=corpus)) +
-    geom_point() + geom_line() + theme_bw() + 
-    xlab("Year of Article") + 
-    ylab("Percentage articles with at least one author with Indian affiliation") +
-    ggtitle("Percentage articles with mention of Indian locations") + 
+ggplot(subset(compare_df, country == "India"),
+       aes(x=as.numeric(year), y=mean,
+                          ymin=bottom_CI, ymax=top_CI,
+                          fill=corpus)) +
+    geom_point() + geom_ribbon(alpha=0.5) + geom_line(alpha=0.5) +
+    theme_bw() +
+    xlab("Year of Article") +
+    ylab("Percentage articles with at least one mention of the India") +
+    ggtitle("Comparison of India mention rate vs India authorship rate") +
+
     scale_fill_brewer(palette="Set2")
 
 

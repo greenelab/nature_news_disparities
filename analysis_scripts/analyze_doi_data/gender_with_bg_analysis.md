@@ -33,19 +33,19 @@ head(cited_df)
 ```
 
     ##   author                            doi year author_pos
-    ## 1    a k          doi:10.1038/nphys4240 2019       last
-    ## 2  aaron        doi:10.1038/nature10921 2012      first
-    ## 3  aaron        doi:10.1038/nature25760 2018      first
-    ## 4  aaron     doi:10.1186/1744-8603-9-43 2019      first
-    ## 5  aaron doi:10.1038/s41467-019-09848-w 2020      first
-    ## 6  aaron doi:10.1038/s41467-019-13176-4 2020       last
-    ##                                    file_id est_gender gender
-    ## 1                       d41586-019-03702-1       MALE   MALE
-    ## 2 influenza-five-questions-on-h5n1-1.10874       MALE   MALE
-    ## 3                       d41586-018-02096-w       MALE   MALE
-    ## 4                       d41586-019-00210-0       MALE   MALE
-    ## 5                       d41586-020-02461-8       MALE   MALE
-    ## 6                       d41586-020-00094-5       MALE   MALE
+    ## 1  aaron doi:10.1038/s41467-019-08746-5 2020       last
+    ## 2  aaron  doi:10.1038/s41586-018-0809-4 2019       last
+    ## 3  aaron     doi:10.1186/1744-8603-9-43 2019      first
+    ## 4  aaron doi:10.1038/s41467-019-09848-w 2020      first
+    ## 5  aaron            doi:10.1038/419895a 2010       last
+    ## 6  aaron            doi:10.1038/nm.3519 2014      first
+    ##                                      file_id est_gender gender
+    ## 1                         d41586-020-00012-9       MALE   MALE
+    ## 2                         d41586-018-07851-7       MALE   MALE
+    ## 3                         d41586-019-00210-0       MALE   MALE
+    ## 4                         d41586-020-02461-8       MALE   MALE
+    ## 5                               466913a.html       MALE   MALE
+    ## 6 cancer-biomarkers-written-in-blood-1.15624       MALE   MALE
 
 ``` r
 # read in the all quotes for all news articles and all years 
@@ -109,12 +109,12 @@ head(springer_df)
 ```
 
     ##      author                            doi year author_pos est_gender gender
-    ## 1       a s  doi:10.1007/s10586-017-1181-0 2017      first       MALE   MALE
-    ## 2        aa  doi:10.1007/s00059-013-3953-5 2013      first       MALE   MALE
-    ## 3        aa  doi:10.1007/s10751-012-0610-y 2012       last       MALE   MALE
-    ## 4     aadil  doi:10.1007/s12591-015-0244-z 2015      first       MALE   MALE
-    ## 5  aadithya  doi:10.1007/s12663-013-0500-0 2013       last       MALE   MALE
-    ## 6 aakanksha doi:10.1007/s40609-019-00149-0 2019      first     FEMALE FEMALE
+    ## 1  a-nasser  doi:10.1007/s00138-008-0123-5 2008      first       MALE   MALE
+    ## 2     aadil  doi:10.1007/s12591-015-0244-z 2015      first       MALE   MALE
+    ## 3  aadithya  doi:10.1007/s12663-013-0500-0 2013       last       MALE   MALE
+    ## 4 aakanksha doi:10.1007/s40609-019-00149-0 2019      first     FEMALE FEMALE
+    ## 5    aakash  doi:10.1007/s41870-018-0121-4 2018      first       MALE   MALE
+    ## 6     aamir  doi:10.1007/s12639-014-0580-x 2014      first       MALE   MALE
 
 ``` r
 # read in the nature author data
@@ -126,13 +126,13 @@ head(nature_df)
     ##       author                            doi year author_pos            file_id
     ## 1     aakash doi:10.1038/s41586-020-03052-3 2020      first s41586-020-03052-3
     ## 2 aanindeeta        doi:10.1038/nature17185 2016      first        nature17185
-    ## 3      aaron        doi:10.1038/nature07084 2008      first        nature07084
-    ## 4      aaron        doi:10.1038/nature03831 2005       last        nature03831
-    ## 5      aaron  doi:10.1038/s41586-020-2288-7 2020      first  s41586-020-2288-7
-    ## 6      aaron        doi:10.1038/nature06830 2008      first        nature06830
+    ## 3      aaron  doi:10.1038/s41586-020-3009-y 2020      first  s41586-020-3009-y
+    ## 4      aaron        doi:10.1038/nature07885 2009       last        nature07885
+    ## 5      aaron        doi:10.1038/nature03831 2005       last        nature03831
+    ## 6      aaron        doi:10.1038/nature04790 2006       last        nature04790
     ##   est_gender gender
     ## 1       MALE   MALE
-    ## 2       <NA>   <NA>
+    ## 2       MALE   MALE
     ## 3       MALE   MALE
     ## 4       MALE   MALE
     ## 5       MALE   MALE
