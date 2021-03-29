@@ -1,18 +1,9 @@
 library(jsonlite)
 library(data.table)
+require(here)
 
-#' read in JSON file and convert to dataframe
-#' 
-#' @param infile, JSON file path
-#' 
-#' @return json_res, dataframe version of JSON object
-read_json <- function(infile){
-
-    json_res = fromJSON(infile)
-    json_res = data.frame(json_res)
-    return(json_res)
-
-}
+proj_dir = here()
+source(file.path(proj_dir, "/utils/scraper_processing_utils.R"))
 
 #' Format the body of the article to remove 
 #' have a unified encoding

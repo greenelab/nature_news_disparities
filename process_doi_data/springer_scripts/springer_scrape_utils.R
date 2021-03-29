@@ -75,6 +75,9 @@ process_dois <- function(doi){
     if(length(grep("http://www.nature.com/doifinder/", doi))!= 0){
         doi = str_replace(doi, "http://www.nature.com/doifinder/", "doi:")
     }
+    if(length(grep("http://nature.com/doifinder/", doi))!= 0){
+        doi = str_replace(doi, "http://www.nature.com/doifinder/", "doi:")
+    }
     if(length(grep("http://nature.comdoi", doi))!= 0){
         doi = str_replace(doi, "http://nature.comdoi", "doi:")
     }

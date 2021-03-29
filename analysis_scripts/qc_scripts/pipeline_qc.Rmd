@@ -48,32 +48,13 @@ Count the number of words in each article to compare down the entire pipeline.
 
 ### scripts to read in scrapey data for both article and year specific stats
 
-read_json <- function(infile){
-
-    json_res <- tryCatch(
-        {
-           fromJSON(infile)
-        },
-        error=function(cond) {
-            message(paste("JSON file empty or error:", infile))
-            message("The original error message:")
-            message(cond)
-            return(NA)
-        }
-    )
-    json_res = data.frame(json_res)
-    return(json_res)
-    
-
-}
-
 
 # get the project directory, everything is set relative to this
 proj_dir = here()
 
 # read in the downloaded articles for each year
-pipeline_1_dir = paste(proj_dir,
-                    "/data/scraped_data/downloads/", sep="")
+pipeline_1_dir = file.path(proj_dir,
+                    "/data/scraped_data/downloads/")
 pipeline_1_files = list.files(pipeline_1_dir, full.names = T)
 
 article_stats_df = NA

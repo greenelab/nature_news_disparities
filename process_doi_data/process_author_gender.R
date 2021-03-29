@@ -19,8 +19,9 @@ get_author_gender <- function(unknown_gendered_df){
     names_processed = rbind(names_processed, data.frame(fread(gender_io_file)))
 
     colnames(names_processed)[1] = "author"
-    names_processed$guessed_gender = "MALE"
+    names_processed$guessed_gender = NA
     names_processed$guessed_gender[names_processed$probability_male < 0.5] = "FEMALE"
+    names_processed$guessed_gender[names_processed$probability_male >= 0.5] = "MALE"
 
     # guess genders from reference
     names_processed = merge(data.table(names_missing), 
@@ -41,44 +42,6 @@ get_author_gender <- function(unknown_gendered_df){
 
 }
 
-format_author_names_internal <- function(in_name){
-    # reverse name if needed
-    in_name = format_reverse(in_name)
-    in_name = format_period(in_name)
-    return(first_name(in_name))
-
-}
-
-format_author_names <- function(author_vec){
-
-    author_vec = unlist(lapply(author_vec, format_author_names_internal))
-
-    # now remove anything that looks like a consortium or not a name
-    non_name_check = "consortium|group|initiative|team|collab|committee|center|program|author|institute"
-    non_name_idx = grep(non_name_check, author_vec)
-    author_vec[non_name_idx] = ""
-
-
-    # now remove anything that looks like initials
-    # so this means it has at least 1 period or - and < 4 characters
-    non_name_idx = grep("[.-]", author_vec)
-    short_name_idx = which(unlist(lapply(author_vec, nchar)) < 4)
-    author_vec[intersect(non_name_idx, short_name_idx)] = ""
-
-    # now strip periods
-    author_vec = gsub("[.]", "", author_vec)
-
-    # or less than 3 characters
-    short_name_idx = which(unlist(lapply(author_vec, nchar)) < 3)
-    author_vec[short_name_idx] = ""
-
-
-    # make sure we are only getting the first name
-    author_vec = unlist(lapply(author_vec, function(x) unlist(str_split(x, " "))[1]))
-    
-
-    return(author_vec)
-}
 
 #' Read all nature json files and get author info
 #' @param author_df, data.frame with all author info 
