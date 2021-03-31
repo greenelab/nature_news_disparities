@@ -35,4 +35,5 @@ else
     RScript ${DIR}/process_author_gender.R ${NATURE_DIR} ${REF_DIR} ${OUT_DIR}
     RScript ${DIR}/process_author_country.R ${NATURE_DIR} ${REF_DIR} ${OUT_DIR}
 
+
 fi

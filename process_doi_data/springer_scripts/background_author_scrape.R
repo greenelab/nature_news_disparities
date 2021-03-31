@@ -30,7 +30,7 @@ url_springer_bg_author_search <- function(year, month, page_start, api_key) {
     # nominatim search api url
     url_springer_search_api <- "http://api.springernature.com/metadata/json?q=(type:Journal AND language:en AND "
     query_str <- paste(url_springer_search_api, 
-                        "onlinedate:", date_str, ")",
+                        "date:", date_str, ")",
                         "&p=50",
                         "&s=", (page_start-1)*50+1,
                         "&api_key=", api_key,
