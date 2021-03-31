@@ -50,6 +50,12 @@ read_json <- function(infile){
 
 }
 
+#' Normalize name order and initials
+#' using the humaniformat package
+#' 
+#' @param in_name, Name in any format
+#' 
+#' @return normalized first name
 format_author_names_internal <- function(in_name){
     # reverse name if needed
     in_name = format_reverse(in_name)
@@ -58,6 +64,12 @@ format_author_names_internal <- function(in_name){
 
 }
 
+#' Normalize and filter first names
+#' that are not initials or companies/groups
+#' 
+#' @param author_vec, vector of names in any format
+#' 
+#' @return normalized first names
 format_author_names <- function(author_vec){
 
     author_vec = unlist(lapply(author_vec, format_author_names_internal))
