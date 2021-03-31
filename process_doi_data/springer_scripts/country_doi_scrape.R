@@ -38,7 +38,7 @@ url_springer_country_search <- function(country, year, api_key) {
     }
 
     # nominatim search api url
-    url_springer_search_api <- "http://api.springernature.com/metadata/json?q=(type:Journal AND "
+    url_springer_search_api <- "http://api.springernature.com/metadata/json?q=(type:Journal AND language:en AND "
     query_str <- paste(url_springer_search_api, 
                         "year:", year,
                         " AND country:", dQuote(country), ")",
@@ -91,6 +91,7 @@ single_springer_country_query <- function(curr_country, curr_year, api_key){
     query_url = url_springer_country_search(curr_country, curr_year, api_key)
     resp = internal_springer_query(query_url)
 
+
     # format response
     resp_df = data.frame("country" = curr_country,
                         "year" = curr_year, "num_entries" = NA)
@@ -115,7 +116,7 @@ single_springer_country_query <- function(curr_country, curr_year, api_key){
     cache_file = file.path(ref_data_dir, "/springer_country_cache.tsv")
     write.table(cache_df, cache_file, sep="\t", quote=F, row.names=F)
 
-    Sys.sleep(1)
+    Sys.sleep(0.2)
 
     return(resp_df)
 
@@ -161,7 +162,7 @@ initialize_springer_country_query <- function(api_key){
     country_info = get_country_info()
 
     # query each country for each year
-    year_vec = 2012:2020
+    year_vec = 2005:2020
     country_vec = unique(country_info$country)
     batch_resp = batch_springer_country_query(year_vec, country_vec, api_key)
 
@@ -172,4 +173,4 @@ initialize_springer_country_query <- function(api_key){
 ### read in arguments
 args = commandArgs(trailingOnly=TRUE)
 api_key = args[1]
-initialize_springer_country_query(api_key)
+res = initialize_springer_country_query(api_key)

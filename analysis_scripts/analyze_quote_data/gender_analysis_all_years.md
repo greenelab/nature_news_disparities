@@ -87,7 +87,7 @@ head(full_quote_df)
     ## 2 434970a Arnold Sommerfeld       MALE     Edward Teller       Sommerfeld
     ## 3 438567a      Arthur Smith       MALE   Arthur E. Smith  Arthur E. Smith
     ## 4 437634a  Bertrand Russell       MALE  Bertrand Russell Bertrand Russell
-    ## 5 434029a             Boxma     NO_EST           Unknown            Boxma
+    ## 5 434029a             Boxma       MALE           Unknown            Boxma
     ## 6 438031a           Bradley       MALE     F. H. Bradley    F. H. Bradley
     ## 7 435748a            Brooks       MALE   C. E. P. Brooks  C. E. P. Brooks
     ##                                                                                          quote

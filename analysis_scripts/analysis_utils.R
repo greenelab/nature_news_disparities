@@ -1,6 +1,7 @@
 library(jsonlite)
 library(data.table)
 library(dplyr)
+library(here)
 
 
 proj_dir = here()
@@ -85,3 +86,130 @@ read_benchmark_location_file <- function(bm_loc_file){
 
 }
 
+
+
+#' Read in the gender-prediction from citation or background files
+#'
+#' @param full_data_df This is the full data to be explored
+#' @param conf_int Numeric, this is the range the Ci is calculated
+#' @return a dataframe of the CI estimates
+read_gender_files <- function(in_file){
+    in_df = data.frame(fread(in_file))
+    colnames(in_df)[which(colnames(in_df) == "guessed_gender")] = "est_gender"
+    in_df = subset(in_df, !is.na(year))
+    return(in_df)
+}
+
+
+#' Compute bootstrap CI
+#' this works by taking a random subset of articles per year
+#' and calculating the bootstrap mean, upperCI and lowerCI
+#' its assumed that there exists a column called est_gender
+#'
+#' @param full_data_df This is the full data to be explored
+#' @param year_col_id This is column name containing year to be selected by
+#' @param article_col_id This is column name containing article ids to be selected by
+#' @param conf_int between 0-1, this is the range the CI is calculated
+#' @return a dataframe of the CI estimates
+compute_bootstrap_gender <- function(full_data_df, year_col_id, article_col_id, conf_int){
+
+    set.seed(5)
+
+    in_df = data.frame(year = full_data_df[,year_col_id],
+                        art_id = full_data_df[,article_col_id],
+                        est_gender = full_data_df$est_gender)
+    
+    # we need to get a bootstrap sample for each year
+    quantile_res = data.frame(year=unique(in_df$year),
+                                bottom_CI = NA,
+                                top_CI = NA,
+                                mean = NA)
+    for(curr_year in unique(in_df$year)){
+        year_df = subset(in_df, year == curr_year)
+
+        year_df = aggregate(year_df$est_gender, list(year_df$art_id), function(x) c(sum(x=='MALE'), length(x)))
+        year_df = data.frame(as.matrix(year_df))
+        colnames(year_df) = c("art_id", "num_male", "num_total")
+        year_df$num_male = as.numeric(year_df$num_male)
+        year_df$num_total = as.numeric(year_df$num_total)
+
+        # get article id's to sample
+        curr_ids = unique(year_df$art_id)
+        bootstrap_size = length(curr_ids)
+        boot_res = rep(NA, 1000)
+        for(idx in 1:1000){
+
+            boot_samp = sample_n(year_df, nrow(year_df), replace=T)
+            percent_male = sum(boot_samp$num_male, na.rm=T) / 
+                            sum(boot_samp$num_total, na.rm=T)
+            boot_res[idx] = percent_male
+            
+        }
+
+        quantile_res[quantile_res$year == curr_year,] = 
+            data.frame(curr_year, 
+                        quantile(boot_res, 1-conf_int),
+                        quantile(boot_res, conf_int),
+                        mean(boot_res))
+
+    }
+
+    return(quantile_res)
+
+}
+
+#' Compute location bootstrap CI
+#' this works by taking a random subset of articles per year
+#' and calculating the bootstrap mean, upperCI and lowerCI
+#' its assumed that there exists a column called country
+#'
+#' @param full_data_df This is the full data to be explored
+#' @param year_col_id This is column name containing year to be selected by
+#' @param article_col_id This is column name containing article ids to be selected by
+#' @param conf_int between 0-1, this is the range the CI is calculated
+#' @return a dataframe of the CI estimates
+compute_bootstrap_location <- function(full_data_df, year_col_id, article_col_id, country_col_id, country_agg, conf_int){
+
+    set.seed(5)
+
+    in_df = data.frame(year = full_data_df[,year_col_id],
+                        art_id = full_data_df[,article_col_id],
+                        est_loc = full_data_df[,country_col_id])
+    
+    # we need to get a bootstrap sample for each year
+    quantile_res = data.frame(year=unique(in_df$year),
+                                bottom_CI = NA,
+                                top_CI = NA,
+                                mean = NA)
+    for(curr_year in unique(in_df$year)){
+        year_df = subset(in_df, year == curr_year)
+
+        year_df = aggregate(year_df$est_loc, list(year_df$art_id), function(x) any(x==country_agg))
+        year_df = data.frame(as.matrix(year_df))
+        colnames(year_df) = c("art_id", "is_country_present")
+        year_df$is_country_present[year_df$is_country_present == "TRUE"] = 1
+        year_df$is_country_present[year_df$is_country_present == "FALSE"] = 0
+        year_df$is_country_present = as.numeric(year_df$is_country_present)
+
+        # get article id's to sample
+        boot_res = rep(NA, 1000)
+        for(idx in 1:1000){
+
+            boot_samp = sample_n(year_df, nrow(year_df), replace=T)
+            percent_country = sum(boot_samp$is_country_present, na.rm=T) / 
+                            nrow(year_df)
+            boot_res[idx] = percent_country
+            
+        }
+
+        quantile_res[quantile_res$year == curr_year,] = 
+            data.frame(curr_year, 
+                        quantile(boot_res, 1-conf_int),
+                        quantile(boot_res, conf_int),
+                        mean(boot_res))
+
+    }
+
+    return(quantile_res)
+
+}

@@ -12,8 +12,10 @@ class NewsSpider(scrapy.Spider):
     def start_requests(self):
 
         year = int(self.target_year)
- 
-        url = 'https://www.nature.com/nature/articles?type=article&year=%d' % year
+        type_article = self.target_type
+
+        url = 'https://www.nature.com/nature/articles?type=%s&year=%d' % (type_article, year)
+
 
         yield scrapy.Request(url=url, callback=self.parse_article_list, cb_kwargs=dict(year=year), dont_filter=True)
 
@@ -34,7 +36,7 @@ class NewsSpider(scrapy.Spider):
 
 
         # also see if there's a next page and yield that, too
-        next_page = response.css('ol.pagination > li[data-page="next"] > a::attr(href)').get()
+        next_page = response.css('ul.c-pagination > li[data-page="next"] > a::attr(href)').get()
         if next_page is not None:
             next_page = response.urljoin(next_page)
             print("next page: %s" % next_page)
@@ -45,20 +47,32 @@ class NewsSpider(scrapy.Spider):
 
         import re
 
-        # get author names
-        author_items = response.css('ul.c-author-list > li')
+        # # get author names
 
-        authors = [
-            {
-                'name': x.css('span[itemprop="name"] > a::text').get(),
-                'affiliation': x.css('meta[itemprop="address"]::attr(content)').get().split(",", maxsplit=3)[3].strip()
-            }
-            for x in author_items
+        # get meta tags, process in order since there can be any number of citation_author_institutions following a citation_author
+        author_metas = response.css('meta[name^="citation_author"]')
+        authors = []
+        curAuthor = None
+        for meta in author_metas:
+            meta_name = meta.css('::attr(name)').get()
+            meta_content = meta.css('::attr(content)').get().strip()
+            if meta_name == 'citation_author':
+                if curAuthor:
+                    authors.append(curAuthor)
+                curAuthor = {'name': meta_content, 'affiliation': ''}
+            elif meta_name == 'citation_author_institution' and curAuthor is not None:
+                curAuthor['affiliation'] += ' ' + meta_content
+            else:
+                raise Exception("unrecognized meta tag %s with content %s" % (meta_name, meta_content))
+
+        authors_mapped = [
+            {'name': x['name'].strip(), 'affiliation': ", ".join(x['affiliation'].strip().split(",")[:]).strip()}
+            for x in authors
         ]
 
         yield {
            "file_id": response.url.split("/")[-1],
            "year": year,
-           "authors": authors
+           "authors": authors_mapped
         }
 

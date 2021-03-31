@@ -10,22 +10,25 @@ cd ${DIR}/nature_news_scraper
 
 # now crawl over the years of interest
 TARGET_YRS=($( seq 2005 2020  ))
-
+TARGET_TYPES=("article" "letter")
 
 for TARGET_YEAR in "${TARGET_YRS[@]}"
 do
+    for TARGET_TYPE in "${TARGET_TYPES[@]}"
+    do
+        # run for the news articles
+        JSON_OUT_FILE="${DIR}/../data/author_data/downloads/links_crawled_${TARGET_YEAR}_${TARGET_TYPE}.json"
 
-    # run for the news articles
-    JSON_OUT_FILE="${DIR}/../data/author_data/downloads/links_crawled_${TARGET_YEAR}.json"
+        if [[ -f "$JSON_OUT_FILE" ]]; then
+            echo "$JSON_OUT_FILE already exists. Skipping $TARGET_YEAR $TARGET_TYPE"
+            continue
+        fi
 
-    if [[ -f "$JSON_OUT_FILE" ]]; then
-        echo "$JSON_OUT_FILE already exists. Skipping $TARGET_YEAR"
-        continue
-    fi
+        # crawl
+        scrapy crawl author_crawl -O ${JSON_OUT_FILE} \
+        -a target_year=${TARGET_YEAR} -a target_type=${TARGET_TYPE}
+    done
 
-    # crawl
-    scrapy crawl author_crawl -O ${JSON_OUT_FILE} \
-    -a target_year=${TARGET_YEAR}
 
 done
 
