@@ -115,9 +115,9 @@ batch_springer_doi_rand_query <- function(author_dois_df, api_key){
         doi_vec = unique(curr_df$doi)
         # we can only do 5000 queries, so we will randomly choose 250 to query
         set.seed(5)
-        doi_vec = sample(doi_vec, 500)
+        doi_vec = sample(doi_vec, 250)
         idx = 1
-        for(chunk in doi_vec[251:500]){
+        for(chunk in doi_vec[1:250]){
             curr_resp = springer_doi_rand_query(chunk, curr_year, api_key)
             if(!is.na(curr_resp)){
                 batch_resp = rbind(batch_resp, curr_resp)

@@ -35,7 +35,7 @@ class NewsSpider(scrapy.Spider):
 
 
         # also see if there's a next page and yield that, too
-        next_page = response.css('ol.pagination > li[data-page="next"] > a::attr(href)').get()
+        next_page = response.css('ul.c-pagination > li[data-page="next"] > a::attr(href)').get()
         if next_page is not None:
             next_page = response.urljoin(next_page)
             print("next page: %s" % next_page)
@@ -55,8 +55,8 @@ class NewsSpider(scrapy.Spider):
         doi_re = re.compile(r"doi:10\.[.0-9]+/[^\s<>]+")
         text_doi = doi_re.findall(" ".join(refbox.getall()))
 
-        # starting in 2011, format changed
-        if year > 2010:
+        # starting around 2011, format changed
+        if len(text_doi) == 0 and len(href_doi) == 0 and year > 2010:
             # doi box in anchor tag
             doi_box = response.css('#references a')
             href_doi = [x.attrib.get('href') for x in doi_box if 'doi' in x.attrib.get('href', '')]
@@ -66,8 +66,15 @@ class NewsSpider(scrapy.Spider):
             doi_re = re.compile(r"doi:10\.[.0-9]+/[^\s<>]+")
             text_doi = doi_re.findall(" ".join(doi_re_url))
 
-
-
+        if len(text_doi) == 0 and len(href_doi) == 0:
+            # if it's *still* empty, it's probably b/c the refs box changed from id="references" to data-container-section="references"
+            doi_box = response.css('div[data-container-section="references"] a')
+            href_doi = [x.attrib.get('href') for x in doi_box if 'doi' in x.attrib.get('href', '')]
+            # doi in text, not hyperlinked      
+            refbox =  response.css('div[data-container-section="references"]')
+            doi_re_url = [re.sub(r"http[s]?://(dx[./])?doi\.org/", "doi:", x) for x in refbox.getall()]
+            doi_re = re.compile(r"doi:10\.[.0-9]+/[^\s<>]+")
+            text_doi = doi_re.findall(" ".join(doi_re_url))
 
         # format the doi's
         all_doi = set(re.sub(r"http[s]?://(dx[./])?doi\.org/", "doi:", x) for x in href_doi + text_doi)

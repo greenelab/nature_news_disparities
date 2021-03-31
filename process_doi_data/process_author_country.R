@@ -214,6 +214,43 @@ get_springer_bg <- function(){
 
 }
 
+#' Compute country bootstrap CI
+#' this works by taking a random subset of articles per year
+#' and calculating the bootstrap mean, upperCI and lowerCI
+#' its assumed that there exists a column called country
+#'
+#' @param sum_country This is the full data to be explored
+#' @return a dataframe of the CI estimates
+get_bootstrapped_CI_country_corpus <- function(sum_country){
+
+    # get the full country info
+    un_info = get_country_info()
+    country_df = merge(sum_country, un_info)
+
+    # for each country, in each corpus calculate the bootstrap CI
+    bootstrap_country_df = NA
+    for(curr_country in unique(country_df$country)){
+        print(curr_country)
+        for(curr_corpus in c("naturenews_mentions", "naturenews_citations")){
+            print(curr_corpus)
+
+            in_df = data.frame(subset(country_df, corpus==curr_corpus))
+            bootstrap_res = compute_bootstrap_location(
+                                in_df, 
+                                year_col_id = "year", 
+                                article_col_id = "file_id", 
+                                country_col_id = "country",
+                                country_agg = curr_country, 
+                                conf_int = 0.95)
+            bootstrap_res$country = curr_country
+            bootstrap_res$corpus = curr_corpus
+            bootstrap_country_df = rbind(bootstrap_country_df, bootstrap_res)
+        }
+    }
+    bootstrap_country_df = bootstrap_country_df[-1,]
+    return(bootstrap_country_df)
+}
+
 
 #' Read all json files to do the gender prediction
 #' the nature background authors
@@ -244,6 +281,10 @@ process_all_author_country <- function(nature_dir, cited_dois_dir, outdir){
     author_country_file = file.path(outdir, "all_author_country.tsv")
     write.table(sum_country, file=author_country_file, sep="\t", quote=F, row.names=F)
 
+    bootstrap_country_df = get_bootstrapped_CI_country_corpus(sum_country)
+    bootstrap_country_file = file.path(outdir, "all_author_country_95CI.tsv")
+    write.table(bootstrap_country_df, file=bootstrap_country_file, sep="\t", quote=F, row.names=F)
+
 
 }
 
@@ -254,4 +295,3 @@ cited_dois_dir = args[2]
 outdir = args[3]
 
 process_all_author_country(nature_dir, cited_dois_dir, outdir)
-

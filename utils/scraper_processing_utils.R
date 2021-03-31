@@ -1,6 +1,8 @@
 require(data.table)
 require(tidyr)
 require(here)
+require(jsonlite)
+require(humaniformat)
 
 proj_dir = here()
 ref_data_dir = paste(proj_dir, "/data/reference_data/", sep = "")
@@ -24,6 +26,69 @@ gender = c(NA, NA, NA, NA, NA,
             NA, NA, NA, NA, NA)
 
 pronouns_df = data.frame(pronouns, gender)
+
+#' read in JSON file and convert to dataframe
+#' 
+#' @param infile, JSON file path
+#' 
+#' @return json_res, dataframe version of JSON object
+read_json <- function(infile){
+
+    json_res <- tryCatch(
+        {
+           fromJSON(infile)
+        },
+        error=function(cond) {
+            message(paste("JSON file empty or error:", infile))
+            message("The original error message:")
+            message(cond)
+            return(NA)
+        }
+    )
+    json_res = data.frame(json_res)
+    return(json_res)
+
+}
+
+format_author_names_internal <- function(in_name){
+    # reverse name if needed
+    in_name = format_reverse(in_name)
+    in_name = format_period(in_name)
+    return(first_name(in_name))
+
+}
+
+format_author_names <- function(author_vec){
+
+    author_vec = unlist(lapply(author_vec, format_author_names_internal))
+
+    # now remove anything that looks like a consortium or not a name
+    non_name_check = "consortium|group|initiative|team|collab|committee|center|program|author|institute"
+    non_name_idx = grep(non_name_check, author_vec)
+    author_vec[non_name_idx] = ""
+
+
+    # now remove anything that looks like initials
+    # so this means it has at least 1 period or - and < 4 characters
+    non_name_idx = grep("[.-]", author_vec)
+    short_name_idx = which(unlist(lapply(author_vec, nchar)) < 4)
+    author_vec[intersect(non_name_idx, short_name_idx)] = ""
+
+    # now strip periods
+    author_vec = gsub("[.]", "", author_vec)
+
+    # or less than 3 characters
+    short_name_idx = which(unlist(lapply(author_vec, nchar)) < 3)
+    author_vec[short_name_idx] = ""
+
+
+    # make sure we are only getting the first name
+    author_vec = unlist(lapply(author_vec, function(x) unlist(str_split(x, " "))[1]))
+    
+
+    return(author_vec)
+}
+
 
 #' Format string version of a name
 #'
