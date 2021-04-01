@@ -213,3 +213,50 @@ compute_bootstrap_location <- function(full_data_df, year_col_id, article_col_id
     return(quantile_res)
 
 }
+
+
+#' Get the word frequencies from a JSON file containing
+#' file_ids and the body of an articles
+#'
+#' @param json_file This contains all the text from a specific year and news-type
+#' @param file_ids_pass optional parameter to only include specific file_ids
+#' @return word_freq a dataframe of word counts
+calc_word_freq <- function(json_file, file_ids_pass=NA){
+    
+        # read in the json
+        all_articles_df = read_json(json_file)
+        
+        # get the articles we are interested in
+        if(!is.na(file_ids_pass)){
+            all_articles_df = subset(all_articles_df, file_id %in% file_ids_pass)
+        }
+        all_articles_df = data.table(all_articles_df)
+        
+        # tokenize
+        all_articles_df <- all_articles_df %>%
+                unnest_tokens(word, body)
+        
+        # remove stop words
+        all_articles_df <- all_articles_df %>%
+                anti_join(stop_words)
+        
+        # make sure its ASCII
+        all_articles_df$word = iconv(all_articles_df$word, from = "UTF-8", to = "ASCII", sub = "")
+        
+        # remove punctuations
+        all_articles_df$word = gsub('[[:punct:] ]+', '', all_articles_df$word)
+        
+        # make sure its not a number
+        non_num = which(is.na(as.numeric(all_articles_df$word)))
+        all_articles_df = all_articles_df[non_num,]
+        
+        # make sure its not an empty string
+        non_whitespace = which(trimws(all_articles_df$word)!="")
+        all_articles_df = all_articles_df[non_whitespace,]
+
+        # get counts
+        word_freq = all_articles_df %>%
+                count(word, sort = TRUE)
+        
+        return(word_freq)
+}
