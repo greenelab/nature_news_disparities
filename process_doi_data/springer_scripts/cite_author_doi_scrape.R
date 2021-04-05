@@ -79,9 +79,6 @@ springer_doi_query <- function(doi_chunk, api_key){
 
     # add in missed DOIs
     all_dois = doi_chunk
-    if(!all(is.na(query_df))){
-        all_dois = union(doi_chunk, query_df$doi)
-    }
     if(!all(is.na(resp_df))){
         missed_dois = setdiff(all_dois, resp_df$doi)
     }else{
