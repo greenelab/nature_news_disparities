@@ -31,7 +31,7 @@ data(stop_words)
 
 This analysis will compare token frequencies between two types of Nature News articles.
 To identify the types of articles, we first identify which countries are cited more than mentioned and which countries are mentioned more than cited.
-This comparison is done on a per year basis.
+This comparison is across all years..
 After this, we will take the most exemplary of the 2 country classes (top mentions > cited: Class M & top mentions < cited: Class C).
 We will compare the token frequencies between a mention of Class C v M.
 
@@ -41,11 +41,11 @@ The all source text is here: `/data/scraped_data/downloads/*.json`
 
 The country mention to source articles id map here: `/data/scraped_data/location_table_raw_YEAR_ARTICLE-TYPE.tsv`
 
-## Get Top Class C and M Countries
+## Get Class C and M Countries
 
 #### Read in the raw country counts.
 
-```{r read_in_raw_counts, fig.align='center'}
+```{r read_in_raw_counts, fig.align='center', warning = FALSE, message = FALSE}
 # get the project directory, everything is set relative to this
 proj_dir = here()
 
@@ -115,7 +115,7 @@ ci_df = merge(un_info, ci_df)
 
 head(ci_df)
 
-# now filter for only the country-year pairings that have enough counts
+# merge together the article info + CI info
 ci_df = merge(raw_sum_df, ci_df)
 
 # show the spread of the mentions and citations
@@ -148,7 +148,7 @@ ggplot(subset(ci_df_cast, tot_citations > MIN_ART | tot_mentions > MIN_ART),
     geom_hline(yintercept = MIN_PROP, color="red") +
     geom_hline(yintercept = -1*MIN_PROP, color="red") +
     xlab("Corpus") + ylab("Mention % - Citation % for each country+year") +
-    ggtitle("Diff. between mentions and citations for each country and year") + 
+    ggtitle("Diff. btw mentions and citations for each country+year (1 point is a country)") + 
     scale_fill_brewer(palette="Set2")
 
 
@@ -160,6 +160,10 @@ top_diff_MC = subset(top_diff_MC, M_C > MIN_PROP | M_C < -1*MIN_PROP)
 ```
 
 #### Plot the top country-year pairings have a large difference in citations vs mentions
+
+In the previous plot, all countries that have at least one point outside of the red lines will be considered either class M (above top red line) or class C (below bottom red line).
+If a country is found in both groups across the years, it is removed from consideration in later downstream processing.
+Countries that are in both classes are shown in the heatmap as having both blue and yellow entries across the row.
 
 ```{r plot_filtered_countries, fig.align='center', fig.width=10, fig.height=10, warning = FALSE}
 
@@ -208,31 +212,38 @@ pheatmap(res_mention$plot_matr, cluster_rows = F,
          main = "Top (Mention - Citation), total mentions",
          color = res_mention$color_pmap, breaks = res_mention$breaks)
 
+# now make the 2 tables of countries that are cited more vs mentioned more
+# class C vs Class M
+class_c_counts = subset(top_diff_MC, M_C < 0, select=c("address.country_code", "year") )
+class_c_counts$class = "class_c" 
+class_c_counts$idx = paste(class_c_counts$address.country_code,
+                          class_c_counts$year, sep="_")
+class_c_counts$idx = class_c_counts$address.country_code
+class_m_counts = subset(top_diff_MC, M_C > 0, select=c("address.country_code", "year") )
+class_m_counts$class = "class_m" 
+class_m_counts$idx = paste(class_m_counts$address.country_code,
+                          class_m_counts$year, sep="_")
+class_m_counts$idx = class_m_counts$address.country_code
 
 ```
 
-## Compare tokens from Class C and M Country-Year pairs
+## Compare tokens from articles mentioning class C and M countries 
 
 #### Get the raw text ids for each class
 
 ```{r get_file_ids, fig.align='center', fig.width=10, fig.height=10, warning = FALSE}
 
-# for every country + year pair in our filtered table (top_diff_MC), get the associated raw file ids
-class_c_counts = subset(top_diff_MC, M_C < 0, select=c("address.country_code", "year") )
-class_c_counts$class = "class_c" 
-class_m_counts = subset(top_diff_MC, M_C > 0, select=c("address.country_code", "year") )
-class_m_counts$class = "class_m" 
-class_m_counts$idx = paste(class_m_counts$address.country_code,
-                          class_m_counts$year, sep="_")
+# for every country + year pair in our filtered table (top_diff_MC),
+# get the associated raw file ids with the articles' text
 
 
-# find all location estimates
+# read in the location - to - article information
 all_loc_files = list.files(file.path(proj_dir, "/data/scraped_data/"), 
                             pattern="location_table_raw",
                             recursive=F,
                             full.names=T)
 
-# read in all the file id's
+# read in all the files
 full_loc_df = NA
 for(loc_file in all_loc_files){
 
@@ -249,67 +260,106 @@ full_loc_df = subset(full_loc_df, est_un_region != "" &
                                         est_un_subregion != "NO_EST")
 colnames(full_loc_df)[1] = c("address.country_code")
 
-
-## filter for countries where they are mentioned more than once just for highest accuracy
+# for best accuracy, only include articles where a country-related noun 
+# was mentinoned more than once
 loc_dups = data.frame(table(full_loc_df$file_id, full_loc_df$address.country_code))
 loc_keep = subset(loc_dups, Freq > 1)
 full_loc_df$freq_idx = paste(full_loc_df$file_id, full_loc_df$address.country_code, sep="_")
 freq_pass = paste(loc_keep$Var1, loc_keep$Var2, sep="_")
-full_loc_df_no_mention_dup = subset(full_loc_df, freq_idx %in% freq_pass)
-
-
-# now get the file ids per class
-country_year_pass = unique(class_m_counts[,c("year", "address.country_code")])
-full_loc_df_pass = merge(country_year_pass, full_loc_df_no_mention_dup)
-
-
-
+full_mention_df = subset(full_loc_df, freq_idx %in% freq_pass)
+full_mention_df$file_idx = paste(full_mention_df$address.country_code,
+                      full_mention_df$year,
+                      full_mention_df$file_id, sep="_")
+full_mention_df$idx = paste(full_mention_df$address.country_code,
+                      full_mention_df$year, sep="_")
+full_mention_df$idx = full_mention_df$address.country_code
 
 ```
 
 #### Get the cited text ids for each class
 
+In order to only look at articles where a country is talked about 
+and not mentioned, we need to filter the mentino articles by cited articles.
+
 ```{r get_cited_file_ids, fig.align='center', fig.width=10, fig.height=10, warning = FALSE}
 
-    # all the cited articles
-    cited_country_file = file.path(proj_dir, 
-                                    "/data/author_data/cited_author_country.tsv")
-    cited_country_df = data.frame(fread(cited_country_file))
-    cited_country_df = subset(cited_country_df, country != "")
-    cited_country_df$country = format_country_names(cited_country_df$country)
-    
-    # format the countries
-    cited_country_df_formatted = get_author_country(cited_country_df)
-    cited_country_df_formatted = unique(cited_country_df_formatted)
+# all the cited articles
+cited_country_file = file.path(proj_dir, 
+                                "/data/author_data/cited_author_country.tsv")
+cited_country_df = data.frame(fread(cited_country_file))
+cited_country_df = subset(cited_country_df, country != "")
+cited_country_df$country = format_country_names(cited_country_df$country)
 
-    # we only care about if a country was cited in an article, 
-    # not how many times it was cited
-    cited_country_df_formatted$num_entries = 1
+# format the countries
+cited_country_df_formatted = get_author_country(cited_country_df)
+cited_country_df_formatted = unique(cited_country_df_formatted)
+
+# we only care about if a country was cited in an article, 
+# not how many times it was cited
+cited_country_df_formatted$num_entries = 1
 
 ```
 
 
-#### Now seperate the articles with a citation and with a mention
+#### Now separate the articles from class C and M
+
+We want to separate the articles into different sections:
+1) articles with class C country mentions
+2) articles with class M country mentions
+
+For both types of mention articles, we want to filter out an article from a country
+if it was cited in that same article.
 
 ```{r merge_mention_citation_file_ids, fig.align='center', fig.width=10, fig.height=10, warning = FALSE}
 
-    # all the cited articles
-    cited_loc = merge(unique(full_loc_df[,c("file_id", "year", "type")]),
-                      cited_country_df_formatted)
+# get all the cited articles
+cited_loc = merge(unique(full_mention_df[,c("file_id", "year", "type")]),
+                  cited_country_df_formatted)
+cited_loc$idx = paste(cited_loc$address.country_code,
+                      cited_loc$year, sep="_")
+cited_loc$idx = cited_loc$address.country_code
+cited_loc$file_idx = paste(cited_loc$address.country_code,
+                      cited_loc$year,
+                      cited_loc$file_id, sep="_")
 
-    cited_loc$idx = paste(cited_loc$address.country_code,
-                          cited_loc$year, sep="_")
-    class_m_citations = subset(cited_loc, idx %in% 
-                                   class_m_counts$idx)
+# get the cited articles from each class
+class_c_citations = subset(cited_loc, idx %in% 
+                               class_c_counts$idx)
+class_m_citations = subset(cited_loc, idx %in% 
+                               class_m_counts$idx)
     
+# now get the mention articles from each class
+class_c_mentions = subset(full_mention_df, idx %in% 
+                               class_c_counts$idx)
+class_m_mentions = subset(full_mention_df, idx %in% 
+                               class_m_counts$idx)
 
+# filter the mentions by the citations
+class_c_mentions = subset(class_c_mentions, 
+                          !file_idx %in% class_c_citations$file_idx )
+class_m_mentions = subset(class_m_mentions, 
+                          !file_idx %in% class_m_citations$file_idx )
+
+# filter out 2020 for this analysis to avoind covid terms
+class_c_mentions = subset(class_c_mentions, year != 2020)
+class_m_mentions = subset(class_m_mentions, year != 2020)
+
+# filter out countries that may be in both class_c and class_m
+# this can be caused by mentions and citations being significantly
+# different across years (sometimes M >> C, sometimes C << M)
+country_overlap = intersect(class_c_mentions$address.country_code,
+                            class_m_mentions$address.country_code)
+class_c_mentions = subset(class_c_mentions, 
+                          !address.country_code %in% country_overlap )
+class_m_mentions = subset(class_m_mentions, 
+                          !address.country_code %in% country_overlap )
 ```
 
 
 
 #### Function to calculate word frequencies from raw text for each class
 
-```{r method_word_freq_raw_text, fig.align='center', fig.width=10, fig.height=10, warning = FALSE}
+```{r method_word_freq_raw_text, fig.align='center', fig.width=10, fig.height=10, warning = FALSE, message = FALSE}
 
 
 #' Get the word frequencies across multiple JSON files containing
@@ -364,53 +414,57 @@ get_word_freq_per_class <- function(class_ids, class_str){
     return(class_word_freq)
 }
 
+
+# get the word frequencies for each class of country
+class_all_word_freq = get_word_freq_per_class(full_mention_df, class_str = "class_all")
+
+print(head(class_all_word_freq))
+
 ```
 
-#### Calculate word frequencies for Class C
+## Calculate word frequencies for each class
+
+Here, we will go through each country, finding the words most specific to articles mentioning this country, but not citing it.
+This is calculated by finding terms that have the highest the larget ratio: term in country specific articles / term over all articles.
+Then, we will take the top 100 terms per country, and see which terms show up the most across all countries.
+This will give us an indication of how class C countries are talked about vs how class M countries are talked about.
+
+#### Class C
+
 
 ```{r calc_word_freq_citations, fig.align='center', fig.width=10, fig.height=10, warning = FALSE, message = FALSE}
 
 
-# get the word frequencies for each class of country
-class_all_word_freq = get_word_freq_per_class(full_loc_df_pass, class_str = "class_all")
-
-class_m_citations = subset(class_m_citations, address.country_code %in% class_m_ids$address.country_code)
 top_words_c = list()
-top_words_m = list()
 # write out top words for each country
-for(curr_country in unique(class_m_citations$address.country_code)){
-    class_c_word_freq = get_word_freq_per_class(
-                            subset(class_m_citations, address.country_code == curr_country), 
-                            class_str = "class_c")
-     class_m_word_freq = get_word_freq_per_class(
-                            subset(class_m_ids, address.country_code == curr_country), 
-                            class_str = "class_m")
-     per_class_word_freq = merge(data.table(class_c_word_freq), 
-                                data.table(class_m_word_freq), by="word")
-     per_class_word_freq = merge(data.table(per_class_word_freq), 
-                                data.table(class_all_word_freq), by="word")
+for(curr_country in unique(class_c_mentions$address.country_code)){
     
+    # get the word freq for class C mentions
+    class_c_word_freq = get_word_freq_per_class(
+                            subset(class_c_mentions, address.country_code == curr_country), 
+                            class_str = "class_c")
+     
+    # merge with the word freq for entire corpus
+     per_class_word_freq = merge(data.table(class_c_word_freq), 
+                                data.table(class_all_word_freq), by="word")
+     
         
-    # it should be more than 100 in at least one corpus
+    # word should be used at least 100 time in the full corpus
     per_class_word_freq = subset(per_class_word_freq, class_all_count > 100)
         
-    per_class_word_freq$ratioC = per_class_word_freq$class_c_count / 
+    # get the word frequency scaled by corpus frequency
+    per_class_word_freq$ratio = per_class_word_freq$class_c_count / 
                                 per_class_word_freq$class_all_count
-    per_class_word_freq$ratioM = per_class_word_freq$class_m_count / 
-                                per_class_word_freq$class_all_count
-    per_class_word_freq$ratio = per_class_word_freq$ratioC / 
-                                per_class_word_freq$ratioM    
-    
+      
+    # write out top words per country
     per_class_word_freq = per_class_word_freq[order(per_class_word_freq$ratio, decreasing=T),]
     print(knitr::kable(head(per_class_word_freq,15), 
                  caption = paste(curr_country, "Class Citation, top terms")))
+    
+    # save top words
     top_words_c[[curr_country]] = per_class_word_freq$word[1:min(nrow(per_class_word_freq), 100)]
     
     
-    per_class_word_freq = per_class_word_freq[order(per_class_word_freq$ratio, decreasing=F),]
-    print(knitr::kable(head(per_class_word_freq,15), 
-                 caption = paste(curr_country, "Class Mention, top terms")))
-    top_words_m[[curr_country]] = per_class_word_freq$word[1:min(nrow(per_class_word_freq), 100)]
 
 }
 top_words_c_freq = data.frame(sort(table(unlist(top_words_c)), decreasing=T))
@@ -418,43 +472,49 @@ top_words_c_freq$prop = top_words_c_freq$Freq / length(top_words_c)
 print(knitr::kable(head(top_words_c_freq,15), 
                        caption = "Overall Class Citation, top terms"))
 
-top_words_m_freq = data.frame(sort(table(unlist(top_words_m)), decreasing=T))
-top_words_m_freq$prop = top_words_m_freq$Freq / length(top_words_m)
-print(knitr::kable(head(top_words_m_freq,15), 
-                       caption = "Overall Class Mention, top terms"))
-
 ```
 
-#### Calculate word frequencies for Class M
+## Calculate word frequencies for Class M
 
 ```{r calc_word_freq_mentions, fig.align='center', fig.width=10, fig.height=10, warning = FALSE, message = FALSE}
 
-# write out top words for each country
+# first remove all cited articles from the articles with a mention
+
 top_words_m = list()
-for(curr_country in unique(class_m_ids$est_country)){
-    class_m_word_freq = get_word_freq_per_class(
-                            subset(class_m_ids, est_country == curr_country), 
-                            class_str = "class_m")
-    per_class_word_freq = merge(data.table(class_m_word_freq), 
-                                data.table(class_all_word_freq), by="word")
+# write out top words for each country
+for(curr_country in unique(class_m_mentions$address.country_code)){
     
+    # get the word freq for class C mentions
+    class_m_word_freq = get_word_freq_per_class(
+                            subset(class_m_mentions, address.country_code == curr_country), 
+                            class_str = "class_m")
+     
+    # merge with the word freq for entire corpus
+     per_class_word_freq = merge(data.table(class_m_word_freq), 
+                                data.table(class_all_word_freq), by="word")
+     
         
-    # it should be more than 100 in at least one corpus
+    # word should be used at least 100 time in the full corpus
     per_class_word_freq = subset(per_class_word_freq, class_all_count > 100)
         
+    # get the word frequency scaled by corpus frequency
     per_class_word_freq$ratio = per_class_word_freq$class_m_count / 
                                 per_class_word_freq$class_all_count
-    
+      
+    # write out top words per country
     per_class_word_freq = per_class_word_freq[order(per_class_word_freq$ratio, decreasing=T),]
     print(knitr::kable(head(per_class_word_freq,15), 
-                       caption = paste(curr_country, "Class Mention, top terms")))
+                 caption = paste(curr_country, "Class Mention, top terms")))
+    
+    # save top words
     top_words_m[[curr_country]] = per_class_word_freq$word[1:min(nrow(per_class_word_freq), 100)]
+    
+    
 
 }
 top_words_m_freq = data.frame(sort(table(unlist(top_words_m)), decreasing=T))
 top_words_m_freq$prop = top_words_m_freq$Freq / length(top_words_m)
 print(knitr::kable(head(top_words_m_freq,15), 
                        caption = "Overall Class Mention, top terms"))
-
 
 ```

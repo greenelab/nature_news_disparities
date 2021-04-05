@@ -5,7 +5,7 @@ Natalie Davidson
 
 ## Data Description
 
-This analysis will compare token frequencies between two types of Nature News articles. To identify the types of articles, we first identify which countries are cited more than mentioned and which countries are mentioned more than cited. This comparison is done on a per year basis. After this, we will take the most exemplary of the 2 country classes (top mentions &gt; cited: Class M & top mentions &lt; cited: Class C). We will compare the token frequencies between a mention of Class C v M.
+This analysis will compare token frequencies between two types of Nature News articles. To identify the types of articles, we first identify which countries are cited more than mentioned and which countries are mentioned more than cited. This comparison is across all years.. After this, we will take the most exemplary of the 2 country classes (top mentions &gt; cited: Class M & top mentions &lt; cited: Class C). We will compare the token frequencies between a mention of Class C v M.
 
 The source data file for a bootstrap estimate of country mentions and citations: `/data/author_data/all_author_country_95CI.tsv`
 
@@ -13,7 +13,7 @@ The all source text is here: `/data/scraped_data/downloads/*.json`
 
 The country mention to source articles id map here: `/data/scraped_data/location_table_raw_YEAR_ARTICLE-TYPE.tsv`
 
-## Get Top Class C and M Countries
+## Get Class C and M Countries
 
 #### Read in the raw country counts.
 
@@ -59,11 +59,6 @@ mention_total = unique(subset(raw_df,
 tot_country_mention = mention_total %>% 
                 group_by(year, address.country_code) %>% 
                 summarise(n()) 
-```
-
-    ## `summarise()` has grouped output by 'year'. You can override using the `.groups` argument.
-
-``` r
 tot_country_mention$corpus = "naturenews_mentions"
 colnames(tot_country_mention)[3] = "total"
 
@@ -73,11 +68,6 @@ citation_total = unique(subset(raw_df,
 tot_country_citation = citation_total %>% 
                 group_by(year, address.country_code) %>% 
                 summarise(n()) 
-```
-
-    ## `summarise()` has grouped output by 'year'. You can override using the `.groups` argument.
-
-``` r
 tot_country_citation$corpus = "naturenews_citations"
 colnames(tot_country_citation)[3] = "total"
 
@@ -130,7 +120,7 @@ head(ci_df)
     ## 6      0    0 naturenews_citations
 
 ``` r
-# now filter for only the country-year pairings that have enough counts
+# merge together the article info + CI info
 ci_df = merge(raw_sum_df, ci_df)
 
 # show the spread of the mentions and citations
@@ -171,7 +161,7 @@ ggplot(subset(ci_df_cast, tot_citations > MIN_ART | tot_mentions > MIN_ART),
     geom_hline(yintercept = MIN_PROP, color="red") +
     geom_hline(yintercept = -1*MIN_PROP, color="red") +
     xlab("Corpus") + ylab("Mention % - Citation % for each country+year") +
-    ggtitle("Diff. between mentions and citations for each country and year") + 
+    ggtitle("Diff. btw mentions and citations for each country+year (1 point is a country)") + 
     scale_fill_brewer(palette="Set2")
 ```
 
@@ -184,6 +174,8 @@ top_diff_MC = subset(top_diff_MC, M_C > MIN_PROP | M_C < -1*MIN_PROP)
 ```
 
 #### Plot the top country-year pairings have a large difference in citations vs mentions
+
+In the previous plot, all countries that have at least one point outside of the red lines will be considered either class M (above top red line) or class C (below bottom red line). If a country is found in both groups across the years, it is removed from consideration in later downstream processing. Countries that are in both classes are shown in the heatmap as having both blue and yellow entries across the row.
 
 ``` r
 make_heatmap_res <- function(in_df, value_col){
@@ -242,26 +234,37 @@ pheatmap(res_mention$plot_matr, cluster_rows = F,
 
 <img src="mention_v_citation_files/figure-markdown_github/plot_filtered_countries-3.png" style="display: block; margin: auto;" />
 
-## Compare tokens from Class C and M Country-Year pairs
+``` r
+# now make the 2 tables of countries that are cited more vs mentioned more
+# class C vs Class M
+class_c_counts = subset(top_diff_MC, M_C < 0, select=c("address.country_code", "year") )
+class_c_counts$class = "class_c" 
+class_c_counts$idx = paste(class_c_counts$address.country_code,
+                          class_c_counts$year, sep="_")
+class_c_counts$idx = class_c_counts$address.country_code
+class_m_counts = subset(top_diff_MC, M_C > 0, select=c("address.country_code", "year") )
+class_m_counts$class = "class_m" 
+class_m_counts$idx = paste(class_m_counts$address.country_code,
+                          class_m_counts$year, sep="_")
+class_m_counts$idx = class_m_counts$address.country_code
+```
+
+## Compare tokens from articles mentioning class C and M countries
 
 #### Get the raw text ids for each class
 
 ``` r
-# for every country + year pair in our filtered table (top_diff_MC), get the associated raw file ids
-class_c_counts = subset(top_diff_MC, M_C < 0 )
-class_c_counts$idx = paste(class_c_counts$address.country_code, 
-                             class_c_counts$year, sep="_")
-class_m_counts = subset(top_diff_MC, M_C > 0 )
-class_m_counts$idx = paste(class_m_counts$address.country_code, 
-                             class_m_counts$year, sep="_")
+# for every country + year pair in our filtered table (top_diff_MC),
+# get the associated raw file ids with the articles' text
 
-# find all location estimates
+
+# read in the location - to - article information
 all_loc_files = list.files(file.path(proj_dir, "/data/scraped_data/"), 
                             pattern="location_table_raw",
                             recursive=F,
                             full.names=T)
 
-# read in all the file id's
+# read in all the files
 full_loc_df = NA
 for(loc_file in all_loc_files){
 
@@ -276,139 +279,98 @@ full_loc_df = subset(full_loc_df, est_un_region != "" &
                                         est_un_subregion != "" &
                                         est_un_region != "NO_EST" & 
                                         est_un_subregion != "NO_EST")
-
-# now get the file ids per class
-country_year_pass = unique(top_diff_MC[,c("year", "address.country_code")])
 colnames(full_loc_df)[1] = c("address.country_code")
-full_loc_df_pass = merge(country_year_pass, full_loc_df) 
-full_loc_df_pass$idx = paste(full_loc_df_pass$address.country_code, 
-                             full_loc_df_pass$year, sep="_")
 
-# this means that its not a year-country pair, but only a country over all time
-class_c_ids = subset(full_loc_df_pass, address.country_code %in% unique(class_c_counts$address.country_code))
-class_m_ids = subset(full_loc_df_pass, address.country_code %in% unique(class_m_counts$address.country_code))
-
-head(class_c_ids)
+# for best accuracy, only include articles where a country-related noun 
+# was mentinoned more than once
+loc_dups = data.frame(table(full_loc_df$file_id, full_loc_df$address.country_code))
+loc_keep = subset(loc_dups, Freq > 1)
+full_loc_df$freq_idx = paste(full_loc_df$file_id, full_loc_df$address.country_code, sep="_")
+freq_pass = paste(loc_keep$Var1, loc_keep$Var2, sep="_")
+full_mention_df = subset(full_loc_df, freq_idx %in% freq_pass)
+full_mention_df$file_idx = paste(full_mention_df$address.country_code,
+                      full_mention_df$year,
+                      full_mention_df$file_id, sep="_")
+full_mention_df$idx = paste(full_mention_df$address.country_code,
+                      full_mention_df$year, sep="_")
+full_mention_df$idx = full_mention_df$address.country_code
 ```
 
-    ##   year address.country_code        file_id
-    ## 1 2005                   ch        437468a
-    ## 2 2005                   ch 051010-13.html
-    ## 3 2005                   ch        438151a
-    ## 4 2005                   ch        436456a
-    ## 5 2005                   ch 050221-17.html
-    ## 6 2005                   ch 050124-12.html
-    ##                                    text          ner est_country est_un_region
-    ## 1 swiss federal institute of technology ORGANIZATION Switzerland        Europe
-    ## 2                           switzerland      COUNTRY Switzerland        Europe
-    ## 3                  university of zürich ORGANIZATION Switzerland        Europe
-    ## 4   university of geneva medical centre ORGANIZATION Switzerland        Europe
-    ## 5                           switzerland      COUNTRY Switzerland        Europe
-    ## 6                  world economic forum ORGANIZATION Switzerland        Europe
-    ##   est_un_subregion         type     idx
-    ## 1   Western Europe news-feature ch_2005
-    ## 2   Western Europe         news ch_2005
-    ## 3   Western Europe news-feature ch_2005
-    ## 4   Western Europe news-feature ch_2005
-    ## 5   Western Europe         news ch_2005
-    ## 6   Western Europe         news ch_2005
+#### Get the cited text ids for each class
+
+In order to only look at articles where a country is talked about and not mentioned, we need to filter the mentino articles by cited articles.
 
 ``` r
-head(class_m_ids)
+# all the cited articles
+cited_country_file = file.path(proj_dir, 
+                                "/data/author_data/cited_author_country.tsv")
+cited_country_df = data.frame(fread(cited_country_file))
+cited_country_df = subset(cited_country_df, country != "")
+cited_country_df$country = format_country_names(cited_country_df$country)
+
+# format the countries
+cited_country_df_formatted = get_author_country(cited_country_df)
 ```
 
-    ##     year address.country_code       file_id                             text
-    ## 605 2005                   gb 050815-2.html                               uk
-    ## 606 2005                   gb       434262a centre for ecology and hydrology
-    ## 607 2005                   gb       438716a                           oxford
-    ## 608 2005                   gb       435235b                    sigma-aldrich
-    ## 609 2005                   gb       437456a                               uk
-    ## 610 2005                   gb       435237a                               uk
-    ##              ner    est_country est_un_region est_un_subregion
-    ## 605      COUNTRY United Kingdom        Europe  Northern Europe
-    ## 606 ORGANIZATION United Kingdom        Europe  Northern Europe
-    ## 607 ORGANIZATION United Kingdom        Europe  Northern Europe
-    ## 608 ORGANIZATION United Kingdom        Europe  Northern Europe
-    ## 609      COUNTRY United Kingdom        Europe  Northern Europe
-    ## 610      COUNTRY United Kingdom        Europe  Northern Europe
-    ##                   type     idx
-    ## 605               news gb_2005
-    ## 606               news gb_2005
-    ## 607               news gb_2005
-    ## 608 technology-feature gb_2005
-    ## 609               news gb_2005
-    ## 610 technology-feature gb_2005
+    ## Loading required package: tmaptools
 
 ``` r
-## filter for countries where they are mentioned more than once just for highest accuracy
-class_c_ids_dups = data.frame(table(class_c_ids$file_id, class_c_ids$address.country_code))
-class_c_ids_keep = subset(class_c_ids_dups, Freq > 1)
-class_c_ids$freq_idx = paste(class_c_ids$file_id, class_c_ids$address.country_code, sep="_")
-freq_pass = paste(class_c_ids_keep$Var1, class_c_ids_keep$Var2, sep="_")
-class_c_ids = subset(class_c_ids, freq_idx %in% freq_pass)
+cited_country_df_formatted = unique(cited_country_df_formatted)
 
-class_m_ids_dups = data.frame(table(class_m_ids$file_id, class_m_ids$address.country_code))
-class_m_ids_keep = subset(class_m_ids_dups, Freq > 1)
-class_m_ids$freq_idx = paste(class_m_ids$file_id, class_m_ids$address.country_code, sep="_")
-freq_pass = paste(class_m_ids_keep$Var1, class_m_ids_keep$Var2, sep="_")
-class_m_ids = subset(class_m_ids, freq_idx %in% freq_pass)
-
-
-# remove any files that are in the overlap
-files_in_both = intersect(class_c_ids$file_id, class_m_ids$file_id)
-class_c_ids = subset(class_c_ids, !file_id %in% files_in_both)
-class_m_ids = subset(class_m_ids, !file_id %in% files_in_both)
-
-head(class_c_ids)
+# we only care about if a country was cited in an article, 
+# not how many times it was cited
+cited_country_df_formatted$num_entries = 1
 ```
 
-    ##    year address.country_code        file_id                 text          ner
-    ## 2  2005                   ch 051010-13.html          switzerland      COUNTRY
-    ## 6  2005                   ch 050124-12.html world economic forum ORGANIZATION
-    ## 10 2005                   ch  050509-7.html university of zurich ORGANIZATION
-    ## 11 2005                   ch        436772a          switzerland      COUNTRY
-    ## 12 2005                   ch  050509-7.html          switzerland      COUNTRY
-    ## 13 2005                   ch  050822-7.html  university of basel ORGANIZATION
-    ##    est_country est_un_region est_un_subregion         type     idx
-    ## 2  Switzerland        Europe   Western Europe         news ch_2005
-    ## 6  Switzerland        Europe   Western Europe         news ch_2005
-    ## 10 Switzerland        Europe   Western Europe         news ch_2005
-    ## 11 Switzerland        Europe   Western Europe news-feature ch_2005
-    ## 12 Switzerland        Europe   Western Europe         news ch_2005
-    ## 13 Switzerland        Europe   Western Europe         news ch_2005
-    ##             freq_idx
-    ## 2  051010-13.html_ch
-    ## 6  050124-12.html_ch
-    ## 10  050509-7.html_ch
-    ## 11        436772a_ch
-    ## 12  050509-7.html_ch
-    ## 13  050822-7.html_ch
+#### Now separate the articles from class C and M
+
+We want to separate the articles into different sections: 1) articles with class C country mentions 2) articles with class M country mentions
+
+For both types of mention articles, we want to filter out an article from a country if it was cited in that same article.
 
 ``` r
-head(class_m_ids)
-```
+# get all the cited articles
+cited_loc = merge(unique(full_mention_df[,c("file_id", "year", "type")]),
+                  cited_country_df_formatted)
+cited_loc$idx = paste(cited_loc$address.country_code,
+                      cited_loc$year, sep="_")
+cited_loc$idx = cited_loc$address.country_code
+cited_loc$file_idx = paste(cited_loc$address.country_code,
+                      cited_loc$year,
+                      cited_loc$file_id, sep="_")
 
-    ##      year address.country_code file_id                               text
-    ## 1677 2005                   in 436168a                              india
-    ## 1678 2005                   in 436168a indian space research organisation
-    ## 1680 2005                   in 434259a        department of biotechnology
-    ## 1682 2005                   in 436161a                              india
-    ## 1683 2005                   in 433675a        jawaharlal nehru university
-    ## 1685 2005                   in 436446a      bhabha atomic research center
-    ##               ner est_country est_un_region est_un_subregion         type
-    ## 1677      COUNTRY       India          Asia    Southern Asia news-feature
-    ## 1678 ORGANIZATION       India          Asia    Southern Asia news-feature
-    ## 1680 ORGANIZATION       India          Asia    Southern Asia         news
-    ## 1682      COUNTRY       India          Asia    Southern Asia         news
-    ## 1683 ORGANIZATION       India          Asia    Southern Asia         news
-    ## 1685 ORGANIZATION       India          Asia    Southern Asia         news
-    ##          idx   freq_idx
-    ## 1677 in_2005 436168a_in
-    ## 1678 in_2005 436168a_in
-    ## 1680 in_2005 434259a_in
-    ## 1682 in_2005 436161a_in
-    ## 1683 in_2005 433675a_in
-    ## 1685 in_2005 436446a_in
+# get the cited articles from each class
+class_c_citations = subset(cited_loc, idx %in% 
+                               class_c_counts$idx)
+class_m_citations = subset(cited_loc, idx %in% 
+                               class_m_counts$idx)
+    
+# now get the mention articles from each class
+class_c_mentions = subset(full_mention_df, idx %in% 
+                               class_c_counts$idx)
+class_m_mentions = subset(full_mention_df, idx %in% 
+                               class_m_counts$idx)
+
+# filter the mentions by the citations
+class_c_mentions = subset(class_c_mentions, 
+                          !file_idx %in% class_c_citations$file_idx )
+class_m_mentions = subset(class_m_mentions, 
+                          !file_idx %in% class_m_citations$file_idx )
+
+# filter out 2020 for this analysis to avoind covid terms
+class_c_mentions = subset(class_c_mentions, year != 2020)
+class_m_mentions = subset(class_m_mentions, year != 2020)
+
+# filter out countries that may be in both class_c and class_m
+# this can be caused by mentions and citations being significantly
+# different across years (sometimes M >> C, sometimes C << M)
+country_overlap = intersect(class_c_mentions$address.country_code,
+                            class_m_mentions$address.country_code)
+class_c_mentions = subset(class_c_mentions, 
+                          !address.country_code %in% country_overlap )
+class_m_mentions = subset(class_m_mentions, 
+                          !address.country_code %in% country_overlap )
+```
 
 #### Function to calculate word frequencies from raw text for each class
 
@@ -464,452 +426,491 @@ get_word_freq_per_class <- function(class_ids, class_str){
      
     return(class_word_freq)
 }
+
+
+# get the word frequencies for each class of country
+class_all_word_freq = get_word_freq_per_class(full_mention_df, class_str = "class_all")
+
+print(head(class_all_word_freq))
 ```
 
-#### Calculate word frequencies for Class C
+    ## # A tibble: 6 x 2
+    ##   word        class_all_count
+    ##   <chr>                 <int>
+    ## 1 research              38300
+    ## 2 university            36852
+    ## 3 researchers           31780
+    ## 4 science               23086
+    ## 5 scientists            22078
+    ## 6 data                  21857
+
+## Calculate word frequencies for each class
+
+Here, we will go through each country, finding the words most specific to articles mentioning this country, but not citing it. This is calculated by finding terms that have the highest the larget ratio: term in country specific articles / term over all articles. Then, we will take the top 100 terms per country, and see which terms show up the most across all countries. This will give us an indication of how class C countries are talked about vs how class M countries are talked about.
+
+#### Class C
 
 ``` r
-# get the word frequencies for each class of country
-class_all_word_freq = get_word_freq_per_class(full_loc_df_pass, class_str = "class_all")
-
 top_words_c = list()
 # write out top words for each country
-for(curr_country in unique(class_c_ids$est_country)){
-    class_c_word_freq = get_word_freq_per_class(
-                            subset(class_c_ids, est_country == curr_country), 
-                            class_str = "class_c")
-    per_class_word_freq = merge(data.table(class_c_word_freq), 
-                                data.table(class_all_word_freq), by="word")
+for(curr_country in unique(class_c_mentions$address.country_code)){
     
+    # get the word freq for class C mentions
+    class_c_word_freq = get_word_freq_per_class(
+                            subset(class_c_mentions, address.country_code == curr_country), 
+                            class_str = "class_c")
+     
+    # merge with the word freq for entire corpus
+     per_class_word_freq = merge(data.table(class_c_word_freq), 
+                                data.table(class_all_word_freq), by="word")
+     
         
-    # it should be more than 100 in at least one corpus
+    # word should be used at least 100 time in the full corpus
     per_class_word_freq = subset(per_class_word_freq, class_all_count > 100)
         
+    # get the word frequency scaled by corpus frequency
     per_class_word_freq$ratio = per_class_word_freq$class_c_count / 
                                 per_class_word_freq$class_all_count
-    
+      
+    # write out top words per country
     per_class_word_freq = per_class_word_freq[order(per_class_word_freq$ratio, decreasing=T),]
     print(knitr::kable(head(per_class_word_freq,15), 
                  caption = paste(curr_country, "Class Citation, top terms")))
+    
+    # save top words
     top_words_c[[curr_country]] = per_class_word_freq$word[1:min(nrow(per_class_word_freq), 100)]
+    
+    
 
 }
 ```
 
     ## 
     ## 
-    ## Table: Switzerland Class Citation, top terms
+    ## Table: ca Class Citation, top terms
     ## 
-    ## |word        | class_c_count| class_all_count|     ratio|
-    ## |:-----------|-------------:|---------------:|---------:|
-    ## |measles     |            37|             165| 0.2242424|
-    ## |printing    |            39|             199| 0.1959799|
-    ## |prions      |            28|             166| 0.1686747|
-    ## |obese       |            16|             104| 0.1538462|
-    ## |printed     |            25|             174| 0.1436782|
-    ## |predatory   |            15|             109| 0.1376147|
-    ## |facial      |            38|             285| 0.1333333|
-    ## |drc         |            28|             219| 0.1278539|
-    ## |lizards     |            13|             104| 0.1250000|
-    ## |cov         |            55|             503| 0.1093439|
-    ## |basel       |            15|             142| 0.1056338|
-    ## |emotions    |            13|             137| 0.0948905|
-    ## |expressions |            11|             116| 0.0948276|
-    ## |spike       |            21|             228| 0.0921053|
-    ## |radius      |            16|             175| 0.0914286|
-    ## 
-    ## 
-    ## Table: Germany Class Citation, top terms
-    ## 
-    ## |word        | class_c_count| class_all_count|     ratio|
-    ## |:-----------|-------------:|---------------:|---------:|
-    ## |leipzig     |            63|             133| 0.4736842|
-    ## |neanderthal |           150|             371| 0.4043127|
-    ## |munich      |           106|             289| 0.3667820|
-    ## |heidelberg  |            64|             178| 0.3595506|
-    ## |germanys    |           100|             279| 0.3584229|
-    ## |tectonics   |            41|             115| 0.3565217|
-    ## |gran        |            43|             123| 0.3495935|
-    ## |refugees    |            57|             164| 0.3475610|
-    ## |meyer       |            47|             140| 0.3357143|
-    ## |confocal    |            34|             104| 0.3269231|
-    ## |denisovans  |            44|             138| 0.3188406|
-    ## |sasso       |            33|             104| 0.3173077|
-    ## |reich       |            37|             122| 0.3032787|
-    ## |max         |           236|             779| 0.3029525|
-    ## |chimps      |            88|             296| 0.2972973|
+    ## |word      | class_c_count| class_all_count|     ratio|
+    ## |:---------|-------------:|---------------:|---------:|
+    ## |blogentry |           118|             124| 0.9516129|
+    ## |alberta   |           185|             218| 0.8486239|
+    ## |ontario   |           246|             308| 0.7987013|
+    ## |sands     |            90|             115| 0.7826087|
+    ## |edmonton  |            86|             111| 0.7747748|
+    ## |canadas   |           154|             207| 0.7439614|
+    ## |ottawa    |           109|             150| 0.7266667|
+    ## |ut        |           141|             203| 0.6945813|
+    ## |mcgill    |           117|             176| 0.6647727|
+    ## |canadian  |           392|             627| 0.6251994|
+    ## |tar       |            75|             122| 0.6147541|
+    ## |canada    |          1466|            2433| 0.6025483|
+    ## |ddt       |            62|             105| 0.5904762|
+    ## |fraser    |            68|             120| 0.5666667|
+    ## |newline   |           123|             221| 0.5565611|
     ## 
     ## 
-    ## Table: France Class Citation, top terms
+    ## Table: ch Class Citation, top terms
+    ## 
+    ## |word          | class_c_count| class_all_count|     ratio|
+    ## |:-------------|-------------:|---------------:|---------:|
+    ## |msf           |            71|             132| 0.5378788|
+    ## |eth           |            72|             137| 0.5255474|
+    ## |basel         |            88|             185| 0.4756757|
+    ## |lausanne      |            69|             155| 0.4451613|
+    ## |novartis      |            92|             217| 0.4239631|
+    ## |zurich        |           161|             405| 0.3975309|
+    ## |swiss         |           219|             623| 0.3515249|
+    ## |perovskite    |            41|             117| 0.3504274|
+    ## |roche         |            74|             212| 0.3490566|
+    ## |switzerland   |           435|            1266| 0.3436019|
+    ## |athletes      |            44|             155| 0.2838710|
+    ## |astrocytes    |            32|             116| 0.2758621|
+    ## |rnai          |            59|             239| 0.2468619|
+    ## |olympic       |            27|             110| 0.2454545|
+    ## |immunotherapy |            33|             137| 0.2408759|
+    ## 
+    ## 
+    ## Table: de Class Citation, top terms
+    ## 
+    ## |word       | class_c_count| class_all_count|     ratio|
+    ## |:----------|-------------:|---------------:|---------:|
+    ## |dfg        |           112|             125| 0.8960000|
+    ## |germanys   |           231|             322| 0.7173913|
+    ## |leipzig    |            99|             139| 0.7122302|
+    ## |munich     |           194|             315| 0.6158730|
+    ## |pbo        |            68|             119| 0.5714286|
+    ## |heidelberg |           118|             208| 0.5673077|
+    ## |potsdam    |            73|             130| 0.5615385|
+    ## |bonn       |            85|             159| 0.5345912|
+    ## |germany    |          1474|            3062| 0.4813847|
+    ## |max        |           445|             926| 0.4805616|
+    ## |planck     |           453|            1003| 0.4516451|
+    ## |bullying   |            79|             175| 0.4514286|
+    ## |philae     |            55|             122| 0.4508197|
+    ## |ludwig     |            51|             114| 0.4473684|
+    ## |german     |           476|            1078| 0.4415584|
+    ## 
+    ## 
+    ## Table: fr Class Citation, top terms
     ## 
     ## |word         | class_c_count| class_all_count|     ratio|
     ## |:------------|-------------:|---------------:|---------:|
-    ## |cnrs         |            95|             186| 0.5107527|
-    ## |thymus       |            53|             107| 0.4953271|
-    ## |eth          |            41|             114| 0.3596491|
-    ## |le           |            60|             167| 0.3592814|
-    ## |ut           |            65|             185| 0.3513514|
-    ## |frances      |            67|             209| 0.3205742|
-    ## |purification |            40|             138| 0.2898551|
-    ## |iter         |            75|             347| 0.2161383|
-    ## |mrna         |            47|             228| 0.2061404|
-    ## |wine         |            24|             117| 0.2051282|
-    ## |philae       |            23|             117| 0.1965812|
-    ## |french       |           170|            1019| 0.1668302|
-    ## |fao          |            25|             151| 0.1655629|
-    ## |hepatitis    |            35|             216| 0.1620370|
-    ## |2d           |            36|             230| 0.1565217|
+    ## |blogentry    |           118|             124| 0.9516129|
+    ## |iter         |           364|             419| 0.8687351|
+    ## |cnrs         |           161|             201| 0.8009950|
+    ## |frances      |           153|             241| 0.6348548|
+    ## |newline      |           132|             221| 0.5972851|
+    ## |philae       |            63|             122| 0.5163934|
+    ## |le           |           105|             204| 0.5147059|
+    ## |thymus       |            54|             121| 0.4462810|
+    ## |fusion       |           480|            1084| 0.4428044|
+    ## |ut           |            86|             203| 0.4236453|
+    ## |purification |            63|             150| 0.4200000|
+    ## |priming      |            42|             102| 0.4117647|
+    ## |pasteur      |            61|             150| 0.4066667|
+    ## |france       |           617|            1521| 0.4056542|
+    ## |cirm         |           100|             256| 0.3906250|
     ## 
     ## 
-    ## Table: Japan Class Citation, top terms
+    ## Table: it Class Citation, top terms
+    ## 
+    ## |word        | class_c_count| class_all_count|     ratio|
+    ## |:-----------|-------------:|---------------:|---------:|
+    ## |laquila     |           101|             136| 0.7426471|
+    ## |italys      |           110|             175| 0.6285714|
+    ## |milan       |            65|             126| 0.5158730|
+    ## |italian     |           267|             569| 0.4692443|
+    ## |rome        |           123|             311| 0.3954984|
+    ## |italy       |           380|            1083| 0.3508772|
+    ## |lisa        |            75|             264| 0.2840909|
+    ## |virgo       |            47|             179| 0.2625698|
+    ## |shale       |            56|             244| 0.2295082|
+    ## |prosecutors |            28|             131| 0.2137405|
+    ## |sasso       |            25|             126| 0.1984127|
+    ## |fermi       |            43|             219| 0.1963470|
+    ## |cultivation |            27|             144| 0.1875000|
+    ## |gran        |            25|             146| 0.1712329|
+    ## |microglia   |            25|             150| 0.1666667|
+    ## 
+    ## 
+    ## Table: jp Class Citation, top terms
+    ## 
+    ## |word      | class_c_count| class_all_count|     ratio|
+    ## |:---------|-------------:|---------------:|---------:|
+    ## |obokata   |           107|             112| 0.9553571|
+    ## |blogentry |           118|             124| 0.9516129|
+    ## |jaxa      |           137|             149| 0.9194631|
+    ## |hayabusa  |           106|             116| 0.9137931|
+    ## |cdb       |            92|             110| 0.8363636|
+    ## |stap      |           106|             132| 0.8030303|
+    ## |riken     |           222|             298| 0.7449664|
+    ## |tohoku    |            95|             128| 0.7421875|
+    ## |fukushima |           265|             369| 0.7181572|
+    ## |yamanaka  |           126|             177| 0.7118644|
+    ## |japans    |           395|             568| 0.6954225|
+    ## |ut        |           130|             203| 0.6403941|
+    ## |tokyo     |           375|             622| 0.6028939|
+    ## |newline   |           123|             221| 0.5565611|
+    ## |takahashi |            57|             103| 0.5533981|
+    ## 
+    ## 
+    ## Table: at Class Citation, top terms
+    ## 
+    ## |word          | class_c_count| class_all_count|     ratio|
+    ## |:-------------|-------------:|---------------:|---------:|
+    ## |austria       |            95|             214| 0.4439252|
+    ## |austrian      |            46|             105| 0.4380952|
+    ## |afm           |            28|             102| 0.2745098|
+    ## |vienna        |            69|             293| 0.2354949|
+    ## |wooden        |            24|             126| 0.1904762|
+    ## |glacier       |            42|             295| 0.1423729|
+    ## |citizen       |            32|             239| 0.1338912|
+    ## |iaea          |            18|             138| 0.1304348|
+    ## |confocal      |            13|             106| 0.1226415|
+    ## |census        |            23|             197| 0.1167513|
+    ## |radioactivity |            16|             142| 0.1126761|
+    ## |twisted       |            12|             115| 0.1043478|
+    ## |caesium       |            17|             183| 0.0928962|
+    ## |glaciers      |            60|             661| 0.0907716|
+    ## |nitrate       |             9|             107| 0.0841121|
+    ## 
+    ## 
+    ## Table: au Class Citation, top terms
+    ## 
+    ## |word         | class_c_count| class_all_count|     ratio|
+    ## |:------------|-------------:|---------------:|---------:|
+    ## |csiro        |           172|             180| 0.9555556|
+    ## |aus          |           160|             197| 0.8121827|
+    ## |australias   |           207|             301| 0.6877076|
+    ## |oxytocin     |            76|             126| 0.6031746|
+    ## |melbourne    |           209|             362| 0.5773481|
+    ## |commonwealth |            65|             114| 0.5701754|
+    ## |queensland   |           111|             199| 0.5577889|
+    ## |brisbane     |            63|             119| 0.5294118|
+    ## |sydney       |           194|             367| 0.5286104|
+    ## |canberra     |           116|             230| 0.5043478|
+    ## |australian   |           464|             921| 0.5038002|
+    ## |australia    |           961|            2129| 0.4513856|
+    ## |cdb          |            47|             110| 0.4272727|
+    ## |tectonics    |            52|             134| 0.3880597|
+    ## |uc           |            49|             134| 0.3656716|
+    ## 
+    ## 
+    ## Table: be Class Citation, top terms
+    ## 
+    ## |word          | class_c_count| class_all_count|     ratio|
+    ## |:-------------|-------------:|---------------:|---------:|
+    ## |owen          |            48|             125| 0.3840000|
+    ## |transgender   |            40|             116| 0.3448276|
+    ## |belgium       |           101|             311| 0.3247588|
+    ## |shale         |            75|             244| 0.3073770|
+    ## |archaeopteryx |            31|             108| 0.2870370|
+    ## |beer          |            54|             221| 0.2443439|
+    ## |consciousness |            36|             177| 0.2033898|
+    ## |fracking      |            16|             102| 0.1568627|
+    ## |conscious     |            34|             229| 0.1484716|
+    ## |ali           |            20|             141| 0.1418440|
+    ## |citizen       |            31|             239| 0.1297071|
+    ## |quasars       |            15|             117| 0.1282051|
+    ## |phytoplankton |            18|             145| 0.1241379|
+    ## |tipping       |            16|             137| 0.1167883|
+    ## |testosterone  |            19|             163| 0.1165644|
+    ## 
+    ## 
+    ## Table: es Class Citation, top terms
+    ## 
+    ## |word      | class_c_count| class_all_count|     ratio|
+    ## |:---------|-------------:|---------------:|---------:|
+    ## |spanish   |           140|             327| 0.4281346|
+    ## |cuba      |            45|             133| 0.3383459|
+    ## |barcelona |            56|             167| 0.3353293|
+    ## |spain     |           177|             661| 0.2677761|
+    ## |jellyfish |            45|             222| 0.2027027|
+    ## |grb       |            23|             114| 0.2017544|
+    ## |tehran    |            20|             102| 0.1960784|
+    ## |iodide    |            19|             102| 0.1862745|
+    ## |paintings |            26|             145| 0.1793103|
+    ## |cas       |            35|             215| 0.1627907|
+    ## |madrid    |            35|             223| 0.1569507|
+    ## |nio       |            45|             293| 0.1535836|
+    ## |redshift  |            25|             182| 0.1373626|
+    ## |lin       |            18|             135| 0.1333333|
+    ## |english   |            72|             564| 0.1276596|
+    ## 
+    ## 
+    ## Table: nl Class Citation, top terms
+    ## 
+    ## |word        | class_c_count| class_all_count|     ratio|
+    ## |:-----------|-------------:|---------------:|---------:|
+    ## |leiden      |           117|             152| 0.7697368|
+    ## |priming     |            58|             102| 0.5686275|
+    ## |ams         |            58|             130| 0.4461538|
+    ## |netherlands |           492|            1112| 0.4424460|
+    ## |ut          |            88|             203| 0.4334975|
+    ## |sofia       |            49|             137| 0.3576642|
+    ## |bullying    |            52|             175| 0.2971429|
+    ## |dutch       |           103|             370| 0.2783784|
+    ## |rankings    |            36|             149| 0.2416107|
+    ## |unconscious |            27|             125| 0.2160000|
+    ## |topological |            41|             191| 0.2146597|
+    ## |hansen      |            31|             152| 0.2039474|
+    ## |amsterdam   |            50|             249| 0.2008032|
+    ## |citation    |            85|             425| 0.2000000|
+    ## |odour       |            25|             126| 0.1984127|
+    ## 
+    ## 
+    ## Table: se Class Citation, top terms
+    ## 
+    ## |word          | class_c_count| class_all_count|     ratio|
+    ## |:-------------|-------------:|---------------:|---------:|
+    ## |macchiarini   |           120|             121| 0.9917355|
+    ## |uppsala       |            89|             119| 0.7478992|
+    ## |karolinska    |           126|             185| 0.6810811|
+    ## |ki            |            71|             110| 0.6454545|
+    ## |ut            |           116|             203| 0.5714286|
+    ## |lund          |            73|             133| 0.5488722|
+    ## |sweden        |           295|             600| 0.4916667|
+    ## |swedish       |           107|             292| 0.3664384|
+    ## |astrocytes    |            40|             116| 0.3448276|
+    ## |stockholm     |            91|             313| 0.2907348|
+    ## |archaeopteryx |            31|             108| 0.2870370|
+    ## |chickens      |            51|             237| 0.2151899|
+    ## |proteomics    |            26|             126| 0.2063492|
+    ## |phosphate     |            43|             213| 0.2018779|
+    ## |gatherers     |            19|             101| 0.1881188|
+    ## 
+    ## 
+    ## Table: dk Class Citation, top terms
     ## 
     ## |word       | class_c_count| class_all_count|     ratio|
     ## |:----------|-------------:|---------------:|---------:|
-    ## |ut         |           109|             185| 0.5891892|
-    ## |jaxa       |            59|             122| 0.4836066|
-    ## |japans     |           130|             445| 0.2921348|
-    ## |yamanaka   |            38|             138| 0.2753623|
-    ## |tokyo      |           134|             508| 0.2637795|
-    ## |sail       |            24|             101| 0.2376238|
-    ## |japanese   |           184|             790| 0.2329114|
-    ## |japan      |           397|            1990| 0.1994975|
-    ## |riken      |            33|             179| 0.1843575|
-    ## |antimatter |            48|             262| 0.1832061|
-    ## |afm        |            19|             106| 0.1792453|
-    ## |calorie    |            19|             114| 0.1666667|
-    ## |tamiflu    |            18|             109| 0.1651376|
-    ## |organoids  |            22|             135| 0.1629630|
-    ## |confocal   |            16|             104| 0.1538462|
-    ## 
-    ## 
-    ## Table: Netherlands Class Citation, top terms
-    ## 
-    ## |word        | class_c_count| class_all_count|     ratio|
-    ## |:-----------|-------------:|---------------:|---------:|
-    ## |ut          |            88|             185| 0.4756757|
-    ## |leiden      |            41|             130| 0.3153846|
-    ## |netherlands |           202|            1002| 0.2015968|
-    ## |biorxiv     |            29|             158| 0.1835443|
-    ## |cats        |            50|             289| 0.1730104|
-    ## |bison       |            18|             107| 0.1682243|
-    ## |organoids   |            21|             135| 0.1555556|
-    ## |oa          |            16|             124| 0.1290323|
-    ## |motors      |            16|             126| 0.1269841|
-    ## |citations   |            46|             378| 0.1216931|
-    ## |dutch       |            39|             328| 0.1189024|
-    ## |flip        |            12|             103| 0.1165049|
-    ## |rankings    |            12|             104| 0.1153846|
-    ## |switches    |            16|             151| 0.1059603|
-    ## |organelles  |            15|             143| 0.1048951|
-    ## 
-    ## 
-    ## Table: Canada Class Citation, top terms
-    ## 
-    ## |word          | class_c_count| class_all_count|     ratio|
-    ## |:-------------|-------------:|---------------:|---------:|
-    ## |ut            |           139|             185| 0.7513514|
-    ## |expressions   |            28|             116| 0.2413793|
-    ## |clay          |            27|             138| 0.1956522|
-    ## |dendritic     |            21|             112| 0.1875000|
-    ## |athletes      |            24|             130| 0.1846154|
-    ## |coronaviruses |            29|             158| 0.1835443|
-    ## |mcgill        |            22|             121| 0.1818182|
-    ## |emotions      |            24|             137| 0.1751825|
-    ## |phage         |            18|             106| 0.1698113|
-    ## |cambrian      |            20|             118| 0.1694915|
-    ## |smallpox      |            17|             104| 0.1634615|
-    ## |organoids     |            22|             135| 0.1629630|
-    ## |vocal         |            22|             142| 0.1549296|
-    ## |oa            |            19|             124| 0.1532258|
-    ## |pd            |            24|             164| 0.1463415|
-    ## 
-    ## 
-    ## Table: Belgium Class Citation, top terms
-    ## 
-    ## |word          | class_c_count| class_all_count|     ratio|
-    ## |:-------------|-------------:|---------------:|---------:|
-    ## |song          |             7|             154| 0.0454545|
-    ## |drain         |             4|             140| 0.0285714|
-    ## |border        |             5|             297| 0.0168350|
-    ## |era           |             7|             499| 0.0140281|
-    ## |realizing     |             1|             101| 0.0099010|
-    ## |bridges       |             1|             106| 0.0094340|
-    ## |concedes      |             1|             107| 0.0093458|
-    ## |mates         |             1|             108| 0.0092593|
-    ## |cages         |             1|             114| 0.0087719|
-    ## |strengthening |             1|             114| 0.0087719|
-    ## |laid          |             3|             343| 0.0087464|
-    ## |testosterone  |             1|             116| 0.0086207|
-    ## |maternal      |             1|             117| 0.0085470|
-    ## |performing    |             2|             234| 0.0085470|
-    ## |inter         |             1|             124| 0.0080645|
-    ## 
-    ## 
-    ## Table: Australia Class Citation, top terms
-    ## 
-    ## |word          | class_c_count| class_all_count|     ratio|
-    ## |:-------------|-------------:|---------------:|---------:|
-    ## |csiro         |            38|             117| 0.3247863|
-    ## |cannabis      |            32|             152| 0.2105263|
-    ## |bison         |            18|             107| 0.1682243|
-    ## |pig           |            37|             224| 0.1651786|
-    ## |aus           |            17|             108| 0.1574074|
-    ## |aboriginal    |            18|             121| 0.1487603|
-    ## |bleaching     |            17|             115| 0.1478261|
-    ## |australias    |            33|             233| 0.1416309|
-    ## |marijuana     |            18|             132| 0.1363636|
-    ## |mitochondrial |            65|             500| 0.1300000|
-    ## |snakes        |            25|             194| 0.1288660|
-    ## |riken         |            23|             179| 0.1284916|
-    ## |lizards       |            13|             104| 0.1250000|
-    ## |nio           |            32|             256| 0.1250000|
-    ## |organoids     |            16|             135| 0.1185185|
-    ## 
-    ## 
-    ## Table: Spain Class Citation, top terms
-    ## 
-    ## |word        | class_c_count| class_all_count|     ratio|
-    ## |:-----------|-------------:|---------------:|---------:|
-    ## |neolithic   |            12|             105| 0.1142857|
-    ## |spanish     |            20|             236| 0.0847458|
-    ## |tooth       |            10|             125| 0.0800000|
-    ## |proportions |             7|             107| 0.0654206|
-    ## |reid        |             6|             104| 0.0576923|
-    ## |passage     |            10|             177| 0.0564972|
-    ## |ireland     |            12|             226| 0.0530973|
-    ## |county      |             9|             173| 0.0520231|
-    ## |burial      |             6|             124| 0.0483871|
-    ## |spain       |            26|             543| 0.0478821|
-    ## |hominins    |             6|             139| 0.0431655|
-    ## |loans       |             4|             103| 0.0388350|
-    ## |baker       |             5|             144| 0.0347222|
-    ## |madrid      |             4|             120| 0.0333333|
-    ## |hire        |             5|             152| 0.0328947|
-    ## 
-    ## 
-    ## Table: Austria Class Citation, top terms
-    ## 
-    ## |word          | class_c_count| class_all_count|     ratio|
-    ## |:-------------|-------------:|---------------:|---------:|
-    ## |superposition |            15|             110| 0.1363636|
-    ## |vienna        |            16|             238| 0.0672269|
-    ## |gate          |             9|             141| 0.0638298|
-    ## |qubit         |             8|             215| 0.0372093|
-    ## |photon        |             9|             284| 0.0316901|
-    ## |einstein      |             6|             241| 0.0248963|
-    ## |interventions |             7|             291| 0.0240550|
-    ## |epidemics     |             3|             125| 0.0240000|
-    ## |measurement   |            11|             543| 0.0202578|
-    ## |mechanics     |             8|             405| 0.0197531|
-    ## |relativity    |             5|             262| 0.0190840|
-    ## |lockdown      |             3|             160| 0.0187500|
-    ## |polarization  |             3|             170| 0.0176471|
-    ## |gates         |             9|             526| 0.0171103|
-    ## |austria       |             3|             179| 0.0167598|
-    ## 
-    ## 
-    ## Table: Sweden Class Citation, top terms
-    ## 
-    ## |word       | class_c_count| class_all_count|     ratio|
-    ## |:----------|-------------:|---------------:|---------:|
-    ## |tracing    |            38|             231| 0.1645022|
-    ## |contacts   |            46|             331| 0.1389728|
-    ## |quarantine |            14|             111| 0.1261261|
-    ## |ethiopia   |            14|             171| 0.0818713|
-    ## |lockdown   |            13|             160| 0.0812500|
-    ## |irans      |             9|             117| 0.0769231|
-    ## |dam        |            14|             209| 0.0669856|
-    ## |contact    |            60|             934| 0.0642398|
-    ## |karolinska |             7|             118| 0.0593220|
-    ## |vietnam    |            12|             232| 0.0517241|
-    ## |pcr        |            14|             276| 0.0507246|
-    ## |filling    |             7|             150| 0.0466667|
-    ## |sudan      |             6|             148| 0.0405405|
-    ## |isolate    |             8|             202| 0.0396040|
-    ## |apps       |             5|             127| 0.0393701|
-    ## 
-    ## 
-    ## Table: Italy Class Citation, top terms
-    ## 
-    ## |word        | class_c_count| class_all_count|     ratio|
-    ## |:-----------|-------------:|---------------:|---------:|
-    ## |volcanoes   |            26|             258| 0.1007752|
-    ## |preprints   |            15|             154| 0.0974026|
-    ## |volcano     |            31|             343| 0.0903790|
-    ## |decode      |            13|             152| 0.0855263|
-    ## |burial      |            10|             124| 0.0806452|
-    ## |iceland     |            11|             148| 0.0743243|
-    ## |lockdown    |            10|             160| 0.0625000|
-    ## |milan       |             6|             103| 0.0582524|
-    ## |appointment |             9|             181| 0.0497238|
-    ## |chambers    |             7|             148| 0.0472973|
-    ## |tourists    |             5|             106| 0.0471698|
-    ## |walter      |             6|             135| 0.0444444|
-    ## |usgs        |             8|             181| 0.0441989|
-    ## |magma       |             9|             212| 0.0424528|
-    ## |eruption    |            16|             381| 0.0419948|
-    ## 
-    ## 
-    ## Table: Denmark Class Citation, top terms
-    ## 
-    ## |word        | class_c_count| class_all_count|     ratio|
-    ## |:-----------|-------------:|---------------:|---------:|
-    ## |masks       |            44|             152| 0.2894737|
-    ## |mask        |            24|             112| 0.2142857|
-    ## |smallpox    |            17|             104| 0.1634615|
-    ## |danish      |            14|             114| 0.1228070|
-    ## |respondents |            30|             407| 0.0737101|
-    ## |postdocs    |            39|             572| 0.0681818|
-    ## |denmark     |            18|             287| 0.0627178|
-    ## |command     |             7|             131| 0.0534351|
-    ## |surgical    |             8|             151| 0.0529801|
-    ## |aerosols    |            13|             301| 0.0431894|
-    ## |wearing     |             6|             140| 0.0428571|
-    ## |satisfied   |             5|             130| 0.0384615|
-    ## |fellowships |             4|             112| 0.0357143|
-    ## |plague      |             6|             168| 0.0357143|
-    ## |disorders   |            31|             917| 0.0338059|
+    ## |denmark    |           119|             363| 0.3278237|
+    ## |danish     |            40|             141| 0.2836879|
+    ## |greenland  |            96|             527| 0.1821632|
+    ## |willerslev |            20|             132| 0.1515152|
+    ## |citizen    |            33|             239| 0.1380753|
+    ## |copenhagen |            72|             548| 0.1313869|
+    ## |offshore   |            40|             311| 0.1286174|
+    ## |biosphere  |            14|             110| 0.1272727|
+    ## |grids      |            16|             128| 0.1250000|
+    ## |bedrock    |            15|             121| 0.1239669|
+    ## |seabed     |            16|             132| 0.1212121|
+    ## |plague     |            22|             190| 0.1157895|
+    ## |cambrian   |            15|             131| 0.1145038|
+    ## |turbines   |            24|             211| 0.1137441|
+    ## |retirement |            26|             238| 0.1092437|
 
 ``` r
 top_words_c_freq = data.frame(sort(table(unlist(top_words_c)), decreasing=T))
 top_words_c_freq$prop = top_words_c_freq$Freq / length(top_words_c)
 print(knitr::kable(head(top_words_c_freq,15), 
-                       caption = "Overall Class Mention, top terms"))
+                       caption = "Overall Class Citation, top terms"))
 ```
 
     ## 
     ## 
-    ## Table: Overall Class Mention, top terms
+    ## Table: Overall Class Citation, top terms
     ## 
-    ## |Var1        | Freq|      prop|
-    ## |:-----------|----:|---------:|
-    ## |cov         |    7| 0.5384615|
-    ## |covid       |    6| 0.4615385|
-    ## |lockdown    |    6| 0.4615385|
-    ## |masks       |    5| 0.3846154|
-    ## |sars        |    5| 0.3846154|
-    ## |coronavirus |    4| 0.3076923|
-    ## |distancing  |    4| 0.3076923|
-    ## |hepatitis   |    4| 0.3076923|
-    ## |newsblog    |    4| 0.3076923|
-    ## |organoids   |    4| 0.3076923|
-    ## |pandemic    |    4| 0.3076923|
-    ## |ut          |    4| 0.3076923|
-    ## |adverse     |    3| 0.2307692|
-    ## |bc          |    3| 0.2307692|
-    ## |biorxiv     |    3| 0.2307692|
+    ## |Var1         | Freq|      prop|
+    ## |:------------|----:|---------:|
+    ## |ut           |    7| 0.5384615|
+    ## |afm          |    5| 0.3846154|
+    ## |archaea      |    5| 0.3846154|
+    ## |palestinian  |    5| 0.3846154|
+    ## |qubit        |    5| 0.3846154|
+    ## |tamiflu      |    5| 0.3846154|
+    ## |astrocytes   |    4| 0.3076923|
+    ## |athletes     |    4| 0.3076923|
+    ## |citizen      |    4| 0.3076923|
+    ## |entanglement |    4| 0.3076923|
+    ## |gigawatts    |    4| 0.3076923|
+    ## |gran         |    4| 0.3076923|
+    ## |hominins     |    4| 0.3076923|
+    ## |ilc          |    4| 0.3076923|
+    ## |modules      |    4| 0.3076923|
 
-#### Calculate word frequencies for Class M
+## Calculate word frequencies for Class M
 
 ``` r
-# write out top words for each country
+# first remove all cited articles from the articles with a mention
+
 top_words_m = list()
-for(curr_country in unique(class_m_ids$est_country)){
-    class_m_word_freq = get_word_freq_per_class(
-                            subset(class_m_ids, est_country == curr_country), 
-                            class_str = "class_m")
-    per_class_word_freq = merge(data.table(class_m_word_freq), 
-                                data.table(class_all_word_freq), by="word")
+# write out top words for each country
+for(curr_country in unique(class_m_mentions$address.country_code)){
     
+    # get the word freq for class C mentions
+    class_m_word_freq = get_word_freq_per_class(
+                            subset(class_m_mentions, address.country_code == curr_country), 
+                            class_str = "class_m")
+     
+    # merge with the word freq for entire corpus
+     per_class_word_freq = merge(data.table(class_m_word_freq), 
+                                data.table(class_all_word_freq), by="word")
+     
         
-    # it should be more than 100 in at least one corpus
+    # word should be used at least 100 time in the full corpus
     per_class_word_freq = subset(per_class_word_freq, class_all_count > 100)
         
+    # get the word frequency scaled by corpus frequency
     per_class_word_freq$ratio = per_class_word_freq$class_m_count / 
                                 per_class_word_freq$class_all_count
-    
+      
+    # write out top words per country
     per_class_word_freq = per_class_word_freq[order(per_class_word_freq$ratio, decreasing=T),]
     print(knitr::kable(head(per_class_word_freq,15), 
-                       caption = paste(curr_country, "Class Mention, top terms")))
+                 caption = paste(curr_country, "Class Mention, top terms")))
+    
+    # save top words
     top_words_m[[curr_country]] = per_class_word_freq$word[1:min(nrow(per_class_word_freq), 100)]
+    
+    
 
 }
 ```
 
     ## 
     ## 
-    ## Table: India Class Mention, top terms
+    ## Table: co Class Mention, top terms
+    ## 
+    ## |word           | class_m_count| class_all_count|     ratio|
+    ## |:--------------|-------------:|---------------:|---------:|
+    ## |ut             |            94|             203| 0.4630542|
+    ## |ppm            |            48|             134| 0.3582090|
+    ## |shuttles       |            29|             104| 0.2788462|
+    ## |carbonate      |            64|             239| 0.2677824|
+    ## |foam           |            42|             159| 0.2641509|
+    ## |sinks          |            33|             137| 0.2408759|
+    ## |colombia       |            27|             119| 0.2268908|
+    ## |sequestration  |            33|             167| 0.1976048|
+    ## |grasses        |            24|             131| 0.1832061|
+    ## |shuttle        |           111|             610| 0.1819672|
+    ## |soot           |            19|             122| 0.1557377|
+    ## |anthropogenic  |            24|             157| 0.1528662|
+    ## |boron          |            22|             148| 0.1486486|
+    ## |hansen         |            22|             152| 0.1447368|
+    ## |photosynthetic |            18|             126| 0.1428571|
+    ## 
+    ## 
+    ## Table: in Class Mention, top terms
     ## 
     ## |word      | class_m_count| class_all_count|     ratio|
     ## |:---------|-------------:|---------------:|---------:|
-    ## |bangalore |            77|             117| 0.6581197|
-    ## |indias    |           359|             597| 0.6013400|
-    ## |pachauri  |            71|             123| 0.5772358|
-    ## |tiger     |           100|             203| 0.4926108|
-    ## |delhi     |           129|             291| 0.4432990|
-    ## |tigers    |            62|             145| 0.4275862|
-    ## |singh     |            53|             132| 0.4015152|
-    ## |indian    |           497|            1310| 0.3793893|
-    ## |rao       |            39|             115| 0.3391304|
-    ## |himalayas |            38|             119| 0.3193277|
-    ## |bt        |            57|             181| 0.3149171|
-    ## |india     |           660|            2132| 0.3095685|
-    ## |cotton    |            59|             210| 0.2809524|
-    ## |herbicide |            24|             104| 0.2307692|
-    ## |monsanto  |            25|             115| 0.2173913|
+    ## |blogentry |           118|             124| 0.9516129|
+    ## |bangalore |            99|             117| 0.8461538|
+    ## |indias    |           435|             570| 0.7631579|
+    ## |delhi     |           215|             287| 0.7491289|
+    ## |rupees    |            69|             109| 0.6330275|
+    ## |pachauri  |            78|             126| 0.6190476|
+    ## |newline   |           129|             221| 0.5837104|
+    ## |rao       |            83|             144| 0.5763889|
+    ## |indian    |           681|            1324| 0.5143505|
+    ## |india     |           912|            1950| 0.4676923|
+    ## |tiger     |           101|             239| 0.4225941|
+    ## |singh     |            65|             166| 0.3915663|
+    ## |tigers    |            62|             165| 0.3757576|
+    ## |himalayas |            39|             124| 0.3145161|
+    ## |shale     |            76|             244| 0.3114754|
     ## 
     ## 
-    ## Table: Colombia Class Mention, top terms
+    ## Table: mx Class Mention, top terms
     ## 
-    ## |word          | class_m_count| class_all_count|     ratio|
-    ## |:-------------|-------------:|---------------:|---------:|
-    ## |weathering    |            14|             104| 0.1346154|
-    ## |ccs           |            22|             174| 0.1264368|
-    ## |nickel        |            14|             131| 0.1068702|
-    ## |ppm           |            14|             135| 0.1037037|
-    ## |petroleum     |            10|             117| 0.0854701|
-    ## |trapping      |            13|             153| 0.0849673|
-    ## |boron         |            11|             133| 0.0827068|
-    ## |carbonate     |            20|             246| 0.0813008|
-    ## |sequestration |            10|             130| 0.0769231|
-    ## |mixtures      |             8|             109| 0.0733945|
-    ## |erosion       |            22|             311| 0.0707395|
-    ## |fatty         |            12|             175| 0.0685714|
-    ## |ph            |            13|             190| 0.0684211|
-    ## |elegans       |             7|             114| 0.0614035|
-    ## |fuels         |            22|             440| 0.0500000|
-    ## 
-    ## 
-    ## Table: Mexico Class Mention, top terms
-    ## 
-    ## |word         | class_m_count| class_all_count|     ratio|
-    ## |:------------|-------------:|---------------:|---------:|
-    ## |mexican      |            21|             185| 0.1135135|
-    ## |monsanto     |            13|             115| 0.1130435|
-    ## |tolerant     |             7|             106| 0.0660377|
-    ## |humanitarian |             7|             108| 0.0648148|
-    ## |spill        |            17|             312| 0.0544872|
-    ## |maize        |            18|             380| 0.0473684|
-    ## |chlorine     |             5|             106| 0.0471698|
-    ## |golden       |            10|             222| 0.0450450|
-    ## |fishermen    |             6|             144| 0.0416667|
-    ## |mexico       |            42|            1160| 0.0362069|
-    ## |pioneer      |             8|             255| 0.0313725|
-    ## |drought      |            14|             492| 0.0284553|
-    ## |transgenic   |             9|             353| 0.0254958|
-    ## |citys        |             4|             161| 0.0248447|
-    ## |projections  |             7|             285| 0.0245614|
+    ## |word           | class_m_count| class_all_count|     ratio|
+    ## |:--------------|-------------:|---------------:|---------:|
+    ## |bison          |            63|             132| 0.4772727|
+    ## |mexicos        |            55|             127| 0.4330709|
+    ## |mexican        |            96|             232| 0.4137931|
+    ## |rust           |            51|             181| 0.2817680|
+    ## |wheat          |           110|             476| 0.2310924|
+    ## |maize          |           119|             531| 0.2241055|
+    ## |maya           |            29|             133| 0.2180451|
+    ## |varieties      |            89|             485| 0.1835052|
+    ## |mexico         |           279|            1556| 0.1793059|
+    ## |monsanto       |            30|             169| 0.1775148|
+    ## |tolerant       |            23|             131| 0.1755725|
+    ## |nanotechnology |            52|             333| 0.1561562|
+    ## |autonomous     |            39|             259| 0.1505792|
+    ## |herbicide      |            19|             133| 0.1428571|
+    ## |transgenic     |            55|             505| 0.1089109|
     ## 
     ## 
-    ## Table: Philippines Class Mention, top terms
+    ## Table: ph Class Mention, top terms
     ## 
-    ## |word        | class_m_count| class_all_count|     ratio|
-    ## |:-----------|-------------:|---------------:|---------:|
-    ## |peru        |             8|             139| 0.0575540|
-    ## |rice        |            23|             635| 0.0362205|
-    ## |philippines |             4|             150| 0.0266667|
-    ## |golden      |             5|             222| 0.0225225|
-    ## |vitamin     |             4|             208| 0.0192308|
-    ## |sweet       |             2|             110| 0.0181818|
-    ## |monday      |             2|             111| 0.0180180|
-    ## |potato      |             2|             111| 0.0180180|
-    ## |juan        |             2|             116| 0.0172414|
-    ## |bangladesh  |             2|             149| 0.0134228|
-    ## |poverty     |             4|             300| 0.0133333|
-    ## |gdp         |             3|             230| 0.0130435|
-    ## |coordinates |             2|             162| 0.0123457|
-    ## |melinda     |             2|             164| 0.0121951|
-    ## |cent        |             2|             191| 0.0104712|
+    ## |word           | class_m_count| class_all_count|     ratio|
+    ## |:--------------|-------------:|---------------:|---------:|
+    ## |philippines    |            46|             175| 0.2628571|
+    ## |rice           |           161|             757| 0.2126816|
+    ## |geoengineering |            28|             210| 0.1333333|
+    ## |irrigation     |            18|             147| 0.1224490|
+    ## |rust           |            22|             181| 0.1215470|
+    ## |bt             |            27|             259| 0.1042471|
+    ## |cotton         |            28|             288| 0.0972222|
+    ## |taylor         |            34|             368| 0.0923913|
+    ## |monsanto       |            14|             169| 0.0828402|
+    ## |wheat          |            38|             476| 0.0798319|
+    ## |sheep          |            17|             226| 0.0752212|
+    ## |opera          |             8|             115| 0.0695652|
+    ## |tolerant       |             9|             131| 0.0687023|
+    ## |humanitarian   |             8|             119| 0.0672269|
+    ## |varieties      |            32|             485| 0.0659794|
 
 ``` r
 top_words_m_freq = data.frame(sort(table(unlist(top_words_m)), decreasing=T))
@@ -922,20 +923,20 @@ print(knitr::kable(head(top_words_m_freq,15),
     ## 
     ## Table: Overall Class Mention, top terms
     ## 
-    ## |Var1       | Freq| prop|
-    ## |:----------|----:|----:|
-    ## |diesel     |    3| 0.75|
-    ## |farmers    |    3| 0.75|
-    ## |bangladesh |    2| 0.50|
-    ## |catches    |    2| 0.50|
-    ## |daughter   |    2| 0.50|
-    ## |farming    |    2| 0.50|
-    ## |gm         |    2| 0.50|
-    ## |golden     |    2| 0.50|
-    ## |harvest    |    2| 0.50|
-    ## |maize      |    2| 0.50|
-    ## |melinda    |    2| 0.50|
-    ## |missouri   |    2| 0.50|
-    ## |monsanto   |    2| 0.50|
-    ## |pesticide  |    2| 0.50|
-    ## |pesticides |    2| 0.50|
+    ## |Var1         | Freq| prop|
+    ## |:------------|----:|----:|
+    ## |bt           |    3| 0.75|
+    ## |cotton       |    3| 0.75|
+    ## |gm           |    3| 0.75|
+    ## |monsanto     |    3| 0.75|
+    ## |rust         |    3| 0.75|
+    ## |tolerant     |    3| 0.75|
+    ## |agricultural |    2| 0.50|
+    ## |arsenic      |    2| 0.50|
+    ## |bangladesh   |    2| 0.50|
+    ## |br           |    2| 0.50|
+    ## |crop         |    2| 0.50|
+    ## |crops        |    2| 0.50|
+    ## |cultivation  |    2| 0.50|
+    ## |drought      |    2| 0.50|
+    ## |farmers      |    2| 0.50|
