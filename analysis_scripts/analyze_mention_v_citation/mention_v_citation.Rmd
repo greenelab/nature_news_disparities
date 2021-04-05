@@ -1,5 +1,5 @@
 ---
-title: "Mention_v_ciation_analysis"
+title: "Mention_v_citation_analysis"
 author: "Natalie Davidson"
 date: "3/31/2021"
 output: rmarkdown::github_document
@@ -13,6 +13,7 @@ require(here)
 require(ggplot2)
 require(pheatmap)
 require(tidytext)
+require(stringr)
 
 
 proj_dir = here()
@@ -60,6 +61,8 @@ raw_df = merge(un_info, raw_df)
 
 head(raw_df)
 
+
+
 # get the total number of mentions and citations
 # for each country per year
 # we only want to evaluate when we have > 10 in either citations or mentions
@@ -99,7 +102,7 @@ colnames(raw_sum_df)[3:4] = c("tot_citations", "tot_mentions")
 #### Read in the bootstrapped estimate of % of articles with country counts.
 
 
-```{r read_in_bootstrap, fig.align='center'}
+```{r read_in_bootstrap, fig.align='center', warning = FALSE}
 
 # read in the cited author data
 ci_file = file.path(proj_dir, "/data/author_data/all_author_country_95CI.tsv")
@@ -158,7 +161,7 @@ top_diff_MC = subset(top_diff_MC, M_C > MIN_PROP | M_C < -1*MIN_PROP)
 
 #### Plot the top country-year pairings have a large difference in citations vs mentions
 
-```{r plot_filtered_countries, fig.align='center', fig.width=10, fig.height=10}
+```{r plot_filtered_countries, fig.align='center', fig.width=10, fig.height=10, warning = FALSE}
 
 make_heatmap_res <- function(in_df, value_col){
     plot_matr_MC = reshape2::dcast(in_df, 
@@ -212,15 +215,16 @@ pheatmap(res_mention$plot_matr, cluster_rows = F,
 
 #### Get the raw text ids for each class
 
-```{r get_file_ids, fig.align='center', fig.width=10, fig.height=10}
+```{r get_file_ids, fig.align='center', fig.width=10, fig.height=10, warning = FALSE}
 
 # for every country + year pair in our filtered table (top_diff_MC), get the associated raw file ids
-class_c_counts = subset(top_diff_MC, M_C < 0 )
-class_c_counts$idx = paste(class_c_counts$address.country_code, 
-                             class_c_counts$year, sep="_")
-class_m_counts = subset(top_diff_MC, M_C > 0 )
-class_m_counts$idx = paste(class_m_counts$address.country_code, 
-                             class_m_counts$year, sep="_")
+class_c_counts = subset(top_diff_MC, M_C < 0, select=c("address.country_code", "year") )
+class_c_counts$class = "class_c" 
+class_m_counts = subset(top_diff_MC, M_C > 0, select=c("address.country_code", "year") )
+class_m_counts$class = "class_m" 
+class_m_counts$idx = paste(class_m_counts$address.country_code,
+                          class_m_counts$year, sep="_")
+
 
 # find all location estimates
 all_loc_files = list.files(file.path(proj_dir, "/data/scraped_data/"), 
@@ -243,39 +247,69 @@ full_loc_df = subset(full_loc_df, est_un_region != "" &
                                         est_un_subregion != "" &
                                         est_un_region != "NO_EST" & 
                                         est_un_subregion != "NO_EST")
-
-# now get the file ids per class
-country_year_pass = unique(top_diff_MC[,c("year", "address.country_code")])
 colnames(full_loc_df)[1] = c("address.country_code")
-full_loc_df_pass = merge(country_year_pass, full_loc_df) 
-full_loc_df_pass$idx = paste(full_loc_df_pass$address.country_code, 
-                             full_loc_df_pass$year, sep="_")
 
-class_c_ids = subset(full_loc_df_pass, address.country_code %in% unique(class_c_counts$address.country_code))
-class_m_ids = subset(full_loc_df_pass, address.country_code %in% unique(class_m_counts$address.country_code))
-
-head(class_c_ids)
-head(class_m_ids)
-
-# remove any files that are in the overlap
-files_in_both = intersect(class_c_ids$file_id, class_m_ids$file_id)
-class_c_ids = subset(class_c_ids, !file_id %in% files_in_both)
-class_m_ids = subset(class_m_ids, !file_id %in% files_in_both)
 
 ## filter for countries where they are mentioned more than once just for highest accuracy
-class_m_ids_dups = data.frame(table(class_m_ids$file_id, class_m_ids$address.country_code))
-class_m_ids_keep = subset(class_m_ids_dups, Freq > 1)
-class_m_ids$freq_idx = paste(class_m_ids$file_id, class_m_ids$address.country_code, sep="_")
-freq_idx = paste(class_m_ids_keep$Var1, class_m_ids_keep$Var2, sep="_")
-class_m_ids = subset(class_m_ids, freq_idx %in% freq_idx)
+loc_dups = data.frame(table(full_loc_df$file_id, full_loc_df$address.country_code))
+loc_keep = subset(loc_dups, Freq > 1)
+full_loc_df$freq_idx = paste(full_loc_df$file_id, full_loc_df$address.country_code, sep="_")
+freq_pass = paste(loc_keep$Var1, loc_keep$Var2, sep="_")
+full_loc_df_no_mention_dup = subset(full_loc_df, freq_idx %in% freq_pass)
+
+
+# now get the file ids per class
+country_year_pass = unique(class_m_counts[,c("year", "address.country_code")])
+full_loc_df_pass = merge(country_year_pass, full_loc_df_no_mention_dup)
+
+
 
 
 ```
 
+#### Get the cited text ids for each class
 
-#### Calculate word frequencies from raw text for each class
+```{r get_cited_file_ids, fig.align='center', fig.width=10, fig.height=10, warning = FALSE}
 
-```{r calc_word_freq_raw_text, fig.align='center', fig.width=10, fig.height=10}
+    # all the cited articles
+    cited_country_file = file.path(proj_dir, 
+                                    "/data/author_data/cited_author_country.tsv")
+    cited_country_df = data.frame(fread(cited_country_file))
+    cited_country_df = subset(cited_country_df, country != "")
+    cited_country_df$country = format_country_names(cited_country_df$country)
+    
+    # format the countries
+    cited_country_df_formatted = get_author_country(cited_country_df)
+    cited_country_df_formatted = unique(cited_country_df_formatted)
+
+    # we only care about if a country was cited in an article, 
+    # not how many times it was cited
+    cited_country_df_formatted$num_entries = 1
+
+```
+
+
+#### Now seperate the articles with a citation and with a mention
+
+```{r merge_mention_citation_file_ids, fig.align='center', fig.width=10, fig.height=10, warning = FALSE}
+
+    # all the cited articles
+    cited_loc = merge(unique(full_loc_df[,c("file_id", "year", "type")]),
+                      cited_country_df_formatted)
+
+    cited_loc$idx = paste(cited_loc$address.country_code,
+                          cited_loc$year, sep="_")
+    class_m_citations = subset(cited_loc, idx %in% 
+                                   class_m_counts$idx)
+    
+
+```
+
+
+
+#### Function to calculate word frequencies from raw text for each class
+
+```{r method_word_freq_raw_text, fig.align='center', fig.width=10, fig.height=10, warning = FALSE}
 
 
 #' Get the word frequencies across multiple JSON files containing
@@ -330,27 +364,97 @@ get_word_freq_per_class <- function(class_ids, class_str){
     return(class_word_freq)
 }
 
+```
+
+#### Calculate word frequencies for Class C
+
+```{r calc_word_freq_citations, fig.align='center', fig.width=10, fig.height=10, warning = FALSE, message = FALSE}
+
 
 # get the word frequencies for each class of country
-class_c_word_freq = get_word_freq_per_class(class_c_ids, class_str = "class_c")
-class_m_word_freq_ph = get_word_freq_per_class(subset(class_m_ids, address.country_code == "in"), class_str = "class_m_ph")
+class_all_word_freq = get_word_freq_per_class(full_loc_df_pass, class_str = "class_all")
 
+class_m_citations = subset(class_m_citations, address.country_code %in% class_m_ids$address.country_code)
+top_words_c = list()
+top_words_m = list()
+# write out top words for each country
+for(curr_country in unique(class_m_citations$address.country_code)){
+    class_c_word_freq = get_word_freq_per_class(
+                            subset(class_m_citations, address.country_code == curr_country), 
+                            class_str = "class_c")
+     class_m_word_freq = get_word_freq_per_class(
+                            subset(class_m_ids, address.country_code == curr_country), 
+                            class_str = "class_m")
+     per_class_word_freq = merge(data.table(class_c_word_freq), 
+                                data.table(class_m_word_freq), by="word")
+     per_class_word_freq = merge(data.table(per_class_word_freq), 
+                                data.table(class_all_word_freq), by="word")
+    
+        
+    # it should be more than 100 in at least one corpus
+    per_class_word_freq = subset(per_class_word_freq, class_all_count > 100)
+        
+    per_class_word_freq$ratioC = per_class_word_freq$class_c_count / 
+                                per_class_word_freq$class_all_count
+    per_class_word_freq$ratioM = per_class_word_freq$class_m_count / 
+                                per_class_word_freq$class_all_count
+    per_class_word_freq$ratio = per_class_word_freq$ratioC / 
+                                per_class_word_freq$ratioM    
+    
+    per_class_word_freq = per_class_word_freq[order(per_class_word_freq$ratio, decreasing=T),]
+    print(knitr::kable(head(per_class_word_freq,15), 
+                 caption = paste(curr_country, "Class Citation, top terms")))
+    top_words_c[[curr_country]] = per_class_word_freq$word[1:min(nrow(per_class_word_freq), 100)]
+    
+    
+    per_class_word_freq = per_class_word_freq[order(per_class_word_freq$ratio, decreasing=F),]
+    print(knitr::kable(head(per_class_word_freq,15), 
+                 caption = paste(curr_country, "Class Mention, top terms")))
+    top_words_m[[curr_country]] = per_class_word_freq$word[1:min(nrow(per_class_word_freq), 100)]
 
-# merge the classes together
-# only take words that are in both
-per_class_word_freq = merge(data.table(class_c_word_freq), data.table(class_m_word_freq_ph), by="word")
+}
+top_words_c_freq = data.frame(sort(table(unlist(top_words_c)), decreasing=T))
+top_words_c_freq$prop = top_words_c_freq$Freq / length(top_words_c)
+print(knitr::kable(head(top_words_c_freq,15), 
+                       caption = "Overall Class Citation, top terms"))
 
-# it should be more than 100 in at least one corpus
-per_class_word_freq = subset(per_class_word_freq, 
-                             class_c_count > 10 & class_m_ph_count > 10)
+top_words_m_freq = data.frame(sort(table(unlist(top_words_m)), decreasing=T))
+top_words_m_freq$prop = top_words_m_freq$Freq / length(top_words_m)
+print(knitr::kable(head(top_words_m_freq,15), 
+                       caption = "Overall Class Mention, top terms"))
 
-# now calculate the log odds ratio
-per_class_word_freq$ratio = per_class_word_freq$class_c_count / 
-                            per_class_word_freq$class_m_ph_count
+```
 
-per_class_word_freq = per_class_word_freq[order(per_class_word_freq$ratio),]
-print(head(per_class_word_freq,50))
-print(tail(per_class_word_freq,50))
+#### Calculate word frequencies for Class M
+
+```{r calc_word_freq_mentions, fig.align='center', fig.width=10, fig.height=10, warning = FALSE, message = FALSE}
+
+# write out top words for each country
+top_words_m = list()
+for(curr_country in unique(class_m_ids$est_country)){
+    class_m_word_freq = get_word_freq_per_class(
+                            subset(class_m_ids, est_country == curr_country), 
+                            class_str = "class_m")
+    per_class_word_freq = merge(data.table(class_m_word_freq), 
+                                data.table(class_all_word_freq), by="word")
+    
+        
+    # it should be more than 100 in at least one corpus
+    per_class_word_freq = subset(per_class_word_freq, class_all_count > 100)
+        
+    per_class_word_freq$ratio = per_class_word_freq$class_m_count / 
+                                per_class_word_freq$class_all_count
+    
+    per_class_word_freq = per_class_word_freq[order(per_class_word_freq$ratio, decreasing=T),]
+    print(knitr::kable(head(per_class_word_freq,15), 
+                       caption = paste(curr_country, "Class Mention, top terms")))
+    top_words_m[[curr_country]] = per_class_word_freq$word[1:min(nrow(per_class_word_freq), 100)]
+
+}
+top_words_m_freq = data.frame(sort(table(unlist(top_words_m)), decreasing=T))
+top_words_m_freq$prop = top_words_m_freq$Freq / length(top_words_m)
+print(knitr::kable(head(top_words_m_freq,15), 
+                       caption = "Overall Class Mention, top terms"))
 
 
 ```

@@ -10,40 +10,6 @@ source(file.path(proj_dir, "/process_doi_data/springer_scripts/springer_scrape_u
 source(file.path(proj_dir, "/analysis_scripts/analysis_utils.R"))
 
 
-format_country_names <- function(country_vec){
-
-    country_vec = lapply(country_vec, 
-                        function(x) gsub("[[:punct:]]", "", x))
-
-    country_vec = lapply(country_vec, 
-                        function(x) gsub("[[:digit:]]+", "", x))
-
-    country_vec = unlist(country_vec)
-    country_vec = str_trim(country_vec)
-    country_vec = tolower(country_vec)
-
-
-    return(country_vec)
-}
-
-
-get_author_country <- function(loc_df){
-
-    # now query open street map to get the country codes
-    osm_res = batch_osm_query(unique(loc_df$country))
-    colnames(osm_res)[which(colnames(osm_res) == "query")] = "country"
-    loc_df = merge(loc_df, 
-                        osm_res[,c("country", "address.country_code")],
-                        all=T)
-    loc_df$address.country_code[
-        which(is.na(loc_df$address.country_code))] = "NOT_FOUND"
-
-    locs_df = unique(loc_df)
-
-
-    return(loc_df)
-
-}
 
 
 
