@@ -103,7 +103,7 @@ print(paste("% of DOIs with no gender prediction:",
             length(gender_missing)/length(unique(authored_df$doi))))
 
 
-# plot number of springer articles with no gender prediction
+# plot number of nature articles with no gender prediction
 ggplot(unique(authored_df[,c("doi", "year", "no_gender")]), 
        aes(x=as.factor(year), fill=no_gender)) +
         geom_bar(position="fill") + theme_bw() +
