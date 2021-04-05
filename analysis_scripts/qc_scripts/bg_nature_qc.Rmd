@@ -41,8 +41,7 @@ This analysis looks at 3 steps of a pipeline
 ```{r step1_read, echo=TRUE, warning=FALSE, message=F}
 
 # read in the scraped citations from nature news articles for each year
-pipeline_1_dir = paste(proj_dir,
-                    "/data/author_data/downloads/", sep="")
+pipeline_1_dir = file.path(proj_dir, "/data/author_data/downloads/")
 pipeline_1_files = list.files(pipeline_1_dir, full.names = T)
 
 all_authors = NA
@@ -144,6 +143,8 @@ print(paste("% of DOIs with no first author gender prediction after filtering
 print(paste("% of DOIs with no last author gender prediction after filtering
             single author pubs + no filtering to full name pubs:", 
             length(last_authors)/length(unique(authored_df$doi))))
+
+stopifnot(length(first_authors) == 0, length(last_authors) == 0)
 
 
 ```
