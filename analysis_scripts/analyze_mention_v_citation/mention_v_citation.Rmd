@@ -30,8 +30,9 @@ data(stop_words)
 ## Data Description
 
 This analysis will compare token frequencies between two types of Nature News articles.
-To identify the types of articles, we first identify which countries are cited more than mentioned and which countries are mentioned more than cited.
-This comparison is across all years..
+The point of this analysis is to identify how countries are talked about differently.
+We seperate countries into two groups be separating them into countries that are talked about vs cited.
+Specifically, we first identify which countries are cited more than mentioned and which countries are mentioned more than cited.
 After this, we will take the most exemplary of the 2 country classes (top mentions > cited: Class M & top mentions < cited: Class C).
 We will compare the token frequencies between a mention of Class C v M.
 
@@ -429,13 +430,14 @@ This is calculated by finding terms that have the highest the larget ratio: term
 Then, we will take the top 100 terms per country, and see which terms show up the most across all countries.
 This will give us an indication of how class C countries are talked about vs how class M countries are talked about.
 
+These are calculated on a per country basis, because the number of articles per country are very different.
+
 #### Class C
 
 
 ```{r calc_word_freq_citations, fig.align='center', fig.width=10, fig.height=10, warning = FALSE, message = FALSE}
 
-
-top_words_c = list()
+all_country_word_freq_c = list()
 # write out top words for each country
 for(curr_country in unique(class_c_mentions$address.country_code)){
     
@@ -462,25 +464,30 @@ for(curr_country in unique(class_c_mentions$address.country_code)){
                  caption = paste(curr_country, "Class Citation, top terms")))
     
     # save top words
-    top_words_c[[curr_country]] = per_class_word_freq$word[1:min(nrow(per_class_word_freq), 100)]
-    
+    per_class_word_freq_df = per_class_word_freq[,c("word", "ratio")]
+    colnames(per_class_word_freq_df)[2] = paste("ratio", curr_country, sep="_")
+    all_country_word_freq_c[[curr_country]] = per_class_word_freq_df
     
 
 }
-top_words_c_freq = data.frame(sort(table(unlist(top_words_c)), decreasing=T))
-top_words_c_freq$prop = top_words_c_freq$Freq / length(top_words_c)
-print(knitr::kable(head(top_words_c_freq,15), 
-                       caption = "Overall Class Citation, top terms"))
+
+
+citations_freq = Reduce(merge, all_country_word_freq_c)
+citations_freq$median_ratio = apply(citations_freq[,2:ncol(citations_freq)], 
+                                   1, median)
+citations_freq = citations_freq[order(citations_freq$median_ratio, decreasing = T),]
+print(knitr::kable(head(citations_freq,15), 
+                       caption = "Overall Class Citation, top terms, ratio is per country frequency"))
 
 ```
 
-## Calculate word frequencies for Class M
+#### Class M
 
 ```{r calc_word_freq_mentions, fig.align='center', fig.width=10, fig.height=10, warning = FALSE, message = FALSE}
 
 # first remove all cited articles from the articles with a mention
 
-top_words_m = list()
+all_country_word_freq_m = list()
 # write out top words for each country
 for(curr_country in unique(class_m_mentions$address.country_code)){
     
@@ -507,14 +514,95 @@ for(curr_country in unique(class_m_mentions$address.country_code)){
                  caption = paste(curr_country, "Class Mention, top terms")))
     
     # save top words
-    top_words_m[[curr_country]] = per_class_word_freq$word[1:min(nrow(per_class_word_freq), 100)]
-    
+    per_class_word_freq_df = per_class_word_freq[,c("word", "ratio")]
+    colnames(per_class_word_freq_df)[2] = paste("ratio", curr_country, sep="_")
+    all_country_word_freq_m[[curr_country]] = per_class_word_freq_df
+
     
 
 }
-top_words_m_freq = data.frame(sort(table(unlist(top_words_m)), decreasing=T))
-top_words_m_freq$prop = top_words_m_freq$Freq / length(top_words_m)
-print(knitr::kable(head(top_words_m_freq,15), 
-                       caption = "Overall Class Mention, top terms"))
+
+mentions_freq = Reduce(merge, all_country_word_freq_m)
+mentions_freq$median_ratio = apply(mentions_freq[,2:ncol(mentions_freq)], 
+                                   1, median)
+mentions_freq = mentions_freq[order(mentions_freq$median_ratio, decreasing = T),]
+
+print(knitr::kable(head(mentions_freq,15), 
+                       caption = "Overall Class Mention, top terms, ratio is per country frequency"))
 
 ```
+
+## Calculate the difference in word frequencies between Class C and M using the top words for each class
+
+Here we will calculate the most descriminative words between the two classes, using the country balanced `median_ratio`.
+
+
+```{r calc_word_freq_diff, fig.align='center', fig.width=10, fig.height=10, warning = FALSE, message = FALSE}
+
+# rename the columns for merging
+colnames(citations_freq)[which(colnames(citations_freq) == "median_ratio")] = "median_ratio_citations"
+colnames(mentions_freq)[which(colnames(mentions_freq) == "median_ratio")] = "median_ratio_mentions"
+
+# merge and calculate the relative ratios
+compare_freq = merge(subset(citations_freq, 
+                            select=c("word", "median_ratio_citations")),
+                     subset(mentions_freq, 
+                            select=c("word", "median_ratio_mentions")))
+compare_freq$compare_ratio =  compare_freq$median_ratio_citations /
+                                compare_freq$median_ratio_mentions
+
+# get the raw counts for each word, unscaled by country
+class_c_word_freq = get_word_freq_per_class(
+                        class_c_mentions, 
+                        class_str = "class_c")
+class_m_word_freq = get_word_freq_per_class(
+                        class_m_mentions, 
+                        class_str = "class_m")
+compare_freq = merge(compare_freq, class_c_word_freq)
+compare_freq = merge(compare_freq, class_m_word_freq)
+
+
+# write out the tables
+compare_freq = compare_freq[order(compare_freq$compare_ratio, decreasing=T),]
+print(knitr::kable(head(compare_freq,15), 
+                       caption = "Overall Class Citation, top terms"))
+
+compare_freq = compare_freq[order(compare_freq$compare_ratio, decreasing=F),]
+print(knitr::kable(head(compare_freq,15), 
+                       caption = "Overall Class Mention, top terms"))
+
+# now take the top and bottom
+compare_freq = compare_freq[order(compare_freq$compare_ratio, decreasing=T),]
+compare_freq_extreme = compare_freq[c(1:15,(nrow(compare_freq)-14):nrow(compare_freq)),]
+compare_freq_extreme$word_type = c(rep("Citation", 15), rep("Mention", 15))
+
+# show the enrichment
+compare_freq_extreme$word = factor(compare_freq_extreme$word, 
+                                      levels = compare_freq_extreme$word)
+ggplot(compare_freq_extreme, aes(x=log10(compare_freq_extreme$compare_ratio), 
+                                 y=as.factor(compare_freq_extreme$word),
+                                 fill=word_type)) +
+    geom_bar(stat="identity") + theme_bw() + 
+    ylab("Words") + xlab("log10 Ratio Citation : Mention Frequencies") + 
+    ggtitle("log10 Ratio Citation : Mention Frequencies for most extreme words, normalized by country") + 
+    scale_fill_brewer(palette="Set2")
+
+ggplot(compare_freq_extreme, aes(x=compare_freq_extreme$class_c_count, 
+                                 y=as.factor(compare_freq_extreme$word),
+                                 fill=word_type)) +
+    geom_bar(stat="identity") + theme_bw() + 
+    ylab("Words") + xlab("Word Frequencies") + 
+    ggtitle("Frequencies for Class C countries for most extreme words") + 
+    scale_fill_brewer(palette="Set2")
+
+ggplot(compare_freq_extreme, aes(x=compare_freq_extreme$class_m_count, 
+                                 y=as.factor(compare_freq_extreme$word),
+                                 fill=word_type)) +
+    geom_bar(stat="identity") + theme_bw() + 
+    ylab("Words") + xlab("Word Frequencies") + 
+    ggtitle("Frequencies for Class M countries for most extreme words") + 
+    scale_fill_brewer(palette="Set2")
+
+
+```
+

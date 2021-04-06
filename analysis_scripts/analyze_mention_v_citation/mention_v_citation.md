@@ -5,7 +5,7 @@ Natalie Davidson
 
 ## Data Description
 
-This analysis will compare token frequencies between two types of Nature News articles. To identify the types of articles, we first identify which countries are cited more than mentioned and which countries are mentioned more than cited. This comparison is across all years.. After this, we will take the most exemplary of the 2 country classes (top mentions &gt; cited: Class M & top mentions &lt; cited: Class C). We will compare the token frequencies between a mention of Class C v M.
+This analysis will compare token frequencies between two types of Nature News articles. The point of this analysis is to identify how countries are talked about differently. We seperate countries into two groups be separating them into countries that are talked about vs cited. Specifically, we first identify which countries are cited more than mentioned and which countries are mentioned more than cited. After this, we will take the most exemplary of the 2 country classes (top mentions &gt; cited: Class M & top mentions &lt; cited: Class C). We will compare the token frequencies between a mention of Class C v M.
 
 The source data file for a bootstrap estimate of country mentions and citations: `/data/author_data/all_author_country_95CI.tsv`
 
@@ -448,10 +448,12 @@ print(head(class_all_word_freq))
 
 Here, we will go through each country, finding the words most specific to articles mentioning this country, but not citing it. This is calculated by finding terms that have the highest the larget ratio: term in country specific articles / term over all articles. Then, we will take the top 100 terms per country, and see which terms show up the most across all countries. This will give us an indication of how class C countries are talked about vs how class M countries are talked about.
 
+These are calculated on a per country basis, because the number of articles per country are very different.
+
 #### Class C
 
 ``` r
-top_words_c = list()
+all_country_word_freq_c = list()
 # write out top words for each country
 for(curr_country in unique(class_c_mentions$address.country_code)){
     
@@ -478,8 +480,9 @@ for(curr_country in unique(class_c_mentions$address.country_code)){
                  caption = paste(curr_country, "Class Citation, top terms")))
     
     # save top words
-    top_words_c[[curr_country]] = per_class_word_freq$word[1:min(nrow(per_class_word_freq), 100)]
-    
+    per_class_word_freq_df = per_class_word_freq[,c("word", "ratio")]
+    colnames(per_class_word_freq_df)[2] = paste("ratio", curr_country, sep="_")
+    all_country_word_freq_c[[curr_country]] = per_class_word_freq_df
     
 
 }
@@ -760,40 +763,42 @@ for(curr_country in unique(class_c_mentions$address.country_code)){
     ## |retirement |            26|             238| 0.1092437|
 
 ``` r
-top_words_c_freq = data.frame(sort(table(unlist(top_words_c)), decreasing=T))
-top_words_c_freq$prop = top_words_c_freq$Freq / length(top_words_c)
-print(knitr::kable(head(top_words_c_freq,15), 
-                       caption = "Overall Class Citation, top terms"))
+citations_freq = Reduce(merge, all_country_word_freq_c)
+citations_freq$median_ratio = apply(citations_freq[,2:ncol(citations_freq)], 
+                                   1, median)
+citations_freq = citations_freq[order(citations_freq$median_ratio, decreasing = T),]
+print(knitr::kable(head(citations_freq,15), 
+                       caption = "Overall Class Citation, top terms, ratio is per country frequency"))
 ```
 
     ## 
     ## 
-    ## Table: Overall Class Citation, top terms
+    ## Table: Overall Class Citation, top terms, ratio is per country frequency
     ## 
-    ## |Var1         | Freq|      prop|
-    ## |:------------|----:|---------:|
-    ## |ut           |    7| 0.5384615|
-    ## |afm          |    5| 0.3846154|
-    ## |archaea      |    5| 0.3846154|
-    ## |palestinian  |    5| 0.3846154|
-    ## |qubit        |    5| 0.3846154|
-    ## |tamiflu      |    5| 0.3846154|
-    ## |astrocytes   |    4| 0.3076923|
-    ## |athletes     |    4| 0.3076923|
-    ## |citizen      |    4| 0.3076923|
-    ## |entanglement |    4| 0.3076923|
-    ## |gigawatts    |    4| 0.3076923|
-    ## |gran         |    4| 0.3076923|
-    ## |hominins     |    4| 0.3076923|
-    ## |ilc          |    4| 0.3076923|
-    ## |modules      |    4| 0.3076923|
+    ## |word        |  ratio_ca|  ratio_ch|  ratio_de|  ratio_fr|  ratio_it|  ratio_jp|  ratio_at|  ratio_au|  ratio_be|  ratio_es|  ratio_nl|  ratio_se|  ratio_dk| median_ratio|
+    ## |:-----------|---------:|---------:|---------:|---------:|---------:|---------:|---------:|---------:|---------:|---------:|---------:|---------:|---------:|------------:|
+    ## |gonaturecom | 0.1580189| 0.0943396| 0.1839623| 0.2193396| 0.0094340| 0.1415094| 0.0023585| 0.0872642| 0.0023585| 0.0518868| 0.0731132| 0.0047170| 0.0259434|    0.0731132|
+    ## |austria     | 0.1121495| 0.0607477| 0.1775701| 0.0841121| 0.0887850| 0.0607477| 0.4439252| 0.0607477| 0.0280374| 0.0093458| 0.0373832| 0.0373832| 0.0046729|    0.0607477|
+    ## |flagship    | 0.0636704| 0.0449438| 0.1535581| 0.1198502| 0.0187266| 0.0898876| 0.0374532| 0.0449438| 0.0074906| 0.0599251| 0.0749064| 0.0711610| 0.0037453|    0.0599251|
+    ## |belgium     | 0.0643087| 0.0546624| 0.1446945| 0.0578778| 0.0578778| 0.0353698| 0.0096463| 0.0450161| 0.3247588| 0.0353698| 0.0868167| 0.0450161| 0.0225080|    0.0546624|
+    ## |buildings   | 0.0843373| 0.0165663| 0.1219880| 0.0602410| 0.0572289| 0.0542169| 0.0346386| 0.0753012| 0.0060241| 0.0496988| 0.0105422| 0.0813253| 0.0120482|    0.0542169|
+    ## |migratory   | 0.1197605| 0.0538922| 0.1497006| 0.0538922| 0.0598802| 0.0898204| 0.0059880| 0.0658683| 0.0059880| 0.0359281| 0.0119760| 0.0479042| 0.0179641|    0.0538922|
+    ## |splitting   | 0.1044776| 0.0522388| 0.0820896| 0.0522388| 0.0223881| 0.0671642| 0.0074627| 0.0522388| 0.0149254| 0.0223881| 0.0298507| 0.0597015| 0.0074627|    0.0522388|
+    ## |amsterdam   | 0.1084337| 0.0682731| 0.0923695| 0.0522088| 0.0923695| 0.0200803| 0.0040161| 0.0883534| 0.0240964| 0.0120482| 0.2008032| 0.0080321| 0.0080321|    0.0522088|
+    ## |silicon     | 0.0717345| 0.0888651| 0.0835118| 0.0588865| 0.0085653| 0.1167024| 0.0042827| 0.0867238| 0.0246253| 0.0214133| 0.0513919| 0.0481799| 0.0032120|    0.0513919|
+    ## |steam       | 0.1242938| 0.0169492| 0.1299435| 0.0677966| 0.0112994| 0.1694915| 0.0169492| 0.0508475| 0.0564972| 0.0169492| 0.0621469| 0.0056497| 0.0338983|    0.0508475|
+    ## |local       | 0.1142945| 0.0332717| 0.0890327| 0.0690080| 0.0400493| 0.0810228| 0.0135551| 0.0576094| 0.0086260| 0.0092421| 0.0502157| 0.0551448| 0.0104744|    0.0502157|
+    ## |writer      | 0.1433692| 0.0501792| 0.0967742| 0.0573477| 0.0537634| 0.0501792| 0.0071685| 0.0430108| 0.0071685| 0.0143369| 0.0501792| 0.0143369| 0.0179211|    0.0501792|
+    ## |invention   | 0.0714286| 0.0549451| 0.1098901| 0.0494505| 0.0109890| 0.0494505| 0.0054945| 0.0329670| 0.0164835| 0.0109890| 0.0494505| 0.0494505| 0.0054945|    0.0494505|
+    ## |yeast       | 0.0493653| 0.0507757| 0.0747532| 0.0112835| 0.0380818| 0.0648801| 0.0014104| 0.0564175| 0.0874471| 0.0014104| 0.0042313| 0.0761636| 0.0014104|    0.0493653|
+    ## |optimized   | 0.0983607| 0.0655738| 0.1229508| 0.0573770| 0.0245902| 0.0491803| 0.0491803| 0.0491803| 0.0163934| 0.0245902| 0.0491803| 0.0163934| 0.0081967|    0.0491803|
 
-## Calculate word frequencies for Class M
+#### Class M
 
 ``` r
 # first remove all cited articles from the articles with a mention
 
-top_words_m = list()
+all_country_word_freq_m = list()
 # write out top words for each country
 for(curr_country in unique(class_m_mentions$address.country_code)){
     
@@ -820,8 +825,10 @@ for(curr_country in unique(class_m_mentions$address.country_code)){
                  caption = paste(curr_country, "Class Mention, top terms")))
     
     # save top words
-    top_words_m[[curr_country]] = per_class_word_freq$word[1:min(nrow(per_class_word_freq), 100)]
-    
+    per_class_word_freq_df = per_class_word_freq[,c("word", "ratio")]
+    colnames(per_class_word_freq_df)[2] = paste("ratio", curr_country, sep="_")
+    all_country_word_freq_m[[curr_country]] = per_class_word_freq_df
+
     
 
 }
@@ -913,9 +920,96 @@ for(curr_country in unique(class_m_mentions$address.country_code)){
     ## |varieties      |            32|             485| 0.0659794|
 
 ``` r
-top_words_m_freq = data.frame(sort(table(unlist(top_words_m)), decreasing=T))
-top_words_m_freq$prop = top_words_m_freq$Freq / length(top_words_m)
-print(knitr::kable(head(top_words_m_freq,15), 
+mentions_freq = Reduce(merge, all_country_word_freq_m)
+mentions_freq$median_ratio = apply(mentions_freq[,2:ncol(mentions_freq)], 
+                                   1, median)
+mentions_freq = mentions_freq[order(mentions_freq$median_ratio, decreasing = T),]
+
+print(knitr::kable(head(mentions_freq,15), 
+                       caption = "Overall Class Mention, top terms, ratio is per country frequency"))
+```
+
+    ## 
+    ## 
+    ## Table: Overall Class Mention, top terms, ratio is per country frequency
+    ## 
+    ## |word         |  ratio_co|  ratio_in|  ratio_mx|  ratio_ph| median_ratio|
+    ## |:------------|---------:|---------:|---------:|---------:|------------:|
+    ## |tolerant     | 0.0076336| 0.1145038| 0.1755725| 0.0687023|    0.0916031|
+    ## |gm           | 0.0043290| 0.1659452| 0.0851371| 0.0548341|    0.0699856|
+    ## |farmers      | 0.0049875| 0.0947631| 0.0764755| 0.0598504|    0.0681629|
+    ## |varieties    | 0.0041237| 0.0659794| 0.1835052| 0.0659794|    0.0659794|
+    ## |transgenic   | 0.0118812| 0.0752475| 0.1089109| 0.0534653|    0.0643564|
+    ## |maize        | 0.0056497| 0.0677966| 0.2241055| 0.0583804|    0.0630885|
+    ## |rice         | 0.0066050| 0.0885073| 0.0303831| 0.2126816|    0.0594452|
+    ## |irrigation   | 0.0204082| 0.0884354| 0.0204082| 0.1224490|    0.0544218|
+    ## |crops        | 0.0069686| 0.0724739| 0.0648084| 0.0425087|    0.0536585|
+    ## |fertilizers  | 0.0080000| 0.0880000| 0.0560000| 0.0480000|    0.0520000|
+    ## |planted      | 0.0190476| 0.0714286| 0.0809524| 0.0238095|    0.0476190|
+    ## |yields       | 0.0162037| 0.0625000| 0.0787037| 0.0324074|    0.0474537|
+    ## |soils        | 0.0752941| 0.0376471| 0.0541176| 0.0188235|    0.0458824|
+    ## |agricultural | 0.0211009| 0.0724771| 0.0431193| 0.0486239|    0.0458716|
+    ## |planting     | 0.0088496| 0.0796460| 0.0840708| 0.0044248|    0.0442478|
+
+## Calculate the difference in word frequencies between Class C and M using the top words for each class
+
+Here we will calculate the most descriminative words between the two classes, using the country balanced `median_ratio`.
+
+``` r
+# rename the columns for merging
+colnames(citations_freq)[which(colnames(citations_freq) == "median_ratio")] = "median_ratio_citations"
+colnames(mentions_freq)[which(colnames(mentions_freq) == "median_ratio")] = "median_ratio_mentions"
+
+# merge and calculate the relative ratios
+compare_freq = merge(subset(citations_freq, 
+                            select=c("word", "median_ratio_citations")),
+                     subset(mentions_freq, 
+                            select=c("word", "median_ratio_mentions")))
+compare_freq$compare_ratio =  compare_freq$median_ratio_citations /
+                                compare_freq$median_ratio_mentions
+
+# get the raw counts for each word, unscaled by country
+class_c_word_freq = get_word_freq_per_class(
+                        class_c_mentions, 
+                        class_str = "class_c")
+class_m_word_freq = get_word_freq_per_class(
+                        class_m_mentions, 
+                        class_str = "class_m")
+compare_freq = merge(compare_freq, class_c_word_freq)
+compare_freq = merge(compare_freq, class_m_word_freq)
+
+
+# write out the tables
+compare_freq = compare_freq[order(compare_freq$compare_ratio, decreasing=T),]
+print(knitr::kable(head(compare_freq,15), 
+                       caption = "Overall Class Citation, top terms"))
+```
+
+    ## 
+    ## 
+    ## Table: Overall Class Citation, top terms
+    ## 
+    ## |word          | median_ratio_citations| median_ratio_mentions| compare_ratio| class_c_count| class_m_count|
+    ## |:-------------|----------------------:|---------------------:|-------------:|-------------:|-------------:|
+    ## |quantum       |              0.0352687|             0.0010797|      32.66667|          2318|            47|
+    ## |physicists    |              0.0451521|             0.0016635|      27.14286|          1027|            43|
+    ## |virus         |              0.0211215|             0.0009346|      22.60000|          1028|            89|
+    ## |machines      |              0.0349206|             0.0015873|      22.00000|           390|            28|
+    ## |theoretical   |              0.0453401|             0.0020991|      21.60000|           563|            36|
+    ## |journals      |              0.0244672|             0.0011839|      20.66667|           907|            81|
+    ## |bird          |              0.0490368|             0.0026270|      18.66667|           374|            20|
+    ## |software      |              0.0261035|             0.0014238|      18.33333|           762|            42|
+    ## |clinical      |              0.0356630|             0.0019471|      18.31579|          1461|           174|
+    ## |articles      |              0.0299501|             0.0016639|      18.00000|           463|            35|
+    ## |sophisticated |              0.0378682|             0.0021038|      18.00000|           266|            15|
+    ## |pigs          |              0.0353430|             0.0020790|      17.00000|           172|             8|
+    ## |reading       |              0.0259146|             0.0015244|      17.00000|           206|            18|
+    ## |vaccines      |              0.0283648|             0.0016685|      17.00000|           446|           127|
+    ## |tissues       |              0.0329013|             0.0019940|      16.50000|           333|            12|
+
+``` r
+compare_freq = compare_freq[order(compare_freq$compare_ratio, decreasing=F),]
+print(knitr::kable(head(compare_freq,15), 
                        caption = "Overall Class Mention, top terms"))
 ```
 
@@ -923,20 +1017,64 @@ print(knitr::kable(head(top_words_m_freq,15),
     ## 
     ## Table: Overall Class Mention, top terms
     ## 
-    ## |Var1         | Freq| prop|
-    ## |:------------|----:|----:|
-    ## |bt           |    3| 0.75|
-    ## |cotton       |    3| 0.75|
-    ## |gm           |    3| 0.75|
-    ## |monsanto     |    3| 0.75|
-    ## |rust         |    3| 0.75|
-    ## |tolerant     |    3| 0.75|
-    ## |agricultural |    2| 0.50|
-    ## |arsenic      |    2| 0.50|
-    ## |bangladesh   |    2| 0.50|
-    ## |br           |    2| 0.50|
-    ## |crop         |    2| 0.50|
-    ## |crops        |    2| 0.50|
-    ## |cultivation  |    2| 0.50|
-    ## |drought      |    2| 0.50|
-    ## |farmers      |    2| 0.50|
+    ## |word              | median_ratio_citations| median_ratio_mentions| compare_ratio| class_c_count| class_m_count|
+    ## |:-----------------|----------------------:|---------------------:|-------------:|-------------:|-------------:|
+    ## |varieties         |              0.0164948|             0.0659794|     0.2500000|           162|           134|
+    ## |drought           |              0.0096154|             0.0312500|     0.3076923|           122|            79|
+    ## |soils             |              0.0141176|             0.0458824|     0.3076923|           125|            72|
+    ## |rice              |              0.0184941|             0.0594452|     0.3111111|           209|           215|
+    ## |farmers           |              0.0257689|             0.0681629|     0.3780488|           378|           237|
+    ## |crops             |              0.0222997|             0.0536585|     0.4155844|           529|           224|
+    ## |grain             |              0.0161290|             0.0376344|     0.4285714|            45|            23|
+    ## |reductions        |              0.0112994|             0.0240113|     0.4705882|           114|            37|
+    ## |yields            |              0.0231481|             0.0474537|     0.4878049|           171|            72|
+    ## |environmentalists |              0.0107143|             0.0196429|     0.5454545|            91|            19|
+    ## |villages          |              0.0204082|             0.0349854|     0.5833333|            99|            59|
+    ## |crop              |              0.0222694|             0.0381760|     0.5833333|           298|           147|
+    ## |tonnes            |              0.0169154|             0.0283582|     0.5964912|           374|           114|
+    ## |coal              |              0.0149068|             0.0248447|     0.6000000|           294|           131|
+    ## |agricultural      |              0.0284404|             0.0458716|     0.6200000|           384|           181|
+
+``` r
+# now take the top and bottom
+compare_freq = compare_freq[order(compare_freq$compare_ratio, decreasing=T),]
+compare_freq_extreme = compare_freq[c(1:15,(nrow(compare_freq)-14):nrow(compare_freq)),]
+compare_freq_extreme$word_type = c(rep("Citation", 15), rep("Mention", 15))
+
+# show the enrichment
+compare_freq_extreme$word = factor(compare_freq_extreme$word, 
+                                      levels = compare_freq_extreme$word)
+ggplot(compare_freq_extreme, aes(x=log10(compare_freq_extreme$compare_ratio), 
+                                 y=as.factor(compare_freq_extreme$word),
+                                 fill=word_type)) +
+    geom_bar(stat="identity") + theme_bw() + 
+    ylab("Words") + xlab("log10 Ratio Citation : Mention Frequencies") + 
+    ggtitle("log10 Ratio Citation : Mention Frequencies for most extreme words, normalized by country") + 
+    scale_fill_brewer(palette="Set2")
+```
+
+<img src="mention_v_citation_files/figure-markdown_github/calc_word_freq_diff-1.png" style="display: block; margin: auto;" />
+
+``` r
+ggplot(compare_freq_extreme, aes(x=compare_freq_extreme$class_c_count, 
+                                 y=as.factor(compare_freq_extreme$word),
+                                 fill=word_type)) +
+    geom_bar(stat="identity") + theme_bw() + 
+    ylab("Words") + xlab("Word Frequencies") + 
+    ggtitle("Frequencies for Class C countries for most extreme words") + 
+    scale_fill_brewer(palette="Set2")
+```
+
+<img src="mention_v_citation_files/figure-markdown_github/calc_word_freq_diff-2.png" style="display: block; margin: auto;" />
+
+``` r
+ggplot(compare_freq_extreme, aes(x=compare_freq_extreme$class_m_count, 
+                                 y=as.factor(compare_freq_extreme$word),
+                                 fill=word_type)) +
+    geom_bar(stat="identity") + theme_bw() + 
+    ylab("Words") + xlab("Word Frequencies") + 
+    ggtitle("Frequencies for Class M countries for most extreme words") + 
+    scale_fill_brewer(palette="Set2")
+```
+
+<img src="mention_v_citation_files/figure-markdown_github/calc_word_freq_diff-3.png" style="display: block; margin: auto;" />
