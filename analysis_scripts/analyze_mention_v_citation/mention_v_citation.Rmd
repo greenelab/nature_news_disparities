@@ -464,8 +464,8 @@ for(curr_country in unique(class_c_mentions$address.country_code)){
                  caption = paste(curr_country, "Class Citation, top terms")))
     
     # save top words
-    per_class_word_freq_df = per_class_word_freq[,c("word", "ratio")]
-    colnames(per_class_word_freq_df)[2] = paste("ratio", curr_country, sep="_")
+    per_class_word_freq_df = per_class_word_freq[,c("word", "class_c_count")]
+    colnames(per_class_word_freq_df)[2] = paste("count", curr_country, sep="_")
     all_country_word_freq_c[[curr_country]] = per_class_word_freq_df
     
 
@@ -473,11 +473,11 @@ for(curr_country in unique(class_c_mentions$address.country_code)){
 
 
 citations_freq = Reduce(merge, all_country_word_freq_c)
-citations_freq$median_ratio = apply(citations_freq[,2:ncol(citations_freq)], 
+citations_freq$median_count = apply(citations_freq[,2:ncol(citations_freq)], 
                                    1, median)
-citations_freq = citations_freq[order(citations_freq$median_ratio, decreasing = T),]
+citations_freq = citations_freq[order(citations_freq$median_count, decreasing = T),]
 print(knitr::kable(head(citations_freq,15), 
-                       caption = "Overall Class Citation, top terms, ratio is per country frequency"))
+                       caption = "Overall Class Citation, top terms, count is per country frequency"))
 
 ```
 
@@ -514,8 +514,8 @@ for(curr_country in unique(class_m_mentions$address.country_code)){
                  caption = paste(curr_country, "Class Mention, top terms")))
     
     # save top words
-    per_class_word_freq_df = per_class_word_freq[,c("word", "ratio")]
-    colnames(per_class_word_freq_df)[2] = paste("ratio", curr_country, sep="_")
+    per_class_word_freq_df = per_class_word_freq[,c("word", "class_m_count")]
+    colnames(per_class_word_freq_df)[2] = paste("count", curr_country, sep="_")
     all_country_word_freq_m[[curr_country]] = per_class_word_freq_df
 
     
@@ -523,33 +523,33 @@ for(curr_country in unique(class_m_mentions$address.country_code)){
 }
 
 mentions_freq = Reduce(merge, all_country_word_freq_m)
-mentions_freq$median_ratio = apply(mentions_freq[,2:ncol(mentions_freq)], 
+mentions_freq$median_count = apply(mentions_freq[,2:ncol(mentions_freq)], 
                                    1, median)
-mentions_freq = mentions_freq[order(mentions_freq$median_ratio, decreasing = T),]
+mentions_freq = mentions_freq[order(mentions_freq$median_count, decreasing = T),]
 
 print(knitr::kable(head(mentions_freq,15), 
-                       caption = "Overall Class Mention, top terms, ratio is per country frequency"))
+                       caption = "Overall Class Mention, top terms, count is per country frequency"))
 
 ```
 
 ## Calculate the difference in word frequencies between Class C and M using the top words for each class
 
-Here we will calculate the most descriminative words between the two classes, using the country balanced `median_ratio`.
+Here we will calculate the most descriminative words between the two classes, using the country balanced `median_count`.
 
 
 ```{r calc_word_freq_diff, fig.align='center', fig.width=10, fig.height=10, warning = FALSE, message = FALSE}
 
 # rename the columns for merging
-colnames(citations_freq)[which(colnames(citations_freq) == "median_ratio")] = "median_ratio_citations"
-colnames(mentions_freq)[which(colnames(mentions_freq) == "median_ratio")] = "median_ratio_mentions"
+colnames(citations_freq)[which(colnames(citations_freq) == "median_count")] = "median_count_citations"
+colnames(mentions_freq)[which(colnames(mentions_freq) == "median_count")] = "median_count_mentions"
 
-# merge and calculate the relative ratios
+# merge and calculate the relative counts
 compare_freq = merge(subset(citations_freq, 
-                            select=c("word", "median_ratio_citations")),
+                            select=c("word", "median_count_citations")),
                      subset(mentions_freq, 
-                            select=c("word", "median_ratio_mentions")))
-compare_freq$compare_ratio =  compare_freq$median_ratio_citations /
-                                compare_freq$median_ratio_mentions
+                            select=c("word", "median_count_mentions")))
+compare_freq$compare_ratio =  compare_freq$median_count_citations /
+                                compare_freq$median_count_mentions
 
 # get the raw counts for each word, unscaled by country
 class_c_word_freq = get_word_freq_per_class(

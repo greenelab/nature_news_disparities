@@ -480,8 +480,8 @@ for(curr_country in unique(class_c_mentions$address.country_code)){
                  caption = paste(curr_country, "Class Citation, top terms")))
     
     # save top words
-    per_class_word_freq_df = per_class_word_freq[,c("word", "ratio")]
-    colnames(per_class_word_freq_df)[2] = paste("ratio", curr_country, sep="_")
+    per_class_word_freq_df = per_class_word_freq[,c("word", "class_c_count")]
+    colnames(per_class_word_freq_df)[2] = paste("count", curr_country, sep="_")
     all_country_word_freq_c[[curr_country]] = per_class_word_freq_df
     
 
@@ -764,34 +764,34 @@ for(curr_country in unique(class_c_mentions$address.country_code)){
 
 ``` r
 citations_freq = Reduce(merge, all_country_word_freq_c)
-citations_freq$median_ratio = apply(citations_freq[,2:ncol(citations_freq)], 
+citations_freq$median_count = apply(citations_freq[,2:ncol(citations_freq)], 
                                    1, median)
-citations_freq = citations_freq[order(citations_freq$median_ratio, decreasing = T),]
+citations_freq = citations_freq[order(citations_freq$median_count, decreasing = T),]
 print(knitr::kable(head(citations_freq,15), 
-                       caption = "Overall Class Citation, top terms, ratio is per country frequency"))
+                       caption = "Overall Class Citation, top terms, count is per country frequency"))
 ```
 
     ## 
     ## 
-    ## Table: Overall Class Citation, top terms, ratio is per country frequency
+    ## Table: Overall Class Citation, top terms, count is per country frequency
     ## 
-    ## |word        |  ratio_ca|  ratio_ch|  ratio_de|  ratio_fr|  ratio_it|  ratio_jp|  ratio_at|  ratio_au|  ratio_be|  ratio_es|  ratio_nl|  ratio_se|  ratio_dk| median_ratio|
-    ## |:-----------|---------:|---------:|---------:|---------:|---------:|---------:|---------:|---------:|---------:|---------:|---------:|---------:|---------:|------------:|
-    ## |gonaturecom | 0.1580189| 0.0943396| 0.1839623| 0.2193396| 0.0094340| 0.1415094| 0.0023585| 0.0872642| 0.0023585| 0.0518868| 0.0731132| 0.0047170| 0.0259434|    0.0731132|
-    ## |austria     | 0.1121495| 0.0607477| 0.1775701| 0.0841121| 0.0887850| 0.0607477| 0.4439252| 0.0607477| 0.0280374| 0.0093458| 0.0373832| 0.0373832| 0.0046729|    0.0607477|
-    ## |flagship    | 0.0636704| 0.0449438| 0.1535581| 0.1198502| 0.0187266| 0.0898876| 0.0374532| 0.0449438| 0.0074906| 0.0599251| 0.0749064| 0.0711610| 0.0037453|    0.0599251|
-    ## |belgium     | 0.0643087| 0.0546624| 0.1446945| 0.0578778| 0.0578778| 0.0353698| 0.0096463| 0.0450161| 0.3247588| 0.0353698| 0.0868167| 0.0450161| 0.0225080|    0.0546624|
-    ## |buildings   | 0.0843373| 0.0165663| 0.1219880| 0.0602410| 0.0572289| 0.0542169| 0.0346386| 0.0753012| 0.0060241| 0.0496988| 0.0105422| 0.0813253| 0.0120482|    0.0542169|
-    ## |migratory   | 0.1197605| 0.0538922| 0.1497006| 0.0538922| 0.0598802| 0.0898204| 0.0059880| 0.0658683| 0.0059880| 0.0359281| 0.0119760| 0.0479042| 0.0179641|    0.0538922|
-    ## |splitting   | 0.1044776| 0.0522388| 0.0820896| 0.0522388| 0.0223881| 0.0671642| 0.0074627| 0.0522388| 0.0149254| 0.0223881| 0.0298507| 0.0597015| 0.0074627|    0.0522388|
-    ## |amsterdam   | 0.1084337| 0.0682731| 0.0923695| 0.0522088| 0.0923695| 0.0200803| 0.0040161| 0.0883534| 0.0240964| 0.0120482| 0.2008032| 0.0080321| 0.0080321|    0.0522088|
-    ## |silicon     | 0.0717345| 0.0888651| 0.0835118| 0.0588865| 0.0085653| 0.1167024| 0.0042827| 0.0867238| 0.0246253| 0.0214133| 0.0513919| 0.0481799| 0.0032120|    0.0513919|
-    ## |steam       | 0.1242938| 0.0169492| 0.1299435| 0.0677966| 0.0112994| 0.1694915| 0.0169492| 0.0508475| 0.0564972| 0.0169492| 0.0621469| 0.0056497| 0.0338983|    0.0508475|
-    ## |local       | 0.1142945| 0.0332717| 0.0890327| 0.0690080| 0.0400493| 0.0810228| 0.0135551| 0.0576094| 0.0086260| 0.0092421| 0.0502157| 0.0551448| 0.0104744|    0.0502157|
-    ## |writer      | 0.1433692| 0.0501792| 0.0967742| 0.0573477| 0.0537634| 0.0501792| 0.0071685| 0.0430108| 0.0071685| 0.0143369| 0.0501792| 0.0143369| 0.0179211|    0.0501792|
-    ## |invention   | 0.0714286| 0.0549451| 0.1098901| 0.0494505| 0.0109890| 0.0494505| 0.0054945| 0.0329670| 0.0164835| 0.0109890| 0.0494505| 0.0494505| 0.0054945|    0.0494505|
-    ## |yeast       | 0.0493653| 0.0507757| 0.0747532| 0.0112835| 0.0380818| 0.0648801| 0.0014104| 0.0564175| 0.0874471| 0.0014104| 0.0042313| 0.0761636| 0.0014104|    0.0493653|
-    ## |optimized   | 0.0983607| 0.0655738| 0.1229508| 0.0573770| 0.0245902| 0.0491803| 0.0491803| 0.0491803| 0.0163934| 0.0245902| 0.0491803| 0.0163934| 0.0081967|    0.0491803|
+    ## |word        | count_ca| count_ch| count_de| count_fr| count_it| count_jp| count_at| count_au| count_be| count_es| count_nl| count_se| count_dk| median_count|
+    ## |:-----------|--------:|--------:|--------:|--------:|--------:|--------:|--------:|--------:|--------:|--------:|--------:|--------:|--------:|------------:|
+    ## |research    |     2948|     1283|     3682|     2283|      921|     1769|      204|     2003|      319|      466|     1303|      718|      205|         1283|
+    ## |university  |     3882|     1218|     3260|     1308|      876|     1650|      270|     2051|      300|      354|     1376|      857|      360|         1218|
+    ## |researchers |     2824|     1041|     2637|     1172|      551|     1215|      115|     1498|      251|      323|     1145|      678|      223|         1041|
+    ## |scientists  |     1898|      702|     2114|     1040|      574|      990|      125|     1045|      162|      246|      766|      421|      148|          702|
+    ## |data        |     1922|      925|     1951|      693|      452|      835|      145|     1119|      136|      240|     1150|      448|      198|          693|
+    ## |people      |     1830|      806|     1333|      723|      377|      831|       91|      800|      158|      131|      690|      368|      113|          690|
+    ## |time        |     2000|      684|     1744|     1013|      448|      862|       99|     1002|      138|      187|      747|      530|      174|          684|
+    ## |science     |     1773|      603|     2016|     1089|      452|     1152|      158|     1080|      184|      311|      714|      282|      157|          603|
+    ## |cells       |     1240|      693|     1565|      706|      288|     1762|       72|      725|       78|       49|      530|      573|       35|          573|
+    ## |team        |     1445|      582|     1481|      535|      325|      677|       82|      765|      117|      160|      542|      382|      149|          535|
+    ## |study       |     1597|      486|     1040|      416|      294|      417|       88|      674|      125|       95|      522|      312|      126|          416|
+    ## |found       |     1417|      396|     1161|      457|      257|      473|       57|      645|      125|      110|      476|      343|      127|          396|
+    ## |human       |     1027|      413|     1258|      475|      224|      590|       51|      475|       67|       65|      380|      379|       74|          380|
+    ## |institute   |      991|      518|     1570|      605|      341|      735|      126|      485|       77|      120|      379|      335|       81|          379|
+    ## |technology  |      730|      412|      873|      406|      125|      602|       76|      427|       58|       96|      368|      195|       49|          368|
 
 #### Class M
 
@@ -825,8 +825,8 @@ for(curr_country in unique(class_m_mentions$address.country_code)){
                  caption = paste(curr_country, "Class Mention, top terms")))
     
     # save top words
-    per_class_word_freq_df = per_class_word_freq[,c("word", "ratio")]
-    colnames(per_class_word_freq_df)[2] = paste("ratio", curr_country, sep="_")
+    per_class_word_freq_df = per_class_word_freq[,c("word", "class_m_count")]
+    colnames(per_class_word_freq_df)[2] = paste("count", curr_country, sep="_")
     all_country_word_freq_m[[curr_country]] = per_class_word_freq_df
 
     
@@ -921,52 +921,52 @@ for(curr_country in unique(class_m_mentions$address.country_code)){
 
 ``` r
 mentions_freq = Reduce(merge, all_country_word_freq_m)
-mentions_freq$median_ratio = apply(mentions_freq[,2:ncol(mentions_freq)], 
+mentions_freq$median_count = apply(mentions_freq[,2:ncol(mentions_freq)], 
                                    1, median)
-mentions_freq = mentions_freq[order(mentions_freq$median_ratio, decreasing = T),]
+mentions_freq = mentions_freq[order(mentions_freq$median_count, decreasing = T),]
 
 print(knitr::kable(head(mentions_freq,15), 
-                       caption = "Overall Class Mention, top terms, ratio is per country frequency"))
+                       caption = "Overall Class Mention, top terms, count is per country frequency"))
 ```
 
     ## 
     ## 
-    ## Table: Overall Class Mention, top terms, ratio is per country frequency
+    ## Table: Overall Class Mention, top terms, count is per country frequency
     ## 
-    ## |word         |  ratio_co|  ratio_in|  ratio_mx|  ratio_ph| median_ratio|
-    ## |:------------|---------:|---------:|---------:|---------:|------------:|
-    ## |tolerant     | 0.0076336| 0.1145038| 0.1755725| 0.0687023|    0.0916031|
-    ## |gm           | 0.0043290| 0.1659452| 0.0851371| 0.0548341|    0.0699856|
-    ## |farmers      | 0.0049875| 0.0947631| 0.0764755| 0.0598504|    0.0681629|
-    ## |varieties    | 0.0041237| 0.0659794| 0.1835052| 0.0659794|    0.0659794|
-    ## |transgenic   | 0.0118812| 0.0752475| 0.1089109| 0.0534653|    0.0643564|
-    ## |maize        | 0.0056497| 0.0677966| 0.2241055| 0.0583804|    0.0630885|
-    ## |rice         | 0.0066050| 0.0885073| 0.0303831| 0.2126816|    0.0594452|
-    ## |irrigation   | 0.0204082| 0.0884354| 0.0204082| 0.1224490|    0.0544218|
-    ## |crops        | 0.0069686| 0.0724739| 0.0648084| 0.0425087|    0.0536585|
-    ## |fertilizers  | 0.0080000| 0.0880000| 0.0560000| 0.0480000|    0.0520000|
-    ## |planted      | 0.0190476| 0.0714286| 0.0809524| 0.0238095|    0.0476190|
-    ## |yields       | 0.0162037| 0.0625000| 0.0787037| 0.0324074|    0.0474537|
-    ## |soils        | 0.0752941| 0.0376471| 0.0541176| 0.0188235|    0.0458824|
-    ## |agricultural | 0.0211009| 0.0724771| 0.0431193| 0.0486239|    0.0458716|
-    ## |planting     | 0.0088496| 0.0796460| 0.0840708| 0.0044248|    0.0442478|
+    ## |word        | count_co| count_in| count_mx| count_ph| median_count|
+    ## |:-----------|--------:|--------:|--------:|--------:|------------:|
+    ## |research    |      197|     1368|      261|      183|        229.0|
+    ## |university  |      215|      800|      217|      102|        216.0|
+    ## |climate     |      329|      322|      108|       78|        215.0|
+    ## |time        |      267|      594|       98|       66|        182.5|
+    ## |researchers |      197|      628|      166|       79|        181.5|
+    ## |science     |      108|     1020|      173|      142|        157.5|
+    ## |people      |      128|      490|      163|       97|        145.5|
+    ## |million     |      154|      444|       58|      103|        128.5|
+    ## |water       |      189|      229|       46|       68|        128.5|
+    ## |scientists  |      107|      680|      138|       83|        122.5|
+    ## |global      |      196|      264|       38|       44|        120.0|
+    ## |data        |      159|      483|       35|       77|        118.0|
+    ## |change      |      155|      285|       76|       54|        115.5|
+    ## |world       |      127|      386|      102|      104|        115.5|
+    ## |plants      |      162|      134|       77|       55|        105.5|
 
 ## Calculate the difference in word frequencies between Class C and M using the top words for each class
 
-Here we will calculate the most descriminative words between the two classes, using the country balanced `median_ratio`.
+Here we will calculate the most descriminative words between the two classes, using the country balanced `median_count`.
 
 ``` r
 # rename the columns for merging
-colnames(citations_freq)[which(colnames(citations_freq) == "median_ratio")] = "median_ratio_citations"
-colnames(mentions_freq)[which(colnames(mentions_freq) == "median_ratio")] = "median_ratio_mentions"
+colnames(citations_freq)[which(colnames(citations_freq) == "median_count")] = "median_count_citations"
+colnames(mentions_freq)[which(colnames(mentions_freq) == "median_count")] = "median_count_mentions"
 
-# merge and calculate the relative ratios
+# merge and calculate the relative counts
 compare_freq = merge(subset(citations_freq, 
-                            select=c("word", "median_ratio_citations")),
+                            select=c("word", "median_count_citations")),
                      subset(mentions_freq, 
-                            select=c("word", "median_ratio_mentions")))
-compare_freq$compare_ratio =  compare_freq$median_ratio_citations /
-                                compare_freq$median_ratio_mentions
+                            select=c("word", "median_count_mentions")))
+compare_freq$compare_ratio =  compare_freq$median_count_citations /
+                                compare_freq$median_count_mentions
 
 # get the raw counts for each word, unscaled by country
 class_c_word_freq = get_word_freq_per_class(
@@ -989,23 +989,23 @@ print(knitr::kable(head(compare_freq,15),
     ## 
     ## Table: Overall Class Citation, top terms
     ## 
-    ## |word          | median_ratio_citations| median_ratio_mentions| compare_ratio| class_c_count| class_m_count|
+    ## |word          | median_count_citations| median_count_mentions| compare_ratio| class_c_count| class_m_count|
     ## |:-------------|----------------------:|---------------------:|-------------:|-------------:|-------------:|
-    ## |quantum       |              0.0352687|             0.0010797|      32.66667|          2318|            47|
-    ## |physicists    |              0.0451521|             0.0016635|      27.14286|          1027|            43|
-    ## |virus         |              0.0211215|             0.0009346|      22.60000|          1028|            89|
-    ## |machines      |              0.0349206|             0.0015873|      22.00000|           390|            28|
-    ## |theoretical   |              0.0453401|             0.0020991|      21.60000|           563|            36|
-    ## |journals      |              0.0244672|             0.0011839|      20.66667|           907|            81|
-    ## |bird          |              0.0490368|             0.0026270|      18.66667|           374|            20|
-    ## |software      |              0.0261035|             0.0014238|      18.33333|           762|            42|
-    ## |clinical      |              0.0356630|             0.0019471|      18.31579|          1461|           174|
-    ## |articles      |              0.0299501|             0.0016639|      18.00000|           463|            35|
-    ## |sophisticated |              0.0378682|             0.0021038|      18.00000|           266|            15|
-    ## |pigs          |              0.0353430|             0.0020790|      17.00000|           172|             8|
-    ## |reading       |              0.0259146|             0.0015244|      17.00000|           206|            18|
-    ## |vaccines      |              0.0283648|             0.0016685|      17.00000|           446|           127|
-    ## |tissues       |              0.0329013|             0.0019940|      16.50000|           333|            12|
+    ## |quantum       |                    147|                   4.5|      32.66667|          2318|            47|
+    ## |physicists    |                     95|                   3.5|      27.14286|          1027|            43|
+    ## |virus         |                    113|                   5.0|      22.60000|          1028|            89|
+    ## |machines      |                     33|                   1.5|      22.00000|           390|            28|
+    ## |theoretical   |                     54|                   2.5|      21.60000|           563|            36|
+    ## |journals      |                     62|                   3.0|      20.66667|           907|            81|
+    ## |bird          |                     56|                   3.0|      18.66667|           374|            20|
+    ## |software      |                     55|                   3.0|      18.33333|           762|            42|
+    ## |clinical      |                    174|                   9.5|      18.31579|          1461|           174|
+    ## |articles      |                     36|                   2.0|      18.00000|           463|            35|
+    ## |sophisticated |                     27|                   1.5|      18.00000|           266|            15|
+    ## |pigs          |                     17|                   1.0|      17.00000|           172|             8|
+    ## |reading       |                     17|                   1.0|      17.00000|           206|            18|
+    ## |vaccines      |                     51|                   3.0|      17.00000|           446|           127|
+    ## |tissues       |                     33|                   2.0|      16.50000|           333|            12|
 
 ``` r
 compare_freq = compare_freq[order(compare_freq$compare_ratio, decreasing=F),]
@@ -1017,23 +1017,23 @@ print(knitr::kable(head(compare_freq,15),
     ## 
     ## Table: Overall Class Mention, top terms
     ## 
-    ## |word              | median_ratio_citations| median_ratio_mentions| compare_ratio| class_c_count| class_m_count|
+    ## |word              | median_count_citations| median_count_mentions| compare_ratio| class_c_count| class_m_count|
     ## |:-----------------|----------------------:|---------------------:|-------------:|-------------:|-------------:|
-    ## |varieties         |              0.0164948|             0.0659794|     0.2500000|           162|           134|
-    ## |drought           |              0.0096154|             0.0312500|     0.3076923|           122|            79|
-    ## |soils             |              0.0141176|             0.0458824|     0.3076923|           125|            72|
-    ## |rice              |              0.0184941|             0.0594452|     0.3111111|           209|           215|
-    ## |farmers           |              0.0257689|             0.0681629|     0.3780488|           378|           237|
-    ## |crops             |              0.0222997|             0.0536585|     0.4155844|           529|           224|
-    ## |grain             |              0.0161290|             0.0376344|     0.4285714|            45|            23|
-    ## |reductions        |              0.0112994|             0.0240113|     0.4705882|           114|            37|
-    ## |yields            |              0.0231481|             0.0474537|     0.4878049|           171|            72|
-    ## |environmentalists |              0.0107143|             0.0196429|     0.5454545|            91|            19|
-    ## |villages          |              0.0204082|             0.0349854|     0.5833333|            99|            59|
-    ## |crop              |              0.0222694|             0.0381760|     0.5833333|           298|           147|
-    ## |tonnes            |              0.0169154|             0.0283582|     0.5964912|           374|           114|
-    ## |coal              |              0.0149068|             0.0248447|     0.6000000|           294|           131|
-    ## |agricultural      |              0.0284404|             0.0458716|     0.6200000|           384|           181|
+    ## |varieties         |                      8|                  32.0|     0.2500000|           162|           134|
+    ## |drought           |                      6|                  19.5|     0.3076923|           122|            79|
+    ## |soils             |                      6|                  19.5|     0.3076923|           125|            72|
+    ## |rice              |                     14|                  45.0|     0.3111111|           209|           215|
+    ## |farmers           |                     31|                  82.0|     0.3780488|           378|           237|
+    ## |crops             |                     32|                  77.0|     0.4155844|           529|           224|
+    ## |grain             |                      3|                   7.0|     0.4285714|            45|            23|
+    ## |reductions        |                      4|                   8.5|     0.4705882|           114|            37|
+    ## |yields            |                     10|                  20.5|     0.4878049|           171|            72|
+    ## |environmentalists |                      3|                   5.5|     0.5454545|            91|            19|
+    ## |crop              |                     21|                  36.0|     0.5833333|           298|           147|
+    ## |villages          |                      7|                  12.0|     0.5833333|            99|            59|
+    ## |tonnes            |                     17|                  28.5|     0.5964912|           374|           114|
+    ## |coal              |                     12|                  20.0|     0.6000000|           294|           131|
+    ## |agricultural      |                     31|                  50.0|     0.6200000|           384|           181|
 
 ``` r
 # now take the top and bottom
