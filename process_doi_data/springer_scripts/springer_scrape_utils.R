@@ -210,3 +210,88 @@ url_springer_doi_search <- function(doi_chunk, api_key) {
     
     return(single_query)
 }
+
+
+#' Read all nature json files and get author info
+#' @param nature_dir, directory containing scraped nature JSON output 
+#' 
+#' @return dataframe, all_authors author infos for nature articles
+read_nature_author_json_files <- function(nature_dir){
+
+    json_res_files = list.files(nature_dir, pattern=".json", full.names = TRUE)
+    
+    all_authors = NA
+    for(curr_file in json_res_files){
+
+        print(curr_file)
+        
+        file_id = basename(curr_file)
+        file_id = substr(file_id, 1, nchar(file_id)-9)
+        
+        json_res = fromJSON(curr_file)
+
+        # format authors
+        authors = unlist(lapply(json_res$authors, function(x) paste(unlist(x$name), collapse="; ")))
+
+        # make df
+        authors_df = data.frame(file_id=json_res$file_id,
+                                year=json_res$year,
+                                authors=authors)
+        
+        all_authors = rbind(all_authors, authors_df)
+
+    }
+
+    all_authors = all_authors[-1,]
+
+    # format file_id into a doi
+    all_authors$doi = paste("doi:10.1038/", all_authors$file_id, sep="")
+
+    return(all_authors)
+
+}
+
+
+#' Read all nature json files and get author info
+#' @param author_df, data.frame with all author info 
+#' 
+#' @return dataframe, reducing all author info to first and last authors only
+format_authors <- function(author_df, use_fullname=F){
+
+    library(stringr)
+
+    # only keep publications with more than 1 author
+    author_df = author_df[grep(";", author_df$authors),]
+
+    first_authors = unlist(lapply(author_df$authors, function(x) unlist(str_split(x, "; "))[1]))
+    last_authors = unlist(lapply(author_df$authors, function(x) rev(unlist(str_split(x, "; ")))[1]))
+
+    if(!use_fullname){
+        first_authors = format_author_firstnames(first_authors)
+        last_authors = format_author_firstnames(last_authors)
+    }else{
+        first_authors = format_author_fullname(first_authors)
+        last_authors = format_author_fullname(last_authors)
+    }
+
+    first_author_df = data.frame(doi = author_df$doi,
+                                year = author_df$year,
+                                author_pos = "first",
+                                author = first_authors)
+    last_author_df = data.frame(doi = author_df$doi,
+                                year = author_df$year,
+                                author_pos = "last",
+                                author = last_authors)
+
+    if(length(grep("file_id", colnames(author_df))) != 0){
+        first_author_df$file_id = author_df$file_id
+        last_author_df$file_id = author_df$file_id
+    }
+
+    author_df = rbind(first_author_df, last_author_df)
+
+
+    author_df = unique(author_df)
+    return(author_df)
+
+}

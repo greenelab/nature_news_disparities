@@ -124,7 +124,7 @@ print(head(first_authors))
     ## [4] "W. H. Bakun"       "M. Ozima"          "P. R. Christensen"
 
 ``` r
-first_authors = format_author_names(first_authors)
+first_authors = format_author_firstnames(first_authors)
 first_authors = first_authors[which(first_authors != "")]
 
 last_authors = unlist(lapply(no_gender_authored_df$authors, function(x) rev(unlist(str_split(x, "; ")))[1]))
@@ -135,7 +135,7 @@ print(head(last_authors))
     ## [5] "F. A. Podosek" "M. C. Malin"
 
 ``` r
-last_authors = format_author_names(last_authors)
+last_authors = format_author_firstnames(last_authors)
 last_authors = last_authors[which(last_authors != "")]
 
 print(paste("% of DOIs with no first author gender prediction after filtering
