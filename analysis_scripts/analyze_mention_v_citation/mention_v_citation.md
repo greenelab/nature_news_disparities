@@ -207,7 +207,8 @@ res_MC = make_heatmap_res(top_diff_MC, value_col="M_C")
 pheatmap(res_MC$plot_matr, cluster_rows = F, 
          cluster_cols = F, display_numbers = T, 
          main = "Top (Mention - Citation) Proportions",
-         color = res_MC$color_pmap, breaks = res_MC$breaks)
+         color = res_MC$color_pmap, breaks = res_MC$breaks,
+         number_color = "darkorange2")
 ```
 
 <img src="mention_v_citation_files/figure-markdown_github/plot_filtered_countries-1.png" style="display: block; margin: auto;" />
@@ -218,7 +219,8 @@ res_cite = make_heatmap_res(top_diff_MC, value_col="tot_citations")
 pheatmap(res_cite$plot_matr, cluster_rows = F, 
          cluster_cols = F, display_numbers = T, 
          main = "Top (Mention - Citation), total citations",
-         color = res_cite$color_pmap, breaks = res_cite$breaks)
+         color = res_cite$color_pmap, breaks = res_cite$breaks,
+         number_color = "darkorange2")
 ```
 
 <img src="mention_v_citation_files/figure-markdown_github/plot_filtered_countries-2.png" style="display: block; margin: auto;" />
@@ -229,7 +231,8 @@ res_mention = make_heatmap_res(top_diff_MC, value_col="tot_mentions")
 pheatmap(res_mention$plot_matr, cluster_rows = F, 
          cluster_cols = F, display_numbers = T, 
          main = "Top (Mention - Citation), total mentions",
-         color = res_mention$color_pmap, breaks = res_mention$breaks)
+         color = res_mention$color_pmap, breaks = res_mention$breaks,
+         number_color = "darkorange2")
 ```
 
 <img src="mention_v_citation_files/figure-markdown_github/plot_filtered_countries-3.png" style="display: block; margin: auto;" />
