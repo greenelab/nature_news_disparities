@@ -1,0 +1,406 @@
+---
+title: "name_origin_with_bg_analysis"
+author: "Natalie Davidson"
+date: "4/6/2021"
+output: rmarkdown::github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+require(data.table)
+require(here)
+require(ggplot2)
+require(ggrepel)
+require(stringr)
+
+
+proj_dir = here()
+source(file.path(proj_dir, "/analysis_scripts/analysis_utils.R"))
+source(file.path(proj_dir, "/utils/plotting_utils.R"))
+source(file.path(proj_dir, "/utils/scraper_processing_utils.R"))
+
+```
+
+## Data Description
+
+This document compares one "foreground" datasets (estimated name origin of authors cited in nature news articles) and compares it to two possible "background" datasets (random sampling of 36K Springer articles, and all nature articles)
+
+The source data file is: `./data/author_data/all_author_fullname_pred.tsv`
+
+The three corpi are indexed by the `corpus` column:
+
+1) `news_citation`: __foreground__ country of Nature News cited authors affiliation. 
+
+2) `nature_articles`: __background__ country of author affiliation from Nature articles. 
+
+3) `springer_articles`: __background__ country of author affiliation from random subset of Springer articles. 
+
+To subset for only articles with a specific country affiliation we will use this file: `./data/author_data/all_author_country.tsv`
+
+## Foreground Location Breakdown
+
+
+Read in the name data.
+
+```{r}
+# get the project directory, everything is set relative to this
+proj_dir = here()
+
+# read in the cited author data
+name_pred_file = file.path(proj_dir, 
+                         "/data/author_data/all_author_fullname_pred.tsv")
+name_pred_df = data.frame(fread(name_pred_file))
+
+name_info_file = file.path(proj_dir, 
+                         "/data/author_data/all_author_fullname.tsv")
+name_info_df = data.frame(fread(name_info_file))
+
+# format the prediction table  table
+colnames(name_pred_df)[1] = "author"
+name_origin_vec = colnames(name_pred_df)[2:ncol(name_pred_df)]
+name_origin = apply(name_pred_df[,2:ncol(name_pred_df)], 1, 
+                    function(x) name_origin_vec[which(x == max(x))])
+name_pred_df$name_origin = name_origin
+
+name_df = merge(name_info_df, name_pred_df[,c("author", "name_origin")])
+
+# remove any names that may have got through that are not real names
+name_df = name_df[grep("collab|group", tolower(name_df$author), invert=T), ]
+name_df = unique(name_df)
+head(name_df)
+
+```
+
+### QC
+
+From each corpus, lets compare the total number of articles considered (the number of articles cited by Nature News and indexed by Springer, number of nature articles, and number of springer articles)
+
+
+```{r qc_analysis, fig.align='center', echo=FALSE, warning=FALSE, message=F}
+
+# now lets add a QC plot 
+citation_total = unique(subset(name_df, corpus == "naturenews_citations", select=c(file_id, year)) )
+tot_prop_citation = citation_total %>% 
+                group_by(year) %>% 
+                summarise(n()) 
+tot_prop_citation$corpus = "naturenews_citations"
+
+springer_total = unique(subset(name_df, corpus == "springer_articles", select=c(file_id, year)) )
+tot_prop_springer = springer_total %>% 
+                group_by(year) %>% 
+                summarise(n()) 
+tot_prop_springer$corpus = "springer_articles"
+
+nature_total = unique(subset(name_df, corpus == "nature_articles", select=c(file_id, year)) )
+tot_prop_nature = nature_total %>% 
+                group_by(year) %>% 
+                summarise(n()) 
+tot_prop_nature$corpus = "nature_articles"
+
+num_art_tot = Reduce(rbind, list(tot_prop_citation, 
+                                 tot_prop_springer, 
+                                 tot_prop_nature))
+num_art_tot = data.frame(num_art_tot)
+colnames(num_art_tot)[2] = "tot_articles"
+ 
+ggplot(num_art_tot, aes(x=as.numeric(year), y=tot_articles,
+                              fill=corpus, color=corpus)) +
+    geom_point() + geom_line() + theme_bw() + 
+    xlab("Year of Article") + ylab("Number of Total Articles") +
+    ggtitle("Total number of Articles per Corpus") + 
+    scale_fill_brewer(palette="Set2")
+
+```
+
+### Name Origin Comparison
+
+For each corpus, lets compare the number of articles with an estimated name origin for the first and last authors.
+
+
+```{r compare_origins_each_corpus, fig.align='center', fig.width = 10, fig.height = 10, echo=FALSE, warning=FALSE, message=F}
+
+
+# make the df into proportions for each name origins
+get_subboot <- function(origin_id, curr_corpus, curr_pos, in_df){
+    bootstrap_res = compute_bootstrap_location(subset(in_df, 
+                                                      corpus==curr_corpus &
+                                                      author_pos==curr_pos), 
+                                              year_col_id = "year", 
+                                              article_col_id = "file_id", 
+                                              country_col_id = "name_origin",
+                                              country_agg = origin_id, 
+                                              conf_int = 0.95)
+    bootstrap_res$name_origin = origin_id
+    return(bootstrap_res)
+
+}
+
+# get the bootstrapped CI
+citation_origin_df = NA
+for(curr_origin in unique(name_df$name_origin)){
+    print(curr_origin)
+    res = get_subboot(curr_origin, 
+                      curr_corpus="naturenews_citations",
+                      curr_pos = "last",
+                      name_df)
+    citation_origin_df = rbind(citation_origin_df, res)
+}
+citation_origin_df = citation_origin_df[-1,]
+
+springer_origin_df = NA
+for(curr_origin in unique(name_df$name_origin)){
+    print(curr_origin)
+    res = get_subboot(curr_origin, 
+                      curr_corpus="springer_articles",
+                      curr_pos = "last",
+                      name_df)
+    springer_origin_df = rbind(springer_origin_df, res)
+}
+springer_origin_df = springer_origin_df[-1,]
+
+nature_origin_df = NA
+for(curr_origin in unique(name_df$name_origin)){
+    print(curr_origin)
+    res = get_subboot(curr_origin, 
+                      curr_corpus="nature_articles",
+                      curr_pos = "last",
+                      name_df)
+    nature_origin_df = rbind(nature_origin_df, res)
+}
+nature_origin_df = nature_origin_df[-1,]
+
+# format them for plotting
+
+citation_origin_df$label = ""
+citation_origin_df$label[citation_origin_df$year == 2020] = 
+    citation_origin_df$name_origin[citation_origin_df$year == 2020]
+    
+springer_origin_df$label = ""
+springer_origin_df$label[springer_origin_df$year == 2020] = 
+    springer_origin_df$name_origin[springer_origin_df$year == 2020]
+
+nature_origin_df$label = ""
+nature_origin_df$label[nature_origin_df$year == 2020] = 
+    nature_origin_df$name_origin[nature_origin_df$year == 2020]
+
+ggplot(citation_origin_df, aes(x=as.numeric(year), y=mean,
+                          ymin=bottom_CI, ymax=top_CI,
+                          fill=name_origin, label=label)) +
+    geom_point() + geom_ribbon(alpha=0.5) + geom_line(alpha=0.5) +
+    theme_bw() + geom_text_repel() + xlim(c(2005,2021))  +
+    xlab("Year of Article") + ylab("Proportion articles from specific name origins") +
+    ggtitle("Estimated Proportion of Nature News Cited articles of Last Author name origin") + 
+    scale_fill_brewer(palette="Set3") +
+    theme(legend.position = "none")
+
+
+ggplot(springer_origin_df, aes(x=as.numeric(year), y=mean,
+                          ymin=bottom_CI, ymax=top_CI,
+                          fill=name_origin, label=label)) +
+    geom_point() + geom_ribbon(alpha=0.5) + geom_line(alpha=0.5) +
+    theme_bw() + geom_text_repel() + xlim(c(2005,2021))  +
+    xlab("Year of Article") + ylab("Proportion articles from specific name origins") +
+    ggtitle("Estimated Proportion of Springer articles of Last Author name origin") + 
+    scale_fill_brewer(palette="Set3") +
+    theme(legend.position = "none")
+
+ggplot(nature_origin_df, aes(x=as.numeric(year), y=mean,
+                          ymin=bottom_CI, ymax=top_CI,
+                          fill=name_origin, label=label)) +
+    geom_point() + geom_ribbon(alpha=0.5) + geom_line(alpha=0.5) +
+    theme_bw() + geom_text_repel() + xlim(c(2005,2021))  +
+    xlab("Year of Article") + ylab("Proportion articles from specific name origins") +
+    ggtitle("Estimated Proportion of Nature articles of Last Author name origin") + 
+    scale_fill_brewer(palette="Set3") +
+    theme(legend.position = "none")
+
+
+
+```
+
+
+The previous plots are likely confounded by country affiliation.
+Here we would like to filter to only authors that are affiliated with US / UK.
+
+```{r qc_subset_us_analysis, fig.align='center', echo=FALSE, warning=FALSE, message=F}
+
+name_country_file = file.path(proj_dir, 
+                         "/data/author_data/all_author_country.tsv")
+name_country_df = data.frame(fread(name_country_file))
+
+us_file_id = subset(name_country_df, address.country_code == "us")
+name_df_us = subset(name_df, file_id %in% us_file_id$file_id)  
+  
+
+# now lets add a QC plot 
+citation_total = unique(subset(name_df_us, corpus == "naturenews_citations", select=c(file_id, year)) )
+tot_prop_citation = citation_total %>% 
+                group_by(year) %>% 
+                summarise(n()) 
+tot_prop_citation$corpus = "naturenews_citations"
+
+springer_total = unique(subset(name_df_us, corpus == "springer_articles", select=c(file_id, year)) )
+tot_prop_springer = springer_total %>% 
+                group_by(year) %>% 
+                summarise(n()) 
+tot_prop_springer$corpus = "springer_articles"
+
+nature_total = unique(subset(name_df_us, corpus == "nature_articles", select=c(file_id, year)) )
+tot_prop_nature = nature_total %>% 
+                group_by(year) %>% 
+                summarise(n()) 
+tot_prop_nature$corpus = "nature_articles"
+
+num_art_tot = Reduce(rbind, list(tot_prop_citation, 
+                                 tot_prop_springer, 
+                                 tot_prop_nature))
+num_art_tot = data.frame(num_art_tot)
+colnames(num_art_tot)[2] = "tot_articles"
+ 
+ggplot(num_art_tot, aes(x=as.numeric(year), y=tot_articles,
+                              fill=corpus, color=corpus)) +
+    geom_point() + geom_line() + theme_bw() + 
+    xlab("Year of Article") + ylab("Number of Total Articles") +
+    ggtitle("Total number of US Affiliated Articles per Corpus") + 
+    scale_fill_brewer(palette="Set2")
+
+```
+
+
+```{r compare_origins_each_corpus_country_subset, fig.align='center', fig.width = 10, fig.height = 10, echo=FALSE, warning=FALSE, message=F}
+
+  
+# get the bootstrapped CI
+citation_origin_df = NA
+for(curr_origin in unique(name_df_us$name_origin)){
+    print(curr_origin)
+    res = get_subboot(curr_origin, 
+                      curr_corpus="naturenews_citations",
+                      curr_pos = "last",
+                      name_df_us)
+    citation_origin_df = rbind(citation_origin_df, res)
+}
+citation_origin_df = citation_origin_df[-1,]
+
+springer_origin_df = NA
+for(curr_origin in unique(name_df_us$name_origin)){
+    print(curr_origin)
+    res = get_subboot(curr_origin, 
+                      curr_corpus="springer_articles",
+                      curr_pos = "last",
+                      name_df_us)
+    springer_origin_df = rbind(springer_origin_df, res)
+}
+springer_origin_df = springer_origin_df[-1,]
+
+nature_origin_df = NA
+for(curr_origin in unique(name_df_us$name_origin)){
+    print(curr_origin)
+    res = get_subboot(curr_origin, 
+                      curr_corpus="nature_articles",
+                      curr_pos = "last",
+                      name_df_us)
+    nature_origin_df = rbind(nature_origin_df, res)
+}
+nature_origin_df = nature_origin_df[-1,]
+
+# format them for plotting
+
+citation_origin_df$label = ""
+citation_origin_df$label[citation_origin_df$year == 2020] = 
+    citation_origin_df$name_origin[citation_origin_df$year == 2020]
+    
+springer_origin_df$label = ""
+springer_origin_df$label[springer_origin_df$year == 2020] = 
+    springer_origin_df$name_origin[springer_origin_df$year == 2020]
+
+nature_origin_df$label = ""
+nature_origin_df$label[nature_origin_df$year == 2020] = 
+    nature_origin_df$name_origin[nature_origin_df$year == 2020]
+
+ggplot(citation_origin_df, aes(x=as.numeric(year), y=mean,
+                          ymin=bottom_CI, ymax=top_CI,
+                          fill=name_origin, label=label)) +
+    geom_point() + geom_ribbon(alpha=0.5) + geom_line(alpha=0.5) +
+    theme_bw() + geom_text_repel() + xlim(c(2005,2021))  +
+    xlab("Year of Article") + ylab("Proportion articles from specific name origins") +
+    ggtitle("Estimated Proportion of US affil. Nature News Cited articles of Last Author name origin") + 
+    scale_fill_brewer(palette="Set3") +
+    theme(legend.position = "none")
+
+
+ggplot(springer_origin_df, aes(x=as.numeric(year), y=mean,
+                          ymin=bottom_CI, ymax=top_CI,
+                          fill=name_origin, label=label)) +
+    geom_point() + geom_ribbon(alpha=0.5) + geom_line(alpha=0.5) +
+    theme_bw() + geom_text_repel() + xlim(c(2005,2021))  +
+    xlab("Year of Article") + ylab("Proportion articles from specific name origins") +
+    ggtitle("Estimated Proportion of US affil. Springer articles of Last Author name origin") + 
+    scale_fill_brewer(palette="Set3") +
+    theme(legend.position = "none")
+
+ggplot(nature_origin_df, aes(x=as.numeric(year), y=mean,
+                          ymin=bottom_CI, ymax=top_CI,
+                          fill=name_origin, label=label)) +
+    geom_point() + geom_ribbon(alpha=0.5) + geom_line(alpha=0.5) +
+    theme_bw() + geom_text_repel() + xlim(c(2005,2021))  +
+    xlab("Year of Article") + ylab("Proportion articles from specific name origins") +
+    ggtitle("Estimated Proportion of US affil. Nature articles of Last Author name origin") + 
+    scale_fill_brewer(palette="Set3") +
+    theme(legend.position = "none")
+
+
+
+```
+
+
+Now lets look at the proportion of articles with atleast 1 country mention or atleast 1 authors' affiliate country cited by Nature News. 
+
+We first look at individual countries.
+
+```{r four_countries_mention_or_citation, out.width="50%", echo=FALSE, warning=FALSE, message=F}
+
+
+citation_origin_df$corpus = "naturenews_citations"
+springer_origin_df$corpus = "springer_articles"
+nature_origin_df$corpus = "nature_articles"
+foreground_df = Reduce(rbind, list(citation_origin_df,
+                                   springer_origin_df,
+                                   nature_origin_df))
+
+for(curr_origin in unique(foreground_df$name_origin)){
+    
+    gg = ggplot(subset(foreground_df, name_origin == curr_origin), 
+       aes(x=as.numeric(year), y=mean,
+                          ymin=bottom_CI, ymax=top_CI,
+                          fill=corpus)) +
+    geom_point() + geom_ribbon(alpha=0.5) + geom_line(alpha=0.5) +
+    theme_bw() + 
+    xlab("Year of Article") + ylab("Percentage articles with last author name origin") +
+    ggtitle(paste("Percentage articles with", curr_origin, "name origin")) + 
+    scale_fill_brewer(palette="Set2")
+    
+    print(gg)
+    
+}
+
+foreground_df = Reduce(rbind, list(citation_origin_df,
+                                   nature_origin_df))
+for(curr_origin in unique(foreground_df$name_origin)){
+    
+    gg = ggplot(subset(foreground_df, name_origin == curr_origin), 
+       aes(x=as.numeric(year), y=mean,
+                          ymin=bottom_CI, ymax=top_CI,
+                          fill=corpus)) +
+    geom_point() + geom_ribbon(alpha=0.5) + geom_line(alpha=0.5) +
+    theme_bw() + 
+    xlab("Year of Article") + ylab("Percentage articles with last author name origin") +
+    ggtitle(paste("Percentage articles with", curr_origin, "name origin")) + 
+    scale_fill_brewer(palette="Set2")
+    
+    print(gg)
+    
+}
+
+```
