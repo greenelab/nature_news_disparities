@@ -5,7 +5,6 @@
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 CORENLP_VERSION='4.2.0'
-SCOPUS_API_KEY='665c78c68c008efa0d3cbee3b4c60f86'
 SPRINGER_API_KEY='aa526f60fdf49130aa089a4728046233'
 
 # check for coreNLP
@@ -89,5 +88,29 @@ if [[ ! -f ./data/reference_data/genderize.tsv ]]; then
     esac
 else
     echo "genderize.io reference data found"
+fi
+
+# get LSTM model for name origin prediction
+# check for it first
+echo "Checking for LSTM name model..."
+if [[ ! -f ./name_lstm_models/LSTM.h5 ]]; then
+    read -r -p "LSTM.h5 model was not found, download? [y/N] " response
+    case "$response" in
+        [yY][eE][sS]|[yY])
+            curl -L "https://github.com/greenelab/wiki-nationality-estimate/raw/master/models/LSTM.h5" \
+                -o ${DIR}/name_lstm_models/LSTM.h5
+            ;;
+            curl -L "https://github.com/greenelab/wiki-nationality-estimate/raw/master/models/LSTM_idx_dic.pkl" \
+                -o ${DIR}/name_lstm_models/LSTM_idx_dic.pkl
+            ;;
+            curl -L "https://github.com/greenelab/wiki-nationality-estimate/raw/master/models/LSTM_categories.txt" \
+                -o ${DIR}/name_lstm_models/LSTM_categories.txt
+            ;;
+        *)
+            # just abort for now
+            ;;
+    esac
+else
+    echo "LSTM.h5 found"
 fi
 
