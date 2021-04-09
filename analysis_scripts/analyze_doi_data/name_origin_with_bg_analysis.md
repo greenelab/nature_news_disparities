@@ -58,13 +58,13 @@ head(name_df)
     ## 8    A Ardavanis 2005      first                 doi:10.1038/sj.bjc.6602378
     ## 9       A Auluck 2005      first                 doi:10.1038/sj.bdj.4812658
     ## 10 A B Niculescu 2015      first brain-study-seeks-roots-of-suicide-1.18870
-    ##                  corpus   name_origin
-    ## 5     springer_articles CelticEnglish
-    ## 6     springer_articles       African
-    ## 7     springer_articles      European
-    ## 8     springer_articles CelticEnglish
-    ## 9     springer_articles     EastAsian
-    ## 10 naturenews_citations      European
+    ##                  corpus  name_origin
+    ## 5     springer_articles    EastAsian
+    ## 6     springer_articles   SouthAsian
+    ## 7     springer_articles        Greek
+    ## 8     springer_articles ArabTurkPers
+    ## 9     springer_articles     European
+    ## 10 naturenews_citations     European
 
 ### QC
 
@@ -76,32 +76,38 @@ From each corpus, lets compare the total number of articles considered (the numb
 
 For each corpus, lets compare the number of articles with an estimated name origin for the first and last authors.
 
-    ## [1] "CelticEnglish"
-    ## [1] "African"
-    ## [1] "European"
     ## [1] "EastAsian"
     ## [1] "SouthAsian"
+    ## [1] "Greek"
+    ## [1] "ArabTurkPers"
+    ## [1] "European"
     ## [1] "Hispanic"
-    ## [1] "Muslim"
-    ## [1] "Israel"
+    ## [1] "Jewish"
+    ## [1] "CelticEnglish"
+    ## [1] "Nordic"
+    ## [1] "African"
 
-    ## [1] "CelticEnglish"
-    ## [1] "African"
-    ## [1] "European"
     ## [1] "EastAsian"
     ## [1] "SouthAsian"
+    ## [1] "Greek"
+    ## [1] "ArabTurkPers"
+    ## [1] "European"
     ## [1] "Hispanic"
-    ## [1] "Muslim"
-    ## [1] "Israel"
+    ## [1] "Jewish"
+    ## [1] "CelticEnglish"
+    ## [1] "Nordic"
+    ## [1] "African"
 
-    ## [1] "CelticEnglish"
-    ## [1] "African"
-    ## [1] "European"
     ## [1] "EastAsian"
     ## [1] "SouthAsian"
+    ## [1] "Greek"
+    ## [1] "ArabTurkPers"
+    ## [1] "European"
     ## [1] "Hispanic"
-    ## [1] "Muslim"
-    ## [1] "Israel"
+    ## [1] "Jewish"
+    ## [1] "CelticEnglish"
+    ## [1] "Nordic"
+    ## [1] "African"
 
 <img src="name_origin_with_bg_analysis_files/figure-markdown_github/compare_origins_each_corpus-1.png" style="display: block; margin: auto;" /><img src="name_origin_with_bg_analysis_files/figure-markdown_github/compare_origins_each_corpus-2.png" style="display: block; margin: auto;" /><img src="name_origin_with_bg_analysis_files/figure-markdown_github/compare_origins_each_corpus-3.png" style="display: block; margin: auto;" />
 
@@ -111,30 +117,36 @@ The previous plots are likely confounded by country affiliation. Here we would l
 
     ## [1] "European"
     ## [1] "CelticEnglish"
-    ## [1] "Hispanic"
     ## [1] "SouthAsian"
-    ## [1] "Muslim"
-    ## [1] "Israel"
+    ## [1] "Jewish"
+    ## [1] "ArabTurkPers"
+    ## [1] "Hispanic"
+    ## [1] "Nordic"
     ## [1] "African"
     ## [1] "EastAsian"
+    ## [1] "Greek"
 
     ## [1] "European"
     ## [1] "CelticEnglish"
-    ## [1] "Hispanic"
     ## [1] "SouthAsian"
-    ## [1] "Muslim"
-    ## [1] "Israel"
+    ## [1] "Jewish"
+    ## [1] "ArabTurkPers"
+    ## [1] "Hispanic"
+    ## [1] "Nordic"
     ## [1] "African"
     ## [1] "EastAsian"
+    ## [1] "Greek"
 
     ## [1] "European"
     ## [1] "CelticEnglish"
-    ## [1] "Hispanic"
     ## [1] "SouthAsian"
-    ## [1] "Muslim"
-    ## [1] "Israel"
+    ## [1] "Jewish"
+    ## [1] "ArabTurkPers"
+    ## [1] "Hispanic"
+    ## [1] "Nordic"
     ## [1] "African"
     ## [1] "EastAsian"
+    ## [1] "Greek"
 
 <img src="name_origin_with_bg_analysis_files/figure-markdown_github/compare_origins_each_corpus_country_subset-1.png" style="display: block; margin: auto;" /><img src="name_origin_with_bg_analysis_files/figure-markdown_github/compare_origins_each_corpus_country_subset-2.png" style="display: block; margin: auto;" /><img src="name_origin_with_bg_analysis_files/figure-markdown_github/compare_origins_each_corpus_country_subset-3.png" style="display: block; margin: auto;" />
 
@@ -142,4 +154,4 @@ Now lets look at the proportion of articles with atleast 1 country mention or at
 
 We first look at individual countries.
 
-<img src="name_origin_with_bg_analysis_files/figure-markdown_github/four_countries_mention_or_citation-1.png" width="50%" /><img src="name_origin_with_bg_analysis_files/figure-markdown_github/four_countries_mention_or_citation-2.png" width="50%" /><img src="name_origin_with_bg_analysis_files/figure-markdown_github/four_countries_mention_or_citation-3.png" width="50%" /><img src="name_origin_with_bg_analysis_files/figure-markdown_github/four_countries_mention_or_citation-4.png" width="50%" /><img src="name_origin_with_bg_analysis_files/figure-markdown_github/four_countries_mention_or_citation-5.png" width="50%" /><img src="name_origin_with_bg_analysis_files/figure-markdown_github/four_countries_mention_or_citation-6.png" width="50%" /><img src="name_origin_with_bg_analysis_files/figure-markdown_github/four_countries_mention_or_citation-7.png" width="50%" /><img src="name_origin_with_bg_analysis_files/figure-markdown_github/four_countries_mention_or_citation-8.png" width="50%" /><img src="name_origin_with_bg_analysis_files/figure-markdown_github/four_countries_mention_or_citation-9.png" width="50%" /><img src="name_origin_with_bg_analysis_files/figure-markdown_github/four_countries_mention_or_citation-10.png" width="50%" /><img src="name_origin_with_bg_analysis_files/figure-markdown_github/four_countries_mention_or_citation-11.png" width="50%" /><img src="name_origin_with_bg_analysis_files/figure-markdown_github/four_countries_mention_or_citation-12.png" width="50%" /><img src="name_origin_with_bg_analysis_files/figure-markdown_github/four_countries_mention_or_citation-13.png" width="50%" /><img src="name_origin_with_bg_analysis_files/figure-markdown_github/four_countries_mention_or_citation-14.png" width="50%" /><img src="name_origin_with_bg_analysis_files/figure-markdown_github/four_countries_mention_or_citation-15.png" width="50%" /><img src="name_origin_with_bg_analysis_files/figure-markdown_github/four_countries_mention_or_citation-16.png" width="50%" />
+<img src="name_origin_with_bg_analysis_files/figure-markdown_github/four_countries_mention_or_citation-1.png" width="50%" /><img src="name_origin_with_bg_analysis_files/figure-markdown_github/four_countries_mention_or_citation-2.png" width="50%" /><img src="name_origin_with_bg_analysis_files/figure-markdown_github/four_countries_mention_or_citation-3.png" width="50%" /><img src="name_origin_with_bg_analysis_files/figure-markdown_github/four_countries_mention_or_citation-4.png" width="50%" /><img src="name_origin_with_bg_analysis_files/figure-markdown_github/four_countries_mention_or_citation-5.png" width="50%" /><img src="name_origin_with_bg_analysis_files/figure-markdown_github/four_countries_mention_or_citation-6.png" width="50%" /><img src="name_origin_with_bg_analysis_files/figure-markdown_github/four_countries_mention_or_citation-7.png" width="50%" /><img src="name_origin_with_bg_analysis_files/figure-markdown_github/four_countries_mention_or_citation-8.png" width="50%" /><img src="name_origin_with_bg_analysis_files/figure-markdown_github/four_countries_mention_or_citation-9.png" width="50%" /><img src="name_origin_with_bg_analysis_files/figure-markdown_github/four_countries_mention_or_citation-10.png" width="50%" /><img src="name_origin_with_bg_analysis_files/figure-markdown_github/four_countries_mention_or_citation-11.png" width="50%" /><img src="name_origin_with_bg_analysis_files/figure-markdown_github/four_countries_mention_or_citation-12.png" width="50%" /><img src="name_origin_with_bg_analysis_files/figure-markdown_github/four_countries_mention_or_citation-13.png" width="50%" /><img src="name_origin_with_bg_analysis_files/figure-markdown_github/four_countries_mention_or_citation-14.png" width="50%" /><img src="name_origin_with_bg_analysis_files/figure-markdown_github/four_countries_mention_or_citation-15.png" width="50%" /><img src="name_origin_with_bg_analysis_files/figure-markdown_github/four_countries_mention_or_citation-16.png" width="50%" /><img src="name_origin_with_bg_analysis_files/figure-markdown_github/four_countries_mention_or_citation-17.png" width="50%" /><img src="name_origin_with_bg_analysis_files/figure-markdown_github/four_countries_mention_or_citation-18.png" width="50%" /><img src="name_origin_with_bg_analysis_files/figure-markdown_github/four_countries_mention_or_citation-19.png" width="50%" /><img src="name_origin_with_bg_analysis_files/figure-markdown_github/four_countries_mention_or_citation-20.png" width="50%" />

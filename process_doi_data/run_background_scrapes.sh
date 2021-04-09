@@ -39,7 +39,7 @@ else
     RScript ${DIR}/process_author_fullnames.R ${NATURE_DIR} ${REF_DIR} ${OUT_DIR}
 
     conda activate nature_news_disparities
-    python ${DIR}/process_author_fullnames.py -m ${MODEL_DIR} \
+    python ${DIR}/springer_scripts/process_author_fullnames.py -m ${MODEL_DIR} \
                                             -n ${OUT_DIR}/all_author_fullname.tsv \
                                             -o ${OUT_DIR}/all_author_fullname_pred.tsv
 
