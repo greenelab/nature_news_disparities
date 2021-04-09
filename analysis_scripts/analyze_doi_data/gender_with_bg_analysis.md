@@ -32,20 +32,20 @@ cited_df = read_gender_files(cited_file)
 head(cited_df)
 ```
 
-    ##   author                            doi year author_pos
-    ## 1  aaron doi:10.1038/s41467-019-08746-5 2020       last
-    ## 2  aaron  doi:10.1038/s41586-018-0809-4 2019       last
-    ## 3  aaron     doi:10.1186/1744-8603-9-43 2019      first
-    ## 4  aaron doi:10.1038/s41467-019-09848-w 2020      first
-    ## 5  aaron            doi:10.1038/419895a 2010       last
-    ## 6  aaron            doi:10.1038/nm.3519 2014      first
-    ##                                      file_id est_gender gender
-    ## 1                         d41586-020-00012-9       MALE   MALE
-    ## 2                         d41586-018-07851-7       MALE   MALE
-    ## 3                         d41586-019-00210-0       MALE   MALE
-    ## 4                         d41586-020-02461-8       MALE   MALE
-    ## 5                               466913a.html       MALE   MALE
-    ## 6 cancer-biomarkers-written-in-blood-1.15624       MALE   MALE
+    ##       author                            doi year author_pos            file_id
+    ## 1   †genetic        doi:10.1038/nature08186 2011       last news.2011.620.html
+    ## 2   †genetic        doi:10.1038/nature08186 2014       last        nature13645
+    ## 3 aanindeeta        doi:10.1038/nature17185 2016      first            531180a
+    ## 4      aaron        doi:10.1038/nature13124 2014      first        nature13067
+    ## 5      aaron doi:10.1038/s41467-019-13176-4 2020       last d41586-020-00094-5
+    ## 6      aaron  doi:10.1038/s41586-019-0953-5 2019      first d41586-019-02974-x
+    ##   est_gender gender
+    ## 1       <NA>   <NA>
+    ## 2       <NA>   <NA>
+    ## 3       <NA>   <NA>
+    ## 4       MALE   MALE
+    ## 5       MALE   MALE
+    ## 6       MALE   MALE
 
 ``` r
 # read in the all quotes for all news articles and all years 
@@ -108,13 +108,20 @@ springer_df = read_gender_files(springer_file)
 head(springer_df)
 ```
 
-    ##      author                            doi year author_pos est_gender gender
-    ## 1  a-nasser  doi:10.1007/s00138-008-0123-5 2008      first       MALE   MALE
-    ## 2     aadil  doi:10.1007/s12591-015-0244-z 2015      first       MALE   MALE
-    ## 3  aadithya  doi:10.1007/s12663-013-0500-0 2013       last       MALE   MALE
-    ## 4 aakanksha doi:10.1007/s40609-019-00149-0 2019      first     FEMALE FEMALE
-    ## 5    aakash  doi:10.1007/s41870-018-0121-4 2018      first       MALE   MALE
-    ## 6     aamir  doi:10.1007/s12639-014-0580-x 2014      first       MALE   MALE
+    ##            author                                doi year author_pos est_gender
+    ## 1          (aegis      doi:10.1007/s10751-019-1553-3 2019       last       <NA>
+    ## 2 [authorinst]the doi:10.1140/epjc/s10052-016-4346-8 2016       last       <NA>
+    ## 3            a-mf         doi:10.1038/sj.onc.1210387 2007      first       <NA>
+    ## 4          aaltje        doi:10.1186/1471-2318-12-19 2012       last       MALE
+    ## 5           aalya     doi:10.1186/1753-6561-6-S5-O16 2012      first       MALE
+    ## 6             aam          doi:10.1186/1479-0556-4-1 2006      first       MALE
+    ##   gender
+    ## 1   <NA>
+    ## 2   <NA>
+    ## 3   <NA>
+    ## 4   MALE
+    ## 5   MALE
+    ## 6   MALE
 
 ``` r
 # read in the nature author data
@@ -132,7 +139,7 @@ head(nature_df)
     ## 6      aaron        doi:10.1038/nature04790 2006       last        nature04790
     ##   est_gender gender
     ## 1       MALE   MALE
-    ## 2       MALE   MALE
+    ## 2       <NA>   <NA>
     ## 3       MALE   MALE
     ## 4       MALE   MALE
     ## 5       MALE   MALE
