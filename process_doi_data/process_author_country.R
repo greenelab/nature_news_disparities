@@ -84,10 +84,20 @@ get_nature_news_mentions <- function(){
                                             est_un_subregion != "" &
                                             est_un_region != "NO_EST" & 
                                             est_un_subregion != "NO_EST")
-
-    full_loc_df = unique(full_loc_df[,c("est_country_code", "file_id", "year")])
+    
+    full_loc_df = full_loc_df[,c("est_country_code", "file_id", "year")]
     colnames(full_loc_df) = c("address.country_code", "file_id", "year")
     full_loc_df$corpus = "naturenews_mentions"
+
+    # for best accuracy only keep a mention if it occurs more than once per article
+    loc_dups = data.frame(table(full_loc_df$file_id, full_loc_df$address.country_code))
+    loc_keep = subset(loc_dups, Freq > 1)
+    full_loc_df$freq_idx = paste(full_loc_df$file_id, full_loc_df$address.country_code, sep="_")
+    freq_pass = paste(loc_keep$Var1, loc_keep$Var2, sep="_")
+    full_loc_df = subset(full_loc_df, freq_idx %in% freq_pass)
+
+    full_loc_df = unique(full_loc_df[,c("address.country_code", "file_id", "year")])
+
 
     return(full_loc_df)
 
@@ -143,8 +153,6 @@ get_nature_news_cited <- function(ref_dir){
 
     cited_country_df_formatted = unique(cited_country_df_formatted[,c("address.country_code",
                                                                          "file_id", "year", "corpus")])
-
-
 
     return(cited_country_df_formatted)
 
@@ -228,13 +236,10 @@ process_all_author_country <- function(nature_dir, cited_dois_dir, outdir){
 
     # background files are NAture and springer
     springer_country_df_formatted = get_springer_bg()
-    
-
     nature_country_df_formatted = get_nature_bg(nature_dir)
    
     # foreground files are Nature mentions and citations
     cited_country_df_formatted = get_nature_news_cited(cited_dois_dir)
-    
     mention_country_df_formatted = get_nature_news_mentions()
     
     # now put it all together

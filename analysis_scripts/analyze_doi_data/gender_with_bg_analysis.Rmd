@@ -18,6 +18,8 @@ require(stringr)
 proj_dir = here()
 source(paste(proj_dir, "/analysis_scripts/analysis_utils.R", sep=""))
 source(paste(proj_dir, "/utils/plotting_utils.R", sep=""))
+
+
 ```
 
 ## Data Description
@@ -68,6 +70,10 @@ full_quote_df = full_quote_df[full_quote_df$est_gender %in% c("FEMALE", "MALE"),
 
 head(full_quote_df)
 
+# remove citations where no gender could be estimated
+cited_df = subset(cited_df, !is.na(est_gender))
+full_quote_df = subset(full_quote_df, !is.na(est_gender))
+
 
 ```
 
@@ -79,26 +85,28 @@ Now lets plot the trend of predicted proportion of Male speakers/authors over ti
     
 
 # get bootstrap estimates for cited data 
+# here we are bootstrapping by subsampling on # citations
 first_cited_df = subset(cited_df, author_pos == "first")
 last_cited_df = subset(cited_df, author_pos == "last")
 
 first_cited_prop_df = compute_bootstrap_gender(first_cited_df, 
                                                year_col_id = "year", 
-                                               article_col_id = "file_id",
+                                               article_col_id = "doi",
                                                conf_int=0.95)
 
 last_cited_prop_df = compute_bootstrap_gender(last_cited_df, 
                                                year_col_id = "year", 
-                                               article_col_id = "file_id",
+                                               article_col_id = "doi",
                                                conf_int=0.95)
 first_cited_prop_df$corpus = "citation_first"
 last_cited_prop_df$corpus = "citation_last"
 
 
 # get bootstrap estimates for quote data 
+# here we are bootstrapping by subsampling on # quotes
 quote_prop_df = compute_bootstrap_gender(full_quote_df, 
                                            year_col_id = "year", 
-                                           article_col_id = "file_id",
+                                           article_col_id = "quote",
                                            conf_int=0.95)
 quote_prop_df$corpus = "quote"
 
@@ -155,12 +163,15 @@ springer_file = file.path(proj_dir, "/data/author_data/springer_author_gender.ts
 springer_df = read_gender_files(springer_file)
 head(springer_df)
 
+
 # read in the nature author data
 nature_file = file.path(proj_dir, "/data/author_data/nature_author_gender.tsv")
 nature_df = read_gender_files(nature_file)
 head(nature_df)
 
-
+# remove citations where no gender could be estimated
+springer_df = subset(springer_df, !is.na(est_gender))
+nature_df = subset(nature_df, !is.na(est_gender))
 
 ```
 
@@ -252,6 +263,8 @@ Now we will compare the identified quotes and cited authors from Nature News and
 # compare foreground and background
 compare_df = rbind(springer_first_prop_df,
                    springer_last_prop_df,
+                   nature_first_prop_df,
+                   nature_last_prop_df,
                    foreground_df[,colnames(springer_last_prop_df)])
 
 
@@ -288,6 +301,17 @@ ggplot(subset(compare_df, corpus %in% c("springer_last", "springer_first", "quot
     geom_hline(yintercept=0.5, color="red")
 
 
+ggplot(subset(compare_df, corpus %in% c("nature_last", "nature_first", "quote")), 
+      aes(x=as.numeric(year), y=mean,
+                          ymin=bottom_CI, ymax=top_CI,
+                          fill=corpus)) +
+    geom_point() + geom_ribbon(alpha=0.5) + geom_line(alpha=0.5) + theme_bw() + 
+    xlab("Year of Article") + ylab("Male Percentage") +
+    ggtitle("Comparison of Nature News Quotes vs First+Last Author Citations Over Time") + 
+    scale_fill_brewer(palette="Set2") + ylim(c(0.5, 1)) +
+    geom_hline(yintercept=0.5, color="red")
+
+
 quote_prop_df = full_quote_df %>% 
                 group_by(year) %>% 
                 summarise(sum(est_gender=="MALE")) 
@@ -313,7 +337,7 @@ Now breakdown the quotes into the different submagazines.
 get_subboot <- function(type_id, type_names, in_df){
     bootstrap_res = compute_bootstrap_gender(subset(in_df, type %in% type_id), 
                                            year_col_id = "year", 
-                                           article_col_id = "file_id",
+                                           article_col_id = "quote",
                                            conf_int=0.95)
     bootstrap_res$corpus = type_names
     return(bootstrap_res)
@@ -363,6 +387,15 @@ ggplot(career_df, aes(x=as.numeric(year), y=mean,
     ggtitle("Male Proportion of Quotes Over Time") + 
     scale_fill_brewer(palette="Set2") +
     geom_hline(yintercept=0.5, color="red")
+
+
+
+ggplot(full_quote_df, aes(x=as.numeric(year), fill=type)) +
+    geom_bar() +
+    theme_bw() +
+    xlab("Year of Article") + ylab("# Quotes") +
+    ggtitle("# of Quotes per article type Over Time") + 
+    scale_fill_brewer(palette="Set2") 
 
 
 ```
