@@ -1,0 +1,10 @@
+African
+CelticEnglish
+EastAsian
+European
+Greek
+Hispanic
+Jewish
+ArabTurkPers
+Nordic
+SouthAsian

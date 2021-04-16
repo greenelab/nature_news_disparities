@@ -56,7 +56,7 @@ read_json <- function(infile){
 #' @param in_name, Name in any format
 #' 
 #' @return normalized first name
-format_author_names_internal <- function(in_name){
+format_author_firstnames_internal <- function(in_name){
     # reverse name if needed
     in_name = format_reverse(in_name)
     in_name = format_period(in_name)
@@ -70,9 +70,9 @@ format_author_names_internal <- function(in_name){
 #' @param author_vec, vector of names in any format
 #' 
 #' @return normalized first names
-format_author_names <- function(author_vec){
+format_author_firstnames <- function(author_vec){
 
-    author_vec = unlist(lapply(author_vec, format_author_names_internal))
+    author_vec = unlist(lapply(author_vec, format_author_firstnames_internal))
 
     # now remove anything that looks like a consortium or not a name
     non_name_check = "consortium|group|initiative|team|collab|committee|center|program|author|institute"
@@ -97,6 +97,47 @@ format_author_names <- function(author_vec){
     # make sure we are only getting the first name
     author_vec = unlist(lapply(author_vec, function(x) unlist(str_split(x, " "))[1]))
     
+
+    return(author_vec)
+}
+
+#' Normalize name order and initials
+#' using the humaniformat package
+#' 
+#' @param in_name, Name in any format
+#' 
+#' @return normalized first name
+format_author_fullname_internal <- function(in_name){
+    # reverse name if needed
+    in_name = format_reverse(in_name)
+
+    # format any initials
+    in_name = format_period(in_name)
+
+    # extract name
+    in_name = parse_names(in_name)
+    in_name = in_name[c("first_name", "middle_name", "last_name")]
+    in_name = paste(na.omit(unlist(in_name[1,])), collapse=" ")
+
+    return(in_name)
+
+}
+
+#' Normalize and filter first names
+#' that are not initials or companies/groups
+#' 
+#' @param author_vec, vector of names in any format
+#' 
+#' @return normalized first names
+format_author_fullname <- function(author_vec){
+
+    author_vec = unlist(lapply(author_vec, format_author_fullname_internal))
+
+    # now remove anything that looks like a consortium or not a name
+    non_name_check = "consortium|group|initiative|team|collab|committee|center|program|author|institute"
+    non_name_idx = grep(non_name_check, author_vec)
+    author_vec[non_name_idx] = ""
+
 
     return(author_vec)
 }

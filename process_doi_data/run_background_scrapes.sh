@@ -9,6 +9,7 @@ REF_DIR="${DIR}/../data/doi_data/downloads/"
 NATURE_DIR="${DIR}/../data/author_data/downloads/"
 OUT_DIR="${DIR}/../data/author_data/"
 SPRINGER_BG_AUTHOR="${DIR}/../data/reference_data/springer_bg_author_cache.tsv"
+MODEL_DIR="${DIR}/../name_lstm_models/"
 
 ## check if the API_KEY is set
 if [ -z ${SPRINGER_API_KEY+x} ]; then
@@ -34,6 +35,13 @@ else
     echo "processing Springer/Nature API calls"
     RScript ${DIR}/process_author_gender.R ${NATURE_DIR} ${REF_DIR} ${OUT_DIR}
     RScript ${DIR}/process_author_country.R ${NATURE_DIR} ${REF_DIR} ${OUT_DIR}
+
+    RScript ${DIR}/process_author_fullnames.R ${NATURE_DIR} ${REF_DIR} ${OUT_DIR}
+
+    conda activate nature_news_disparities
+    python ${DIR}/springer_scripts/process_author_fullnames.py -m ${MODEL_DIR} \
+                                            -n ${OUT_DIR}/all_author_fullname.tsv \
+                                            -o ${OUT_DIR}/all_author_fullname_pred.tsv
 
 
 fi
