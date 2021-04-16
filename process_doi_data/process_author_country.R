@@ -50,7 +50,7 @@ read_nature_country_json_files <- function(nature_dir){
     all_authors = all_authors[-1,]
 
     # format file_id into a doi
-    all_authors$doi = paste("doi:10.1038/", all_authors$file_id, sep="")
+    all_authors$doi = paste0("doi:10.1038/", all_authors$file_id)
 
     # split the countries into multiple rows
     all_authors = separate_rows(all_authors, country_affil, sep="; ")
@@ -88,15 +88,10 @@ get_nature_news_mentions <- function(){
     full_loc_df = full_loc_df[,c("est_country_code", "file_id", "year")]
     colnames(full_loc_df) = c("address.country_code", "file_id", "year")
     full_loc_df$corpus = "naturenews_mentions"
+    full_loc_df$doi = paste0("doi:10.1038/", full_loc_df$file_id)
 
-    # for best accuracy only keep a mention if it occurs more than once per article
-    loc_dups = data.frame(table(full_loc_df$file_id, full_loc_df$address.country_code))
-    loc_keep = subset(loc_dups, Freq > 1)
-    full_loc_df$freq_idx = paste(full_loc_df$file_id, full_loc_df$address.country_code, sep="_")
-    freq_pass = paste(loc_keep$Var1, loc_keep$Var2, sep="_")
-    full_loc_df = subset(full_loc_df, freq_idx %in% freq_pass)
-
-    full_loc_df = unique(full_loc_df[,c("address.country_code", "file_id", "year")])
+    full_loc_df = unique(full_loc_df[,c("address.country_code",
+                                        "file_id", "doi", "year", "corpus")])
 
 
     return(full_loc_df)
@@ -118,7 +113,7 @@ get_nature_bg <- function(nature_dir){
     nature_country_df_formatted$corpus = "nature_articles"
 
     nature_country_df_formatted = unique(nature_country_df_formatted[,c("address.country_code",
-                                                                         "file_id", "year", "corpus")])
+                                                                         "file_id", "doi", "year", "corpus")])
 
 
     return(nature_country_df_formatted)
@@ -148,11 +143,10 @@ get_nature_news_cited <- function(ref_dir){
     # we only care about if a country was cited in an article, 
     # not how many times it was cited
     cited_country_df_formatted$num_entries = 1
-
     cited_country_df_formatted$corpus = "naturenews_citations"
 
     cited_country_df_formatted = unique(cited_country_df_formatted[,c("address.country_code",
-                                                                         "file_id", "year", "corpus")])
+                                                                         "file_id", "doi", "year", "corpus")])
 
     return(cited_country_df_formatted)
 
@@ -177,11 +171,11 @@ get_springer_bg <- function(){
 
 
     # format the result
-    colnames(springer_country_df_formatted)[2] = "file_id"
     springer_country_df_formatted$corpus = "springer_articles"
+    springer_country_df_formatted$file_id = NA
 
     springer_country_df_formatted = unique(springer_country_df_formatted[,c("address.country_code",
-                                                                         "file_id", "year", "corpus")])
+                                                                         "file_id", "doi", "year", "corpus")])
 
     return(springer_country_df_formatted)
 
