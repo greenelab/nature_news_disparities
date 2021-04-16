@@ -122,12 +122,12 @@ For each corpus, lets compare the number of articles with an estimated name orig
 
 
 # make the df into proportions for each name origins
-get_subboot <- function(origin_id, curr_corpus, curr_pos, in_df){
+get_subboot <- function(origin_id, curr_corpus, curr_pos, in_df, bootstrap_col_id="file_id"){
     bootstrap_res = compute_bootstrap_location(subset(in_df, 
                                                       corpus==curr_corpus &
                                                       author_pos==curr_pos), 
                                               year_col_id = "year", 
-                                              article_col_id = "file_id", 
+                                              article_col_id = bootstrap_col_id, 
                                               country_col_id = "name_origin",
                                               country_agg = origin_id, 
                                               conf_int = 0.95)
@@ -229,18 +229,17 @@ name_country_file = file.path(proj_dir,
                          "/data/author_data/all_author_country.tsv")
 name_country_df = data.frame(fread(name_country_file))
 
-us_file_id = subset(name_country_df, address.country_code == "us")
-name_df_us = subset(name_df, file_id %in% us_file_id$file_id)  
-  
+name_df_us = subset(name_country_df, address.country_code == "us")
+
 
 # now lets add a QC plot 
-citation_total = unique(subset(name_df_us, corpus == "naturenews_citations", select=c(file_id, year)) )
+citation_total = unique(subset(name_df_us, corpus == "naturenews_citations", select=c(doi, year)) )
 tot_prop_citation = citation_total %>% 
                 group_by(year) %>% 
                 summarise(n()) 
 tot_prop_citation$corpus = "naturenews_citations"
 
-springer_total = unique(subset(name_df_us, corpus == "springer_articles", select=c(file_id, year)) )
+springer_total = unique(subset(name_df_us, corpus == "springer_articles", select=c(doi, year)) )
 tot_prop_springer = springer_total %>% 
                 group_by(year) %>% 
                 summarise(n()) 

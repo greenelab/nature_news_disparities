@@ -68,5 +68,5 @@ nature_dir = args[1]
 cited_dois_dir = args[2]
 outdir = args[3]
 
-process_all_author_gender(nature_dir, cited_dois_dir, outdir)
+process_all_author_fullnames(nature_dir, cited_dois_dir, outdir)
 

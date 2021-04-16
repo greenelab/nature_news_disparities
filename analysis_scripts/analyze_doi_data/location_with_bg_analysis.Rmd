@@ -111,10 +111,10 @@ top_un_subregions = top_un_subregions[c(33,13, 6,7,12, 4, 5, 29, 20)]
 top_un_subregions = c(top_un_subregions, "India")
 
 # make the df into proportions for eachcountry
-get_subboot <- function(country_id, curr_corpus, in_df){
+get_subboot <- function(country_id, curr_corpus, in_df, bootstrap_col_id="file_id"){
     bootstrap_res = compute_bootstrap_location(subset(in_df, corpus==curr_corpus), 
                                               year_col_id = "year", 
-                                              article_col_id = "file_id", 
+                                              article_col_id = bootstrap_col_id, 
                                               country_col_id = "country",
                                               country_agg = country_id, 
                                               conf_int = 0.95)
@@ -261,7 +261,7 @@ row.names(foreground_matr) = foreground_matr$country
 foreground_matr = foreground_matr[,-1]
 
 
-top_diff_country_idx = which(apply(foreground_matr, 1, mean) > 0.02)
+top_diff_country_idx = which(apply(foreground_matr, 1, median) > 0)
 sub_matr = foreground_matr[top_diff_country_idx,]
 max_val = max(abs(sub_matr))
 breaks = c(seq(-1*max_val, max_val, by = 0.01))
@@ -270,10 +270,10 @@ pheatmap(sub_matr, cluster_rows = T,
          cluster_cols = F, display_numbers = T, 
          main = "Mentioned more than cited
                 (Mention - Citation) Proportions, 
-                Only showning Mean(Mention - Citation) > 0.02 countries",
+                Only showning Mean(Mention - Citation) > 0 countries",
          color = color_pmap, breaks = breaks)
 
-bottom_diff_country_idx = which(apply(foreground_matr, 1, mean) < -0.01)
+bottom_diff_country_idx = which(apply(foreground_matr, 1, median) < -0.00000001)
 sub_matr = foreground_matr[bottom_diff_country_idx,]
 max_val = max(abs(sub_matr))
 breaks = c(seq(-1*max_val, max_val, by = 0.01))
@@ -300,7 +300,7 @@ Here lets first look at the total number of articles considered (number of natur
 ```{r qc_num_article_background, out.width="50%", echo=FALSE, warning=FALSE, message=F}
 
 # nature bg
-nature_total = unique(subset(country_df, corpus == "nature_articles", select=c(file_id, year)) )
+nature_total = unique(subset(country_df, corpus == "nature_articles", select=c(doi, year)) )
 tot_prop_naturebg = nature_total %>% 
                 group_by(year) %>% 
                 summarise(n()) 
@@ -308,7 +308,7 @@ tot_prop_naturebg$corpus = "nature_articles"
 colnames(tot_prop_naturebg)[2] = "num_entries"
 
 # springer bg
-springer_total = unique(subset(country_df, corpus == "springer_articles", select=c(file_id, year)) )
+springer_total = unique(subset(country_df, corpus == "springer_articles", select=c(doi, year)) )
 tot_prop_springerbg = springer_total %>% 
                 group_by(year) %>% 
                 summarise(n()) 
@@ -324,8 +324,7 @@ ggplot(num_art_background, aes(x=as.numeric(year), y=num_entries,
     geom_point() + geom_line() + theme_bw() + 
     xlab("Year of Article") + ylab("Number of Total Articles") +
     ggtitle("Total number of Articles per Background Corpus") + 
-    scale_fill_brewer(palette="Set2") +
-    scale_y_continuous(trans='log10')
+    scale_fill_brewer(palette="Set2") 
 
 ```
 
@@ -342,7 +341,8 @@ for(curr_country in top_un_subregions){
     print(curr_country)
     res = get_subboot(curr_country, 
                       curr_corpus="nature_articles", 
-                      country_df)
+                      country_df,
+                      bootstrap_col_id = "doi")
     nature_country_df = rbind(nature_country_df, res)
 }
 nature_country_df = nature_country_df[-1,]
@@ -358,7 +358,8 @@ for(curr_country in top_un_subregions){
     print(curr_country)
     res = get_subboot(curr_country, 
                       curr_corpus="springer_articles", 
-                      country_df)
+                      country_df,
+                      bootstrap_col_id = "doi")
     springer_country_df = rbind(springer_country_df, res)
 }
 springer_country_df = springer_country_df[-1,]
@@ -380,7 +381,7 @@ ggplot(subset(background_df, country == "United States"),
     theme_bw() + 
     xlab("Year of Article") + 
     ylab("Percentage articles with at least one author with US affiliation") +
-    ggtitle("Percentage articles with mention/citation of US locations") + 
+    ggtitle("Percentage articles with citation of US locations") + 
     scale_fill_brewer(palette="Set2")
 
 
@@ -392,7 +393,7 @@ ggplot(subset(background_df, country == "United Kingdom"),
     theme_bw() + 
     xlab("Year of Article") + 
     ylab("Percentage articles with at least one author with UK affiliation") +
-    ggtitle("Percentage articles with mention/citation of UK locations") + 
+    ggtitle("Percentage articles with citation of UK locations") + 
     scale_fill_brewer(palette="Set2")
 
 
@@ -404,7 +405,7 @@ ggplot(subset(background_df, country == "People's Republic of China"),
     theme_bw() + 
     xlab("Year of Article") + 
     ylab("Percentage articles with at least one author with Chinese affiliation") +
-    ggtitle("Percentage articles with mention/citation of Chinese locations") + 
+    ggtitle("Percentage articles with citation of Chinese locations") + 
     scale_fill_brewer(palette="Set2")
 
 
@@ -416,7 +417,7 @@ ggplot(subset(background_df, country == "India"),
     theme_bw() + 
     xlab("Year of Article") + 
     ylab("Percentage articles with at least one author with Indian affiliation") +
-    ggtitle("Percentage articles with mention/citation of Indian locations") + 
+    ggtitle("Percentage articles with citation of Indian locations") + 
     scale_fill_brewer(palette="Set2")
 
 
@@ -426,6 +427,24 @@ Now lets compare nature news citations rate against Springer and Nature articles
 We see that the citation rate mostly tracks the Nature article rate.
 
 ```{r citation_v_springer_v_nature, out.width="50%", echo=FALSE, warning=FALSE, message=F}
+
+# need to bootstrap on DOIs now to make background comparison clearer
+
+citation_country_df = NA
+for(curr_country in top_un_subregions){
+    print(curr_country)
+    res = get_subboot(curr_country, 
+                      curr_corpus="naturenews_citations", 
+                      country_df,
+                      bootstrap_col_id = "doi")
+    citation_country_df = rbind(citation_country_df, res)
+}
+citation_country_df = citation_country_df[-1,]
+citation_country_df$corpus = "naturenews_citations"
+citation_country_df$label = ""
+citation_country_df$label[citation_country_df$year == 2020] = 
+    citation_country_df$country[citation_country_df$year == 2020]
+
 
 
 compare_df = rbind(citation_country_df, 

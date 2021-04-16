@@ -20,10 +20,10 @@ source(file.path(proj_dir, "/process_doi_data/springer_scripts/springer_scrape_u
 #' update the cache
 #' Populates reference_data/springer_cited_author_country_cache.tsv as a side-effect
 #' 
-#' @param doi_chunk, a vector of DOIs
+#' @param curr_doi, a DOI
 #' @param api_key, personal API_KEY
 #' @return dataframe of author affiliation country info for each DOI
-springer_country_doi_query <- function(curr_file, doi_chunk, api_key){
+springer_country_doi_query <- function(curr_file, curr_doi, api_key){
 
     # we need to follow Springer guidelines
     # we MUST cache
@@ -34,7 +34,7 @@ springer_country_doi_query <- function(curr_file, doi_chunk, api_key){
 
     #run query
     print(paste("running query"))
-    query_url = url_springer_doi_search(doi_chunk, api_key)
+    query_url = url_springer_doi_search(curr_doi, api_key)
     resp = internal_springer_query(query_url)
 
     # format response
@@ -43,6 +43,7 @@ springer_country_doi_query <- function(curr_file, doi_chunk, api_key){
         if(dim(resp$facets$values[5][[1]])[1] > 0){
             resp_df = as.data.frame(resp$facets$values[5])
             colnames(resp_df) = c("country", "num_entries")
+            resp_df$doi = curr_doi
             resp_df$file_id = curr_file
         }
         
@@ -77,23 +78,22 @@ file_id_batch_springer_doi_query <- function(dois_found_df, api_key, outdir){
     # query within each article id, then batched at a max size of 50
     # at a time and append together
     batch_resp = NA
-    for(curr_file in unique(dois_found_df$file_id)){
-        doi_vec = dois_found_df$doi[which(dois_found_df$file_id == curr_file)]
-        doi_chunks = split(doi_vec, ceiling(seq_along(doi_vec)/50))
-        idx = 1
-        print(curr_file)
-        for(chunk in doi_chunks[1:length(doi_chunks)]){
-            curr_resp = springer_country_doi_query(curr_file, chunk, api_key)
-            if(!is.na(curr_resp)){
-                batch_resp = rbind(batch_resp, curr_resp)
-            }
-            print(idx)
-            idx = idx +1 
+
+    idx = 1
+    for(curr_doi in unique(dois_found_df$doi)){
+        print(curr_doi)
+        curr_file = dois_found_df$file_id[idx]
+
+        curr_resp = springer_country_doi_query(curr_file, curr_doi, api_key)
+        if(!is.na(curr_resp)){
+            batch_resp = rbind(batch_resp, curr_resp)
         }
+
 
         if(is.na(curr_resp)){
             # we don't want to query twice so even if its empty, we enter it as null
-            curr_summ_df = data.frame(file_id=curr_file,
+            curr_summ_df = data.frame(doi=curr_doi,
+                                    file_id=curr_file,
                                     country=NA,
                                     query_date=as.Date(Sys.Date(), format = "%B %d %Y"),
                                     num_entries=NA)
@@ -102,16 +102,21 @@ file_id_batch_springer_doi_query <- function(dois_found_df, api_key, outdir){
             curr_summ_df = curr_resp
             curr_summ_df$num_entries = as.numeric(curr_summ_df$num_entries)
             curr_summ_df = curr_summ_df %>% 
-                        group_by(file_id, country, query_date) %>% 
+                        group_by(doi, file_id, country, query_date) %>% 
                         summarise(sum_entries=sum(num_entries)) 
             curr_summ_df = data.frame(curr_summ_df)
-            colnames(curr_summ_df)[4] = "num_entries"
+            colnames(curr_summ_df)[5] = "num_entries"
 
         }
         outfile = file.path(outdir, "cited_author_country.tsv")
         cached_df = data.frame(fread(outfile))
         cached_df = rbind(cached_df, curr_summ_df)
         write.table(cached_df, file=outfile, sep="\t", quote=F, row.names=F)
+
+
+        print(idx)
+        idx = idx +1 
+
     }
     batch_resp = batch_resp[-1,]
 
@@ -143,7 +148,9 @@ get_ref_authors <- function(api_key, ref_dir, outdir){
     # only query for files we havent already seen
     outfile = file.path(outdir, "cited_author_country.tsv")
     cached_df = data.frame(fread(outfile))
-    dois_found_df = subset(dois_found_df, !file_id %in% unique(cached_df$file_id))
+    dois_found_df = subset(dois_found_df, !doi %in% unique(cached_df$doi))
+
+    print(length(unique(dois_found_df$doi)))
 
     batch_resp = file_id_batch_springer_doi_query(dois_found_df, api_key, outdir)
 
