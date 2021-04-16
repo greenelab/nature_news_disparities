@@ -97,13 +97,13 @@ if [[ ! -f ./name_lstm_models/LSTM.h5 ]]; then
     read -r -p "LSTM.h5 model was not found, download? [y/N] " response
     case "$response" in
         [yY][eE][sS]|[yY])
-            curl -L "https://github.com/greenelab/wiki-nationality-estimate/raw/master/models/NamePrism.h5" \
+            curl -L "https://github.com/greenelab/wiki-nationality-estimate/raw/7425af1021f8a5c00aad789ebcaef67c5fe427bb/models/NamePrism.h5" \
                 -o ${DIR}/name_lstm_models/NamePrism.h5
             ;;
-            curl -L "https://github.com/greenelab/wiki-nationality-estimate/raw/master/models/NamePrism_idx_dic.pkl" \
+            curl -L "https://github.com/greenelab/wiki-nationality-estimate/raw/7425af1021f8a5c00aad789ebcaef67c5fe427bb/models/NamePrism_idx_dic.pkl" \
                 -o ${DIR}/name_lstm_models/NamePrism_idx_dic.pkl
             ;;
-            curl -L "https://github.com/greenelab/wiki-nationality-estimate/raw/master/models/NamePrism_categories.txt" \
+            curl -L "https://github.com/greenelab/wiki-nationality-estimate/raw/7425af1021f8a5c00aad789ebcaef67c5fe427bb/models/NamePrism_categories.txt" \
                 -o ${DIR}/name_lstm_models/NamePrism_categories.txt
             ;;
         *)
