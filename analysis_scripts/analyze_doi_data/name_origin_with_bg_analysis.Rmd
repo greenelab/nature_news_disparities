@@ -56,7 +56,7 @@ name_info_file = file.path(proj_dir,
                          "/data/author_data/all_author_fullname.tsv")
 name_info_df = data.frame(fread(name_info_file))
 
-# format the prediction table  table
+# format the prediction table
 colnames(name_pred_df)[1] = "author"
 name_origin_vec = colnames(name_pred_df)[2:ncol(name_pred_df)]
 name_origin = apply(name_pred_df[,2:ncol(name_pred_df)], 1, 
