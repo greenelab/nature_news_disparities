@@ -36,7 +36,7 @@ name_info_file = file.path(proj_dir,
                          "/data/author_data/all_author_fullname.tsv")
 name_info_df = data.frame(fread(name_info_file))
 
-# format the prediction table  table
+# format the prediction table
 colnames(name_pred_df)[1] = "author"
 name_origin_vec = colnames(name_pred_df)[2:ncol(name_pred_df)]
 name_origin = apply(name_pred_df[,2:ncol(name_pred_df)], 1, 
@@ -52,19 +52,19 @@ head(name_df)
 ```
 
     ##           author year author_pos                                    file_id
-    ## 5   A A Bidokhti 2018       last              doi:10.1007/s12040-018-1013-5
-    ## 6       A Adwani 2005      first                 doi:10.1186/1477-7800-2-27
-    ## 7      A Apessos 2005      first                 doi:10.1038/sj.bjc.6602260
-    ## 8    A Ardavanis 2005      first                 doi:10.1038/sj.bjc.6602378
-    ## 9       A Auluck 2005      first                 doi:10.1038/sj.bdj.4812658
+    ## 5   A A Bidokhti 2018       last                                       <NA>
+    ## 6       A Adwani 2005      first                                       <NA>
+    ## 7      A Apessos 2005      first                                       <NA>
+    ## 8    A Ardavanis 2005      first                                       <NA>
+    ## 9       A Auluck 2005      first                                       <NA>
     ## 10 A B Niculescu 2015      first brain-study-seeks-roots-of-suicide-1.18870
-    ##                  corpus  name_origin
-    ## 5     springer_articles    EastAsian
-    ## 6     springer_articles   SouthAsian
-    ## 7     springer_articles        Greek
-    ## 8     springer_articles ArabTurkPers
-    ## 9     springer_articles     European
-    ## 10 naturenews_citations     European
+    ##                              doi               corpus  name_origin
+    ## 5  doi:10.1007/s12040-018-1013-5    springer_articles    EastAsian
+    ## 6     doi:10.1186/1477-7800-2-27    springer_articles   SouthAsian
+    ## 7     doi:10.1038/sj.bjc.6602260    springer_articles        Greek
+    ## 8     doi:10.1038/sj.bjc.6602378    springer_articles ArabTurkPers
+    ## 9     doi:10.1038/sj.bdj.4812658    springer_articles     European
+    ## 10       doi:10.1038/mp.2015.112 naturenews_citations     European
 
 ### QC
 
@@ -116,37 +116,37 @@ The previous plots are likely confounded by country affiliation. Here we would l
 <img src="name_origin_with_bg_analysis_files/figure-markdown_github/qc_subset_us_analysis-1.png" style="display: block; margin: auto;" />
 
     ## [1] "European"
-    ## [1] "CelticEnglish"
-    ## [1] "SouthAsian"
-    ## [1] "Jewish"
-    ## [1] "ArabTurkPers"
-    ## [1] "Hispanic"
-    ## [1] "Nordic"
     ## [1] "African"
     ## [1] "EastAsian"
+    ## [1] "CelticEnglish"
+    ## [1] "Hispanic"
+    ## [1] "SouthAsian"
+    ## [1] "Jewish"
+    ## [1] "Nordic"
     ## [1] "Greek"
+    ## [1] "ArabTurkPers"
 
     ## [1] "European"
-    ## [1] "CelticEnglish"
-    ## [1] "SouthAsian"
-    ## [1] "Jewish"
-    ## [1] "ArabTurkPers"
-    ## [1] "Hispanic"
-    ## [1] "Nordic"
     ## [1] "African"
     ## [1] "EastAsian"
+    ## [1] "CelticEnglish"
+    ## [1] "Hispanic"
+    ## [1] "SouthAsian"
+    ## [1] "Jewish"
+    ## [1] "Nordic"
     ## [1] "Greek"
+    ## [1] "ArabTurkPers"
 
     ## [1] "European"
-    ## [1] "CelticEnglish"
-    ## [1] "SouthAsian"
-    ## [1] "Jewish"
-    ## [1] "ArabTurkPers"
-    ## [1] "Hispanic"
-    ## [1] "Nordic"
     ## [1] "African"
     ## [1] "EastAsian"
+    ## [1] "CelticEnglish"
+    ## [1] "Hispanic"
+    ## [1] "SouthAsian"
+    ## [1] "Jewish"
+    ## [1] "Nordic"
     ## [1] "Greek"
+    ## [1] "ArabTurkPers"
 
 <img src="name_origin_with_bg_analysis_files/figure-markdown_github/compare_origins_each_corpus_country_subset-1.png" style="display: block; margin: auto;" /><img src="name_origin_with_bg_analysis_files/figure-markdown_github/compare_origins_each_corpus_country_subset-2.png" style="display: block; margin: auto;" /><img src="name_origin_with_bg_analysis_files/figure-markdown_github/compare_origins_each_corpus_country_subset-3.png" style="display: block; margin: auto;" />
 

@@ -156,8 +156,8 @@ ggplot(unique(springer_article_df[,c("file_id", "year", "type")]),
 
 # make a version of DOI tracking with a marker if it has a citation and if it is a springer citation
 doi_springer_df = subset(springer_full_res, select=c("file_id", "year", "type", "doi", "publisher"))
-doi_springer_df$citation_status = "non_springer_citation"
-doi_springer_df$citation_status[doi_springer_df$doi != ""] = "has_citation"
+doi_springer_df$citation_status = "no_citation"
+doi_springer_df$citation_status[doi_springer_df$doi != ""] = "non_springer_citation"
 doi_springer_df$citation_status[!is.na(doi_springer_df$publisher)] = "springer"
 doi_springer_df = unique(doi_springer_df)
 
@@ -274,10 +274,10 @@ country_res = fread(pipeline_4_file)
 authored_df = subset(springer_full_res, !is.na(publisher) & doi != "")
 
 # files authored but have no country prediction
-file_missing = setdiff(unique(authored_df$file_id), unique(country_res$file_id))
+file_missing = setdiff(unique(authored_df$doi), unique(country_res$doi))
 authored_df$no_country = FALSE
-authored_df$no_country[which(authored_df$file_id %in% file_missing)] = TRUE
+authored_df$no_country[which(authored_df$doi %in% file_missing)] = TRUE
 print(paste("% of DOIs with no country prediction:", 
-            length(file_missing)/length(unique(authored_df$file_id))))
+            length(file_missing)/length(unique(authored_df$doi))))
 
 ```
