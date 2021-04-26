@@ -21,6 +21,7 @@ process_all_author_fullnames <- function(nature_dir, cited_dois_dir, outdir){
     springer_author_file = file.path(proj_dir, 
                                     "/data/reference_data/springer_bg_author_cache.tsv")
     springer_author_df = data.frame(fread(springer_author_file))
+    springer_author_df$file_id = NA
 
     # springer cited authorship
     cited_author_file = file.path(proj_dir, 
@@ -48,10 +49,7 @@ process_all_author_fullnames <- function(nature_dir, cited_dois_dir, outdir){
     springer_author_df$corpus = "springer_articles"
     nature_author_df$corpus = "nature_articles"
 
-    # we care about the file_id that the article was cited in
-    springer_author_df$file_id = springer_author_df$doi
-
-    col_ids = c("year", "author_pos", "author", "file_id", "corpus")
+    col_ids = c("year", "author_pos", "author", "file_id", "doi", "corpus")
     all_author_df = Reduce(rbind, list(cited_author_df[,col_ids],
                                         springer_author_df[,col_ids],
                                         nature_author_df[,col_ids]))
@@ -68,5 +66,5 @@ nature_dir = args[1]
 cited_dois_dir = args[2]
 outdir = args[3]
 
-process_all_author_gender(nature_dir, cited_dois_dir, outdir)
+process_all_author_fullnames(nature_dir, cited_dois_dir, outdir)
 

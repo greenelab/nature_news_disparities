@@ -117,119 +117,21 @@ So Springer has many more articles than Nature. Let's look comparatively at diff
 
 <img src="location_with_bg_analysis_files/figure-markdown_github/springer_v_nature-1.png" width="50%" /><img src="location_with_bg_analysis_files/figure-markdown_github/springer_v_nature-2.png" width="50%" /><img src="location_with_bg_analysis_files/figure-markdown_github/springer_v_nature-3.png" width="50%" /><img src="location_with_bg_analysis_files/figure-markdown_github/springer_v_nature-4.png" width="50%" />
 
-<!-- Now lets compare nature news citations rate against Springer and Nature articles for a few countries. -->
-<!-- We see that the citation rate mostly tracks the Nature article rate. -->
-<!-- ```{r citation_v_springer_v_nature, out.width="50%", echo=FALSE, warning=FALSE, message=F} -->
-<!-- nature_bg_df = get_aggr_region(country_df, num_art_df,  -->
-<!--                                curr_corpus="nature_articles", "country") -->
-<!-- springer_bg_df = get_aggr_region(country_df, num_art_df,  -->
-<!--                                  curr_corpus="springer", "country") -->
-<!-- cited_df = get_aggr_region(country_df, num_art_df,  -->
-<!--                            curr_corpus="news_citation", "country") -->
-<!-- compare_df = rbind(nature_bg_df, springer_bg_df, cited_df) -->
-<!-- ggplot(subset(compare_df, country == "United States"), aes(x=as.numeric(year), y=prop, -->
-<!--                               fill=corpus, color=corpus)) + -->
-<!--     geom_point() + geom_line() + theme_bw() +  -->
-<!--     xlab("Year of Article") +  -->
-<!--     ylab("Percentage articles with at least one author with US affiliation") + -->
-<!--     ggtitle("Percentage articles with citation of US locations") +  -->
-<!--     scale_fill_brewer(palette="Set2") -->
-<!-- ggplot(subset(compare_df, country == "United Kingdom"), aes(x=as.numeric(year), y=prop, -->
-<!--                               fill=corpus, color=corpus)) + -->
-<!--     geom_point() + geom_line() + theme_bw() +  -->
-<!--     xlab("Year of Article") +  -->
-<!--     ylab("Percentage articles with at least one author with UK affiliation") + -->
-<!--     ggtitle("Percentage articles with citation of UK locations") +  -->
-<!--     scale_fill_brewer(palette="Set2") -->
-<!-- ggplot(subset(compare_df, country == "People's Republic of China"), aes(x=as.numeric(year), y=prop, -->
-<!--                               fill=corpus, color=corpus)) + -->
-<!--     geom_point() + geom_line() + theme_bw() +  -->
-<!--     xlab("Year of Article") +  -->
-<!--     ylab("Percentage articles with at least one author with Chinese affiliation") + -->
-<!--     ggtitle("Percentage articles with citation of Chinese locations") +  -->
-<!--     scale_fill_brewer(palette="Set2") -->
-<!-- ggplot(subset(compare_df, country == "India"), aes(x=as.numeric(year), y=prop, -->
-<!--                               fill=corpus, color=corpus)) + -->
-<!--     geom_point() + geom_line() + theme_bw() +  -->
-<!--     xlab("Year of Article") +  -->
-<!--     ylab("Percentage articles with at least one author with Indian affiliation") + -->
-<!--     ggtitle("Percentage articles with mention/citation of Indian locations") +  -->
-<!--     scale_fill_brewer(palette="Set2") -->
-<!-- ``` -->
-<!-- Now lets take the Nature authorship - Nature News citation proportion for each country.  -->
-<!-- This will help us understand if Nature News focuses more on research from a specific country. -->
-<!-- ```{r authorship_minus_citation, fig.align='center', fig.width = 15, fig.height = 10, echo=FALSE, warning=FALSE, message=F} -->
-<!-- nature_bg_df = get_aggr_region(country_df, num_art_df,  -->
-<!--                                curr_corpus="nature_articles", "country") -->
-<!-- cited_df = get_aggr_region(country_df, num_art_df,  -->
-<!--                            curr_corpus="news_citation", "country") -->
-<!-- colnames(nature_bg_df)[6] = "nature_prop" -->
-<!-- colnames(cited_df)[6] = "citation_prop" -->
-<!-- compare_df = merge(nature_bg_df[,c("year", "country", "nature_prop")],  -->
-<!--                       cited_df[,c("year", "country", "citation_prop")]) -->
-<!-- compare_df$diff = compare_df$nature_prop - compare_df$citation_prop -->
-<!-- compare_matr = compare_df %>% -->
-<!--                     dcast(country ~ year, value.var="diff") -->
-<!-- row.names(compare_matr) = compare_matr$country -->
-<!-- compare_matr = compare_matr[,-1] -->
-<!-- top_diff_country_idx = which(apply(compare_matr, 1, mean) > 0) -->
-<!-- sub_matr = compare_matr[top_diff_country_idx,] -->
-<!-- max_val = max(abs(sub_matr)) -->
-<!-- breaks = c(seq(-1*max_val, max_val, by = 0.01)) -->
-<!-- color_pmap <- colorRampPalette(c("yellow", "white", "blue"))(length(breaks)) -->
-<!-- pheatmap(sub_matr, cluster_rows = T,  -->
-<!--          cluster_cols = F, display_numbers = T,  -->
-<!--          main = "Authored More than Cited \n -->
-<!--                 (Authors - Citation) Proportions,  -->
-<!--                 Only showning Mean(Nature Authors - Citation) > 0.001 countries", -->
-<!--          color = color_pmap, breaks = breaks) -->
-<!-- bottom_diff_country_idx = which(apply(compare_matr, 1, mean) < -0.001) -->
-<!-- sub_matr = compare_matr[bottom_diff_country_idx,] -->
-<!-- max_val = max(abs(sub_matr)) -->
-<!-- breaks = c(seq(-1*max_val, max_val, by = 0.01)) -->
-<!-- color_pmap <- colorRampPalette(c("yellow", "white", "blue"))(length(breaks)) -->
-<!-- pheatmap(sub_matr, cluster_rows = T,  -->
-<!--          cluster_cols = F, display_numbers = T,  -->
-<!--          main = "Cited more than Authored \n -->
-<!--                 (Authors - Citation) Proportions,  -->
-<!--                 Only showning Mean(Nature Authors - Citation) < -0.001 countries", -->
-<!--          color = color_pmap, breaks = breaks) -->
-<!-- ``` -->
-<!-- Now lets compare nature news mentions rate against Springer and Nature articles for a few countries. -->
-<!-- ```{r four_countries_v_springer_v_nature,  out.width="50%", echo=FALSE, warning=FALSE, message=F} -->
-<!-- nature_bg_df = get_aggr_region(country_df, num_art_df,  -->
-<!--                                curr_corpus="nature_articles", "country") -->
-<!-- springer_bg_df = get_aggr_region(country_df, num_art_df,  -->
-<!--                                  curr_corpus="springer", "country") -->
-<!-- cited_df = get_aggr_region(country_df, num_art_df,  -->
-<!--                            curr_corpus="nature_news", "country") -->
-<!-- compare_df = rbind(nature_bg_df, springer_bg_df, cited_df) -->
-<!-- ggplot(subset(compare_df, country == "United States"), aes(x=as.numeric(year), y=prop, -->
-<!--                               fill=corpus, color=corpus)) + -->
-<!--     geom_point() + geom_line() + theme_bw() +  -->
-<!--     xlab("Year of Article") +  -->
-<!--     ylab("Percentage articles with at least one author with US affiliation") + -->
-<!--     ggtitle("Percentage articles with mention of US locations") +  -->
-<!--     scale_fill_brewer(palette="Set2") -->
-<!-- ggplot(subset(compare_df, country == "United Kingdom"), aes(x=as.numeric(year), y=prop, -->
-<!--                               fill=corpus, color=corpus)) + -->
-<!--     geom_point() + geom_line() + theme_bw() +  -->
-<!--     xlab("Year of Article") +  -->
-<!--     ylab("Percentage articles with at least one author with UK affiliation") + -->
-<!--     ggtitle("Percentage articles with mention of UK locations") +  -->
-<!--     scale_fill_brewer(palette="Set2") -->
-<!-- ggplot(subset(compare_df, country == "People's Republic of China"), aes(x=as.numeric(year), y=prop, -->
-<!--                               fill=corpus, color=corpus)) + -->
-<!--     geom_point() + geom_line() + theme_bw() +  -->
-<!--     xlab("Year of Article") +  -->
-<!--     ylab("Percentage articles with at least one author with Chinese affiliation") + -->
-<!--     ggtitle("Percentage articles with mention of Chinese locations") +  -->
-<!--     scale_fill_brewer(palette="Set2") -->
-<!-- ggplot(subset(compare_df, country == "India"), aes(x=as.numeric(year), y=prop, -->
-<!--                               fill=corpus, color=corpus)) + -->
-<!--     geom_point() + geom_line() + theme_bw() +  -->
-<!--     xlab("Year of Article") +  -->
-<!--     ylab("Percentage articles with at least one author with Indian affiliation") + -->
-<!--     ggtitle("Percentage articles with mention of Indian locations") +  -->
-<!--     scale_fill_brewer(palette="Set2") -->
-<!-- ``` -->
+Now lets compare nature news citations rate against Springer and Nature articles for a few countries. We see that the citation rate mostly tracks the Nature article rate.
+
+    ## [1] "United States"
+    ## [1] "United Kingdom"
+    ## [1] "People's Republic of China"
+    ## [1] "Germany"
+    ## [1] "France"
+    ## [1] "Canada"
+    ## [1] "Switzerland"
+    ## [1] "Netherlands"
+    ## [1] "Japan"
+    ## [1] "India"
+
+<img src="location_with_bg_analysis_files/figure-markdown_github/citation_v_springer_v_nature-1.png" width="50%" /><img src="location_with_bg_analysis_files/figure-markdown_github/citation_v_springer_v_nature-2.png" width="50%" /><img src="location_with_bg_analysis_files/figure-markdown_github/citation_v_springer_v_nature-3.png" width="50%" /><img src="location_with_bg_analysis_files/figure-markdown_github/citation_v_springer_v_nature-4.png" width="50%" />
+
+Now lets compare nature news mentions rate against Springer and Nature articles for a few countries.
+
+<img src="location_with_bg_analysis_files/figure-markdown_github/four_countries_v_springer_v_nature-1.png" width="50%" /><img src="location_with_bg_analysis_files/figure-markdown_github/four_countries_v_springer_v_nature-2.png" width="50%" /><img src="location_with_bg_analysis_files/figure-markdown_github/four_countries_v_springer_v_nature-3.png" width="50%" /><img src="location_with_bg_analysis_files/figure-markdown_github/four_countries_v_springer_v_nature-4.png" width="50%" />

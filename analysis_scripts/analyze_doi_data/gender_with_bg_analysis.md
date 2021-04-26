@@ -89,6 +89,12 @@ head(full_quote_df)
     ## 6 2005 news-and-views
     ## 7 2005 news-and-views
 
+``` r
+# remove citations where no gender could be estimated
+cited_df = subset(cited_df, !is.na(est_gender))
+full_quote_df = subset(full_quote_df, !is.na(est_gender))
+```
+
 ### compare proportions over all years
 
 From the Nature News corpus, we predict the gender of quoted speakers and cited (first and last) authors. Now lets plot the trend of predicted proportion of Male speakers/authors over time <img src="gender_with_bg_analysis_files/figure-markdown_github/compare_quotes_vs_citations-1.png" width="50%" /><img src="gender_with_bg_analysis_files/figure-markdown_github/compare_quotes_vs_citations-2.png" width="50%" />
@@ -145,6 +151,12 @@ head(nature_df)
     ## 5       MALE   MALE
     ## 6       MALE   MALE
 
+``` r
+# remove citations where no gender could be estimated
+springer_df = subset(springer_df, !is.na(est_gender))
+nature_df = subset(nature_df, !is.na(est_gender))
+```
+
 ### compare gender authorship proportions over all years
 
 Now lets look at all author publication gender and plot the trend over time. We see that the Springer corpus has many more articles sampled from it than the Nature corpus. We also see that there is an increase in Springer articles from 2005-2020; this is caused by name format changes. In this analysis, an article is only considered if it has a name where the gender is able to be guessed. In 2005, more journals were shortening the name such that only initials were used, thus reducing the number of articles able to be analyzed.
@@ -157,8 +169,8 @@ Since the number of articles in Nature are small and the resulting proportion of
 
 Now we will compare the identified quotes and cited authors from Nature News and compare the proportions of male speakers/authors against the previously shown background set of Springer articles.
 
-<img src="gender_with_bg_analysis_files/figure-markdown_github/foreground_background_comparison-1.png" width="50%" /><img src="gender_with_bg_analysis_files/figure-markdown_github/foreground_background_comparison-2.png" width="50%" /><img src="gender_with_bg_analysis_files/figure-markdown_github/foreground_background_comparison-3.png" width="50%" />
+<img src="gender_with_bg_analysis_files/figure-markdown_github/foreground_background_comparison-1.png" width="50%" /><img src="gender_with_bg_analysis_files/figure-markdown_github/foreground_background_comparison-2.png" width="50%" /><img src="gender_with_bg_analysis_files/figure-markdown_github/foreground_background_comparison-3.png" width="50%" /><img src="gender_with_bg_analysis_files/figure-markdown_github/foreground_background_comparison-4.png" width="50%" />
 
 Now breakdown the quotes into the different submagazines.
 
-<img src="gender_with_bg_analysis_files/figure-markdown_github/quote_analysis_by_article_type-1.png" width="50%" /><img src="gender_with_bg_analysis_files/figure-markdown_github/quote_analysis_by_article_type-2.png" width="50%" />
+<img src="gender_with_bg_analysis_files/figure-markdown_github/quote_analysis_by_article_type-1.png" width="50%" /><img src="gender_with_bg_analysis_files/figure-markdown_github/quote_analysis_by_article_type-2.png" width="50%" /><img src="gender_with_bg_analysis_files/figure-markdown_github/quote_analysis_by_article_type-3.png" width="50%" />

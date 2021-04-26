@@ -200,7 +200,7 @@ country_res = subset(country_res, corpus == "springer_articles")
 # files authored but have no country prediction
 # first subset to only countries that are not blank or NA
 country_df = subset(country_df, country != "" & !is.na(country))
-file_missing = setdiff(unique(country_df$doi), unique(country_res$file_id))
+file_missing = setdiff(unique(country_df$doi), unique(country_res$doi))
 country_df$no_country = FALSE
 country_df$no_country[which(country_df$doi %in% file_missing)] = TRUE
 print(paste("% of DOIs with no country prediction:", 

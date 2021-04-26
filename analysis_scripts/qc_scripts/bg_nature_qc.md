@@ -19,8 +19,7 @@ This notebook will QC the scraped author information from nature research articl
 
 ``` r
 # read in the scraped citations from nature news articles for each year
-pipeline_1_dir = paste(proj_dir,
-                    "/data/author_data/downloads/", sep="")
+pipeline_1_dir = file.path(proj_dir, "/data/author_data/downloads/")
 pipeline_1_files = list.files(pipeline_1_dir, full.names = T)
 
 all_authors = NA
@@ -81,7 +80,7 @@ print(paste("% of DOIs with no gender prediction:",
     ## [1] "% of DOIs with no gender prediction: 0.165275085731325"
 
 ``` r
-# plot number of springer articles with no gender prediction
+# plot number of nature articles with no gender prediction
 ggplot(unique(authored_df[,c("doi", "year", "no_gender")]), 
        aes(x=as.factor(year), fill=no_gender)) +
         geom_bar(position="fill") + theme_bw() +
@@ -116,6 +115,8 @@ ggplot(unique(no_gender_authored_df[,c("doi", "year")]),
 
 ``` r
 # now the remaining should all be abreviated first names
+# we only use first names because we assume that the 
+# first name is predictive of gender
 first_authors = unlist(lapply(no_gender_authored_df$authors, function(x) unlist(str_split(x, "; "))[1]))
 print(head(first_authors))
 ```
@@ -152,6 +153,10 @@ print(paste("% of DOIs with no last author gender prediction after filtering
 ```
 
     ## [1] "% of DOIs with no last author gender prediction after filtering\n            single author pubs + no filtering to full name pubs: 0"
+
+``` r
+stopifnot(length(first_authors) == 0, length(last_authors) == 0)
+```
 
 ## Pipeline Step 4: Country Predictions
 

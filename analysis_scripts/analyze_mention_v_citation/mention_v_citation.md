@@ -41,13 +41,20 @@ head(raw_df)
     ## 4                   ae United Arab Emirates      Asia    Western Asia
     ## 5                   ae United Arab Emirates      Asia    Western Asia
     ## 6                   ae United Arab Emirates      Asia    Western Asia
-    ##              file_id year               corpus
-    ## 1            446937a 2007  naturenews_mentions
-    ## 2 d41586-019-02846-4 2019  naturenews_mentions
-    ## 3            544301a 2017 naturenews_citations
-    ## 4 d41586-018-04978-5 2018 naturenews_citations
-    ## 5 d41586-019-02338-5 2019  naturenews_mentions
-    ## 6            480462a 2011  naturenews_mentions
+    ##                              file_id
+    ## 1                            446937a
+    ## 2                 d41586-018-07526-3
+    ## 3     science-stars-of-china-1.20113
+    ## 4 scientists-meet-capitalists-1.9512
+    ## 5                 d41586-020-02386-2
+    ## 6                            513490a
+    ##                                              doi year              corpus
+    ## 1                            doi:10.1038/446937a 2007 naturenews_mentions
+    ## 2                 doi:10.1038/d41586-018-07526-3 2018 naturenews_mentions
+    ## 3     doi:10.1038/science-stars-of-china-1.20113 2016 naturenews_mentions
+    ## 4 doi:10.1038/scientists-meet-capitalists-1.9512 2011 naturenews_mentions
+    ## 5                 doi:10.1038/d41586-020-02386-2 2020 naturenews_mentions
+    ## 6                            doi:10.1038/513490a 2014 naturenews_mentions
 
 ``` r
 # get the total number of mentions and citations
@@ -105,11 +112,11 @@ head(ci_df)
 ```
 
     ##       country address.country_code un_region  un_subregion year bottom_CI
-    ## 1 Afghanistan                   af      Asia Southern Asia 2020         0
-    ## 2 Afghanistan                   af      Asia Southern Asia 2016         0
-    ## 3 Afghanistan                   af      Asia Southern Asia 2018         0
-    ## 4 Afghanistan                   af      Asia Southern Asia 2011         0
-    ## 5 Afghanistan                   af      Asia Southern Asia 2006         0
+    ## 1 Afghanistan                   af      Asia Southern Asia 2016         0
+    ## 2 Afghanistan                   af      Asia Southern Asia 2020         0
+    ## 3 Afghanistan                   af      Asia Southern Asia 2012         0
+    ## 4 Afghanistan                   af      Asia Southern Asia 2015         0
+    ## 5 Afghanistan                   af      Asia Southern Asia 2008         0
     ## 6 Afghanistan                   af      Asia Southern Asia 2014         0
     ##   top_CI mean               corpus
     ## 1      0    0 naturenews_citations
@@ -493,88 +500,46 @@ for(curr_country in unique(class_c_mentions$address.country_code)){
 
     ## 
     ## 
-    ## Table: ca Class Citation, top terms
-    ## 
-    ## |word      | class_c_count| class_all_count|     ratio|
-    ## |:---------|-------------:|---------------:|---------:|
-    ## |blogentry |           118|             124| 0.9516129|
-    ## |alberta   |           185|             218| 0.8486239|
-    ## |ontario   |           246|             308| 0.7987013|
-    ## |sands     |            90|             115| 0.7826087|
-    ## |edmonton  |            86|             111| 0.7747748|
-    ## |canadas   |           154|             207| 0.7439614|
-    ## |ottawa    |           109|             150| 0.7266667|
-    ## |ut        |           141|             203| 0.6945813|
-    ## |mcgill    |           117|             176| 0.6647727|
-    ## |canadian  |           392|             627| 0.6251994|
-    ## |tar       |            75|             122| 0.6147541|
-    ## |canada    |          1466|            2433| 0.6025483|
-    ## |ddt       |            62|             105| 0.5904762|
-    ## |fraser    |            68|             120| 0.5666667|
-    ## |newline   |           123|             221| 0.5565611|
-    ## 
-    ## 
     ## Table: ch Class Citation, top terms
     ## 
     ## |word          | class_c_count| class_all_count|     ratio|
     ## |:-------------|-------------:|---------------:|---------:|
+    ## |eth           |            78|             137| 0.5693431|
     ## |msf           |            71|             132| 0.5378788|
-    ## |eth           |            72|             137| 0.5255474|
-    ## |basel         |            88|             185| 0.4756757|
-    ## |lausanne      |            69|             155| 0.4451613|
-    ## |novartis      |            92|             217| 0.4239631|
-    ## |zurich        |           161|             405| 0.3975309|
-    ## |swiss         |           219|             623| 0.3515249|
-    ## |perovskite    |            41|             117| 0.3504274|
-    ## |roche         |            74|             212| 0.3490566|
-    ## |switzerland   |           435|            1266| 0.3436019|
-    ## |athletes      |            44|             155| 0.2838710|
+    ## |lausanne      |            82|             155| 0.5290323|
+    ## |basel         |            95|             185| 0.5135135|
+    ## |zurich        |           189|             405| 0.4666667|
+    ## |novartis      |            94|             217| 0.4331797|
+    ## |switzerland   |           488|            1266| 0.3854660|
+    ## |swiss         |           235|             623| 0.3772071|
+    ## |perovskite    |            44|             117| 0.3760684|
+    ## |roche         |            78|             212| 0.3679245|
+    ## |athletes      |            52|             155| 0.3354839|
+    ## |olympic       |            31|             110| 0.2818182|
+    ## |immunotherapy |            38|             137| 0.2773723|
     ## |astrocytes    |            32|             116| 0.2758621|
-    ## |rnai          |            59|             239| 0.2468619|
-    ## |olympic       |            27|             110| 0.2454545|
-    ## |immunotherapy |            33|             137| 0.2408759|
+    ## |afm           |            26|             102| 0.2549020|
     ## 
     ## 
     ## Table: de Class Citation, top terms
     ## 
     ## |word       | class_c_count| class_all_count|     ratio|
     ## |:----------|-------------:|---------------:|---------:|
-    ## |dfg        |           112|             125| 0.8960000|
-    ## |germanys   |           231|             322| 0.7173913|
-    ## |leipzig    |            99|             139| 0.7122302|
-    ## |munich     |           194|             315| 0.6158730|
-    ## |pbo        |            68|             119| 0.5714286|
-    ## |heidelberg |           118|             208| 0.5673077|
-    ## |potsdam    |            73|             130| 0.5615385|
-    ## |bonn       |            85|             159| 0.5345912|
-    ## |germany    |          1474|            3062| 0.4813847|
-    ## |max        |           445|             926| 0.4805616|
-    ## |planck     |           453|            1003| 0.4516451|
-    ## |bullying   |            79|             175| 0.4514286|
-    ## |philae     |            55|             122| 0.4508197|
-    ## |ludwig     |            51|             114| 0.4473684|
-    ## |german     |           476|            1078| 0.4415584|
-    ## 
-    ## 
-    ## Table: fr Class Citation, top terms
-    ## 
-    ## |word         | class_c_count| class_all_count|     ratio|
-    ## |:------------|-------------:|---------------:|---------:|
-    ## |blogentry    |           118|             124| 0.9516129|
-    ## |iter         |           364|             419| 0.8687351|
-    ## |cnrs         |           161|             201| 0.8009950|
-    ## |frances      |           153|             241| 0.6348548|
-    ## |newline      |           132|             221| 0.5972851|
-    ## |philae       |            63|             122| 0.5163934|
-    ## |le           |           105|             204| 0.5147059|
-    ## |thymus       |            54|             121| 0.4462810|
-    ## |fusion       |           480|            1084| 0.4428044|
-    ## |ut           |            86|             203| 0.4236453|
-    ## |purification |            63|             150| 0.4200000|
-    ## |priming      |            42|             102| 0.4117647|
-    ## |pasteur      |            61|             150| 0.4066667|
-    ## |france       |           617|            1521| 0.4056542|
-    ## |cirm         |           100|             256| 0.3906250|
+    ## |dfg        |           121|             125| 0.9680000|
+    ## |leipzig    |           110|             139| 0.7913669|
+    ## |pbo        |            92|             119| 0.7731092|
+    ## |germanys   |           237|             322| 0.7360248|
+    ## |munich     |           202|             315| 0.6412698|
+    ## |denisovans |            99|             161| 0.6149068|
+    ## |potsdam    |            79|             130| 0.6076923|
+    ## |heidelberg |           116|             208| 0.5576923|
+    ## |max        |           516|             926| 0.5572354|
+    ## |johannes   |            57|             105| 0.5428571|
+    ## |germany    |          1618|            3062| 0.5284128|
+    ## |denisovan  |            57|             108| 0.5277778|
+    ## |bonn       |            83|             159| 0.5220126|
+    ## |planck     |           520|            1003| 0.5184447|
+    ## |ludwig     |            57|             114| 0.5000000|
     ## 
     ## 
     ## Table: it Class Citation, top terms
@@ -582,19 +547,19 @@ for(curr_country in unique(class_c_mentions$address.country_code)){
     ## |word        | class_c_count| class_all_count|     ratio|
     ## |:-----------|-------------:|---------------:|---------:|
     ## |laquila     |           101|             136| 0.7426471|
-    ## |italys      |           110|             175| 0.6285714|
-    ## |milan       |            65|             126| 0.5158730|
+    ## |italys      |           112|             175| 0.6400000|
+    ## |milan       |            69|             126| 0.5476190|
     ## |italian     |           267|             569| 0.4692443|
     ## |rome        |           123|             311| 0.3954984|
-    ## |italy       |           380|            1083| 0.3508772|
-    ## |lisa        |            75|             264| 0.2840909|
-    ## |virgo       |            47|             179| 0.2625698|
+    ## |italy       |           396|            1083| 0.3656510|
+    ## |lisa        |            83|             264| 0.3143939|
+    ## |virgo       |            53|             179| 0.2960894|
     ## |shale       |            56|             244| 0.2295082|
+    ## |sasso       |            28|             126| 0.2222222|
+    ## |fermi       |            47|             219| 0.2146119|
     ## |prosecutors |            28|             131| 0.2137405|
-    ## |sasso       |            25|             126| 0.1984127|
-    ## |fermi       |            43|             219| 0.1963470|
+    ## |gran        |            29|             146| 0.1986301|
     ## |cultivation |            27|             144| 0.1875000|
-    ## |gran        |            25|             146| 0.1712329|
     ## |microglia   |            25|             150| 0.1666667|
     ## 
     ## 
@@ -602,42 +567,63 @@ for(curr_country in unique(class_c_mentions$address.country_code)){
     ## 
     ## |word      | class_c_count| class_all_count|     ratio|
     ## |:---------|-------------:|---------------:|---------:|
-    ## |obokata   |           107|             112| 0.9553571|
     ## |blogentry |           118|             124| 0.9516129|
     ## |jaxa      |           137|             149| 0.9194631|
     ## |hayabusa  |           106|             116| 0.9137931|
-    ## |cdb       |            92|             110| 0.8363636|
-    ## |stap      |           106|             132| 0.8030303|
-    ## |riken     |           222|             298| 0.7449664|
-    ## |tohoku    |            95|             128| 0.7421875|
-    ## |fukushima |           265|             369| 0.7181572|
-    ## |yamanaka  |           126|             177| 0.7118644|
-    ## |japans    |           395|             568| 0.6954225|
+    ## |obokata   |            99|             112| 0.8839286|
+    ## |cdb       |            97|             110| 0.8818182|
+    ## |yamanaka  |           153|             177| 0.8644068|
+    ## |tohoku    |           104|             128| 0.8125000|
+    ## |riken     |           231|             298| 0.7751678|
+    ## |japans    |           415|             568| 0.7306338|
+    ## |fukushima |           268|             369| 0.7262873|
+    ## |takahashi |            74|             103| 0.7184466|
     ## |ut        |           130|             203| 0.6403941|
-    ## |tokyo     |           375|             622| 0.6028939|
-    ## |newline   |           123|             221| 0.5565611|
-    ## |takahashi |            57|             103| 0.5533981|
+    ## |tokyo     |           394|             622| 0.6334405|
+    ## |stap      |            82|             132| 0.6212121|
+    ## |sasai     |            68|             120| 0.5666667|
+    ## 
+    ## 
+    ## Table: nl Class Citation, top terms
+    ## 
+    ## |word        | class_c_count| class_all_count|     ratio|
+    ## |:-----------|-------------:|---------------:|---------:|
+    ## |leiden      |           120|             152| 0.7894737|
+    ## |priming     |            58|             102| 0.5686275|
+    ## |netherlands |           541|            1112| 0.4865108|
+    ## |ams         |            58|             130| 0.4461538|
+    ## |ut          |            88|             203| 0.4334975|
+    ## |sofia       |            49|             137| 0.3576642|
+    ## |dutch       |           120|             370| 0.3243243|
+    ## |bullying    |            52|             175| 0.2971429|
+    ## |gaia        |            38|             132| 0.2878788|
+    ## |qubits      |           128|             447| 0.2863535|
+    ## |qubit       |            42|             150| 0.2800000|
+    ## |antennas    |            53|             213| 0.2488263|
+    ## |rankings    |            36|             149| 0.2416107|
+    ## |amsterdam   |            56|             249| 0.2248996|
+    ## |unconscious |            27|             125| 0.2160000|
     ## 
     ## 
     ## Table: at Class Citation, top terms
     ## 
     ## |word          | class_c_count| class_all_count|     ratio|
     ## |:-------------|-------------:|---------------:|---------:|
-    ## |austria       |            95|             214| 0.4439252|
-    ## |austrian      |            46|             105| 0.4380952|
+    ## |austria       |           107|             214| 0.5000000|
+    ## |austrian      |            50|             105| 0.4761905|
+    ## |vienna        |            87|             293| 0.2969283|
     ## |afm           |            28|             102| 0.2745098|
-    ## |vienna        |            69|             293| 0.2354949|
     ## |wooden        |            24|             126| 0.1904762|
+    ## |superposition |            28|             155| 0.1806452|
+    ## |causal        |            24|             139| 0.1726619|
+    ## |qubit         |            22|             150| 0.1466667|
     ## |glacier       |            42|             295| 0.1423729|
     ## |citizen       |            32|             239| 0.1338912|
     ## |iaea          |            18|             138| 0.1304348|
+    ## |entangled     |            31|             245| 0.1265306|
     ## |confocal      |            13|             106| 0.1226415|
     ## |census        |            23|             197| 0.1167513|
     ## |radioactivity |            16|             142| 0.1126761|
-    ## |twisted       |            12|             115| 0.1043478|
-    ## |caesium       |            17|             183| 0.0928962|
-    ## |glaciers      |            60|             661| 0.0907716|
-    ## |nitrate       |             9|             107| 0.0841121|
     ## 
     ## 
     ## Table: au Class Citation, top terms
@@ -645,20 +631,20 @@ for(curr_country in unique(class_c_mentions$address.country_code)){
     ## |word         | class_c_count| class_all_count|     ratio|
     ## |:------------|-------------:|---------------:|---------:|
     ## |csiro        |           172|             180| 0.9555556|
-    ## |aus          |           160|             197| 0.8121827|
-    ## |australias   |           207|             301| 0.6877076|
-    ## |oxytocin     |            76|             126| 0.6031746|
-    ## |melbourne    |           209|             362| 0.5773481|
-    ## |commonwealth |            65|             114| 0.5701754|
-    ## |queensland   |           111|             199| 0.5577889|
-    ## |brisbane     |            63|             119| 0.5294118|
-    ## |sydney       |           194|             367| 0.5286104|
-    ## |canberra     |           116|             230| 0.5043478|
-    ## |australian   |           464|             921| 0.5038002|
-    ## |australia    |           961|            2129| 0.4513856|
-    ## |cdb          |            47|             110| 0.4272727|
-    ## |tectonics    |            52|             134| 0.3880597|
-    ## |uc           |            49|             134| 0.3656716|
+    ## |aus          |           165|             197| 0.8375635|
+    ## |australias   |           230|             301| 0.7641196|
+    ## |queensland   |           139|             199| 0.6984925|
+    ## |toads        |            79|             119| 0.6638655|
+    ## |melbourne    |           229|             362| 0.6325967|
+    ## |brisbane     |            74|             119| 0.6218487|
+    ## |aboriginal   |            90|             147| 0.6122449|
+    ## |wolbachia    |            75|             124| 0.6048387|
+    ## |australian   |           542|             921| 0.5884908|
+    ## |commonwealth |            66|             114| 0.5789474|
+    ## |sydney       |           209|             367| 0.5694823|
+    ## |canberra     |           122|             230| 0.5304348|
+    ## |australia    |          1098|            2129| 0.5157351|
+    ## |reef         |           228|             443| 0.5146727|
     ## 
     ## 
     ## Table: be Class Citation, top terms
@@ -666,8 +652,8 @@ for(curr_country in unique(class_c_mentions$address.country_code)){
     ## |word          | class_c_count| class_all_count|     ratio|
     ## |:-------------|-------------:|---------------:|---------:|
     ## |owen          |            48|             125| 0.3840000|
+    ## |belgium       |           108|             311| 0.3472669|
     ## |transgender   |            40|             116| 0.3448276|
-    ## |belgium       |           101|             311| 0.3247588|
     ## |shale         |            75|             244| 0.3073770|
     ## |archaeopteryx |            31|             108| 0.2870370|
     ## |beer          |            54|             221| 0.2443439|
@@ -684,86 +670,107 @@ for(curr_country in unique(class_c_mentions$address.country_code)){
     ## 
     ## Table: es Class Citation, top terms
     ## 
-    ## |word      | class_c_count| class_all_count|     ratio|
-    ## |:---------|-------------:|---------------:|---------:|
-    ## |spanish   |           140|             327| 0.4281346|
-    ## |cuba      |            45|             133| 0.3383459|
-    ## |barcelona |            56|             167| 0.3353293|
-    ## |spain     |           177|             661| 0.2677761|
-    ## |jellyfish |            45|             222| 0.2027027|
-    ## |grb       |            23|             114| 0.2017544|
-    ## |tehran    |            20|             102| 0.1960784|
-    ## |iodide    |            19|             102| 0.1862745|
-    ## |paintings |            26|             145| 0.1793103|
-    ## |cas       |            35|             215| 0.1627907|
-    ## |madrid    |            35|             223| 0.1569507|
-    ## |nio       |            45|             293| 0.1535836|
-    ## |redshift  |            25|             182| 0.1373626|
-    ## |lin       |            18|             135| 0.1333333|
-    ## |english   |            72|             564| 0.1276596|
+    ## |word         | class_c_count| class_all_count|     ratio|
+    ## |:------------|-------------:|---------------:|---------:|
+    ## |spanish      |           143|             327| 0.4373089|
+    ## |barcelona    |            62|             167| 0.3712575|
+    ## |grb          |            41|             114| 0.3596491|
+    ## |cuba         |            45|             133| 0.3383459|
+    ## |spain        |           194|             661| 0.2934947|
+    ## |neanderthals |           113|             538| 0.2100372|
+    ## |jellyfish    |            45|             222| 0.2027027|
+    ## |tehran       |            20|             102| 0.1960784|
+    ## |iodide       |            19|             102| 0.1862745|
+    ## |paintings    |            26|             145| 0.1793103|
+    ## |afterglow    |            19|             108| 0.1759259|
+    ## |cas          |            35|             215| 0.1627907|
+    ## |madrid       |            36|             223| 0.1614350|
+    ## |nio          |            46|             293| 0.1569966|
+    ## |computation  |            22|             159| 0.1383648|
     ## 
     ## 
-    ## Table: nl Class Citation, top terms
+    ## Table: il Class Citation, top terms
     ## 
     ## |word        | class_c_count| class_all_count|     ratio|
     ## |:-----------|-------------:|---------------:|---------:|
-    ## |leiden      |           117|             152| 0.7697368|
-    ## |priming     |            58|             102| 0.5686275|
-    ## |ams         |            58|             130| 0.4461538|
-    ## |netherlands |           492|            1112| 0.4424460|
-    ## |ut          |            88|             203| 0.4334975|
-    ## |sofia       |            49|             137| 0.3576642|
-    ## |bullying    |            52|             175| 0.2971429|
-    ## |dutch       |           103|             370| 0.2783784|
-    ## |rankings    |            36|             149| 0.2416107|
-    ## |unconscious |            27|             125| 0.2160000|
-    ## |topological |            41|             191| 0.2146597|
-    ## |hansen      |            31|             152| 0.2039474|
-    ## |amsterdam   |            50|             249| 0.2008032|
-    ## |citation    |            85|             425| 0.2000000|
-    ## |odour       |            25|             126| 0.1984127|
+    ## |weizmann    |           109|             113| 0.9646018|
+    ## |palestinian |            95|             162| 0.5864198|
+    ## |ut          |           116|             203| 0.5714286|
+    ## |israel      |           373|             681| 0.5477239|
+    ## |israeli     |           131|             240| 0.5458333|
+    ## |jerusalem   |            68|             128| 0.5312500|
+    ## |territories |            50|             138| 0.3623188|
+    ## |seeding     |            45|             141| 0.3191489|
+    ## |jordan      |            63|             214| 0.2943925|
+    ## |ultrasound  |            36|             155| 0.2322581|
+    ## |organelles  |            26|             124| 0.2096774|
+    ## |transcripts |            26|             128| 0.2031250|
+    ## |ribosome    |            26|             131| 0.1984733|
+    ## |ovarian     |            31|             163| 0.1901840|
+    ## |feng        |            22|             116| 0.1896552|
     ## 
     ## 
     ## Table: se Class Citation, top terms
     ## 
-    ## |word          | class_c_count| class_all_count|     ratio|
-    ## |:-------------|-------------:|---------------:|---------:|
-    ## |macchiarini   |           120|             121| 0.9917355|
-    ## |uppsala       |            89|             119| 0.7478992|
-    ## |karolinska    |           126|             185| 0.6810811|
-    ## |ki            |            71|             110| 0.6454545|
-    ## |ut            |           116|             203| 0.5714286|
-    ## |lund          |            73|             133| 0.5488722|
-    ## |sweden        |           295|             600| 0.4916667|
-    ## |swedish       |           107|             292| 0.3664384|
-    ## |astrocytes    |            40|             116| 0.3448276|
-    ## |stockholm     |            91|             313| 0.2907348|
-    ## |archaeopteryx |            31|             108| 0.2870370|
-    ## |chickens      |            51|             237| 0.2151899|
-    ## |proteomics    |            26|             126| 0.2063492|
-    ## |phosphate     |            43|             213| 0.2018779|
-    ## |gatherers     |            19|             101| 0.1881188|
+    ## |word           | class_c_count| class_all_count|     ratio|
+    ## |:--------------|-------------:|---------------:|---------:|
+    ## |macchiarini    |           120|             121| 0.9917355|
+    ## |uppsala        |            99|             119| 0.8319328|
+    ## |karolinska     |           132|             185| 0.7135135|
+    ## |ki             |            71|             110| 0.6454545|
+    ## |lund           |            83|             133| 0.6240602|
+    ## |ut             |           116|             203| 0.5714286|
+    ## |sweden         |           327|             600| 0.5450000|
+    ## |swedish        |           113|             292| 0.3869863|
+    ## |astrocytes     |            40|             116| 0.3448276|
+    ## |stockholm      |            98|             313| 0.3130990|
+    ## |archaeopteryx  |            31|             108| 0.2870370|
+    ## |apps           |            40|             141| 0.2836879|
+    ## |neonicotinoids |            26|             105| 0.2476190|
+    ## |dopamine       |            67|             284| 0.2359155|
+    ## |domestication  |            23|             102| 0.2254902|
     ## 
     ## 
     ## Table: dk Class Citation, top terms
     ## 
     ## |word       | class_c_count| class_all_count|     ratio|
     ## |:----------|-------------:|---------------:|---------:|
-    ## |denmark    |           119|             363| 0.3278237|
-    ## |danish     |            40|             141| 0.2836879|
-    ## |greenland  |            96|             527| 0.1821632|
-    ## |willerslev |            20|             132| 0.1515152|
+    ## |denmark    |           132|             363| 0.3636364|
+    ## |willerslev |            48|             132| 0.3636364|
+    ## |danish     |            45|             141| 0.3191489|
+    ## |greenland  |           108|             527| 0.2049336|
+    ## |copenhagen |            84|             548| 0.1532847|
     ## |citizen    |            33|             239| 0.1380753|
-    ## |copenhagen |            72|             548| 0.1313869|
     ## |offshore   |            40|             311| 0.1286174|
-    ## |biosphere  |            14|             110| 0.1272727|
     ## |grids      |            16|             128| 0.1250000|
     ## |bedrock    |            15|             121| 0.1239669|
-    ## |seabed     |            16|             132| 0.1212121|
+    ## |biosphere  |            13|             110| 0.1181818|
     ## |plague     |            22|             190| 0.1157895|
-    ## |cambrian   |            15|             131| 0.1145038|
+    ## |bgi        |            22|             193| 0.1139896|
     ## |turbines   |            24|             211| 0.1137441|
     ## |retirement |            26|             238| 0.1092437|
+    ## |seabed     |            14|             132| 0.1060606|
+    ## 
+    ## 
+    ## Table: fi Class Citation, top terms
+    ## 
+    ## |word          | class_c_count| class_all_count|     ratio|
+    ## |:-------------|-------------:|---------------:|---------:|
+    ## |finland       |            41|             158| 0.2594937|
+    ## |smartphone    |            12|             111| 0.1081081|
+    ## |eus           |            18|             168| 0.1071429|
+    ## |toxicologist  |            11|             105| 0.1047619|
+    ## |xenon         |            27|             260| 0.1038462|
+    ## |fungi         |            31|             363| 0.0853994|
+    ## |fungal        |            16|             189| 0.0846561|
+    ## |scores        |            31|             376| 0.0824468|
+    ## |erc           |            16|             210| 0.0761905|
+    ## |toxicology    |             8|             117| 0.0683761|
+    ## |biobank       |             9|             140| 0.0642857|
+    ## |daughters     |             8|             131| 0.0610687|
+    ## |monoxide      |            12|             197| 0.0609137|
+    ## |chernobyl     |            11|             181| 0.0607735|
+    ## |domestication |             6|             102| 0.0588235|
 
 ``` r
 citations_freq = Reduce(merge, all_country_word_freq_c)
@@ -778,23 +785,23 @@ print(knitr::kable(head(citations_freq,15),
     ## 
     ## Table: Overall Class Citation, top terms, count is per country frequency
     ## 
-    ## |word        | count_ca| count_ch| count_de| count_fr| count_it| count_jp| count_at| count_au| count_be| count_es| count_nl| count_se| count_dk| median_count|
+    ## |word        | count_ch| count_de| count_it| count_jp| count_nl| count_at| count_au| count_be| count_es| count_il| count_se| count_dk| count_fi| median_count|
     ## |:-----------|--------:|--------:|--------:|--------:|--------:|--------:|--------:|--------:|--------:|--------:|--------:|--------:|--------:|------------:|
-    ## |research    |     2948|     1283|     3682|     2283|      921|     1769|      204|     2003|      319|      466|     1303|      718|      205|         1283|
-    ## |university  |     3882|     1218|     3260|     1308|      876|     1650|      270|     2051|      300|      354|     1376|      857|      360|         1218|
-    ## |researchers |     2824|     1041|     2637|     1172|      551|     1215|      115|     1498|      251|      323|     1145|      678|      223|         1041|
-    ## |scientists  |     1898|      702|     2114|     1040|      574|      990|      125|     1045|      162|      246|      766|      421|      148|          702|
-    ## |data        |     1922|      925|     1951|      693|      452|      835|      145|     1119|      136|      240|     1150|      448|      198|          693|
-    ## |people      |     1830|      806|     1333|      723|      377|      831|       91|      800|      158|      131|      690|      368|      113|          690|
-    ## |time        |     2000|      684|     1744|     1013|      448|      862|       99|     1002|      138|      187|      747|      530|      174|          684|
-    ## |science     |     1773|      603|     2016|     1089|      452|     1152|      158|     1080|      184|      311|      714|      282|      157|          603|
-    ## |cells       |     1240|      693|     1565|      706|      288|     1762|       72|      725|       78|       49|      530|      573|       35|          573|
-    ## |team        |     1445|      582|     1481|      535|      325|      677|       82|      765|      117|      160|      542|      382|      149|          535|
-    ## |study       |     1597|      486|     1040|      416|      294|      417|       88|      674|      125|       95|      522|      312|      126|          416|
-    ## |found       |     1417|      396|     1161|      457|      257|      473|       57|      645|      125|      110|      476|      343|      127|          396|
-    ## |human       |     1027|      413|     1258|      475|      224|      590|       51|      475|       67|       65|      380|      379|       74|          380|
-    ## |institute   |      991|      518|     1570|      605|      341|      735|      126|      485|       77|      120|      379|      335|       81|          379|
-    ## |technology  |      730|      412|      873|      406|      125|      602|       76|      427|       58|       96|      368|      195|       49|          368|
+    ## |university  |     1367|     3473|      913|     1803|     1510|      308|     2280|      324|      391|      662|      954|      397|      132|          913|
+    ## |research    |     1364|     3858|      918|     1870|     1348|      214|     2117|      322|      481|      533|      773|      220|      185|          773|
+    ## |cells       |      853|     1671|      326|     2291|      613|       72|      862|       82|       53|      899|      722|       48|       25|          613|
+    ## |researchers |     1184|     2859|      610|     1361|     1252|      147|     1767|      275|      364|      545|      771|      245|      102|          610|
+    ## |time        |      767|     1887|      474|      906|      827|      125|     1125|      143|      223|      433|      569|      186|       64|          474|
+    ## |scientists  |      787|     2276|      589|     1037|      815|      134|     1192|      170|      262|      405|      470|      145|       69|          470|
+    ## |data        |     1026|     2100|      468|      857|     1239|      153|     1211|      147|      263|      271|      487|      212|       73|          468|
+    ## |cell        |      430|     1295|      234|     1150|      423|       63|      492|       84|       35|      497|      420|       25|       15|          420|
+    ## |people      |      904|     1449|      396|      895|      717|      106|      941|      167|      141|      264|      424|      119|       54|          396|
+    ## |human       |      444|     1456|      247|      659|      419|       51|      645|       69|      100|      376|      407|      102|       26|          376|
+    ## |team        |      721|     1695|      350|      762|      650|      110|      994|      131|      215|      320|      452|      171|       61|          350|
+    ## |science     |      643|     2045|      455|     1194|      732|      169|     1132|      190|      319|      344|      309|      161|      102|          344|
+    ## |institute   |      576|     1745|      339|      785|      410|      141|      551|       81|      133|      332|      370|       90|       41|          339|
+    ## |found       |      467|     1309|      291|      517|      518|       61|      766|      139|      134|      309|      431|      138|       57|          309|
+    ## |study       |      557|     1165|      301|      464|      565|      100|      767|      132|      112|      293|      391|      135|       79|          301|
 
 #### Class M
 
@@ -844,7 +851,7 @@ for(curr_country in unique(class_m_mentions$address.country_code)){
     ## |word           | class_m_count| class_all_count|     ratio|
     ## |:--------------|-------------:|---------------:|---------:|
     ## |ut             |            94|             203| 0.4630542|
-    ## |ppm            |            48|             134| 0.3582090|
+    ## |ppm            |            46|             134| 0.3432836|
     ## |shuttles       |            29|             104| 0.2788462|
     ## |carbonate      |            64|             239| 0.2677824|
     ## |foam           |            42|             159| 0.2641509|
@@ -865,17 +872,17 @@ for(curr_country in unique(class_m_mentions$address.country_code)){
     ## |word      | class_m_count| class_all_count|     ratio|
     ## |:---------|-------------:|---------------:|---------:|
     ## |blogentry |           118|             124| 0.9516129|
-    ## |bangalore |            99|             117| 0.8461538|
+    ## |bangalore |           101|             117| 0.8632479|
     ## |indias    |           435|             570| 0.7631579|
     ## |delhi     |           215|             287| 0.7491289|
     ## |rupees    |            69|             109| 0.6330275|
     ## |pachauri  |            78|             126| 0.6190476|
     ## |newline   |           129|             221| 0.5837104|
     ## |rao       |            83|             144| 0.5763889|
-    ## |indian    |           681|            1324| 0.5143505|
-    ## |india     |           912|            1950| 0.4676923|
+    ## |indian    |           694|            1324| 0.5241692|
+    ## |india     |           931|            1950| 0.4774359|
     ## |tiger     |           101|             239| 0.4225941|
-    ## |singh     |            65|             166| 0.3915663|
+    ## |singh     |            68|             166| 0.4096386|
     ## |tigers    |            62|             165| 0.3757576|
     ## |himalayas |            39|             124| 0.3145161|
     ## |shale     |            76|             244| 0.3114754|
@@ -885,19 +892,19 @@ for(curr_country in unique(class_m_mentions$address.country_code)){
     ## 
     ## |word           | class_m_count| class_all_count|     ratio|
     ## |:--------------|-------------:|---------------:|---------:|
+    ## |mexicos        |            61|             127| 0.4803150|
     ## |bison          |            63|             132| 0.4772727|
-    ## |mexicos        |            55|             127| 0.4330709|
-    ## |mexican        |            96|             232| 0.4137931|
+    ## |mexican        |           108|             232| 0.4655172|
     ## |rust           |            51|             181| 0.2817680|
     ## |wheat          |           110|             476| 0.2310924|
+    ## |maya           |            30|             133| 0.2255639|
     ## |maize          |           119|             531| 0.2241055|
-    ## |maya           |            29|             133| 0.2180451|
+    ## |mexico         |           314|            1556| 0.2017995|
     ## |varieties      |            89|             485| 0.1835052|
-    ## |mexico         |           279|            1556| 0.1793059|
     ## |monsanto       |            30|             169| 0.1775148|
     ## |tolerant       |            23|             131| 0.1755725|
+    ## |autonomous     |            43|             259| 0.1660232|
     ## |nanotechnology |            52|             333| 0.1561562|
-    ## |autonomous     |            39|             259| 0.1505792|
     ## |herbicide      |            19|             133| 0.1428571|
     ## |transgenic     |            55|             505| 0.1089109|
     ## 
@@ -906,21 +913,42 @@ for(curr_country in unique(class_m_mentions$address.country_code)){
     ## 
     ## |word           | class_m_count| class_all_count|     ratio|
     ## |:--------------|-------------:|---------------:|---------:|
-    ## |philippines    |            46|             175| 0.2628571|
-    ## |rice           |           161|             757| 0.2126816|
+    ## |philippines    |            52|             175| 0.2971429|
+    ## |rice           |           214|             757| 0.2826948|
     ## |geoengineering |            28|             210| 0.1333333|
     ## |irrigation     |            18|             147| 0.1224490|
     ## |rust           |            22|             181| 0.1215470|
     ## |bt             |            27|             259| 0.1042471|
     ## |cotton         |            28|             288| 0.0972222|
+    ## |varieties      |            47|             485| 0.0969072|
     ## |taylor         |            34|             368| 0.0923913|
+    ## |tolerant       |            12|             131| 0.0916031|
+    ## |tolerance      |            20|             224| 0.0892857|
     ## |monsanto       |            14|             169| 0.0828402|
     ## |wheat          |            38|             476| 0.0798319|
     ## |sheep          |            17|             226| 0.0752212|
-    ## |opera          |             8|             115| 0.0695652|
-    ## |tolerant       |             9|             131| 0.0687023|
-    ## |humanitarian   |             8|             119| 0.0672269|
-    ## |varieties      |            32|             485| 0.0659794|
+    ## |denisovan      |             8|             108| 0.0740741|
+    ## 
+    ## 
+    ## Table: ru Class Mention, top terms
+    ## 
+    ## |word       | class_m_count| class_all_count|     ratio|
+    ## |:----------|-------------:|---------------:|---------:|
+    ## |singer     |            58|             112| 0.5178571|
+    ## |moscow     |           139|             294| 0.4727891|
+    ## |russias    |           103|             222| 0.4639640|
+    ## |russian    |           431|            1126| 0.3827709|
+    ## |iaea       |            48|             138| 0.3478261|
+    ## |ut         |            65|             203| 0.3201970|
+    ## |ukraine    |            43|             142| 0.3028169|
+    ## |russia     |           282|             947| 0.2977825|
+    ## |ras        |            59|             199| 0.2964824|
+    ## |academys   |            31|             123| 0.2520325|
+    ## |soviet     |            93|             371| 0.2506739|
+    ## |chernobyl  |            36|             181| 0.1988950|
+    ## |smallpox   |            33|             168| 0.1964286|
+    ## |confocal   |            17|             106| 0.1603774|
+    ## |enrichment |            27|             174| 0.1551724|
 
 ``` r
 mentions_freq = Reduce(merge, all_country_word_freq_m)
@@ -936,23 +964,23 @@ print(knitr::kable(head(mentions_freq,15),
     ## 
     ## Table: Overall Class Mention, top terms, count is per country frequency
     ## 
-    ## |word        | count_co| count_in| count_mx| count_ph| median_count|
-    ## |:-----------|--------:|--------:|--------:|--------:|------------:|
-    ## |research    |      197|     1368|      261|      183|        229.0|
-    ## |university  |      215|      800|      217|      102|        216.0|
-    ## |climate     |      329|      322|      108|       78|        215.0|
-    ## |time        |      267|      594|       98|       66|        182.5|
-    ## |researchers |      197|      628|      166|       79|        181.5|
-    ## |science     |      108|     1020|      173|      142|        157.5|
-    ## |people      |      128|      490|      163|       97|        145.5|
-    ## |million     |      154|      444|       58|      103|        128.5|
-    ## |water       |      189|      229|       46|       68|        128.5|
-    ## |scientists  |      107|      680|      138|       83|        122.5|
-    ## |global      |      196|      264|       38|       44|        120.0|
-    ## |data        |      159|      483|       35|       77|        118.0|
-    ## |change      |      155|      285|       76|       54|        115.5|
-    ## |world       |      127|      386|      102|      104|        115.5|
-    ## |plants      |      162|      134|       77|       55|        105.5|
+    ## |word        | count_co| count_in| count_mx| count_ph| count_ru| median_count|
+    ## |:-----------|--------:|--------:|--------:|--------:|--------:|------------:|
+    ## |research    |      197|     1374|      300|      191|      549|          300|
+    ## |university  |      215|      805|      246|      113|      325|          246|
+    ## |time        |      264|      595|      111|       75|      229|          229|
+    ## |researchers |      197|      631|      186|      107|      266|          197|
+    ## |science     |      108|     1021|      188|      145|      515|          188|
+    ## |scientists  |      106|      685|      182|       94|      406|          182|
+    ## |energy      |      167|      391|       30|       21|      176|          167|
+    ## |data        |      157|      488|       38|       79|      236|          157|
+    ## |million     |      153|      445|       59|      116|      168|          153|
+    ## |people      |      128|      495|      182|      101|      146|          146|
+    ## |world       |      127|      387|      107|      107|      146|          127|
+    ## |national    |       76|      438|      116|       56|      132|          116|
+    ## |climate     |      322|      324|      112|       79|       81|          112|
+    ## |space       |      143|      424|        6|       20|      108|          108|
+    ## |team        |      106|      297|       51|       52|      111|          106|
 
 ## Calculate the difference in word frequencies between Class C and M using the top words for each class
 
@@ -992,23 +1020,23 @@ print(knitr::kable(head(compare_freq,15),
     ## 
     ## Table: Overall Class Citation, top terms
     ## 
-    ## |word          | median_count_citations| median_count_mentions| compare_ratio| class_c_count| class_m_count|
-    ## |:-------------|----------------------:|---------------------:|-------------:|-------------:|-------------:|
-    ## |quantum       |                    147|                   4.5|      32.66667|          2318|            47|
-    ## |physicists    |                     95|                   3.5|      27.14286|          1027|            43|
-    ## |virus         |                    113|                   5.0|      22.60000|          1028|            89|
-    ## |machines      |                     33|                   1.5|      22.00000|           390|            28|
-    ## |theoretical   |                     54|                   2.5|      21.60000|           563|            36|
-    ## |journals      |                     62|                   3.0|      20.66667|           907|            81|
-    ## |bird          |                     56|                   3.0|      18.66667|           374|            20|
-    ## |software      |                     55|                   3.0|      18.33333|           762|            42|
-    ## |clinical      |                    174|                   9.5|      18.31579|          1461|           174|
-    ## |articles      |                     36|                   2.0|      18.00000|           463|            35|
-    ## |sophisticated |                     27|                   1.5|      18.00000|           266|            15|
-    ## |pigs          |                     17|                   1.0|      17.00000|           172|             8|
-    ## |reading       |                     17|                   1.0|      17.00000|           206|            18|
-    ## |vaccines      |                     51|                   3.0|      17.00000|           446|           127|
-    ## |tissues       |                     33|                   2.0|      16.50000|           333|            12|
+    ## |word        | median_count_citations| median_count_mentions| compare_ratio| class_c_count| class_m_count|
+    ## |:-----------|----------------------:|---------------------:|-------------:|-------------:|-------------:|
+    ## |bird        |                     45|                     2|      22.50000|           307|            20|
+    ## |quantum     |                    157|                     7|      22.42857|          2033|            57|
+    ## |patients    |                    135|                     7|      19.28571|          1523|           133|
+    ## |mechanism   |                     30|                     2|      15.00000|           372|            51|
+    ## |reading     |                     14|                     1|      14.00000|           185|            22|
+    ## |cells       |                    613|                    44|      13.93182|          6531|           600|
+    ## |theoretical |                     41|                     3|      13.66667|           472|            60|
+    ## |biomedical  |                     26|                     2|      13.00000|           393|            49|
+    ## |healthy     |                     39|                     3|      13.00000|           385|            34|
+    ## |virus       |                     64|                     5|      12.80000|           809|           157|
+    ## |molecule    |                     38|                     3|      12.66667|           514|            57|
+    ## |synthetic   |                     38|                     3|      12.66667|           386|            33|
+    ## |cell        |                    420|                    35|      12.00000|          3985|           479|
+    ## |astronomers |                     35|                     3|      11.66667|           522|            61|
+    ## |brain       |                    151|                    13|      11.61538|          2192|           114|
 
 ``` r
 compare_freq = compare_freq[order(compare_freq$compare_ratio, decreasing=F),]
@@ -1022,21 +1050,21 @@ print(knitr::kable(head(compare_freq,15),
     ## 
     ## |word              | median_count_citations| median_count_mentions| compare_ratio| class_c_count| class_m_count|
     ## |:-----------------|----------------------:|---------------------:|-------------:|-------------:|-------------:|
-    ## |varieties         |                      8|                  32.0|     0.2500000|           162|           134|
-    ## |drought           |                      6|                  19.5|     0.3076923|           122|            79|
-    ## |soils             |                      6|                  19.5|     0.3076923|           125|            72|
-    ## |rice              |                     14|                  45.0|     0.3111111|           209|           215|
-    ## |farmers           |                     31|                  82.0|     0.3780488|           378|           237|
-    ## |crops             |                     32|                  77.0|     0.4155844|           529|           224|
-    ## |grain             |                      3|                   7.0|     0.4285714|            45|            23|
-    ## |reductions        |                      4|                   8.5|     0.4705882|           114|            37|
-    ## |yields            |                     10|                  20.5|     0.4878049|           171|            72|
-    ## |environmentalists |                      3|                   5.5|     0.5454545|            91|            19|
-    ## |crop              |                     21|                  36.0|     0.5833333|           298|           147|
-    ## |villages          |                      7|                  12.0|     0.5833333|            99|            59|
-    ## |tonnes            |                     17|                  28.5|     0.5964912|           374|           114|
-    ## |coal              |                     12|                  20.0|     0.6000000|           294|           131|
-    ## |agricultural      |                     31|                  50.0|     0.6200000|           384|           181|
+    ## |drought           |                      5|                    17|     0.2941176|           102|            82|
+    ## |partnership       |                      5|                    13|     0.3846154|           143|            56|
+    ## |fuel              |                     28|                    70|     0.4000000|           605|           289|
+    ## |yield             |                     11|                    23|     0.4782609|           216|            93|
+    ## |crop              |                     18|                    36|     0.5000000|           273|           158|
+    ## |pledged           |                      3|                     6|     0.5000000|            80|            36|
+    ## |projected         |                      3|                     6|     0.5000000|            93|            31|
+    ## |renewable         |                      9|                    17|     0.5294118|           216|            93|
+    ## |coastal           |                      4|                     7|     0.5714286|           182|            52|
+    ## |tank              |                      8|                    14|     0.5714286|           157|            82|
+    ## |environmentalists |                      3|                     5|     0.6000000|            48|            23|
+    ## |germanys          |                      5|                     8|     0.6250000|           258|            31|
+    ## |oil               |                     22|                    35|     0.6285714|           421|           215|
+    ## |electricity       |                     27|                    41|     0.6585366|           481|           184|
+    ## |crossing          |                      2|                     3|     0.6666667|            45|            14|
 
 ``` r
 # now take the top and bottom
