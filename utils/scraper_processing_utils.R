@@ -186,13 +186,19 @@ format_name_str <- function(in_str){
 #' @param key_str, a query string 
 #' @param str_vec, a string vector
 #' @return string, a string from str_vec that has closest distance to key_str
-get_matched_string <- function(key_str, str_vec){
+get_matched_string <- function(key_str, str_vec, max_cost=NA){
     require("stringdist")
 
     # get match via longest common substring
     # where deletions are NOT penalized
     costs = sapply(tolower(str_vec), adist, y=tolower(key_str), costs=list(deletions=0))
     lcs_idx = which(costs == min(costs)[1])
+
+    if(!is.na(max_cost)){
+        if(min(costs)[1] > max_cost){
+            return(NA)
+        }
+    }
     return(str_vec[lcs_idx])
 
 }

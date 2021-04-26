@@ -16,8 +16,8 @@ require(stringr)
 
 
 proj_dir = here()
-source(paste(proj_dir, "/analysis_scripts/analysis_utils.R", sep=""))
-source(paste(proj_dir, "/utils/plotting_utils.R", sep=""))
+source(file.path(proj_dir, "/analysis_scripts/analysis_utils.R"))
+source(file.path(proj_dir, "/utils/plotting_utils.R"))
 ```
 
 ## Nature News Gender Disparities in Quotes
