@@ -7,6 +7,7 @@ library(here)
 proj_dir = here()
 source(file.path(proj_dir, "/utils/scraper_processing_utils.R"))
 
+BOOTSTRAP_SIZE=10
 
 #' Read in the quote information from processed coreNLP TSV output
 #'
@@ -137,8 +138,8 @@ compute_bootstrap_first_author <- function(full_data_df, year_col_id, article_co
         # get article id's to sample
         curr_ids = unique(year_df$art_id)
         bootstrap_size = length(curr_ids)
-        boot_res = rep(NA, 10)
-        for(idx in 1:10){
+        boot_res = rep(NA, BOOTSTRAP_SIZE)
+        for(idx in 1:BOOTSTRAP_SIZE){
 
             boot_samp = sample_n(year_df, nrow(year_df), replace=T)
             percent_first = sum(boot_samp$num_first, na.rm=T) / 
@@ -195,8 +196,8 @@ compute_bootstrap_gender <- function(full_data_df, year_col_id, article_col_id, 
         # get article id's to sample
         curr_ids = unique(year_df$art_id)
         bootstrap_size = length(curr_ids)
-        boot_res = rep(NA, 10)
-        for(idx in 1:10){
+        boot_res = rep(NA, BOOTSTRAP_SIZE)
+        for(idx in 1:BOOTSTRAP_SIZE){
 
             boot_samp = sample_n(year_df, nrow(year_df), replace=T)
             percent_male = sum(boot_samp$num_male, na.rm=T) / 
@@ -251,8 +252,8 @@ compute_bootstrap_location <- function(full_data_df, year_col_id, article_col_id
         year_df$is_country_present = as.numeric(year_df$is_country_present)
 
         # get article id's to sample
-        boot_res = rep(NA, 10)
-        for(idx in 1:10){
+        boot_res = rep(NA, BOOTSTRAP_SIZE)
+        for(idx in 1:BOOTSTRAP_SIZE){
 
             boot_samp = sample_n(year_df, nrow(year_df), replace=T)
             percent_country = sum(boot_samp$is_country_present, na.rm=T) / 
