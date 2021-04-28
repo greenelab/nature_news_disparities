@@ -7,6 +7,7 @@ library(here)
 proj_dir = here()
 source(file.path(proj_dir, "/utils/scraper_processing_utils.R"))
 
+BOOTSTRAP_SIZE=10
 
 #' Read in the quote information from processed coreNLP TSV output
 #'
@@ -101,6 +102,75 @@ read_gender_files <- function(in_file){
 }
 
 
+#' Compute first v last bootstrap CI
+#' this works by taking a random subset of articles per year
+#' and calculating the bootstrap mean, upperCI and lowerCI
+#' its assumed that there exists a column called author_pos
+#' where there are only two values -- first / last
+#'
+#' @param full_data_df This is the full data to be explored
+#' @param year_col_id This is column name containing year to be selected by
+#' @param article_col_id This is column name containing article ids to be selected by
+#' @param conf_int between 0-1, this is the range the CI is calculated
+#' @return a dataframe of the CI estimates
+compute_bootstrap_first_author <- function(full_data_df, year_col_id, article_col_id, conf_int){
+
+    set.seed(5)
+
+    # make sure there is an author_pos column
+    stopifnot("author_pos" %in% colnames(full_data_df))
+
+    # and the column has the right values
+    author_pos_val = unique(full_data_df$author_pos)
+    author_pos_val = union(author_pos_val, c("first", "last"))
+    print(length(author_pos_val))
+    stopifnot(length(author_pos_val) == 2)
+
+    in_df = data.frame(year = full_data_df[,year_col_id],
+                        art_id = full_data_df[,article_col_id],
+                        author_pos = full_data_df$author_pos)
+
+    
+    # we need to get a bootstrap sample for each year
+    quantile_res = data.frame(year=unique(in_df$year),
+                                bottom_CI = NA,
+                                top_CI = NA,
+                                mean = NA)
+    for(curr_year in unique(in_df$year)){
+        year_df = subset(in_df, year == curr_year)
+
+        year_df = aggregate(year_df$author_pos, list(year_df$art_id), function(x) c(sum(x=='first'), length(x)))
+        year_df = data.frame(as.matrix(year_df))
+        colnames(year_df) = c("art_id", "num_first", "num_total")
+        year_df$num_first = as.numeric(year_df$num_first)
+        year_df$num_total = as.numeric(year_df$num_total)
+
+        # get article id's to sample
+        curr_ids = unique(year_df$art_id)
+        bootstrap_size = length(curr_ids)
+        boot_res = rep(NA, BOOTSTRAP_SIZE)
+        for(idx in 1:BOOTSTRAP_SIZE){
+
+            boot_samp = sample_n(year_df, nrow(year_df), replace=T)
+            percent_first = sum(boot_samp$num_first, na.rm=T) / 
+                            sum(boot_samp$num_total, na.rm=T)
+            boot_res[idx] = percent_first
+            
+        }
+
+        quantile_res[quantile_res$year == curr_year,] = 
+            data.frame(curr_year, 
+                        quantile(boot_res, 1-conf_int),
+                        quantile(boot_res, conf_int),
+                        mean(boot_res))
+
+    }
+
+    return(quantile_res)
+
+}
+
+
 #' Compute bootstrap CI
 #' this works by taking a random subset of articles per year
 #' and calculating the bootstrap mean, upperCI and lowerCI
@@ -136,8 +206,8 @@ compute_bootstrap_gender <- function(full_data_df, year_col_id, article_col_id, 
         # get article id's to sample
         curr_ids = unique(year_df$art_id)
         bootstrap_size = length(curr_ids)
-        boot_res = rep(NA, 10)
-        for(idx in 1:10){
+        boot_res = rep(NA, BOOTSTRAP_SIZE)
+        for(idx in 1:BOOTSTRAP_SIZE){
 
             boot_samp = sample_n(year_df, nrow(year_df), replace=T)
             percent_male = sum(boot_samp$num_male, na.rm=T) / 
@@ -192,8 +262,8 @@ compute_bootstrap_location <- function(full_data_df, year_col_id, article_col_id
         year_df$is_country_present = as.numeric(year_df$is_country_present)
 
         # get article id's to sample
-        boot_res = rep(NA, 10)
-        for(idx in 1:10){
+        boot_res = rep(NA, BOOTSTRAP_SIZE)
+        for(idx in 1:BOOTSTRAP_SIZE){
 
             boot_samp = sample_n(year_df, nrow(year_df), replace=T)
             percent_country = sum(boot_samp$is_country_present, na.rm=T) / 
