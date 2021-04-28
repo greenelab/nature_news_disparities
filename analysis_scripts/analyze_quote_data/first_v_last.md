@@ -216,7 +216,11 @@ first_cited_prop_df = compute_bootstrap_first_author(quote_author_df,
                                                year_col_id = "year", 
                                                article_col_id = "file_id",
                                                conf_int=0.95)
+```
 
+    ## [1] 2
+
+``` r
 ggplot(first_cited_prop_df, aes(x=as.numeric(year), y=mean,
                           ymin=bottom_CI, ymax=top_CI)) +
     geom_point() + geom_ribbon(alpha=0.5) + geom_line(alpha=0.5) + 
@@ -258,4 +262,30 @@ for(curr_type in unique(missed_quote_df$type)){
 }
 ```
 
-<img src="first_v_last_files/figure-markdown_github/plot_first_v_last_by_type-1.png" width="50%" /><img src="first_v_last_files/figure-markdown_github/plot_first_v_last_by_type-2.png" width="50%" /><img src="first_v_last_files/figure-markdown_github/plot_first_v_last_by_type-3.png" width="50%" /><img src="first_v_last_files/figure-markdown_github/plot_first_v_last_by_type-4.png" width="50%" /><img src="first_v_last_files/figure-markdown_github/plot_first_v_last_by_type-5.png" width="50%" /><img src="first_v_last_files/figure-markdown_github/plot_first_v_last_by_type-6.png" width="50%" /><img src="first_v_last_files/figure-markdown_github/plot_first_v_last_by_type-7.png" width="50%" />
+    ## [1] 2
+
+<img src="first_v_last_files/figure-markdown_github/plot_first_v_last_by_type-1.png" width="50%" />
+
+    ## [1] 2
+
+<img src="first_v_last_files/figure-markdown_github/plot_first_v_last_by_type-2.png" width="50%" />
+
+    ## [1] 2
+
+<img src="first_v_last_files/figure-markdown_github/plot_first_v_last_by_type-3.png" width="50%" />
+
+    ## [1] 2
+
+<img src="first_v_last_files/figure-markdown_github/plot_first_v_last_by_type-4.png" width="50%" />
+
+    ## [1] 2
+
+<img src="first_v_last_files/figure-markdown_github/plot_first_v_last_by_type-5.png" width="50%" />
+
+    ## [1] 2
+
+<img src="first_v_last_files/figure-markdown_github/plot_first_v_last_by_type-6.png" width="50%" />
+
+    ## [1] 2
+
+<img src="first_v_last_files/figure-markdown_github/plot_first_v_last_by_type-7.png" width="50%" />
