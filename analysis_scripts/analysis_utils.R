@@ -120,6 +120,15 @@ compute_bootstrap_first_author <- function(full_data_df, year_col_id, article_co
     in_df = data.frame(year = full_data_df[,year_col_id],
                         art_id = full_data_df[,article_col_id],
                         author_pos = full_data_df$author_pos)
+
+    # make sure there is an author_pos column
+    stopifnot("author_pos" %in% colnames(full_data_df))
+
+    # and the column has the right values
+    author_pos_val = unique(full_data_df$author_pos)
+    author_pos_val = intersect(author_pos_val, c("first", "last"))
+    stopifnot(length(author_pos_val) == 2)
+
     
     # we need to get a bootstrap sample for each year
     quantile_res = data.frame(year=unique(in_df$year),
