@@ -117,17 +117,18 @@ compute_bootstrap_first_author <- function(full_data_df, year_col_id, article_co
 
     set.seed(5)
 
-    in_df = data.frame(year = full_data_df[,year_col_id],
-                        art_id = full_data_df[,article_col_id],
-                        author_pos = full_data_df$author_pos)
-
     # make sure there is an author_pos column
     stopifnot("author_pos" %in% colnames(full_data_df))
 
     # and the column has the right values
     author_pos_val = unique(full_data_df$author_pos)
-    author_pos_val = intersect(author_pos_val, c("first", "last"))
+    author_pos_val = union(author_pos_val, c("first", "last"))
+    print(length(author_pos_val))
     stopifnot(length(author_pos_val) == 2)
+
+    in_df = data.frame(year = full_data_df[,year_col_id],
+                        art_id = full_data_df[,article_col_id],
+                        author_pos = full_data_df$author_pos)
 
     
     # we need to get a bootstrap sample for each year
