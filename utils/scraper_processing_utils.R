@@ -182,15 +182,24 @@ format_name_str <- function(in_str){
 
 #' Given a query string, return closest string in the
 #' vector of reference strings (no penalty for deletion)
-#'
+#' using adist: "the generalized Levenshtein (edit) distance, 
+#' giving the minimal possibly weighted number of insertions, 
+#' deletions and substitutions needed to transform one string into another.
+#' For our use, deletions are NOT penalized and have weight 0
+#' this is because when matching names, we may only get a last name 
+#' and would like to match it to a full name. 
+#' Example query string: "John"
+#' reference strings: "John Fillipio", "Jane Do"
+#' without deletion weight of 0, John has the closest distance to "Jane Doe"
+#' 
+#' 
 #' @param key_str, a query string 
 #' @param str_vec, a string vector
 #' @return string, a string from str_vec that has closest distance to key_str
 get_matched_string <- function(key_str, str_vec, max_cost=NA){
     require("stringdist")
 
-    # get match via longest common substring
-    # where deletions are NOT penalized
+    # get closest matching string
     costs = sapply(tolower(str_vec), adist, y=tolower(key_str), costs=list(deletions=0))
     lcs_idx = which(costs == min(costs)[1])
 
