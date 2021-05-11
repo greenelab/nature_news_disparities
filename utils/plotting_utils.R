@@ -1,4 +1,48 @@
 
+###################################
+###
+### color palette settings start
+###
+###################################
+require("RColorBrewer")
+ARTICLE_TYPE_FACTOR_ORDER = c("research",
+                            "springer",
+                            "career-column",
+                            "career-feature",
+                            "news",
+                            "news-and-views",
+                            "news-feature",
+                            "technology-feature",
+                            "toolbox")
+
+ARTICLE_TYPE_COLOR = brewer.pal(n = 9, name = "Set3")
+names(ARTICLE_TYPE_COLOR) = ARTICLE_TYPE_FACTOR_ORDER
+
+QUOTE_ANALYSIS_ORDER = c("nature_first",
+                            "nature_last",
+                            "springer_first",
+                            "springer_last",
+                            "quote",
+                            "non_career",
+                            "career-column",
+                            "career-feature",
+                            "citation",
+                            "mention"
+)
+
+
+QUOTE_ANALYSIS_COLOR = c("#8DD3C7", "#1D4942", "#FFFFB3", "#C7C700", "#BC80BD", 
+                        "#CCEBC5", "#BEBADA", "#FB8072", "#FFED6F", "#FCCDE5")
+names(QUOTE_ANALYSIS_COLOR) = QUOTE_ANALYSIS_ORDER
+
+
+###################################
+###
+### color palette settings end
+###
+###################################
+
+
 #' Method to plot a CARET confusion matrix and basic prediction stats
 #' for a binary prediction task
 #' 
