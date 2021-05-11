@@ -1,0 +1,785 @@
+---
+title: "Figure4_citation_v_mention"
+author: "Natalie Davidson"
+date: "5/4/2021"
+output: rmarkdown::github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+require(data.table)
+require(here)
+require(ggplot2)
+require(ggrepel)
+require(pheatmap)
+require(tidytext)
+require(stringr)
+require(magick)
+require(pdftools)
+
+proj_dir = here()
+
+
+source(file.path(proj_dir, "/analysis_scripts/analysis_utils.R"))
+source(file.path(proj_dir, "/utils/plotting_utils.R"))
+source(file.path(proj_dir, "/utils/scraper_processing_utils.R"))
+
+MIN_ART = 5
+MIN_PROP = 0.05
+MIN_WORD_FREQ = 100
+NUM_COUNTRIES_PLOT = 10
+
+data(stop_words)
+
+```
+
+
+## Overview
+
+This notebook generates figure 4 and additional supplemental figures.
+
+
+This analysis performs 3 main analyses 
+
+1) looking at the citation rates of authors by country 
+
+2) analyzing if the country citation rate is significantly different than the rate at which it is talked about 
+
+3) for countries that have a very different citation vs mention rate, are there tokens that differentiate these countries?
+
+For analysis 3, its main point is to identify how countries are talked about differently.
+To do this, we seperate countries into two groups: countries that are talked about vs cited.
+Specifically, we first identify which countries are cited more than mentioned and which countries are mentioned more than cited.
+After this, we will take the most exemplary of the 2 country classes (top mentions > cited: Class M & top mentions < cited: Class C).
+We will compare the token frequencies between a mention of Class C v M.
+
+
+The **data** it uses to build the plots are here:
+
+For analysis 1 the source data file is: `./data/author_data/all_author_country.tsv`
+
+The four corpi are indexed by the `corpus` column:
+
+1) `nature_news`: __foreground__ country of a location mentioned in any Nature News article
+
+2) `news_citation`: __foreground__ country of Nature News cited authors affiliation. 
+
+3) `nature_articles`: __background__ country of author affiliation from Nature articles. 
+
+4) `springer`: __background__ country of author affiliation from random subset of Springer articles. 
+
+The `num_entries` column denotes the number of articles with at least ONE author from a particular country
+The `address.country_code` column denotes the UN 2-digit country code
+
+
+For analysis 2+3 the source data files are:
+
+1) Bootstrap estimate of country mentions and citations: `/data/author_data/all_author_country_95CI.tsv`
+
+2) Source text for token analysis is here: `/data/scraped_data/downloads/*.json`
+
+3) Country mention to source articles id map here: `/data/scraped_data/location_table_raw_YEAR_ARTICLE-TYPE.tsv`
+
+
+
+
+The **pdfs** included in the plots are here:
+
+1. `/figure_notebooks/illustrator_pdfs/`
+
+The **setting + helper functions** to generate the plots are here:
+
+1. plotting related functions: `/utils/plotting_utils.R`
+
+2. reading + data processing related functions: `/utils/scraper_processing_utils.R` and `/analysis_scripts/analysis_utils.R`
+
+3. nautre research article and springer specific data processing functions: `/process_doi_data/springer_scripts/springer_scrape_utils.R`
+
+
+
+
+## Read in the data
+
+```{r read_all_data, echo=TRUE, warning=FALSE, message=F}
+
+#### read in the cited author data
+country_file = file.path(proj_dir, "/data/author_data/all_author_country.tsv")
+country_df = data.frame(fread(country_file))
+
+# get UN info
+un_info = get_country_info()
+country_df = merge(country_df, un_info)
+head(country_df)
+
+#### read in the bootstrapped author data
+ci_file = file.path(proj_dir, "/data/author_data/all_author_country_95CI.tsv")
+ci_df = fread(ci_file)
+ci_df = subset(ci_df, country != "" & !is.na(country))
+ci_df = merge(un_info, ci_df)
+head(ci_df)
+
+
+#### read in the location - to - article information
+all_loc_files = list.files(file.path(proj_dir, "/data/scraped_data/"), 
+                            pattern="location_table_raw",
+                            recursive=F,
+                            full.names=T)
+full_loc_df = NA
+for(loc_file in all_loc_files){
+
+    loc_df = read_corenlp_location_files(loc_file)
+    loc_df$year = str_extract(loc_file, "[1-9][0-9]+") # curr_year
+    loc_df$type = substring(basename(loc_file), 
+                            25, nchar(basename(loc_file))-4)
+    full_loc_df = rbind(full_loc_df, loc_df)
+}
+full_loc_df = full_loc_df[-1,]
+full_loc_df = subset(full_loc_df, est_un_region != "" & 
+                                        est_un_subregion != "" &
+                                        est_un_region != "NO_EST" & 
+                                        est_un_subregion != "NO_EST")
+colnames(full_loc_df)[1] = c("address.country_code")
+head(full_loc_df)
+
+
+#### read in all the cited articles
+cited_country_file = file.path(proj_dir, 
+                                "/data/author_data/cited_author_country.tsv")
+cited_country_df = data.frame(fread(cited_country_file))
+cited_country_df = subset(cited_country_df, country != "")
+cited_country_df$country = format_country_names(cited_country_df$country)
+
+# format the countries
+cited_country_df_formatted = get_author_country(cited_country_df)
+cited_country_df_formatted = unique(cited_country_df_formatted)
+
+# we only care about if a country was cited in an article, 
+# not how many times it was cited
+cited_country_df_formatted$num_entries = 1
+
+
+
+```
+
+## Process Data
+
+
+### summarize the number of mentions/citations considered
+
+```{r get_summary_articles, echo=TRUE, warning=FALSE, message=F}
+
+# get num or articles with a country mention
+mention_total = unique(subset(country_df, corpus == "naturenews_mentions", select=c(file_id, year)) )
+tot_prop_mention = mention_total %>% 
+                group_by(year) %>% 
+                summarise(n()) 
+tot_prop_mention$corpus = "naturenews_mentions"
+
+# get num or articles with a country citation
+citation_total = unique(subset(country_df, corpus == "naturenews_citations", select=c(file_id, year)) )
+tot_prop_citation = citation_total %>% 
+                group_by(year) %>% 
+                summarise(n()) 
+tot_prop_citation$corpus = "naturenews_citations"
+
+# get num or articles with a country citation
+tot_prop_df = rbind(tot_prop_mention, tot_prop_citation)
+tot_prop_df = data.frame(tot_prop_df)
+colnames(tot_prop_df)[2] = "tot_articles"
+
+
+```
+
+### Analysis 1: Get top bootstrap estimates for later plotting
+
+```{r top_bootstrap, echo=TRUE, warning=FALSE, message=F}
+
+top_countries_citation = unique(subset(ci_df, corpus == "naturenews_citations", 
+                                      select=c(country, mean)) ) %>% 
+                        group_by(country) %>% 
+                        summarise(overall_mean=mean(mean))
+top_countries_citation = top_countries_citation[
+                            order(top_countries_citation$overall_mean, 
+                                  decreasing=T),]
+head(top_countries_citation)
+
+# make the df into proportions for eachcountry
+get_subboot <- function(country_id, curr_corpus, in_df, bootstrap_col_id="file_id"){
+    bootstrap_res = compute_bootstrap_location(subset(in_df, corpus==curr_corpus), 
+                                              year_col_id = "year", 
+                                              article_col_id = bootstrap_col_id, 
+                                              country_col_id = "country",
+                                              country_agg = country_id, 
+                                              conf_int = 0.95)
+    bootstrap_res$country = country_id
+    return(bootstrap_res)
+
+}
+
+
+citation_country_df = NA
+for(curr_country in top_countries_citation$country[1:NUM_COUNTRIES_PLOT]){
+    print(curr_country)
+    res = get_subboot(curr_country, 
+                      curr_corpus="naturenews_citations", 
+                      country_df)
+    citation_country_df = rbind(citation_country_df, res)
+}
+citation_country_df = citation_country_df[-1,]
+citation_country_df$label = ""
+citation_country_df$label[citation_country_df$year == 2020] = 
+    citation_country_df$country[citation_country_df$year == 2020]
+citation_country_df$corpus = "citation"
+
+
+springer_country_df = NA
+for(curr_country in top_countries_citation$country[1:NUM_COUNTRIES_PLOT]){
+    print(curr_country)
+    res = get_subboot(curr_country, 
+                      curr_corpus="springer_articles", 
+                      country_df,
+                      bootstrap_col_id = "doi")
+    springer_country_df = rbind(springer_country_df, res)
+}
+springer_country_df = springer_country_df[-1,]
+springer_country_df$label = ""
+springer_country_df$label[springer_country_df$year == 2020] = 
+    springer_country_df$country[springer_country_df$year == 2020]
+springer_country_df$corpus = "springer_last"
+
+
+nature_country_df = NA
+for(curr_country in top_countries_citation$country[1:NUM_COUNTRIES_PLOT]){
+    print(curr_country)
+    res = get_subboot(curr_country, 
+                      curr_corpus="nature_articles", 
+                      country_df)
+    nature_country_df = rbind(nature_country_df, res)
+}
+nature_country_df = nature_country_df[-1,]
+nature_country_df$label = ""
+nature_country_df$label[nature_country_df$year == 2020] = 
+    nature_country_df$country[nature_country_df$year == 2020]
+nature_country_df$corpus = "nature_last"
+
+
+
+```
+
+
+### Analysis 2: Identify Countries with significantly different citation and mention rates
+
+```{r mention_v_citation, echo=TRUE, warning=FALSE, message=F}
+
+
+### get the total number of mentions and citations
+### for each country per year
+### we will use this later as a filter, because we will only consider countries with enough observations
+
+# for best accuracy, we only consider an article to be truely country related
+# if there exists at least 2 country associated nouns in the article
+loc_dups = data.frame(table(full_loc_df$file_id, full_loc_df$address.country_code))
+loc_keep = subset(loc_dups, Freq > 1)
+full_loc_df$freq_idx = paste(full_loc_df$file_id, full_loc_df$address.country_code, sep="_")
+freq_pass = paste(loc_keep$Var1, loc_keep$Var2, sep="_")
+
+
+# count the mentions by country
+country_mention_total = unique(subset(country_df, 
+                              corpus == "naturenews_mentions", 
+                              select=c(file_id, year, address.country_code)) )
+country_df_idx = paste(country_mention_total$file_id, 
+                       country_mention_total$address.country_code, 
+                       sep="_")
+country_mention_total = country_mention_total[which(country_df_idx %in% freq_pass),]
+
+tot_country_mention = country_mention_total %>% 
+                group_by(year, address.country_code) %>% 
+                summarise(n()) 
+tot_country_mention$corpus = "naturenews_mentions"
+colnames(tot_country_mention)[3] = "total"
+
+
+# count the citations by country
+country_citation_total = unique(subset(country_df, 
+                               corpus == "naturenews_citations", 
+                               select=c(file_id, year, address.country_code)) )
+tot_country_citation = country_citation_total %>% 
+                group_by(year, address.country_code) %>% 
+                summarise(n()) 
+tot_country_citation$corpus = "naturenews_citations"
+colnames(tot_country_citation)[3] = "total"
+
+# put them together and format
+raw_sum_df = rbind(tot_country_citation, tot_country_mention)
+raw_sum_df = reshape2::dcast(raw_sum_df, year+address.country_code ~ corpus, value.var="total")
+raw_sum_df[is.na(raw_sum_df)] = 0
+colnames(raw_sum_df)[3:4] = c("tot_citations", "tot_mentions")
+
+
+###  now add in the CI estimates for each country
+ci_raw_df = merge(raw_sum_df, ci_df)
+
+# dcast the folder so we can compare mentions to citations
+ci_raw_df_cast = reshape2::dcast(ci_raw_df, 
+                             year+country+address.country_code+tot_citations+tot_mentions ~ corpus, 
+                             value.var="mean")
+
+###  calculate the difference between mentions + citations
+ci_raw_df_cast$M_C = ci_raw_df_cast$naturenews_mentions - ci_raw_df_cast$naturenews_citations
+
+
+###  now filter for the very top and bottom of citation v mention
+top_diff_MC = subset(ci_raw_df_cast, tot_citations > 0 | tot_mentions > 0)
+top_diff_MC_filt = NA
+for(curr_year in unique(top_diff_MC$year)){
+    curr_MC = subset(top_diff_MC, year == curr_year)
+    top_limit = quantile(curr_MC$M_C, 0.95)
+    bottom_limit = quantile(curr_MC$M_C, 0.05)
+    
+    print(top_limit)
+    print(bottom_limit)
+    
+    curr_MC = subset(curr_MC, M_C > top_limit | M_C < bottom_limit)
+    top_diff_MC_filt = rbind(top_diff_MC_filt, curr_MC)
+}
+top_diff_MC_filt = top_diff_MC_filt[-1,]
+head(top_diff_MC_filt)
+
+# make sure there are enough articles
+top_diff_MC_filt = subset(top_diff_MC_filt, tot_citations > MIN_ART | tot_mentions > MIN_ART)
+
+
+###  now make the 2 tables of countries that are cited more vs mentioned more
+# class C vs Class M
+class_c_counts = subset(top_diff_MC_filt, M_C < 0, select=c("address.country_code", "year") )
+class_c_counts$class = "class_c" 
+class_c_counts$idx = paste(class_c_counts$address.country_code,
+                          class_c_counts$year, sep="_")
+class_c_counts$idx = class_c_counts$address.country_code
+
+class_m_counts = subset(top_diff_MC_filt, M_C > 0, select=c("address.country_code", "year") )
+class_m_counts$class = "class_m" 
+class_m_counts$idx = paste(class_m_counts$address.country_code,
+                          class_m_counts$year, sep="_")
+class_m_counts$idx = class_m_counts$address.country_code
+
+
+```
+
+
+
+### Analysis 3 part1: Identify which news articles are associated with C vs M
+
+```{r articles_c_v_m, echo=TRUE, warning=FALSE, message=F}
+
+# for best accuracy, we only consider an article to be truely country related
+# if there exists at least 2 country associated nouns in the article
+loc_dups = data.frame(table(full_loc_df$file_id, full_loc_df$address.country_code))
+loc_keep = subset(loc_dups, Freq > 1)
+full_loc_df$freq_idx = paste(full_loc_df$file_id, full_loc_df$address.country_code, sep="_")
+freq_pass = paste(loc_keep$Var1, loc_keep$Var2, sep="_")
+full_mention_df = subset(full_loc_df, freq_idx %in% freq_pass)
+full_mention_df$file_idx = paste(full_mention_df$address.country_code,
+                      full_mention_df$year,
+                      full_mention_df$file_id, sep="_")
+full_mention_df$idx = paste(full_mention_df$address.country_code,
+                      full_mention_df$year, sep="_")
+full_mention_df$idx = full_mention_df$address.country_code
+
+
+# now get the mention articles from each class
+class_c_mentions = subset(full_mention_df, idx %in% 
+                               class_c_counts$idx)
+class_m_mentions = subset(full_mention_df, idx %in% 
+                               class_m_counts$idx)
+
+# get all the cited articles
+cited_loc = merge(unique(full_mention_df[,c("file_id", "year", "type")]),
+                  cited_country_df_formatted)
+cited_loc$idx = paste(cited_loc$address.country_code,
+                      cited_loc$year, sep="_")
+cited_loc$idx = cited_loc$address.country_code
+cited_loc$file_idx = paste(cited_loc$address.country_code,
+                      cited_loc$year,
+                      cited_loc$file_id, sep="_")
+
+# get the cited articles from each class
+class_c_citations = subset(cited_loc, idx %in% 
+                               class_c_counts$idx)
+class_m_citations = subset(cited_loc, idx %in% 
+                               class_m_counts$idx)
+
+# filter the mentions by the citations
+class_c_mentions = subset(class_c_mentions, 
+                          !file_idx %in% class_c_citations$file_idx )
+class_m_mentions = subset(class_m_mentions, 
+                          !file_idx %in% class_m_citations$file_idx )
+
+
+# filter out 2020 for this analysis to avoind covid terms
+class_c_mentions = subset(class_c_mentions, year != 2020)
+class_m_mentions = subset(class_m_mentions, year != 2020)
+
+# filter out countries that may be in both class_c and class_m
+# this can be caused by mentions and citations being significantly
+# different across years (sometimes M >> C, sometimes C << M)
+country_overlap = intersect(class_c_mentions$address.country_code,
+                            class_m_mentions$address.country_code)
+class_c_mentions = subset(class_c_mentions, 
+                          !address.country_code %in% country_overlap )
+class_m_mentions = subset(class_m_mentions, 
+                          !address.country_code %in% country_overlap )
+
+
+```
+
+
+### Analysis 3 part2: Get the tokens associated with C vs M
+
+```{r tokens_c_v_m, echo=TRUE, warning=FALSE, message=F}
+
+
+#### get the word frequencies for all articles considered
+class_all_word_freq = get_word_freq_per_class(full_mention_df, class_str = "class_all")
+
+
+#### get the word frequencies for all articles associated with class C countries
+all_country_word_freq_c = get_word_freq_per_country(class_c_mentions, 
+                                                    class_str="class_c", 
+                                                    class_all_word_freq,
+                                                    min_freq=MIN_WORD_FREQ)
+citations_freq = Reduce(function(x, y) merge(x, y, by = "word", all = T), 
+                       all_country_word_freq_c)
+citations_freq[is.na(citations_freq)] = 0
+citations_freq$median_count = apply(citations_freq[,2:ncol(citations_freq)], 
+                                   1, median)
+citations_freq = citations_freq[order(citations_freq$median_count, decreasing = T),]
+citations_freq = subset(citations_freq, median_count > 0)
+print(knitr::kable(head(citations_freq,15), 
+                       caption = "Overall Class Citation, top terms, count is per country frequency"))
+
+#### get the word frequencies for all articles associated with class M countries
+all_country_word_freq_m = get_word_freq_per_country(class_m_mentions, 
+                                                    class_str="class_m", 
+                                                    class_all_word_freq,
+                                                    min_freq=MIN_WORD_FREQ)
+mentions_freq = Reduce(function(x, y) merge(x, y, by = "word", all = T), 
+                       all_country_word_freq_m)
+mentions_freq[is.na(mentions_freq)] = 0
+mentions_freq$median_count = apply(mentions_freq[,2:ncol(mentions_freq)], 
+                                   1, median)
+mentions_freq = mentions_freq[order(mentions_freq$median_count, decreasing = T),]
+mentions_freq = subset(mentions_freq, median_count > 0)
+print(knitr::kable(head(mentions_freq,15), 
+                       caption = "Overall Class Mention, top terms, count is per country frequency"))
+
+
+```
+
+
+### Analysis 3 part3: Find tokens that differentiate articles related to class C / M countries
+
+
+```{r calc_word_freq_diff, echo=TRUE, warning = FALSE, message = FALSE}
+
+# rename the columns for merging
+colnames(citations_freq)[which(colnames(citations_freq) == "median_count")] = "median_count_citations"
+colnames(mentions_freq)[which(colnames(mentions_freq) == "median_count")] = "median_count_mentions"
+
+# merge and calculate the relative counts
+compare_freq = merge(subset(citations_freq, 
+                            select=c("word", "median_count_citations")),
+                     subset(mentions_freq, 
+                            select=c("word", "median_count_mentions")))
+compare_freq$compare_ratio =  compare_freq$median_count_citations /
+                                compare_freq$median_count_mentions
+
+# get the raw counts for each word, unscaled by country
+class_c_word_freq = get_word_freq_per_class(
+                        class_c_mentions, 
+                        class_str = "class_c")
+class_m_word_freq = get_word_freq_per_class(
+                        class_m_mentions, 
+                        class_str = "class_m")
+compare_freq = merge(compare_freq, class_c_word_freq)
+compare_freq = merge(compare_freq, class_m_word_freq)
+
+
+# write out the tables
+compare_freq = compare_freq[order(compare_freq$compare_ratio, decreasing=T),]
+print(knitr::kable(head(compare_freq,15), 
+                       caption = "Overall Class Citation, top terms"))
+
+compare_freq = compare_freq[order(compare_freq$compare_ratio, decreasing=F),]
+print(knitr::kable(head(compare_freq,15), 
+                       caption = "Overall Class Mention, top terms"))
+
+# now take the top and bottom
+compare_freq = compare_freq[order(compare_freq$compare_ratio, decreasing=T),]
+compare_freq_extreme = compare_freq[c(1:15,(nrow(compare_freq)-14):nrow(compare_freq)),]
+compare_freq_extreme$word_type = c(rep("Citation", 15), rep("Mention", 15))
+
+# show the enrichment
+compare_freq_extreme$word = factor(compare_freq_extreme$word, 
+                                      levels = compare_freq_extreme$word)
+
+
+```
+
+
+
+## Make the Figures
+
+### make the citation plot
+
+```{r make_citation_gg, echo=TRUE, warning=FALSE, message=F}
+
+### full plot of citations
+citation_full_gg = ggplot(citation_country_df, aes(x=as.numeric(year), y=mean,
+                                                ymin=bottom_CI, ymax=top_CI,
+                        fill=country, label=label)) +
+    geom_point() + geom_ribbon(alpha=0.5) + geom_line(alpha=0.5) +
+    theme_bw() + geom_text_repel()  + xlim(c(2005,2021)) + 
+    xlab("Year of Article") + ylab("Proportion of Articles") +
+    ggtitle("Proportion of Articles with at least 1 author affiliation in top 10 cited countries") + 
+    scale_fill_brewer(palette="Set3") +
+    theme(legend.position = "none")
+
+ggsave(file.path(proj_dir, "/figure_notebooks/tmp_files/fig4_tmp/citation_full_gg.pdf"),
+       citation_full_gg, width = 7, height = 5, units = "in", device = "pdf")
+
+### full plot of citations with bg
+cite_plot_df = Reduce(rbind, list(citation_country_df, 
+                                  springer_country_df, 
+                                  nature_country_df))
+cite_plot_df$corpus = factor(cite_plot_df$corpus, levels = QUOTE_ANALYSIS_ORDER)
+citation_indiv_10_springer_gg = ggplot(cite_plot_df, 
+       aes(x=as.numeric(year), y=mean,
+          ymin=bottom_CI, ymax=top_CI,
+          fill=corpus)) +
+    geom_point() + geom_ribbon(alpha=0.5) + geom_line(alpha=0.5) +
+    theme_bw()  + xlim(c(2005,2021)) + 
+    xlab("Year of Article") + ylab("Proportion of Articles") +
+    ggtitle("Proportion of Articles with at least 1 Author Affiliation in Top 10 Cited Countries") + 
+    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR, labels = c("nature", "springer", "citation")) +
+    theme(legend.position = "bottom") +
+    facet_wrap(~ country, scales = "free")
+
+ggsave(file.path(proj_dir, "/figure_notebooks/tmp_files/fig4_tmp/citation_indiv_10_springer_gg.pdf"),
+       citation_indiv_10_springer_gg, width = 7, height = 5, units = "in", device = "pdf")
+
+
+### full plot of citations with bg top 3, no springer
+cite_plot_df = Reduce(rbind, list(citation_country_df, 
+                                  nature_country_df))
+cite_plot_df = subset(cite_plot_df, country %in% top_countries_citation$country[1:3])
+cite_plot_df$corpus = factor(cite_plot_df$corpus, levels = QUOTE_ANALYSIS_ORDER)
+citation_indiv_3_gg = ggplot(cite_plot_df, 
+       aes(x=as.numeric(year), y=mean,
+          ymin=bottom_CI, ymax=top_CI,
+          fill=corpus)) +
+    geom_point() + geom_ribbon(alpha=0.5) + geom_line(alpha=0.5) +
+    theme_bw()  + xlim(c(2005,2021)) + 
+    xlab("Year of Article") + ylab("Proportion of Articles") +
+    ggtitle("Proportion of Articles with at least 1 Author Affiliation in Top 3 Cited Countries") + 
+    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR, labels = c("nature", "citation")) +
+    theme(legend.position = "bottom") +
+    facet_wrap(~ country, scales = "free")
+
+ggsave(file.path(proj_dir, "/figure_notebooks/tmp_files/fig4_tmp/citation_indiv_3_gg.pdf"),
+       citation_indiv_3_gg, width = 7, height = 5, units = "in", device = "pdf")
+
+
+```
+
+### generate the mention v citation heatmap
+
+
+```{r make_heatmap_gg, echo=TRUE, warning=FALSE, message=F}
+
+
+## first make the plot with the adaptive filter results
+plot_df = subset(top_diff_MC, tot_citations > MIN_ART | tot_mentions > MIN_ART)
+plot_df$idx = paste(plot_df$year, plot_df$country)
+plot_df$filtered = "filter"
+keep_idx = paste(top_diff_MC_filt$year, top_diff_MC_filt$country)
+plot_df$filtered[plot_df$idx %in% keep_idx] = "keep"
+
+# show the spread of the difference mentions and citations
+c_vs_m_filter_gg = ggplot(plot_df, aes(x=as.numeric(year), 
+                        y=as.numeric(M_C),
+                        color = filtered)) +
+    geom_point() + theme_bw() + 
+    xlab("Corpus") + ylab("Mention % - Citation % for each country+year") +
+    ggtitle("Diff. btw mentions and citations for each country+year (1 point is a country)") + 
+    scale_fill_brewer(palette="Set2")
+ggsave(file.path(proj_dir, "/figure_notebooks/tmp_files/fig4_tmp/c_vs_m_filter_gg.pdf"),
+       c_vs_m_filter_gg, width = 10, height = 5, units = "in", device = "pdf")
+
+
+## make the overall heatmap
+make_heatmap_res <- function(in_df, value_col){
+    plot_matr_MC = reshape2::dcast(in_df, 
+                             country ~ year, 
+                             value.var=value_col)
+    row.names(plot_matr_MC) = plot_matr_MC$country
+    plot_matr_MC = plot_matr_MC[,-1]
+    plot_matr_MC[is.na(plot_matr_MC)] = 0
+    
+    max_val = max(abs(plot_matr_MC), na.rm = T)
+    breaks = c(seq(-1*max_val, max_val, by = 0.01))
+    color_pmap <- colorRampPalette(c("pink", "white", "green"))(length(breaks))
+
+    if(max_val > 1){
+        breaks = c(seq(1, max_val, by = 1))
+        color_pmap <- colorRampPalette(c("white", "green"))(length(breaks))
+
+    }
+
+    res = list(plot_matr = plot_matr_MC,
+               color_pmap = color_pmap,
+               breaks = breaks)
+    return(res)
+}
+
+# plot the Top proportion differences
+countries_considered = union(class_m_mentions$est_country,
+                             class_c_mentions$est_country)
+heatmap_df = subset(top_diff_MC, country %in% countries_considered)
+res_MC = make_heatmap_res(heatmap_df, value_col="M_C")
+
+# make annotation of the median difference
+heatmap_median_df = heatmap_df %>% 
+                group_by(country) %>% 
+                summarise(median_M_C = median(M_C)) 
+annot_df = data.frame(median_M_C = heatmap_median_df$median_M_C)
+row.names(annot_df) = heatmap_median_df$country
+annot_df$class = "Cite"
+annot_df$class[annot_df$median_M_C > 0] = "Mention"
+annot_df$class = factor(annot_df$class, levels = c("Mention", "Cite"))
+
+annot_df = annot_df[order(annot_df$median_M_C),]
+
+
+# now make the heatmap
+res_MC$plot_matr = res_MC$plot_matr[row.names(annot_df),]
+full_heatmap = pheatmap(res_MC$plot_matr, cluster_rows = F, 
+         cluster_cols = F, display_numbers = T, 
+         main = "Top (Mention - Citation) Proportions",
+         color = res_MC$color_pmap, breaks = res_MC$breaks,
+         number_color = "black", annotation_row = annot_df)
+
+ggsave(file.path(proj_dir, "/figure_notebooks/tmp_files/fig4_tmp/full_heatmap.pdf"),
+       full_heatmap, width = 10, height = 5, units = "in", device = "pdf")
+
+
+```
+
+
+### generate the mention v citation word plots
+
+
+```{r make_c-vs-m_word_gg, echo=TRUE, warning=FALSE, message=F}
+
+
+word_ratio_gg = ggplot(compare_freq_extreme, aes(x=log10(compare_freq_extreme$compare_ratio), 
+                                 y=as.factor(compare_freq_extreme$word),
+                                 fill=word_type)) +
+    geom_bar(stat="identity") + theme_bw() + 
+    ylab("Words") + xlab("log10 Ratio Citation : Mention Frequencies") + 
+    ggtitle("Top 15 Most Divergent Words by Class") + 
+    scale_fill_brewer(palette="Set2")
+
+ggsave(file.path(proj_dir, "/figure_notebooks/tmp_files/fig4_tmp/word_ratio_gg.pdf"),
+       word_ratio_gg, width = 5, height = 5, units = "in", device = "pdf")
+
+
+word_count_class_c_gg = ggplot(compare_freq_extreme, aes(x=compare_freq_extreme$class_c_count, 
+                                 y=as.factor(compare_freq_extreme$word),
+                                 fill=word_type)) +
+    geom_bar(stat="identity") + theme_bw() + 
+    ylab("Words") + xlab("Word Frequencies") + 
+    ggtitle("Top 15 Frequencies for Class C") + 
+    scale_fill_brewer(palette="Set2")
+
+
+ggsave(file.path(proj_dir, "/figure_notebooks/tmp_files/fig4_tmp/word_count_class_c_gg.pdf"),
+       word_count_class_c_gg, width = 5, height = 5, units = "in", device = "pdf")
+
+
+word_count_class_m_gg = ggplot(compare_freq_extreme, aes(x=compare_freq_extreme$class_m_count, 
+                                 y=as.factor(compare_freq_extreme$word),
+                                 fill=word_type)) +
+    geom_bar(stat="identity") + theme_bw() + 
+    ylab("Words") + xlab("Word Frequencies") + 
+    ggtitle("Top 15 Frequencies for Class M") + 
+    scale_fill_brewer(palette="Set2")
+
+ggsave(file.path(proj_dir, "/figure_notebooks/tmp_files/fig4_tmp/word_count_class_m_gg.pdf"),
+       word_count_class_m_gg, width = 5, height = 5, units = "in", device = "pdf")
+
+
+```
+
+
+### format main figure
+
+```{r make_fig4, echo=TRUE, warning=FALSE, message=F}
+
+
+plot_overview = image_read_pdf(file.path(proj_dir,
+                                  "/figure_notebooks/illustrator_pdfs/nature_news_mention_citation_schematic.pdf"))
+
+citation_overview_gg = image_read_pdf(file.path(proj_dir,
+                                  "/figure_notebooks/tmp_files/fig4_tmp/citation_full_gg.pdf"))
+citation_nature_indiv_sub_gg = image_read_pdf(file.path(proj_dir,
+                                  "/figure_notebooks/tmp_files/fig4_tmp/citation_indiv_3_gg.pdf"))
+
+
+heatmap_gg = image_read_pdf(file.path(proj_dir,
+                                  "/figure_notebooks/tmp_files/fig4_tmp/full_heatmap.pdf"))
+word_ratio_gg = image_read_pdf(file.path(proj_dir,
+                                  "/figure_notebooks/tmp_files/fig4_tmp/word_ratio_gg.pdf"))
+#heatmap_gg = image_scale(heatmap_gg, 750)
+#word_ratio_gg = image_scale(word_ratio_gg, 250)
+
+middle_image <- image_append(image_scale(c(citation_overview_gg, citation_nature_indiv_sub_gg),1000), stack = FALSE)
+bottom_image <- image_append(image_scale(c(heatmap_gg, word_ratio_gg), "x500"), stack = FALSE)
+full_image <- image_append(image_scale(c(plot_overview, middle_image, bottom_image), 1000), stack = TRUE)
+
+print(full_image)
+
+outfile = file.path(proj_dir,"/figure_notebooks/tmp_files/fig4_tmp/fig4_main.pdf")
+image_write(full_image, format = "pdf", outfile)
+
+
+```
+
+
+
+### format supp. figure
+
+```{r make_supp_fig, echo=TRUE, warning=FALSE, message=F}
+
+
+c_vs_m_filter_gg = image_read_pdf(file.path(proj_dir,
+                                  "/figure_notebooks/tmp_files/fig4_tmp/c_vs_m_filter_gg.pdf"))
+word_count_class_c_gg = image_read_pdf(file.path(proj_dir,
+                                  "/figure_notebooks/tmp_files/fig4_tmp/word_count_class_c_gg.pdf"))
+word_count_class_m_gg = image_read_pdf(file.path(proj_dir,
+                                  "/figure_notebooks/tmp_files/fig4_tmp/word_count_class_m_gg.pdf"))
+
+
+bottom_image <- image_append(image_scale(c(word_count_class_c_gg, word_count_class_m_gg), "x500"), stack = FALSE)
+full_image <- image_append(image_scale(c(c_vs_m_filter_gg, bottom_image), 1000), stack = TRUE)
+
+print(full_image)
+
+outfile = file.path(proj_dir,"/figure_notebooks/tmp_files/fig4_tmp/fig4_supp.pdf")
+image_write(full_image, format = "pdf", outfile)
+
+
+
+```
