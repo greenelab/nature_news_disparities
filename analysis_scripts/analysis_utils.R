@@ -101,6 +101,36 @@ read_gender_files <- function(in_file){
     return(in_df)
 }
 
+#' public method that reads in the name origine prediction 
+#' files and formats it into a dataframe
+#' 
+#' @param name_pred_file, prediction results from Wiki2019-LSTM
+#' @param name_info_file, file used as input to Wiki2019-LSTM
+#' @return dataframe of name origin predictions with annotation info
+read_name_origin <- function(name_pred_file, name_info_file){
+        
+    # read in the name data
+    name_pred_df = data.frame(fread(name_pred_file))
+    name_info_df = data.frame(fread(name_info_file))
+    
+    # format the prediction table
+    colnames(name_pred_df)[1] = "author"
+    name_origin_vec = colnames(name_pred_df)[2:ncol(name_pred_df)]
+    name_origin = apply(name_pred_df[,2:ncol(name_pred_df)], 1, 
+                        function(x) name_origin_vec[which(x == max(x))])
+    name_pred_df$name_origin = name_origin
+    
+    name_df = merge(name_info_df, name_pred_df[,c("author", "name_origin")])
+    
+    # remove any names that may have got through that are not real names
+    name_df = name_df[grep("collab|group", tolower(name_df$author), invert=T), ]
+    name_df = unique(name_df)
+    
+    
+    return(name_df)
+}
+
+
 
 #' Compute first v last bootstrap CI
 #' this works by taking a random subset of articles per year
@@ -364,4 +394,108 @@ get_author_country <- function(loc_df){
 
     return(loc_df)
 
+}
+
+
+#' Get the word frequencies across multiple JSON files containing
+#' for all years and news types
+#'
+#' @param class_ids This contains at a minimum a file_id - country - 
+#' article_type - year mapping
+#' @param class_str name of country class of interest
+#' @return word_freq a dataframe of word counts across all relevant articles
+get_word_freq_per_class <- function(class_ids, class_str){
+        
+    # get the word frequencies for class C articles
+    class_word_freq = NA
+    for(curr_year in unique(class_ids$year)){
+        # subset for each year
+        curr_year_df = subset(class_ids, year == curr_year)
+        
+        for(curr_type in unique(curr_year_df$type)){
+            # subset for each type within a year
+            curr_year_type_df = subset(curr_year_df, type == curr_type)
+    
+            # make the file name
+            curr_file = file.path(proj_dir, "/data/scraped_data/downloads/",
+                                  paste("links_crawled_", 
+                                        curr_year, "_", 
+                                        curr_type, ".json", sep=""))
+            
+            # calculate the word frequency
+            curr_word_freq = calc_word_freq(curr_file, unique(curr_year_type_df$file_id))
+            curr_word_freq = as.data.frame(curr_word_freq)
+            curr_word_freq$year = curr_year
+            curr_word_freq$type = curr_type
+            class_word_freq = rbind(class_word_freq, curr_word_freq)
+        }
+    }
+    class_word_freq_total = class_word_freq[-1,]
+    class_word_freq = class_word_freq[-1,]
+    
+    # sum word frequencies across the different JSON files
+    class_word_freq = class_word_freq %>%
+                    select("word", "n") %>%
+                    group_by(word) %>% 
+                    summarise(sum(n)) 
+    col_id = paste(class_str, "_count", sep="")
+    colnames(class_word_freq)[2] = col_id
+    
+    # sort
+    class_word_freq = class_word_freq[
+                            order(class_word_freq[,col_id], 
+                                  decreasing=T),]
+     
+    return(class_word_freq)
+}
+
+
+
+#' Get the word frequencies across multiple JSON files containing
+#' for all years and news types. This additionally processes the counts
+#' and normalizes the frequency of the word by all observed articles
+#'
+#' @param class_ids This contains at a minimum a file_id - country - 
+#' article_type - year mapping
+#' @param class_str name of country class of interest
+#' @param class_all_word_freq output from get_word_freq_per_class using all articles
+#' @param min_freq, the minimum frequency of a word in class_all_word_freq to be considered 
+#' @return all_country_word_freq list of dataframes, each element is a dataframe 
+#' of word counts across all relevant articles from a country
+get_word_freq_per_country <- function(mentions_df, class_str, 
+                                          class_all_word_freq, min_freq){
+
+    count_str = paste0(class_str, "_count")
+    
+    all_country_word_freq = list()
+    for(curr_country in unique(mentions_df$address.country_code)){
+        
+        # get the word freq for class C mentions
+        class_word_freq = get_word_freq_per_class(
+                                subset(mentions_df, address.country_code == curr_country), 
+                                class_str = class_str)
+        
+        # merge with the word freq for entire corpus
+        per_class_word_freq = merge(data.table(class_word_freq), 
+                                    data.table(class_all_word_freq), by="word")
+        
+            
+        # word should be used at least 100 time in the full corpus
+        per_class_word_freq = subset(per_class_word_freq, class_all_count > min_freq)
+            
+        # get the word frequency scaled by corpus frequency
+        per_class_word_freq$ratio = subset(per_class_word_freq, select=c(count_str)) / 
+                                    per_class_word_freq$class_all_count
+        
+        # get top words per country
+        per_class_word_freq = per_class_word_freq[order(per_class_word_freq$ratio, decreasing=T),]
+        
+        # save top words
+        per_class_word_freq_df = subset(per_class_word_freq, select=c("word", count_str))
+        colnames(per_class_word_freq_df)[2] = paste("count", curr_country, sep="_")
+        all_country_word_freq[[curr_country]] = per_class_word_freq_df
+
+    }
+
+    return(all_country_word_freq)
 }
