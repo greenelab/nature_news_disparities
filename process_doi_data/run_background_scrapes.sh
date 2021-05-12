@@ -6,6 +6,7 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
 ## set up paths
 REF_DIR="${DIR}/../data/doi_data/downloads/"
+QUOTE_DIR="${DIR}/../data/scraped_data/"
 NATURE_DIR="${DIR}/../data/author_data/downloads/"
 OUT_DIR="${DIR}/../data/author_data/"
 SPRINGER_BG_AUTHOR="${DIR}/../data/reference_data/springer_bg_author_cache.tsv"
@@ -37,11 +38,16 @@ else
     RScript ${DIR}/process_author_country.R ${NATURE_DIR} ${REF_DIR} ${OUT_DIR}
 
     RScript ${DIR}/process_author_fullnames.R ${NATURE_DIR} ${REF_DIR} ${OUT_DIR}
+    RScript ${DIR}/process_speaker_fullnames.R ${QUOTE_DIR} ${OUT_DIR}
 
     conda activate nature_news_disparities
     python ${DIR}/springer_scripts/process_author_fullnames.py -m ${MODEL_DIR} \
                                             -n ${OUT_DIR}/all_author_fullname.tsv \
                                             -o ${OUT_DIR}/all_author_fullname_pred.tsv
+
+    python ${DIR}/springer_scripts/process_author_fullnames.py -m ${MODEL_DIR} \
+                                            -n ${OUT_DIR}/all_speaker_fullname.tsv \
+                                            -o ${OUT_DIR}/all_speaker_fullname_pred.tsv
 
 
 fi

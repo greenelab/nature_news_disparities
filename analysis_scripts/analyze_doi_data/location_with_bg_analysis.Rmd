@@ -44,9 +44,6 @@ The `address.country_code` column denotes the UN 2-digit country code
 
 
 
-A reference data file is:  `./data/author_data/total_num_articles_per_corpus.tsv`
-This file contains the number of articles per corpus for reference.
-
 ## Foreground Location Breakdown
 
 

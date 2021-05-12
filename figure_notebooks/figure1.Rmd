@@ -1,0 +1,186 @@
+---
+title: "overview_fig"
+author: "Natalie Davidson"
+date: "4/30/2021"
+output: rmarkdown::github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+require(data.table)
+require(here)
+require(ggplot2)
+require(magick)
+require(pdftools)
+
+proj_dir = here()
+source(file.path(proj_dir, "/utils/scraper_processing_utils.R"))
+source(file.path(proj_dir, "/utils/plotting_utils.R"))
+source(file.path(proj_dir, "/process_doi_data/springer_scripts/springer_scrape_utils.R"))
+
+```
+
+
+## Overview
+
+This notebook generates figure 1 and supplemental figure 1.
+
+
+The **data** it uses to build the plots are here:
+
+1. nature news scraped data: `/data/scraped_data/downloads/`
+
+2. nature research articles and letters author data: `/data/author_data/downloads/`
+
+
+The **pdfs** included in the plots are here:
+
+1. `/figure_notebooks/illustrator_pdfs/`
+
+The **setting + helper functions** to generate the plots are here:
+
+1. plotting related functions: `/utils/plotting_utils.R`
+
+2. reading + data processing related functions: `/utils/scraper_processing_utils.R`
+
+3. nautre research article and springer specific data processing functions: `/process_doi_data/springer_scripts/springer_scrape_utils.R`
+
+
+
+
+## Read in the data
+
+### Read in the scraped DOIs
+
+```{r read_nature_news, echo=TRUE, warning=FALSE, message=F}
+
+
+# read in the scraped news articles for each year
+news_scraped_dir = file.path(proj_dir,
+                    "/data/scraped_data/downloads/")
+news_scraped_dir_files = list.files(news_scraped_dir, full.names = T)
+
+news_df = NA
+for(curr_file in news_scraped_dir_files){
+    
+    curr_df = read_json(curr_file)
+    
+    # if the json file was empty, skip
+    if(all(is.na(curr_df))){
+        next
+    }
+    
+    # get the year form the file name
+    file_name_year = substring(basename(curr_file), 
+                            15, 18)
+    
+    # get the news article type from the file name
+    file_name_type = substring(basename(curr_file), 
+                            20, nchar(basename(curr_file))-5)
+    
+    # format the output
+    article_ids = curr_df$file_id
+    num_articles = length(article_ids)
+    curr_info_df = data.frame(year=file_name_year, 
+                                type=file_name_type, 
+                                file_id=article_ids)
+    news_df = rbind(news_df, curr_info_df)
+    
+}
+news_df = news_df[-1,]
+
+head(news_df)
+
+```
+
+### Read in the nature + springer research author information
+
+```{r read_nature_articles, echo=TRUE, warning=FALSE, message=F}
+
+# now read all the nature the research + letters articles
+nature_author_dir = file.path(proj_dir,
+                    "/data/author_data/downloads/")
+nature_author_df = read_nature_author_json_files(nature_author_dir)
+
+head(nature_author_df)
+
+# now read the randomly sampled Springer research articles
+springer_author_file = file.path(proj_dir, 
+                                "/data/reference_data/springer_bg_author_cache.tsv")
+springer_author_df = data.frame(fread(springer_author_file))
+
+head(springer_author_df)
+
+
+```
+
+
+### append the three data sources together
+
+```{r append_data_together, echo=TRUE, warning=FALSE, message=F}
+
+nature_author_df$type = "research"
+springer_author_df$type = "springer"
+springer_author_df$file_id = springer_author_df$doi
+
+col_ids = c("year", "type", "file_id")
+full_df = Reduce(rbind, list(nature_author_df[,col_ids], 
+                             springer_author_df[,col_ids],
+                             news_df[,col_ids]))
+
+```
+
+
+
+## Make the Figures
+
+### generate the plots
+
+```{r make_gg, echo=TRUE, warning=FALSE, message=F}
+
+# plot number of articles scraped
+full_df$type = factor(full_df$type, levels = ARTICLE_TYPE_FACTOR_ORDER)
+news_nature_gg = ggplot(subset(full_df, type != "springer"), 
+                        aes(x=as.factor(year), fill=type)) +
+                geom_bar() + theme_bw() +
+                scale_fill_manual(values=ARTICLE_TYPE_COLOR) +
+                xlab("Year of Article") + ylab("Num. Articles") +
+                    ggtitle("# Nature News and Research Articles Over Time")
+
+all_gg = ggplot(full_df, aes(x=as.factor(year), fill=type)) +
+                geom_bar() + theme_bw() +
+                scale_fill_manual(values=ARTICLE_TYPE_COLOR) +
+                xlab("Year of Article") + ylab("# articles") +
+                    ggtitle("# Springer + Nature News and Research Articles Over Time")
+ggsave(file.path(proj_dir, "/figure_notebooks/tmp_files/fig1_tmp/news_nature_gg.png"),
+       news_nature_gg, width = 10, height = 4, units = "in")
+ggsave(file.path(proj_dir, "/figure_notebooks/tmp_files/fig1_tmp/all_gg.png"),
+       all_gg)
+
+```
+
+
+### format figure 1
+
+```{r make_fig1, echo=TRUE, warning=FALSE, message=F}
+
+plot_overview = image_read_pdf(file.path(proj_dir,
+                                  "/figure_notebooks/illustrator_pdfs/nature_news_ex_fig1a.pdf"))
+plot_data_diagram = image_read_pdf(file.path(proj_dir,
+                                  "/figure_notebooks/illustrator_pdfs/nature_news_ex_fig1b.pdf"))
+news_nature_gg = image_read(file.path(proj_dir,
+                                  "/figure_notebooks/tmp_files/fig1_tmp/news_nature_gg.png"))
+
+
+bottom_panel <- image_append(image_scale(c(plot_overview, plot_data_diagram), 500), stack = FALSE)
+full_image <- image_append(image_scale(c(bottom_panel, news_nature_gg),3000), 
+                           stack = TRUE)
+
+print(full_image)
+
+outfile = file.path(proj_dir,"/figure_notebooks/tmp_files/fig1_tmp/fig1_main.pdf")
+image_write(full_image, format = "pdf", outfile)
+
+```
+

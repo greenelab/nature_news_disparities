@@ -88,7 +88,7 @@ springer_doi_rand_query <- function(doi_chunk, curr_year, api_key){
     }
     write.table(cache_df, cache_file, sep="\t", quote=F, row.names=F)
 
-    Sys.sleep(1)
+    Sys.sleep(0.1)
 
     return(resp_df)
 
@@ -113,11 +113,11 @@ batch_springer_doi_rand_query <- function(author_dois_df, api_key){
 
         curr_df = subset(author_dois_df, year == curr_year)
         doi_vec = unique(curr_df$doi)
-        # we can only do 5000 queries, so we will randomly choose 250 to query
+        # we can only do 5000 queries, so we will randomly choose 330 to query
         set.seed(5)
-        doi_vec = sample(doi_vec, 250)
+        doi_vec = sample(doi_vec, min(length(doi_vec), 2400))
         idx = 1
-        for(chunk in doi_vec[1:250]){
+        for(chunk in doi_vec[1:2400]){
             curr_resp = springer_doi_rand_query(chunk, curr_year, api_key)
             if(!is.na(curr_resp)){
                 batch_resp = rbind(batch_resp, curr_resp)

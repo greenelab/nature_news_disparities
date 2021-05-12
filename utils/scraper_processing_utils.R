@@ -184,7 +184,7 @@ format_name_str <- function(in_str){
 #' vector of reference strings (no penalty for deletion)
 #' using adist: "the generalized Levenshtein (edit) distance, 
 #' giving the minimal possibly weighted number of insertions, 
-#' deletions and substitutions needed to transform one string into another.
+#' deletions and substitutions needed to transform one string into another."
 #' For our use, deletions are NOT penalized and have weight 0
 #' this is because when matching names, we may only get a last name 
 #' and would like to match it to a full name. 
