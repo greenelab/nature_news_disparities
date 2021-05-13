@@ -246,4 +246,7 @@ print(full_image)
 ``` r
 outfile = file.path(proj_dir,"/figure_notebooks/tmp_files/fig1_tmp/fig1_main.pdf")
 image_write(full_image, format = "pdf", outfile)
+
+outfile = file.path(proj_dir,"/figure_notebooks/tmp_files/fig1_tmp/fig1_main.png")
+image_write(full_image, format = "png", outfile)
 ```

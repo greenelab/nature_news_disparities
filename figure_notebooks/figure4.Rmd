@@ -753,6 +753,8 @@ print(full_image)
 
 outfile = file.path(proj_dir,"/figure_notebooks/tmp_files/fig4_tmp/fig4_main.pdf")
 image_write(full_image, format = "pdf", outfile)
+outfile = file.path(proj_dir,"/figure_notebooks/tmp_files/fig4_tmp/fig4_main.png")
+image_write(full_image, format = "png", outfile)
 
 
 ```
@@ -763,7 +765,8 @@ image_write(full_image, format = "pdf", outfile)
 
 ```{r make_supp_fig, echo=TRUE, warning=FALSE, message=F}
 
-
+citation_indiv_10_springer_gg = image_read_pdf(file.path(proj_dir,
+                                  "/figure_notebooks/tmp_files/fig4_tmp/citation_indiv_10_springer_gg.pdf"))
 c_vs_m_filter_gg = image_read_pdf(file.path(proj_dir,
                                   "/figure_notebooks/tmp_files/fig4_tmp/c_vs_m_filter_gg.pdf"))
 word_count_class_c_gg = image_read_pdf(file.path(proj_dir,
@@ -773,12 +776,18 @@ word_count_class_m_gg = image_read_pdf(file.path(proj_dir,
 
 
 bottom_image <- image_append(image_scale(c(word_count_class_c_gg, word_count_class_m_gg), "x500"), stack = FALSE)
-full_image <- image_append(image_scale(c(c_vs_m_filter_gg, bottom_image), 1000), stack = TRUE)
+full_image <- image_append(image_scale(c(citation_indiv_10_springer_gg, 
+                                         c_vs_m_filter_gg, 
+                                         bottom_image), 1000), stack = TRUE)
 
 print(full_image)
 
 outfile = file.path(proj_dir,"/figure_notebooks/tmp_files/fig4_tmp/fig4_supp.pdf")
 image_write(full_image, format = "pdf", outfile)
+
+
+outfile = file.path(proj_dir,"/figure_notebooks/tmp_files/fig4_tmp/fig4_supp.png")
+image_write(full_image, format = "png", outfile)
 
 
 

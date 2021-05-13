@@ -101,15 +101,15 @@ head(springer_author_df)
     ## 1          (aegis      doi:10.1007/s10751-019-1553-3 2019       last       <NA>
     ## 2 [authorinst]the doi:10.1140/epjc/s10052-016-4346-8 2016       last       <NA>
     ## 3            a-mf         doi:10.1038/sj.onc.1210387 2007      first       <NA>
-    ## 4          aaltje        doi:10.1186/1471-2318-12-19 2012       last       MALE
-    ## 5           aalya     doi:10.1186/1753-6561-6-S5-O16 2012      first       MALE
+    ## 4          aaltje        doi:10.1186/1471-2318-12-19 2012       last     FEMALE
+    ## 5           aalya     doi:10.1186/1753-6561-6-S5-O16 2012      first     FEMALE
     ## 6             aam          doi:10.1186/1479-0556-4-1 2006      first       MALE
     ##   gender
     ## 1   <NA>
     ## 2   <NA>
     ## 3   <NA>
-    ## 4   MALE
-    ## 5   MALE
+    ## 4 FEMALE
+    ## 5 FEMALE
     ## 6   MALE
 
 ``` r
@@ -437,6 +437,14 @@ print(full_image)
 
 <img src="figure2_files/figure-markdown_github/make_fig1-1.png" width="500" />
 
+``` r
+outfile = file.path(proj_dir,"/figure_notebooks/tmp_files/fig2_tmp/fig2_main.pdf")
+image_write(full_image, format = "pdf", outfile)
+
+outfile = file.path(proj_dir,"/figure_notebooks/tmp_files/fig2_tmp/fig2_main.png")
+image_write(full_image, format = "png", outfile)
+```
+
 ### format supp. figure
 
 ``` r
@@ -455,3 +463,10 @@ print(full_image)
     ## 1 PNG     1000    417 sRGB       TRUE         0 300x300
 
 <img src="figure2_files/figure-markdown_github/make_supp_fig-1.png" width="1000" />
+
+``` r
+outfile = file.path(proj_dir,"/figure_notebooks/tmp_files/fig2_tmp/fig2_supp.pdf")
+image_write(full_image, format = "pdf", outfile)
+outfile = file.path(proj_dir,"/figure_notebooks/tmp_files/fig2_tmp/fig2_supp.png")
+image_write(full_image, format = "png", outfile)
+```

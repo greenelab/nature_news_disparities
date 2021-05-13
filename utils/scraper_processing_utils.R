@@ -687,6 +687,12 @@ query_genderize_io <- function(in_dir) {
     query_names = sample(all_names)[1:max_len]
     names_processed = data.frame(findGivenNames(query_names, textPrepare=F))
     names_processed = unique(names_processed)
+    names_processed$probability = as.numeric(names_processed$probability)
+    names_processed_male = subset(names_processed, gender == "male")
+    names_processed_female = subset(names_processed, gender == "female")
+    names_processed_female$probability = 1 - names_processed_female$probability
+    names_processed = rbind(names_processed_female, names_processed_male)
+
     
 
     # make it in the same format as the reference data

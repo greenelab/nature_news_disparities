@@ -415,6 +415,9 @@ print(full_image)
 outfile = file.path(proj_dir,"/figure_notebooks/tmp_files/fig2_tmp/fig2_main.pdf")
 image_write(full_image, format = "pdf", outfile)
 
+outfile = file.path(proj_dir,"/figure_notebooks/tmp_files/fig2_tmp/fig2_main.png")
+image_write(full_image, format = "png", outfile)
+
 ```
 
 
@@ -434,6 +437,8 @@ print(full_image)
 
 outfile = file.path(proj_dir,"/figure_notebooks/tmp_files/fig2_tmp/fig2_supp.pdf")
 image_write(full_image, format = "pdf", outfile)
+outfile = file.path(proj_dir,"/figure_notebooks/tmp_files/fig2_tmp/fig2_supp.png")
+image_write(full_image, format = "png", outfile)
 
 ```
 
