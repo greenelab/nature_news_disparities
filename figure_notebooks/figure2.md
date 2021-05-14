@@ -425,7 +425,7 @@ career_gg = image_read_pdf(file.path(proj_dir,
 
 middle_image <- image_append(image_scale(c(tot_quotes_gg, quotes_nature_gg),1000), stack = FALSE)
 bottom_image <- image_append(image_scale(c(first_v_last_gg, career_gg),1000), stack = FALSE)
-full_image <- image_append(image_scale(c(plot_overview, middle_image, bottom_image), 500), stack = TRUE)
+full_image <- image_append(image_scale(c(plot_overview, middle_image, bottom_image), 1000), stack = TRUE)
 
 print(full_image)
 ```
@@ -433,9 +433,9 @@ print(full_image)
     ## # A tibble: 1 x 7
     ##   format width height colorspace matte filesize density
     ##   <chr>  <int>  <int> <chr>      <lgl>    <int> <chr>  
-    ## 1 PNG      500    575 sRGB       TRUE         0 300x300
+    ## 1 PNG     1000   1152 sRGB       TRUE         0 300x300
 
-<img src="figure2_files/figure-markdown_github/make_fig1-1.png" width="500" />
+<img src="figure2_files/figure-markdown_github/make_fig1-1.png" width="1000" />
 
 ``` r
 outfile = file.path(proj_dir,"/figure_notebooks/tmp_files/fig2_tmp/fig2_main.pdf")

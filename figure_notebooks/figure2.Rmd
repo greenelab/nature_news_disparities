@@ -408,7 +408,7 @@ career_gg = image_read_pdf(file.path(proj_dir,
 
 middle_image <- image_append(image_scale(c(tot_quotes_gg, quotes_nature_gg),1000), stack = FALSE)
 bottom_image <- image_append(image_scale(c(first_v_last_gg, career_gg),1000), stack = FALSE)
-full_image <- image_append(image_scale(c(plot_overview, middle_image, bottom_image), 500), stack = TRUE)
+full_image <- image_append(image_scale(c(plot_overview, middle_image, bottom_image), 1000), stack = TRUE)
 
 print(full_image)
 
