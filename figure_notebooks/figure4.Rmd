@@ -778,7 +778,7 @@ word_count_class_m_gg = image_read_pdf(file.path(proj_dir,
 bottom_image <- image_append(image_scale(c(word_count_class_c_gg, word_count_class_m_gg), "x500"), stack = FALSE)
 full_image <- image_append(image_scale(c(citation_indiv_10_springer_gg, 
                                          c_vs_m_filter_gg, 
-                                         bottom_image), 1000), stack = TRUE)
+                                         bottom_image), 3000), stack = TRUE)
 
 print(full_image)
 

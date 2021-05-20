@@ -978,7 +978,7 @@ word_count_class_m_gg = image_read_pdf(file.path(proj_dir,
 bottom_image <- image_append(image_scale(c(word_count_class_c_gg, word_count_class_m_gg), "x500"), stack = FALSE)
 full_image <- image_append(image_scale(c(citation_indiv_10_springer_gg, 
                                          c_vs_m_filter_gg, 
-                                         bottom_image), 1000), stack = TRUE)
+                                         bottom_image), 3000), stack = TRUE)
 
 print(full_image)
 ```
@@ -986,9 +986,9 @@ print(full_image)
     ## # A tibble: 1 x 7
     ##   format width height colorspace matte filesize density
     ##   <chr>  <int>  <int> <chr>      <lgl>    <int> <chr>  
-    ## 1 PNG     1000   1714 sRGB       TRUE         0 300x300
+    ## 1 PNG     3000   5143 sRGB       TRUE         0 300x300
 
-<img src="figure4_files/figure-markdown_github/make_supp_fig-1.png" width="1000" />
+<img src="figure4_files/figure-markdown_github/make_supp_fig-1.png" width="3000" />
 
 ``` r
 outfile = file.path(proj_dir,"/figure_notebooks/tmp_files/fig4_tmp/fig4_supp.pdf")

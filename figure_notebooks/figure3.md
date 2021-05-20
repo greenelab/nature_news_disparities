@@ -478,14 +478,14 @@ quote_springer_indiv_full_gg = image_read_pdf(file.path(proj_dir,
                                   "/figure_notebooks/tmp_files/fig3_tmp/quote_springer_indiv_full_gg.pdf"))
 
 springer_left = image_append(image_scale(c(citation_nature_indiv_full_gg, 
-                                         quote_nature_indiv_full_gg), 1000), 
+                                         quote_nature_indiv_full_gg), 3000), 
                            stack = TRUE)
 nature_right = image_append(image_scale(c(citation_springer_indiv_full_gg, 
-                                         quote_springer_indiv_full_gg), 1000), 
+                                         quote_springer_indiv_full_gg), 3000), 
                            stack = TRUE)
 bottom_panel = image_append(c(springer_left, nature_right), stack = FALSE)
 
-full_image <- image_append(c(image_scale(tot_art_gg, 500),  image_scale(bottom_panel, 1000)), 
+full_image <- image_append(c(image_scale(tot_art_gg, 1500),  image_scale(bottom_panel, 3000)), 
                            stack = TRUE)
 print(full_image)
 ```
@@ -493,9 +493,9 @@ print(full_image)
     ## # A tibble: 1 x 7
     ##   format width height colorspace matte filesize density
     ##   <chr>  <int>  <int> <chr>      <lgl>    <int> <chr>  
-    ## 1 PNG     1000   1214 sRGB       TRUE         0 300x300
+    ## 1 PNG     3000   3643 sRGB       TRUE         0 300x300
 
-<img src="figure3_files/figure-markdown_github/make_supp_fig-1.png" width="1000" />
+<img src="figure3_files/figure-markdown_github/make_supp_fig-1.png" width="3000" />
 
 ``` r
 outfile = file.path(proj_dir,"/figure_notebooks/tmp_files/fig3_tmp/fig3_supp.pdf")
