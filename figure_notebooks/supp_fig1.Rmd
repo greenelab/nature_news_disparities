@@ -257,7 +257,7 @@ full_image <- image_append(image_scale(c(gg_gender, bottom_image), 3000), stack 
 
 print(full_image)
 
-outfile = file.path(proj_dir,"/figure_notebooks/tmp_files/supp_fig1_tmp/supp_fig1.pdf")
-image_write(full_image, format = "pdf", outfile)
+outfile = file.path(proj_dir,"/figure_notebooks/tmp_files/supp_fig1_tmp/supp_fig1.png")
+image_write(full_image, format = "png", outfile)
 
 ```
