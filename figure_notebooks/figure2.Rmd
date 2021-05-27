@@ -331,7 +331,7 @@ quotes_nature_gg =
                           fill=corpus)) +
     geom_point() + geom_ribbon(alpha=0.5) + geom_line(alpha=0.5) + theme_bw() + 
     xlab("Year of Article") + ylab("Male Percentage") +
-    ggtitle("Comparison of News Quotes vs First+Last Author Research Citations") + 
+    ggtitle("News Quotes vs First+Last Author Research Citations") + 
     ylim(c(0, 1)) +
     geom_hline(yintercept=0.5, color="red") +
     scale_fill_manual(values=QUOTE_ANALYSIS_COLOR) +
@@ -348,7 +348,7 @@ quotes_springer_gg =
                           fill=corpus)) +
     geom_point() + geom_ribbon(alpha=0.5) + geom_line(alpha=0.5) + theme_bw() + 
     xlab("Year of Article") + ylab("Percentage of Quotes from Est. Male Speaker") +
-    ggtitle("Comparison of News Quotes vs First+Last Author Springer Article Citations") + 
+    ggtitle("News Quotes vs First+Last Author Springer Article Citations") + 
     ylim(c(0, 1)) +
     geom_hline(yintercept=0.5, color="red") +
     scale_fill_manual(values=QUOTE_ANALYSIS_COLOR) +
@@ -385,7 +385,7 @@ career_gg = ggplot(career_df, aes(x=as.numeric(year), y=mean,
     theme_bw() + ylim(c(0,1)) +
     xlab("Year of Article") + ylab("Male Quote Percentage") + 
     ylim(c(0, 1)) +
-    ggtitle("Male Proportion of Quotes in Career-Feature vs All Other Articles") + 
+    ggtitle("Male Proportion of Quotes in Career-Feature vs Other Articles") + 
     geom_hline(yintercept=0.5, color="red") +
     scale_fill_manual(values=QUOTE_ANALYSIS_COLOR) +
     theme(legend.position="bottom")
@@ -418,14 +418,23 @@ ggsave(file.path(proj_dir, "/figure_notebooks/tmp_files/fig2_tmp/first_v_last_gg
 
 plot_overview = image_read_pdf(file.path(proj_dir,
                                   "/figure_notebooks/illustrator_pdfs/nature_news_quote_gender_schematic.pdf"))
+plot_overview = image_annotate(plot_overview, "a", size = 20)
+
 quotes_nature_gg = image_read_pdf(file.path(proj_dir,
                                   "/figure_notebooks/tmp_files/fig2_tmp/quotes_nature_gg.pdf"))
+quotes_nature_gg = image_annotate(quotes_nature_gg, "c", size = 30)
+
 tot_quotes_gg = image_read_pdf(file.path(proj_dir,
                                   "/figure_notebooks/tmp_files/fig2_tmp/tot_quotes_gg.pdf"))
+tot_quotes_gg = image_annotate(tot_quotes_gg, "b", size = 30)
+
 first_v_last_gg = image_read_pdf(file.path(proj_dir,
                                   "/figure_notebooks/tmp_files/fig2_tmp/first_v_last_gg.pdf"))
+first_v_last_gg = image_annotate(first_v_last_gg, "d", size = 30)
+
 career_gg = image_read_pdf(file.path(proj_dir,
                                   "/figure_notebooks/tmp_files/fig2_tmp/career_gg.pdf"))
+career_gg = image_annotate(career_gg, "e", size = 30)
 
 middle_image <- image_append(image_scale(c(tot_quotes_gg, quotes_nature_gg),3000), stack = FALSE)
 bottom_image <- image_append(image_scale(c(first_v_last_gg, career_gg),3000), stack = FALSE)
@@ -449,8 +458,11 @@ image_write(full_image, format = "png", outfile)
 
 all_type_gg = image_read_pdf(file.path(proj_dir,
                                   "/figure_notebooks/tmp_files/fig2_tmp/all_type_gg.pdf"))
+all_type_gg = image_annotate(all_type_gg, "b", size = 30)
+
 quotes_springer_gg = image_read_pdf(file.path(proj_dir,
                                   "/figure_notebooks/tmp_files/fig2_tmp/quotes_springer_gg.pdf"))
+quotes_springer_gg = image_annotate(quotes_springer_gg, "a", size = 30)
 
 full_image <- image_append(image_scale(c(quotes_springer_gg, all_type_gg), 500), stack = FALSE)
 print(full_image)

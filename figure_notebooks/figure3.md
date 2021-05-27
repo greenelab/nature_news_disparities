@@ -388,22 +388,29 @@ ggsave(file.path(proj_dir, "/figure_notebooks/tmp_files/fig3_tmp/quote_nature_in
 ``` r
 plot_overview = image_read_pdf(file.path(proj_dir,
                                   "/figure_notebooks/illustrator_pdfs/nature_news_name_origin_schematic.pdf"))
+plot_overview = image_annotate(plot_overview, "a", size = 20)
 
 citation_overview_gg = image_read_pdf(file.path(proj_dir,
                                   "/figure_notebooks/tmp_files/fig3_tmp/citation_overview_gg.pdf"))
+citation_overview_gg = image_annotate(citation_overview_gg, "d", size = 30)
+
 citation_nature_indiv_sub_gg = image_read_pdf(file.path(proj_dir,
                                   "/figure_notebooks/tmp_files/fig3_tmp/citation_nature_indiv_sub_gg.pdf"))
+citation_nature_indiv_sub_gg = image_annotate(citation_nature_indiv_sub_gg, "e", size = 30)
 
 
 quote_overview_gg = image_read_pdf(file.path(proj_dir,
                                   "/figure_notebooks/tmp_files/fig3_tmp/quote_overview_gg.pdf"))
+quote_overview_gg = image_annotate(quote_overview_gg, "b", size = 30)
+
 quote_nature_indiv_sub_gg = image_read_pdf(file.path(proj_dir,
                                   "/figure_notebooks/tmp_files/fig3_tmp/quote_nature_indiv_sub_gg.pdf"))
+quote_nature_indiv_sub_gg = image_annotate(quote_nature_indiv_sub_gg, "c", size = 30)
 
 
-middle_image <- image_append(image_scale(c(quote_overview_gg, quote_nature_indiv_sub_gg),1000), stack = FALSE)
-bottom_image <- image_append(image_scale(c(citation_overview_gg, citation_nature_indiv_sub_gg),1000), stack = FALSE)
-full_image <- image_append(image_scale(c(plot_overview, middle_image, bottom_image), 1000), stack = TRUE)
+middle_image <- image_append(image_scale(c(quote_overview_gg, quote_nature_indiv_sub_gg),3000), stack = FALSE)
+bottom_image <- image_append(image_scale(c(citation_overview_gg, citation_nature_indiv_sub_gg),3000), stack = FALSE)
+full_image <- image_append(image_scale(c(plot_overview, middle_image, bottom_image), 3000), stack = TRUE)
 
 print(full_image)
 ```
@@ -411,9 +418,9 @@ print(full_image)
     ## # A tibble: 1 x 7
     ##   format width height colorspace matte filesize density
     ##   <chr>  <int>  <int> <chr>      <lgl>    <int> <chr>  
-    ## 1 PNG     1000   1046 sRGB       TRUE         0 300x300
+    ## 1 PNG     3000   3140 sRGB       TRUE         0 300x300
 
-<img src="figure3_files/figure-markdown_github/make_fig1-1.png" width="1000" />
+<img src="figure3_files/figure-markdown_github/make_fig1-1.png" width="3000" />
 
 ``` r
 outfile = file.path(proj_dir,"/figure_notebooks/tmp_files/fig3_tmp/fig3_main.pdf")
@@ -428,15 +435,23 @@ image_write(full_image, format = "png", outfile)
 ``` r
 tot_art_gg = image_read_pdf(file.path(proj_dir,
                                   "/figure_notebooks/tmp_files/fig3_tmp/tot_art_gg.pdf"))
+tot_art_gg = image_annotate(tot_art_gg, "a", size = 20)
 
 citation_nature_indiv_full_gg = image_read_pdf(file.path(proj_dir,
                                   "/figure_notebooks/tmp_files/fig3_tmp/citation_nature_indiv_full_gg.pdf"))
+citation_nature_indiv_full_gg = image_annotate(citation_nature_indiv_full_gg, "b", size = 30)
+
 citation_springer_indiv_full_gg = image_read_pdf(file.path(proj_dir,
                                   "/figure_notebooks/tmp_files/fig3_tmp/citation_springer_indiv_full_gg.pdf"))
+citation_springer_indiv_full_gg = image_annotate(citation_springer_indiv_full_gg, "c", size = 30)
+
 quote_nature_indiv_full_gg = image_read_pdf(file.path(proj_dir,
                                   "/figure_notebooks/tmp_files/fig3_tmp/quote_nature_indiv_full_gg.pdf"))
+quote_nature_indiv_full_gg = image_annotate(quote_nature_indiv_full_gg, "d", size = 30)
+
 quote_springer_indiv_full_gg = image_read_pdf(file.path(proj_dir,
                                   "/figure_notebooks/tmp_files/fig3_tmp/quote_springer_indiv_full_gg.pdf"))
+quote_springer_indiv_full_gg = image_annotate(quote_springer_indiv_full_gg, "e", size = 30)
 
 springer_left = image_append(image_scale(c(citation_nature_indiv_full_gg, 
                                          quote_nature_indiv_full_gg), 3000), 

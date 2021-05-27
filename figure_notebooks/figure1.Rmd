@@ -167,13 +167,19 @@ ggsave(file.path(proj_dir, "/figure_notebooks/tmp_files/fig1_tmp/all_gg.png"),
 
 plot_overview = image_read_pdf(file.path(proj_dir,
                                   "/figure_notebooks/illustrator_pdfs/nature_news_ex_fig1a.pdf"))
+plot_overview = image_extent(plot_overview, '2130x1236', 
+                                            color = 'white', gravity = "northeast")
 plot_data_diagram = image_read_pdf(file.path(proj_dir,
                                   "/figure_notebooks/illustrator_pdfs/nature_news_ex_fig1b.pdf"))
 news_nature_gg = image_read(file.path(proj_dir,
                                   "/figure_notebooks/tmp_files/fig1_tmp/news_nature_gg.png"))
 
 
-bottom_panel <- image_append(image_scale(c(plot_overview, plot_data_diagram), 500), stack = FALSE)
+bottom_panel <- image_append(image_scale(c(plot_overview, plot_data_diagram), 3000), stack = FALSE)
+bottom_panel = image_annotate(bottom_panel, "a", size = 160)
+news_nature_gg = image_annotate(image_scale(news_nature_gg, 3000), "b", size = 80)
+
+
 full_image <- image_append(image_scale(c(bottom_panel, news_nature_gg),3000), 
                            stack = TRUE)
 

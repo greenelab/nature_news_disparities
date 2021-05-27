@@ -243,10 +243,17 @@ ggsave(file.path(proj_dir, "/figure_notebooks/tmp_files/supp_fig1_tmp/gg_loc_lin
 ``` r
 gg_gender = image_read_pdf(file.path(proj_dir,
                                   "/figure_notebooks/tmp_files/supp_fig1_tmp/gg_gender.pdf"))
+gg_gender = image_annotate(gg_gender, "a", size = 30)
+
+
 gg_loc_hist = image_read_pdf(file.path(proj_dir,
                                   "/figure_notebooks/tmp_files/supp_fig1_tmp/gg_loc_hist.pdf"))
+gg_loc_hist = image_annotate(gg_loc_hist, "b", size = 30)
+
+
 gg_loc_line = image_read_pdf(file.path(proj_dir,
                                   "/figure_notebooks/tmp_files/supp_fig1_tmp/gg_loc_line.pdf"))
+gg_loc_line = image_annotate(gg_loc_line, "c", size = 30)
 
 
 top_image <- image_append(image_scale(c(gg_gender, gg_loc_hist), "x3000"), stack = FALSE)

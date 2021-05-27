@@ -757,22 +757,36 @@ ggsave(file.path(proj_dir, "/figure_notebooks/tmp_files/fig4_tmp/word_count_clas
 
 plot_overview = image_read_pdf(file.path(proj_dir,
                                   "/figure_notebooks/illustrator_pdfs/nature_news_mention_citation_schematic.pdf"))
+plot_overview = image_annotate(plot_overview, "a", size = 20)
+
 
 citation_overview_gg = image_read_pdf(file.path(proj_dir,
                                   "/figure_notebooks/tmp_files/fig4_tmp/citation_full_gg.pdf"))
+citation_overview_gg = image_annotate(citation_overview_gg, "b", size = 40)
+
+
 citation_nature_indiv_sub_gg = image_read_pdf(file.path(proj_dir,
                                   "/figure_notebooks/tmp_files/fig4_tmp/citation_indiv_3_gg.pdf"))
+citation_nature_indiv_sub_gg = image_extent(citation_nature_indiv_sub_gg, '2150x1500', 
+                                            color = 'white', gravity = "northeast")
+citation_nature_indiv_sub_gg = image_annotate(citation_nature_indiv_sub_gg, "c", size = 40)
 
 
 heatmap_gg = image_read_pdf(file.path(proj_dir,
                                   "/figure_notebooks/tmp_files/fig4_tmp/full_heatmap.pdf"))
+heatmap_gg = image_extent(heatmap_gg, '3100x1500', color = 'white', gravity = "northeast")
+heatmap_gg = image_annotate(heatmap_gg, "d", size = 40)
+
+
 word_ratio_gg = image_read_pdf(file.path(proj_dir,
                                   "/figure_notebooks/tmp_files/fig4_tmp/word_ratio_gg.pdf"))
+word_ratio_gg = image_annotate(word_ratio_gg, "e", size = 40)
+
 #heatmap_gg = image_scale(heatmap_gg, 750)
 #word_ratio_gg = image_scale(word_ratio_gg, 250)
 
 middle_image <- image_append(image_scale(c(citation_overview_gg, citation_nature_indiv_sub_gg),1000), stack = FALSE)
-bottom_image <- image_append(image_scale(c(heatmap_gg, word_ratio_gg), "x500"), stack = FALSE)
+bottom_image <- image_append(image_scale(c(heatmap_gg, word_ratio_gg), "x1000"), stack = FALSE)
 full_image <- image_append(image_scale(c(plot_overview, middle_image, bottom_image), 1000), stack = TRUE)
 
 print(full_image)
@@ -793,15 +807,23 @@ image_write(full_image, format = "png", outfile)
 
 citation_indiv_10_springer_gg = image_read_pdf(file.path(proj_dir,
                                   "/figure_notebooks/tmp_files/fig4_tmp/citation_indiv_10_springer_gg.pdf"))
+citation_indiv_10_springer_gg = image_annotate(citation_indiv_10_springer_gg, "a", size = 20)
+
 c_vs_m_filter_gg = image_read_pdf(file.path(proj_dir,
                                   "/figure_notebooks/tmp_files/fig4_tmp/c_vs_m_filter_gg.pdf"))
+c_vs_m_filter_gg = image_annotate(c_vs_m_filter_gg, "b", size = 30)
+
 word_count_class_c_gg = image_read_pdf(file.path(proj_dir,
                                   "/figure_notebooks/tmp_files/fig4_tmp/word_count_class_c_gg.pdf"))
+word_count_class_c_gg = image_annotate(word_count_class_c_gg, "c", size = 30)
+
 word_count_class_m_gg = image_read_pdf(file.path(proj_dir,
                                   "/figure_notebooks/tmp_files/fig4_tmp/word_count_class_m_gg.pdf"))
+word_count_class_m_gg = image_annotate(word_count_class_m_gg, "d", size = 30)
 
 
-bottom_image <- image_append(image_scale(c(word_count_class_c_gg, word_count_class_m_gg), "x500"), stack = FALSE)
+
+bottom_image <- image_append(image_scale(c(word_count_class_c_gg, word_count_class_m_gg), "x1500"), stack = FALSE)
 full_image <- image_append(image_scale(c(citation_indiv_10_springer_gg, 
                                          c_vs_m_filter_gg, 
                                          bottom_image), 3000), stack = TRUE)
