@@ -2,7 +2,7 @@
 title: "Supp1_benchmark"
 author: "Natalie Davidson"
 date: "5/25/2021"
-output: html_document
+output: rmarkdown::github_document
 ---
 
 ```{r setup, include=FALSE}
@@ -13,6 +13,8 @@ require(here)
 require(ggplot2)
 require(caret)
 require(ggrepel)
+options(ggrepel.max.overlaps = Inf)
+
 require(magick)
 require(pdftools)
 
@@ -180,6 +182,10 @@ for(curr_country in union(country_mention_est$est_country_code,
     est_set = subset(country_mention_est, est_country_code == curr_country)
 
     files_fp = setdiff(est_set$file_id, true_set$file_id)
+    if(length(files_fp) > 0){
+        print(files_fp)
+        print(curr_country)
+    }
     files_missed = setdiff(true_set$file_id, est_set$file_id)
     
     res = data.frame(country_code = curr_country,
@@ -201,8 +207,6 @@ country_errors = country_errors[-1,]
 
 ```{r gender_plot, echo=TRUE, warning=FALSE, message=F}
 
-gg_gender = draw_confusion_matrix(confusion_matrix, "FEMALE", "MALE", "Gender prediction Conf. Matr.")
-
 ggsave(file.path(proj_dir, "/figure_notebooks/tmp_files/supp_fig1_tmp/gg_gender.pdf"),
        draw_confusion_matrix(confusion_matrix, "FEMALE", "MALE", "Gender prediction Conf. Matr."),
        width = 5, height = 5, units = "in", device = "pdf")
@@ -211,13 +215,14 @@ ggsave(file.path(proj_dir, "/figure_notebooks/tmp_files/supp_fig1_tmp/gg_gender.
 
 ### location FPR 
 
-```{r gender_plot, echo=TRUE, warning=FALSE, message=F}
+```{r location_plot, echo=TRUE, warning=FALSE, message=F}
 
-gg_loc_hist = ggplot(country_errors, aes(x=num_fp)) +
-                geom_histogram() +
+gg_loc_hist = ggplot(country_errors, aes(x=as.factor(num_fp))) +
+                geom_bar() +
                 theme_bw() + 
-                xlab("Number of Articles with False Country Mention") +
-                ggtitle("Number of Articles with False Country Mention in Benchmark") + 
+                ylab("Number of Articles (30 Total)") +
+                xlab("Number False Country Mentions Per Article") +
+                ggtitle("# False Country Mentions Per Article in Benchmark") + 
                 theme(legend.position = "none")
 ggsave(file.path(proj_dir, "/figure_notebooks/tmp_files/supp_fig1_tmp/gg_loc_hist.pdf"),
        gg_loc_hist, width = 5, height = 5, units = "in", device = "pdf")

@@ -22,6 +22,9 @@ source(file.path(proj_dir, "/analysis_scripts/analysis_utils.R"))
 source(file.path(proj_dir, "/utils/plotting_utils.R"))
 source(file.path(proj_dir, "/process_doi_data/springer_scripts/springer_scrape_utils.R"))
 
+RERUN_BOOTSTRAP = FALSE
+
+
 ```
 
 
@@ -200,76 +203,94 @@ quote_author_df = unique(quote_author_df)
 
 ```{r bootstrap_est, echo=TRUE, warning=FALSE, message=F}
 
-#### Quote data
-quote_prop_df = compute_bootstrap_gender(full_quote_df, 
-                                           year_col_id = "year", 
-                                           article_col_id = "quote",
-                                           conf_int=0.95)
-quote_prop_df$corpus = "quote"
-
-#### Quote data broken down by article type
-get_subboot <- function(type_id, type_names, in_df){
-    bootstrap_res = compute_bootstrap_gender(subset(in_df, type %in% type_id), 
-                                           year_col_id = "year", 
-                                           article_col_id = "quote",
-                                           conf_int=0.95)
-    bootstrap_res$corpus = type_names
-    return(bootstrap_res)
-
-}
-
-type_df = NA
-for(curr_type in unique(full_quote_df$type)){
-    res = get_subboot(curr_type, curr_type, full_quote_df)
-    type_df = rbind(type_df, res)
-}
-type_df = type_df[-1,]
-
-#### Quote data broken down by article type career vs non-career
-career_df = NA
-non_career = setdiff(unique(full_quote_df$type), c("career-column", "career-feature"))
-career_type = list("career-column", "career-feature", non_career)
-career_name = c("career-column", "career-feature", "non_career")
-for(curr_type_idx in 1:length(career_type)){
-    curr_type = unlist(career_type[curr_type_idx])
-    curr_name = career_name[curr_type_idx]
-    res = get_subboot(curr_type, 
-                      curr_name,
-                      full_quote_df)
-    career_df = rbind(career_df, res)
-}
-career_df = career_df[-1,]
-
-
-
-#### Background data
-springer_first_prop_df = compute_bootstrap_gender(subset(springer_author_df, author_pos == "first"), 
-                                           year_col_id = "year", 
-                                           article_col_id = "doi",
-                                           conf_int=0.95)
-springer_last_prop_df = compute_bootstrap_gender(subset(springer_author_df, author_pos == "last"), 
-                                           year_col_id = "year", 
-                                           article_col_id = "doi",
-                                           conf_int=0.95)
-nature_first_prop_df = compute_bootstrap_gender(subset(nature_author_df, author_pos == "first"), 
-                                           year_col_id = "year", 
-                                           article_col_id = "doi",
-                                           conf_int=0.95)
-nature_last_prop_df = compute_bootstrap_gender(subset(nature_author_df, author_pos == "last"), 
-                                           year_col_id = "year", 
-                                           article_col_id = "doi",
-                                           conf_int=0.95)
-springer_first_prop_df$corpus = "springer_first"
-springer_last_prop_df$corpus = "springer_last"
-nature_first_prop_df$corpus = "nature_first"
-nature_last_prop_df$corpus = "nature_last"
-
-
-#### first v last author quotes
-first_cited_prop_df = compute_bootstrap_first_author(quote_author_df, 
+if(RERUN_BOOTSTRAP){
+        
+    
+    #### Quote data
+    quote_prop_df = compute_bootstrap_gender(full_quote_df, 
                                                year_col_id = "year", 
-                                               article_col_id = "file_id",
+                                               article_col_id = "quote",
                                                conf_int=0.95)
+    quote_prop_df$corpus = "quote"
+    
+    #### Quote data broken down by article type
+    get_subboot <- function(type_id, type_names, in_df){
+        bootstrap_res = compute_bootstrap_gender(subset(in_df, type %in% type_id), 
+                                               year_col_id = "year", 
+                                               article_col_id = "quote",
+                                               conf_int=0.95)
+        bootstrap_res$corpus = type_names
+        return(bootstrap_res)
+    
+    }
+    
+    type_df = NA
+    for(curr_type in unique(full_quote_df$type)){
+        res = get_subboot(curr_type, curr_type, full_quote_df)
+        type_df = rbind(type_df, res)
+    }
+    type_df = type_df[-1,]
+    
+    #### Quote data broken down by article type career vs non-career
+    career_df = NA
+    non_career = setdiff(unique(full_quote_df$type), c("career-feature"))
+    career_type = list("career-feature", non_career)
+    career_name = c("career-feature", "other")
+    for(curr_type_idx in 1:length(career_type)){
+        curr_type = unlist(career_type[curr_type_idx])
+        curr_name = career_name[curr_type_idx]
+        res = get_subboot(curr_type, 
+                          curr_name,
+                          full_quote_df)
+        career_df = rbind(career_df, res)
+    }
+    career_df = career_df[-1,]
+    
+    
+    
+    #### Background data
+    springer_first_prop_df = compute_bootstrap_gender(
+                                subset(springer_author_df, author_pos == "first"), 
+                                year_col_id = "year", 
+                                article_col_id = "doi",
+                                conf_int=0.95)
+    springer_last_prop_df = compute_bootstrap_gender(
+                                subset(springer_author_df, author_pos == "last"), 
+                                year_col_id = "year", 
+                                article_col_id = "doi",
+                                conf_int=0.95)
+    nature_first_prop_df = compute_bootstrap_gender(
+                                subset(nature_author_df, author_pos == "first"), 
+                                year_col_id = "year", 
+                                article_col_id = "doi",
+                                conf_int=0.95)
+    nature_last_prop_df = compute_bootstrap_gender(
+                                subset(nature_author_df, author_pos == "last"), 
+                                year_col_id = "year", 
+                                article_col_id = "doi",
+                                conf_int=0.95)
+    springer_first_prop_df$corpus = "springer_first"
+    springer_last_prop_df$corpus = "springer_last"
+    nature_first_prop_df$corpus = "nature_first"
+    nature_last_prop_df$corpus = "nature_last"
+    
+    
+    #### first v last author quotes
+    first_cited_prop_df = compute_bootstrap_first_author(quote_author_df, 
+                                                   year_col_id = "year", 
+                                                   article_col_id = "file_id",
+                                                   conf_int=0.95)
+    all_bootstrap_file = file.path(proj_dir,
+                            "/figure_notebooks/tmp_files/fig2_tmp/fig2.RData")
+    save(quote_prop_df, type_df, career_df, 
+         springer_first_prop_df, springer_last_prop_df, 
+         nature_first_prop_df, nature_last_prop_df, 
+         first_cited_prop_df, file = "fig2.RData")
+}else{
+    all_bootstrap_file = file.path(proj_dir,
+                                "/figure_notebooks/tmp_files/fig2_tmp/fig2.RData")
+    load(all_bootstrap_file)
+}
 
 ```
 
@@ -364,7 +385,7 @@ career_gg = ggplot(career_df, aes(x=as.numeric(year), y=mean,
     theme_bw() + ylim(c(0,1)) +
     xlab("Year of Article") + ylab("Male Quote Percentage") + 
     ylim(c(0, 1)) +
-    ggtitle("Male Proportion of Quotes in Career vs Non-Career related Articles") + 
+    ggtitle("Male Proportion of Quotes in Career-Feature vs All Other Articles") + 
     geom_hline(yintercept=0.5, color="red") +
     scale_fill_manual(values=QUOTE_ANALYSIS_COLOR) +
     theme(legend.position="bottom")
