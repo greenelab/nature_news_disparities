@@ -562,7 +562,7 @@ batch_osm_query <- function(query_vec){
 
 }
 
-#' private method that runs the first population of the OSM
+#' private method that runsupdates the frequency of the OSM
 #' cache. 
 #' This method should not be run by users since they 
 #' should always have a populated cache.
@@ -570,7 +570,10 @@ batch_osm_query <- function(query_vec){
 #' @param in_dir, full location of folder that contains all location tables
 #' from pipeline step 4. Files must contain the string location_table_raw
 #' in the name
-initial_osm_query <- function(in_dir) {
+#' @param all_authors, output df from 
+#' /process_doi_data/process_author_country.R
+#' read_nature_country_json_files
+update_osm_freq <- function(in_dir, all_authors){
 
     # this method will just populate the cache with any locations
     # that are missing
@@ -590,7 +593,7 @@ initial_osm_query <- function(in_dir) {
         return()
     }
 
-    # read in location files
+    # read in location files for mentions
     all_missing_locs = NA
     for(curr_file in all_loc_files){
         in_df = data.frame(fread(curr_file))
@@ -599,6 +602,67 @@ initial_osm_query <- function(in_dir) {
     all_missing_locs = all_missing_locs[-1,]
     query_locs = unique(tolower(all_missing_locs$text))
 
+    # read in location files for nature BG affiliations
+    all_authors$text = all_authors$country_affil
+    query_locs = unique(tolower(c(query_locs, all_authors$text)))
+    all_missing_locs = rbind(all_missing_locs, all_authors[,c("file_id", "text")])
+
+    # write out the frequncies of organizations, 
+    # we want to make sure that the top ones are correct
+    freq_locs = as.data.frame(table(all_missing_locs$text))
+    colnames(freq_locs)[1] = "query"
+    colnames(freq_locs)[2] = "Freq_update_05_24_2021"
+
+    cache_file = file.path(ref_data_dir, "/osm_cache.tsv")
+    cache_df = data.frame(fread(cache_file))
+    freq_locs = merge(freq_locs, cache_df)
+    freq_locs = freq_locs[order(freq_locs$Freq_update_05_24_2021, decreasing=T),]
+
+    cache_edit_file = file.path(ref_data_dir, "/osm_cache_edited2.tsv")
+    write.table(freq_locs, cache_edit_file, sep="\t", quote=F, row.names=F)
+
+
+}
+
+#' private method that runs the first population of the OSM
+#' cache. 
+#' This method should not be run by users since they 
+#' should always have a populated cache.
+#' 
+#' @param in_dir, full location of folder that contains all location tables
+#' from pipeline step 4. Files must contain the string location_table_raw
+#' in the name
+#' @param all_authors, output df from 
+#' /process_doi_data/process_author_country.R
+#' read_nature_country_json_files
+initial_osm_query <- function(in_dir){
+
+    # this method will just populate the cache with any locations
+    # that are missing
+
+    # people should never use this method, this is only
+    # for me to run the first instance of the cache, others
+    # should already have a populated cache file from github
+
+    # find all files that unfound locations
+    all_loc_files = list.files(in_dir, 
+                                pattern="location_table_raw",
+                                recursive=F,
+                                full.names=T)
+    if(length(all_loc_files) == 0){
+        warn_str = "No location files found. Are you supplying the correct input dir?"
+        warning(warn_str)
+        return()
+    }
+
+    # read in location files for mentions
+    all_missing_locs = NA
+    for(curr_file in all_loc_files){
+        in_df = data.frame(fread(curr_file))
+        all_missing_locs = rbind(all_missing_locs, in_df[,c("file_id", "text")])
+    }
+    all_missing_locs = all_missing_locs[-1,]
+    query_locs = unique(tolower(all_missing_locs$text))
 
     batch_resp = batch_osm_query(query_locs)
 
@@ -618,6 +682,7 @@ initial_osm_query <- function(in_dir) {
 
 
 }
+
 
 #' private method that updates the gender cache. 
 #' This method should not be run by users since they 
@@ -687,6 +752,12 @@ query_genderize_io <- function(in_dir) {
     query_names = sample(all_names)[1:max_len]
     names_processed = data.frame(findGivenNames(query_names, textPrepare=F))
     names_processed = unique(names_processed)
+    names_processed$probability = as.numeric(names_processed$probability)
+    names_processed_male = subset(names_processed, gender == "male")
+    names_processed_female = subset(names_processed, gender == "female")
+    names_processed_female$probability = 1 - names_processed_female$probability
+    names_processed = rbind(names_processed_female, names_processed_male)
+
     
 
     # make it in the same format as the reference data

@@ -223,13 +223,19 @@ ggsave(file.path(proj_dir, "/figure_notebooks/tmp_files/fig1_tmp/all_gg.png"),
 ``` r
 plot_overview = image_read_pdf(file.path(proj_dir,
                                   "/figure_notebooks/illustrator_pdfs/nature_news_ex_fig1a.pdf"))
+plot_overview = image_extent(plot_overview, '2130x1236', 
+                                            color = 'white', gravity = "northeast")
 plot_data_diagram = image_read_pdf(file.path(proj_dir,
                                   "/figure_notebooks/illustrator_pdfs/nature_news_ex_fig1b.pdf"))
 news_nature_gg = image_read(file.path(proj_dir,
                                   "/figure_notebooks/tmp_files/fig1_tmp/news_nature_gg.png"))
 
 
-bottom_panel <- image_append(image_scale(c(plot_overview, plot_data_diagram), 500), stack = FALSE)
+bottom_panel <- image_append(image_scale(c(plot_overview, plot_data_diagram), 3000), stack = FALSE)
+bottom_panel = image_annotate(bottom_panel, "a", size = 160)
+news_nature_gg = image_annotate(image_scale(news_nature_gg, 3000), "b", size = 80)
+
+
 full_image <- image_append(image_scale(c(bottom_panel, news_nature_gg),3000), 
                            stack = TRUE)
 
@@ -239,11 +245,14 @@ print(full_image)
     ## # A tibble: 1 x 7
     ##   format width height colorspace matte filesize density
     ##   <chr>  <int>  <int> <chr>      <lgl>    <int> <chr>  
-    ## 1 PNG     3000   2088 sRGB       TRUE         0 300x300
+    ## 1 PNG     3000   2071 sRGB       TRUE         0 300x300
 
 <img src="figure1_files/figure-markdown_github/make_fig1-1.png" width="3000" />
 
 ``` r
 outfile = file.path(proj_dir,"/figure_notebooks/tmp_files/fig1_tmp/fig1_main.pdf")
 image_write(full_image, format = "pdf", outfile)
+
+outfile = file.path(proj_dir,"/figure_notebooks/tmp_files/fig1_tmp/fig1_main.png")
+image_write(full_image, format = "png", outfile)
 ```

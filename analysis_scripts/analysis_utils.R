@@ -7,7 +7,7 @@ library(here)
 proj_dir = here()
 source(file.path(proj_dir, "/utils/scraper_processing_utils.R"))
 
-BOOTSTRAP_SIZE=10
+BOOTSTRAP_SIZE=5000
 
 #' Read in the quote information from processed coreNLP TSV output
 #'
@@ -291,15 +291,20 @@ compute_bootstrap_location <- function(full_data_df, year_col_id, article_col_id
         year_df$is_country_present[year_df$is_country_present == "FALSE"] = 0
         year_df$is_country_present = as.numeric(year_df$is_country_present)
 
-        # get article id's to sample
         boot_res = rep(NA, BOOTSTRAP_SIZE)
-        for(idx in 1:BOOTSTRAP_SIZE){
+        if(length(table(year_df$is_country_present)) != 2){
+            # if there was no observation for this year, skip
+            boot_res = rep(0, BOOTSTRAP_SIZE)
+        }else{
+            # get article id's to sample
+            for(idx in 1:BOOTSTRAP_SIZE){
 
-            boot_samp = sample_n(year_df, nrow(year_df), replace=T)
-            percent_country = sum(boot_samp$is_country_present, na.rm=T) / 
-                            nrow(year_df)
-            boot_res[idx] = percent_country
-            
+                boot_samp = sample_n(year_df, nrow(year_df), replace=T)
+                percent_country = sum(boot_samp$is_country_present, na.rm=T) / 
+                                nrow(year_df)
+                boot_res[idx] = percent_country
+                
+            }
         }
 
         quantile_res[quantile_res$year == curr_year,] = 

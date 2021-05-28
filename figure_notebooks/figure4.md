@@ -73,27 +73,27 @@ head(country_df)
     ## 4                   ae
     ## 5                   ae
     ## 6                   ae
-    ##                                                                           file_id
-    ## 1                                                                         446937a
-    ## 2                                                              d41586-020-00154-w
-    ## 3                                                                   4601067a.html
-    ## 4                                                              news.2009.137.html
-    ## 5                                china-s-emissions-estimates-don-t-add-up-1.10815
-    ## 6 antibody-infusions-provide-long-term-defence-against-hiv-like-infection-1.19832
-    ##                                                            doi year
-    ## 1                                          doi:10.1038/446937a 2007
-    ## 2                               doi:10.1038/d41586-020-00154-w 2020
-    ## 3                                    doi:10.1038/4601067a.html 2009
-    ## 4                               doi:10.1038/news.2009.137.html 2009
-    ## 5 doi:10.1038/china-s-emissions-estimates-don-t-add-up-1.10815 2012
-    ## 6                                      doi:10.1038/nature24646 2016
-    ##                 corpus              country un_region    un_subregion
-    ## 1  naturenews_mentions              Andorra    Europe Southern Europe
-    ## 2  naturenews_mentions United Arab Emirates      Asia    Western Asia
-    ## 3  naturenews_mentions United Arab Emirates      Asia    Western Asia
-    ## 4  naturenews_mentions United Arab Emirates      Asia    Western Asia
-    ## 5  naturenews_mentions United Arab Emirates      Asia    Western Asia
-    ## 6 naturenews_citations United Arab Emirates      Asia    Western Asia
+    ##                                                        file_id
+    ## 1                                                      446937a
+    ## 2 funding-uncertainty-strands-spain-s-young-scientists-1.10177
+    ## 3                                           d41586-020-03563-z
+    ## 4                                                         <NA>
+    ## 5                                                 468609a.html
+    ## 6                                           news.2010.491.html
+    ##                                                                        doi year
+    ## 1                                                      doi:10.1038/446937a 2007
+    ## 2 doi:10.1038/funding-uncertainty-strands-spain-s-young-scientists-1.10177 2012
+    ## 3                                           doi:10.1038/d41586-020-03563-z 2020
+    ## 4                                            doi:10.1007/s10967-008-1005-z 2008
+    ## 5                                                 doi:10.1038/468609a.html 2010
+    ## 6                                           doi:10.1038/news.2010.491.html 2010
+    ##                corpus              country un_region    un_subregion
+    ## 1 naturenews_mentions              Andorra    Europe Southern Europe
+    ## 2 naturenews_mentions United Arab Emirates      Asia    Western Asia
+    ## 3 naturenews_mentions United Arab Emirates      Asia    Western Asia
+    ## 4   springer_articles United Arab Emirates      Asia    Western Asia
+    ## 5 naturenews_mentions United Arab Emirates      Asia    Western Asia
+    ## 6 naturenews_mentions United Arab Emirates      Asia    Western Asia
 
 ``` r
 #### read in the bootstrapped author data
@@ -105,11 +105,11 @@ head(ci_df)
 ```
 
     ##       country address.country_code un_region  un_subregion year bottom_CI
-    ## 1 Afghanistan                   af      Asia Southern Asia 2016         0
-    ## 2 Afghanistan                   af      Asia Southern Asia 2020         0
-    ## 3 Afghanistan                   af      Asia Southern Asia 2012         0
-    ## 4 Afghanistan                   af      Asia Southern Asia 2015         0
-    ## 5 Afghanistan                   af      Asia Southern Asia 2008         0
+    ## 1 Afghanistan                   af      Asia Southern Asia 2012         0
+    ## 2 Afghanistan                   af      Asia Southern Asia 2008         0
+    ## 3 Afghanistan                   af      Asia Southern Asia 2016         0
+    ## 4 Afghanistan                   af      Asia Southern Asia 2020         0
+    ## 5 Afghanistan                   af      Asia Southern Asia 2015         0
     ## 6 Afghanistan                   af      Asia Southern Asia 2014         0
     ##   top_CI mean               corpus
     ## 1      0    0 naturenews_citations
@@ -217,11 +217,11 @@ head(top_countries_citation)
     ##   country        overall_mean
     ##   <chr>                 <dbl>
     ## 1 United States         0.819
-    ## 2 United Kingdom        0.360
+    ## 2 United Kingdom        0.358
     ## 3 Germany               0.260
-    ## 4 France                0.168
-    ## 5 Japan                 0.143
-    ## 6 Canada                0.136
+    ## 4 France                0.167
+    ## 5 Japan                 0.142
+    ## 6 Canada                0.138
 
 ``` r
 # make the df into proportions for eachcountry
@@ -237,93 +237,75 @@ get_subboot <- function(country_id, curr_corpus, in_df, bootstrap_col_id="file_i
 
 }
 
+# we only run the bootstraps if we want to update them
+# this is an expensive process > 1hr
+if(RERUN_BOOTSTRAP){
+        
+    citation_country_df = NA
+    for(curr_country in top_countries_citation$country[1:NUM_COUNTRIES_PLOT]){
+        print(curr_country)
+        res = get_subboot(curr_country, 
+                          curr_corpus="naturenews_citations", 
+                          country_df)
+        citation_country_df = rbind(citation_country_df, res)
+    }
+    citation_country_df = citation_country_df[-1,]
+    citation_country_df$label = ""
+    citation_country_df$label[citation_country_df$year == 2020] = 
+        citation_country_df$country[citation_country_df$year == 2020]
+    citation_country_df$corpus = "citation"
+    outfile = file.path(proj_dir,"/figure_notebooks/tmp_files/fig4_tmp/citation_country_df.tsv")
+    write.table(citation_country_df, outfile, sep="\t", quote=F, row.names=F)
+    
+    
+    springer_country_df = NA
+    for(curr_country in top_countries_citation$country[1:NUM_COUNTRIES_PLOT]){
+        print(curr_country)
+        res = get_subboot(curr_country, 
+                          curr_corpus="springer_articles", 
+                          country_df,
+                          bootstrap_col_id = "doi")
+        springer_country_df = rbind(springer_country_df, res)
+    }
+    springer_country_df = springer_country_df[-1,]
+    springer_country_df$label = ""
+    springer_country_df$label[springer_country_df$year == 2020] = 
+        springer_country_df$country[springer_country_df$year == 2020]
+    springer_country_df$corpus = "springer_last"
+    outfile = file.path(proj_dir,"/figure_notebooks/tmp_files/fig4_tmp/springer_country_df.tsv")
+    write.table(springer_country_df, outfile, sep="\t", quote=F, row.names=F)
+    
+    
+    nature_country_df = NA
+    for(curr_country in top_countries_citation$country[1:NUM_COUNTRIES_PLOT]){
+        print(curr_country)
+        res = get_subboot(curr_country, 
+                          curr_corpus="nature_articles", 
+                          country_df)
+        nature_country_df = rbind(nature_country_df, res)
+    }
+    nature_country_df = nature_country_df[-1,]
+    nature_country_df$label = ""
+    nature_country_df$label[nature_country_df$year == 2020] = 
+        nature_country_df$country[nature_country_df$year == 2020]
+    nature_country_df$corpus = "nature_last"
+    outfile = file.path(proj_dir,"/figure_notebooks/tmp_files/fig4_tmp/nature_country_df.tsv")
+    write.table(nature_country_df, outfile, sep="\t", quote=F, row.names=F)
+}else{
+    
+    citation_country_file = file.path(proj_dir,
+                                      "/figure_notebooks/tmp_files/fig4_tmp/citation_country_df.tsv")
+    citation_country_df = data.frame(fread(citation_country_file))
 
-citation_country_df = NA
-for(curr_country in top_countries_citation$country[1:NUM_COUNTRIES_PLOT]){
-    print(curr_country)
-    res = get_subboot(curr_country, 
-                      curr_corpus="naturenews_citations", 
-                      country_df)
-    citation_country_df = rbind(citation_country_df, res)
+    springer_country_file = file.path(proj_dir,
+                                      "/figure_notebooks/tmp_files/fig4_tmp/springer_country_df.tsv")
+    springer_country_df = data.frame(fread(springer_country_file))
+    
+    nature_country_file = file.path(proj_dir,
+                                      "/figure_notebooks/tmp_files/fig4_tmp/nature_country_df.tsv")
+    nature_country_df = data.frame(fread(nature_country_file))
+
 }
-```
-
-    ## [1] "United States"
-    ## [1] "United Kingdom"
-    ## [1] "Germany"
-    ## [1] "France"
-    ## [1] "Japan"
-    ## [1] "Canada"
-    ## [1] "People's Republic of China"
-    ## [1] "Australia"
-    ## [1] "Switzerland"
-    ## [1] "Netherlands"
-
-``` r
-citation_country_df = citation_country_df[-1,]
-citation_country_df$label = ""
-citation_country_df$label[citation_country_df$year == 2020] = 
-    citation_country_df$country[citation_country_df$year == 2020]
-citation_country_df$corpus = "citation"
-
-
-springer_country_df = NA
-for(curr_country in top_countries_citation$country[1:NUM_COUNTRIES_PLOT]){
-    print(curr_country)
-    res = get_subboot(curr_country, 
-                      curr_corpus="springer_articles", 
-                      country_df,
-                      bootstrap_col_id = "doi")
-    springer_country_df = rbind(springer_country_df, res)
-}
-```
-
-    ## [1] "United States"
-    ## [1] "United Kingdom"
-    ## [1] "Germany"
-    ## [1] "France"
-    ## [1] "Japan"
-    ## [1] "Canada"
-    ## [1] "People's Republic of China"
-    ## [1] "Australia"
-    ## [1] "Switzerland"
-    ## [1] "Netherlands"
-
-``` r
-springer_country_df = springer_country_df[-1,]
-springer_country_df$label = ""
-springer_country_df$label[springer_country_df$year == 2020] = 
-    springer_country_df$country[springer_country_df$year == 2020]
-springer_country_df$corpus = "springer_last"
-
-
-nature_country_df = NA
-for(curr_country in top_countries_citation$country[1:NUM_COUNTRIES_PLOT]){
-    print(curr_country)
-    res = get_subboot(curr_country, 
-                      curr_corpus="nature_articles", 
-                      country_df)
-    nature_country_df = rbind(nature_country_df, res)
-}
-```
-
-    ## [1] "United States"
-    ## [1] "United Kingdom"
-    ## [1] "Germany"
-    ## [1] "France"
-    ## [1] "Japan"
-    ## [1] "Canada"
-    ## [1] "People's Republic of China"
-    ## [1] "Australia"
-    ## [1] "Switzerland"
-    ## [1] "Netherlands"
-
-``` r
-nature_country_df = nature_country_df[-1,]
-nature_country_df$label = ""
-nature_country_df$label[nature_country_df$year == 2020] = 
-    nature_country_df$country[nature_country_df$year == 2020]
-nature_country_df$corpus = "nature_last"
 ```
 
 ### Analysis 2: Identify Countries with significantly different citation and mention rates
@@ -403,69 +385,69 @@ for(curr_year in unique(top_diff_MC$year)){
 ```
 
     ##        95% 
-    ## 0.02517255 
+    ## 0.02259009 
     ##          5% 
-    ## -0.06734333 
+    ## -0.06711471 
     ##        95% 
-    ## 0.03849449 
+    ## 0.03692688 
     ##          5% 
-    ## -0.02653255 
+    ## -0.02711303 
     ##        95% 
-    ## 0.03948048 
+    ## 0.03964871 
     ##          5% 
-    ## -0.01405258 
+    ## -0.01765817 
     ##        95% 
-    ## 0.04321605 
+    ## 0.04254716 
     ##          5% 
-    ## -0.03525474 
+    ## -0.03370415 
     ##        95% 
-    ## 0.05235106 
-    ##          5% 
-    ## -0.01664048 
-    ##        95% 
-    ## 0.05517123 
+    ## 0.05228889 
     ##           5% 
-    ## -0.007772107 
-    ##        95% 
-    ## 0.05807304 
-    ##          5% 
-    ## -0.01593248 
-    ##        95% 
-    ## 0.02607111 
-    ##          5% 
-    ## -0.02075659 
-    ##        95% 
-    ## 0.02992241 
-    ##          5% 
-    ## -0.03805301 
-    ##        95% 
-    ## 0.03204665 
-    ##          5% 
-    ## -0.04743041 
-    ##        95% 
-    ## 0.01887307 
-    ##          5% 
-    ## -0.08396688 
-    ##        95% 
-    ## 0.02020136 
-    ##         5% 
-    ## -0.0746109 
-    ##        95% 
-    ## 0.02522143 
-    ##          5% 
-    ## -0.05849427 
-    ##        95% 
-    ## 0.02546184 
-    ##          5% 
-    ## -0.06304553 
-    ##        95% 
-    ## 0.01830874 
-    ##          5% 
-    ## -0.09273311 
+    ## -0.009949715 
     ##       95% 
-    ## 0.0285193 
+    ## 0.0551451 
+    ##           5% 
+    ## -0.009888312 
+    ##        95% 
+    ## 0.05571896 
     ##          5% 
-    ## -0.06531202
+    ## -0.01206763 
+    ##        95% 
+    ## 0.02721797 
+    ##          5% 
+    ## -0.02826491 
+    ##        95% 
+    ## 0.02761623 
+    ##          5% 
+    ## -0.04259051 
+    ##        95% 
+    ## 0.03404551 
+    ##          5% 
+    ## -0.04304287 
+    ##        95% 
+    ## 0.01790664 
+    ##          5% 
+    ## -0.08150624 
+    ##        95% 
+    ## 0.01985705 
+    ##          5% 
+    ## -0.07693836 
+    ##        95% 
+    ## 0.02462379 
+    ##          5% 
+    ## -0.06428023 
+    ##        95% 
+    ## 0.02743434 
+    ##          5% 
+    ## -0.06395108 
+    ##        95% 
+    ## 0.01901346 
+    ##          5% 
+    ## -0.09668138 
+    ##        95% 
+    ## 0.02826572 
+    ##          5% 
+    ## -0.07293272
 
 ``` r
 top_diff_MC_filt = top_diff_MC_filt[-1,]
@@ -480,12 +462,12 @@ head(top_diff_MC_filt)
     ## 37 2005     India                   in             5           21
     ## 42 2005     Japan                   jp            65           47
     ##    naturenews_citations naturenews_mentions         M_C
-    ## 15          0.001246106          0.03993506  0.03868896
-    ## 19          0.240498442          0.13402597 -0.10647247
-    ## 27          0.207165109          0.10324675 -0.10391836
-    ## 34          0.006542056          0.04246753  0.03592548
-    ## 37          0.014018692          0.08259740  0.06857871
-    ## 42          0.210591900          0.09876623 -0.11182567
+    ## 15          0.003107788          0.04218688  0.03907909
+    ## 19          0.246350779          0.13660416 -0.10974662
+    ## 27          0.202298442          0.10505273 -0.09724572
+    ## 34          0.006267290          0.04157740  0.03531011
+    ## 37          0.015712773          0.08260558  0.06689281
+    ## 42          0.202223676          0.09599065 -0.10623303
 
 ``` r
 # make sure there are enough articles
@@ -567,7 +549,10 @@ class_c_mentions = subset(class_c_mentions,
                           !address.country_code %in% country_overlap )
 class_m_mentions = subset(class_m_mentions, 
                           !address.country_code %in% country_overlap )
+print(country_overlap)
 ```
+
+    ## [1] "fr" "gb" "us"
 
 ### Analysis 3 part2: Get the tokens associated with C vs M
 
@@ -635,23 +620,23 @@ print(knitr::kable(head(mentions_freq,15),
     ## 
     ## Table: Overall Class Mention, top terms, count is per country frequency
     ## 
-    ## |word        | count_ca| count_cl| count_cn| count_co| count_in| count_br| count_id| count_mx| count_za| count_ph| count_ru| count_cd| median_count|
-    ## |:-----------|--------:|--------:|--------:|--------:|--------:|--------:|--------:|--------:|--------:|--------:|--------:|--------:|------------:|
-    ## |research    |     2983|      139|     1819|      197|     1374|      545|      154|      300|      754|      191|      549|       54|        422.5|
-    ## |science     |     1760|      182|     1176|      108|     1021|      508|       97|      188|      449|      145|      515|       20|        318.5|
-    ## |university  |     4039|      166|     1929|      215|      805|      476|      102|      246|      674|      113|      325|       54|        285.5|
-    ## |scientists  |     1951|       79|      969|      106|      685|      377|       93|      182|      363|       94|      406|       48|        272.5|
-    ## |time        |     2081|      217|      885|      264|      595|      285|      134|      111|      266|       75|      229|       60|        246.5|
-    ## |researchers |     2997|      121|     1316|      197|      631|      380|       69|      186|      504|      107|      266|       87|        231.5|
-    ## |data        |     1962|       86|      728|      157|      488|      327|      127|       38|      298|       79|      236|       99|        196.5|
-    ## |people      |     1888|       44|      818|      128|      495|      195|       97|      182|      407|      101|      146|      283|        188.5|
-    ## |million     |     1230|      112|      828|      153|      445|      248|       86|       59|      250|      116|      168|       37|        160.5|
-    ## |government  |      788|       37|      738|       62|      548|      240|       71|       81|      205|       59|      233|       54|        143.0|
-    ## |climate     |     1006|       19|      452|      322|      324|      235|       47|      112|      166|       79|       81|       13|        139.0|
-    ## |world       |     1050|       63|      645|      127|      387|      173|       76|      107|      164|      107|      146|       68|        136.5|
-    ## |national    |      812|       86|      645|       76|      438|      211|       63|      116|      171|       56|      132|       37|        124.0|
-    ## |energy      |      856|       78|      686|      167|      391|      161|       30|       30|       81|       21|      176|        6|        121.0|
-    ## |institute   |     1014|       56|      752|       80|      509|      154|       63|       88|      168|       80|      237|       27|        121.0|
+    ## |word        | count_ca| count_cl| count_cn| count_co| count_in| count_br| count_mx| count_za| count_ph| count_cd| median_count|
+    ## |:-----------|--------:|--------:|--------:|--------:|--------:|--------:|--------:|--------:|--------:|--------:|------------:|
+    ## |research    |     2983|      139|     1819|      197|     1374|      545|      300|      754|      191|       54|        422.5|
+    ## |university  |     4039|      166|     1929|      215|      805|      476|      246|      674|      113|       54|        361.0|
+    ## |science     |     1760|      182|     1176|      108|     1021|      508|      188|      449|      145|       20|        318.5|
+    ## |researchers |     2997|      121|     1316|      197|      631|      380|      186|      504|      107|       87|        288.5|
+    ## |scientists  |     1951|       79|      969|      106|      685|      377|      182|      363|       94|       48|        272.5|
+    ## |time        |     2081|      217|      885|      264|      595|      285|      111|      266|       75|       60|        265.0|
+    ## |people      |     1888|       44|      818|      128|      495|      195|      182|      407|      101|      283|        239.0|
+    ## |data        |     1962|       86|      728|      157|      488|      327|       38|      298|       79|       99|        227.5|
+    ## |climate     |     1006|       19|      452|      322|      324|      235|      112|      166|       79|       13|        200.5|
+    ## |million     |     1230|      112|      828|      153|      445|      248|       59|      250|      116|       37|        200.5|
+    ## |study       |     1720|       72|      543|      140|      292|      156|       80|      214|       60|       30|        148.0|
+    ## |world       |     1050|       63|      645|      127|      387|      173|      107|      164|      107|       68|        145.5|
+    ## |health      |      803|       17|      545|       47|      328|       87|       53|      233|       72|      201|        144.0|
+    ## |national    |      812|       86|      645|       76|      438|      211|      116|      171|       56|       37|        143.5|
+    ## |government  |      788|       37|      738|       62|      548|      240|       81|      205|       59|       54|        143.0|
 
 ### Analysis 3 part3: Find tokens that differentiate articles related to class C / M countries
 
@@ -691,21 +676,21 @@ print(knitr::kable(head(compare_freq,15),
     ## 
     ## |word          | median_count_citations| median_count_mentions| compare_ratio| class_c_count| class_m_count|
     ## |:-------------|----------------------:|---------------------:|-------------:|-------------:|-------------:|
-    ## |parkinsons    |                   13.0|                   0.5|          26.0|           186|           106|
+    ## |ips           |                   20.0|                   0.5|          40.0|           561|           117|
+    ## |entanglement  |                   15.0|                   0.5|          30.0|           137|           103|
+    ## |graphene      |                   14.0|                   0.5|          28.0|           226|           103|
     ## |classical     |                   25.0|                   1.0|          25.0|           228|           126|
     ## |epigenetic    |                   12.5|                   0.5|          25.0|           144|            56|
-    ## |mitochondrial |                   12.0|                   0.5|          24.0|           267|           114|
+    ## |es            |                   12.0|                   0.5|          24.0|           173|            52|
+    ## |mitochondrial |                   12.0|                   0.5|          24.0|           267|           113|
     ## |yeast         |                   22.5|                   1.0|          22.5|           252|           128|
-    ## |amino         |                   10.0|                   0.5|          20.0|           123|            73|
-    ## |autism        |                    9.5|                   0.5|          19.0|           206|           175|
-    ## |cas9          |                   19.0|                   1.0|          19.0|           228|           113|
-    ## |transplant    |                    9.0|                   0.5|          18.0|           132|            68|
-    ## |algorithm     |                    8.5|                   0.5|          17.0|           129|           100|
-    ## |cognitive     |                   25.5|                   1.5|          17.0|           260|           135|
-    ## |everyday      |                    8.5|                   0.5|          17.0|            65|            34|
-    ## |higgs         |                    8.5|                   0.5|          17.0|           161|            45|
-    ## |nucleus       |                   17.0|                   1.0|          17.0|           215|            80|
-    ## |polymer       |                    8.5|                   0.5|          17.0|           119|            49|
+    ## |cultured      |                   10.5|                   0.5|          21.0|            89|            51|
+    ## |amino         |                   10.0|                   0.5|          20.0|           123|            71|
+    ## |autism        |                    9.5|                   0.5|          19.0|           206|           117|
+    ## |cas9          |                   19.0|                   1.0|          19.0|           228|           109|
+    ## |pigs          |                   19.0|                   1.0|          19.0|           165|           130|
+    ## |tubes         |                    9.0|                   0.5|          18.0|           125|            63|
+    ## |higgs         |                    8.5|                   0.5|          17.0|           161|            44|
 
 ``` r
 compare_freq = compare_freq[order(compare_freq$compare_ratio, decreasing=F),]
@@ -717,23 +702,23 @@ print(knitr::kable(head(compare_freq,15),
     ## 
     ## Table: Overall Class Mention, top terms
     ## 
-    ## |word          | median_count_citations| median_count_mentions| compare_ratio| class_c_count| class_m_count|
-    ## |:-------------|----------------------:|---------------------:|-------------:|-------------:|-------------:|
-    ## |dams          |                    1.5|                   7.5|     0.2000000|            70|           124|
-    ## |pesticide     |                    0.5|                   2.5|     0.2000000|            20|            69|
-    ## |rainforest    |                    0.5|                   2.5|     0.2000000|            31|           112|
-    ## |plantations   |                    1.5|                   7.0|     0.2142857|            62|            75|
-    ## |deforestation |                    2.5|                  10.5|     0.2380952|           122|           323|
-    ## |ut            |                   10.5|                  44.0|     0.2386364|           175|           177|
-    ## |forestry      |                    1.0|                   4.0|     0.2500000|            47|           111|
-    ## |monsoon       |                    0.5|                   2.0|     0.2500000|            24|            86|
-    ## |tectonic      |                    0.5|                   2.0|     0.2500000|            66|            54|
-    ## |drought       |                    5.5|                  20.0|     0.2750000|           102|           211|
-    ## |lava          |                    1.0|                   3.5|     0.2857143|            60|            41|
-    ## |officers      |                    1.0|                   3.5|     0.2857143|            58|            48|
-    ## |corn          |                    2.5|                   8.5|     0.2941176|            50|            87|
-    ## |eruptions     |                    2.5|                   8.5|     0.2941176|            92|            80|
-    ## |governance    |                    1.5|                   5.0|     0.3000000|            54|            63|
+    ## |word        | median_count_citations| median_count_mentions| compare_ratio| class_c_count| class_m_count|
+    ## |:-----------|----------------------:|---------------------:|-------------:|-------------:|-------------:|
+    ## |br          |                    0.5|                   6.5|     0.0769231|            24|            54|
+    ## |pesticide   |                    0.5|                   5.5|     0.0909091|            20|            69|
+    ## |bt          |                    0.5|                   3.0|     0.1666667|            52|           109|
+    ## |herd        |                    0.5|                   3.0|     0.1666667|            20|            35|
+    ## |spores      |                    0.5|                   3.0|     0.1666667|            19|            33|
+    ## |dams        |                    1.5|                   8.5|     0.1764706|            70|           124|
+    ## |indigenous  |                    2.5|                  12.5|     0.2000000|           137|           147|
+    ## |rainforest  |                    0.5|                   2.5|     0.2000000|            31|           109|
+    ## |tectonic    |                    0.5|                   2.5|     0.2000000|            66|            52|
+    ## |plantations |                    1.5|                   7.0|     0.2142857|            62|            51|
+    ## |epa         |                    1.0|                   4.5|     0.2222222|            43|            84|
+    ## |ethiopia    |                    1.0|                   4.5|     0.2222222|            37|            51|
+    ## |sierra      |                    1.0|                   4.5|     0.2222222|            35|            47|
+    ## |drought     |                    5.5|                  24.5|     0.2244898|           102|           210|
+    ## |paulo       |                    1.5|                   6.5|     0.2307692|            27|           156|
 
 ``` r
 # now take the top and bottom
@@ -934,22 +919,32 @@ ggsave(file.path(proj_dir, "/figure_notebooks/tmp_files/fig4_tmp/word_count_clas
 ``` r
 plot_overview = image_read_pdf(file.path(proj_dir,
                                   "/figure_notebooks/illustrator_pdfs/nature_news_mention_citation_schematic.pdf"))
+plot_overview = image_annotate(plot_overview, "a", size = 20)
 
 citation_overview_gg = image_read_pdf(file.path(proj_dir,
                                   "/figure_notebooks/tmp_files/fig4_tmp/citation_full_gg.pdf"))
+citation_overview_gg = image_annotate(citation_overview_gg, "b", size = 40)
+
 citation_nature_indiv_sub_gg = image_read_pdf(file.path(proj_dir,
                                   "/figure_notebooks/tmp_files/fig4_tmp/citation_indiv_3_gg.pdf"))
+citation_nature_indiv_sub_gg = image_extent(citation_nature_indiv_sub_gg, '2150x1500', color = 'white', gravity = "northeast")
+citation_nature_indiv_sub_gg = image_annotate(citation_nature_indiv_sub_gg, "c", size = 40)
 
 
 heatmap_gg = image_read_pdf(file.path(proj_dir,
                                   "/figure_notebooks/tmp_files/fig4_tmp/full_heatmap.pdf"))
+heatmap_gg = image_extent(heatmap_gg, '3100x1500', color = 'white', gravity = "northeast")
+heatmap_gg = image_annotate(heatmap_gg, "d", size = 40)
+
 word_ratio_gg = image_read_pdf(file.path(proj_dir,
                                   "/figure_notebooks/tmp_files/fig4_tmp/word_ratio_gg.pdf"))
+word_ratio_gg = image_annotate(word_ratio_gg, "e", size = 40)
+
 #heatmap_gg = image_scale(heatmap_gg, 750)
 #word_ratio_gg = image_scale(word_ratio_gg, 250)
 
 middle_image <- image_append(image_scale(c(citation_overview_gg, citation_nature_indiv_sub_gg),1000), stack = FALSE)
-bottom_image <- image_append(image_scale(c(heatmap_gg, word_ratio_gg), "x500"), stack = FALSE)
+bottom_image <- image_append(image_scale(c(heatmap_gg, word_ratio_gg), "x1000"), stack = FALSE)
 full_image <- image_append(image_scale(c(plot_overview, middle_image, bottom_image), 1000), stack = TRUE)
 
 print(full_image)
@@ -958,28 +953,42 @@ print(full_image)
     ## # A tibble: 1 x 7
     ##   format width height colorspace matte filesize density
     ##   <chr>  <int>  <int> <chr>      <lgl>    <int> <chr>  
-    ## 1 PNG     1000    998 sRGB       TRUE         0 300x300
+    ## 1 PNG     1000    991 sRGB       TRUE         0 300x300
 
 <img src="figure4_files/figure-markdown_github/make_fig4-1.png" width="1000" />
 
 ``` r
 outfile = file.path(proj_dir,"/figure_notebooks/tmp_files/fig4_tmp/fig4_main.pdf")
 image_write(full_image, format = "pdf", outfile)
+outfile = file.path(proj_dir,"/figure_notebooks/tmp_files/fig4_tmp/fig4_main.png")
+image_write(full_image, format = "png", outfile)
 ```
 
 ### format supp. figure
 
 ``` r
+citation_indiv_10_springer_gg = image_read_pdf(file.path(proj_dir,
+                                  "/figure_notebooks/tmp_files/fig4_tmp/citation_indiv_10_springer_gg.pdf"))
+citation_indiv_10_springer_gg = image_annotate(citation_indiv_10_springer_gg, "a", size = 20)
+
 c_vs_m_filter_gg = image_read_pdf(file.path(proj_dir,
                                   "/figure_notebooks/tmp_files/fig4_tmp/c_vs_m_filter_gg.pdf"))
+c_vs_m_filter_gg = image_annotate(c_vs_m_filter_gg, "b", size = 30)
+
 word_count_class_c_gg = image_read_pdf(file.path(proj_dir,
                                   "/figure_notebooks/tmp_files/fig4_tmp/word_count_class_c_gg.pdf"))
+word_count_class_c_gg = image_annotate(word_count_class_c_gg, "c", size = 30)
+
 word_count_class_m_gg = image_read_pdf(file.path(proj_dir,
                                   "/figure_notebooks/tmp_files/fig4_tmp/word_count_class_m_gg.pdf"))
+word_count_class_m_gg = image_annotate(word_count_class_m_gg, "d", size = 30)
 
 
-bottom_image <- image_append(image_scale(c(word_count_class_c_gg, word_count_class_m_gg), "x500"), stack = FALSE)
-full_image <- image_append(image_scale(c(c_vs_m_filter_gg, bottom_image), 1000), stack = TRUE)
+
+bottom_image <- image_append(image_scale(c(word_count_class_c_gg, word_count_class_m_gg), "x1500"), stack = FALSE)
+full_image <- image_append(image_scale(c(citation_indiv_10_springer_gg, 
+                                         c_vs_m_filter_gg, 
+                                         bottom_image), 3000), stack = TRUE)
 
 print(full_image)
 ```
@@ -987,11 +996,15 @@ print(full_image)
     ## # A tibble: 1 x 7
     ##   format width height colorspace matte filesize density
     ##   <chr>  <int>  <int> <chr>      <lgl>    <int> <chr>  
-    ## 1 PNG     1000   1000 sRGB       TRUE         0 300x300
+    ## 1 PNG     3000   5143 sRGB       TRUE         0 300x300
 
-<img src="figure4_files/figure-markdown_github/make_supp_fig-1.png" width="1000" />
+<img src="figure4_files/figure-markdown_github/make_supp_fig-1.png" width="3000" />
 
 ``` r
 outfile = file.path(proj_dir,"/figure_notebooks/tmp_files/fig4_tmp/fig4_supp.pdf")
 image_write(full_image, format = "pdf", outfile)
+
+
+outfile = file.path(proj_dir,"/figure_notebooks/tmp_files/fig4_tmp/fig4_supp.png")
+image_write(full_image, format = "png", outfile)
 ```

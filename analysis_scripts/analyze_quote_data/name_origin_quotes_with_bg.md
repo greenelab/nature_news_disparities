@@ -25,34 +25,6 @@ Read in the name data.
 # get the project directory, everything is set relative to this
 proj_dir = here()
 
-#' public method that reads in the name origine prediction 
-#' files and formats it into a dataframe
-#' 
-#' @param name_pred_file, prediction results from Wiki2019-LSTM
-#' @param name_info_file, file used as input to Wiki2019-LSTM
-#' @return dataframe of name origin predictions with annotation info
-read_name_origin <- function(name_pred_file, name_info_file){
-        
-    # read in the name data
-    name_pred_df = data.frame(fread(name_pred_file))
-    name_info_df = data.frame(fread(name_info_file))
-    
-    # format the prediction table
-    colnames(name_pred_df)[1] = "author"
-    name_origin_vec = colnames(name_pred_df)[2:ncol(name_pred_df)]
-    name_origin = apply(name_pred_df[,2:ncol(name_pred_df)], 1, 
-                        function(x) name_origin_vec[which(x == max(x))])
-    name_pred_df$name_origin = name_origin
-    
-    name_df = merge(name_info_df, name_pred_df[,c("author", "name_origin")])
-    
-    # remove any names that may have got through that are not real names
-    name_df = name_df[grep("collab|group", tolower(name_df$author), invert=T), ]
-    name_df = unique(name_df)
-    
-    
-    return(name_df)
-}
 
 # first read in the quote data
 name_pred_file = file.path(proj_dir, 

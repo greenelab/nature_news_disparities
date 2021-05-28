@@ -1,6 +1,6 @@
 file_id	text	ner	address.country_code
 4641259a.html	connecticut	STATE_OR_PROVINCE	us
-4641259a.html	ms	STATE_OR_PROVINCE	us
+4641259a.html	ms	STATE_OR_PROVINCE	NONE
 4641259a.html	national center for genome resources in santa fe	ORGANIZATION	us
 4641259a.html	new mexico	STATE_OR_PROVINCE	us
 4641259a.html	university of california	ORGANIZATION	us
@@ -9,7 +9,7 @@ file_id	text	ner	address.country_code
 464472b.html	american geophysical union	ORGANIZATION	us
 464472b.html	antarctic survey	ORGANIZATION	gb
 464472b.html	canada	COUNTRY	ca
-464472b.html	columbia university's lamont-doherty earth observatory	ORGANIZATION	NONE
+464472b.html	columbia university's lamont-doherty earth observatory	ORGANIZATION	us
 464472b.html	goddard space flight center	ORGANIZATION	us
 464472b.html	maryland	STATE_OR_PROVINCE	us
 464472b.html	nasa	ORGANIZATION	us
@@ -40,11 +40,11 @@ bat-drinks-using-tongue-pump-trick-1.18434	university of ulm	ORGANIZATION	de
 climatologists-to-physicists-your-planet-needs-you-1.17270	american institute of physics in college park	ORGANIZATION	us
 climatologists-to-physicists-your-planet-needs-you-1.17270	australia	COUNTRY	au
 climatologists-to-physicists-your-planet-needs-you-1.17270	belgium	COUNTRY	be
-climatologists-to-physicists-your-planet-needs-you-1.17270	catholic university of leuven	ORGANIZATION	NONE
+climatologists-to-physicists-your-planet-needs-you-1.17270	catholic university of leuven	ORGANIZATION	be
 climatologists-to-physicists-your-planet-needs-you-1.17270	germany	COUNTRY	de
 climatologists-to-physicists-your-planet-needs-you-1.17270	laboratory of dynamic meteorology	ORGANIZATION	NONE
 climatologists-to-physicists-your-planet-needs-you-1.17270	maryland	STATE_OR_PROVINCE	us
-climatologists-to-physicists-your-planet-needs-you-1.17270	max planck institute for meteorology	ORGANIZATION	NONE
+climatologists-to-physicists-your-planet-needs-you-1.17270	max planck institute for meteorology	ORGANIZATION	de
 climatologists-to-physicists-your-planet-needs-you-1.17270	monash university	ORGANIZATION	au
 climatologists-to-physicists-your-planet-needs-you-1.17270	nature geoscience	ORGANIZATION	NONE
 climatologists-to-physicists-your-planet-needs-you-1.17270	uk	COUNTRY	gb
@@ -178,7 +178,7 @@ d41586-020-02821-4	rutgers university	ORGANIZATION	us
 d41586-020-02821-4	uk	COUNTRY	gb
 d41586-020-02821-4	uk medicines and healthcare regulatory agency	ORGANIZATION	NONE
 d41586-020-02821-4	united kingdom	COUNTRY	gb
-d41586-020-02821-4	university of maryland school of medicine	ORGANIZATION	NONE
+d41586-020-02821-4	university of maryland school of medicine	ORGANIZATION	us
 d41586-020-02821-4	us national institute of allergy	ORGANIZATION	us
 d41586-020-02835-y	australia	COUNTRY	au
 d41586-020-02835-y	australian academy of science	ORGANIZATION	au
@@ -187,7 +187,7 @@ d41586-020-02835-y	australian national university	ORGANIZATION	au
 d41586-020-02835-y	australian nuclear science and technology organisation	ORGANIZATION	NONE
 d41586-020-02835-y	australian renewable energy agency	ORGANIZATION	NONE
 d41586-020-02835-y	australian research council	ORGANIZATION	au
-d41586-020-02835-y	ccs	ORGANIZATION	ve
+d41586-020-02835-y	ccs	ORGANIZATION	NONE
 d41586-020-02835-y	commonwealth scientific and industrial research organisation	ORGANIZATION	au
 d41586-020-02835-y	csiro	ORGANIZATION	au
 d41586-020-02835-y	group of eight	ORGANIZATION	NONE
@@ -208,7 +208,7 @@ d41586-020-03495-8	george mason university	ORGANIZATION	us
 d41586-020-03495-8	harris county public health	ORGANIZATION	us
 d41586-020-03495-8	harvard medical school	ORGANIZATION	us
 d41586-020-03495-8	harvard t.h. chan school of public health	ORGANIZATION	NONE
-d41586-020-03495-8	joint united nations programme	ORGANIZATION	NONE
+d41586-020-03495-8	joint united nations programme	ORGANIZATION	MULTI
 d41586-020-03495-8	massachusetts	STATE_OR_PROVINCE	us
 d41586-020-03495-8	massachusetts general hospital	ORGANIZATION	us
 d41586-020-03495-8	national institutes of health	ORGANIZATION	us
@@ -223,7 +223,7 @@ d41586-020-03495-8	world health organization	ORGANIZATION	MULTI
 d41586-020-03495-8	yale school of medicine	ORGANIZATION	NONE
 ebola-experience-leaves-world-no-less-vulnerable-1.18844	australia	COUNTRY	au
 ebola-experience-leaves-world-no-less-vulnerable-1.18844	harvard university	ORGANIZATION	us
-ebola-experience-leaves-world-no-less-vulnerable-1.18844	lancet	ORGANIZATION	pl
+ebola-experience-leaves-world-no-less-vulnerable-1.18844	lancet	ORGANIZATION	NONE
 ebola-experience-leaves-world-no-less-vulnerable-1.18844	liberia	COUNTRY	lr
 ebola-experience-leaves-world-no-less-vulnerable-1.18844	london school of hygiene and tropical medicine	ORGANIZATION	gb
 ebola-experience-leaves-world-no-less-vulnerable-1.18844	united nations	ORGANIZATION	MULTI
@@ -282,7 +282,7 @@ news.2010.404.html	max planck institute for chemistry	ORGANIZATION	de
 news.2010.404.html	russia	COUNTRY	ru
 news.2010.404.html	russian federation	COUNTRY	ru
 news.2010.404.html	uk	COUNTRY	gb
-news.2010.404.html	university of freiburg	ORGANIZATION	NONE
+news.2010.404.html	university of freiburg	ORGANIZATION	de
 news.2010.404.html	university of portsmouth	ORGANIZATION	gb
 news.2010.585.html	america	COUNTRY	NONE
 news.2010.585.html	arizona	STATE_OR_PROVINCE	us
@@ -364,7 +364,7 @@ us-precision-medicine-proposal-sparks-questions-1.16774	white house	ORGANIZATION
 us-science-academies-take-on-human-genome-editing-1.17581	california	STATE_OR_PROVINCE	us
 us-science-academies-take-on-human-genome-editing-1.17581	center for genetics and society	ORGANIZATION	NONE
 us-science-academies-take-on-human-genome-editing-1.17581	nam	ORGANIZATION	ao
-us-science-academies-take-on-human-genome-editing-1.17581	nas	ORGANIZATION	bs
+us-science-academies-take-on-human-genome-editing-1.17581	nas	ORGANIZATION	NONE
 us-science-academies-take-on-human-genome-editing-1.17581	national academy of medicine	ORGANIZATION	us
 us-science-academies-take-on-human-genome-editing-1.17581	stanford university	ORGANIZATION	us
 us-science-academies-take-on-human-genome-editing-1.17581	united states	COUNTRY	us

@@ -118,15 +118,15 @@ head(springer_df)
     ## 1          (aegis      doi:10.1007/s10751-019-1553-3 2019       last       <NA>
     ## 2 [authorinst]the doi:10.1140/epjc/s10052-016-4346-8 2016       last       <NA>
     ## 3            a-mf         doi:10.1038/sj.onc.1210387 2007      first       <NA>
-    ## 4          aaltje        doi:10.1186/1471-2318-12-19 2012       last       MALE
-    ## 5           aalya     doi:10.1186/1753-6561-6-S5-O16 2012      first       MALE
+    ## 4          aaltje        doi:10.1186/1471-2318-12-19 2012       last     FEMALE
+    ## 5           aalya     doi:10.1186/1753-6561-6-S5-O16 2012      first     FEMALE
     ## 6             aam          doi:10.1186/1479-0556-4-1 2006      first       MALE
     ##   gender
     ## 1   <NA>
     ## 2   <NA>
     ## 3   <NA>
-    ## 4   MALE
-    ## 5   MALE
+    ## 4 FEMALE
+    ## 5 FEMALE
     ## 6   MALE
 
 ``` r

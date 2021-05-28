@@ -149,116 +149,77 @@ get_subboot <- function(origin_id, curr_corpus, in_df, bootstrap_col_id="doi"){
 
 }
 
-# get the bootstrapped CI for each source data type
-citation_origin_df = NA
-for(curr_origin in unique(name_df$name_origin)){
-    print(curr_origin)
-    res = get_subboot(curr_origin, 
-                      curr_corpus="citation",
-                      name_df)
-    citation_origin_df = rbind(citation_origin_df, res)
+if(RERUN_BOOTSTRAP){
+    
+    # get the bootstrapped CI for each source data type
+    citation_origin_df = NA
+    for(curr_origin in unique(name_df$name_origin)){
+        print(curr_origin)
+        res = get_subboot(curr_origin, 
+                          curr_corpus="citation",
+                          name_df)
+        citation_origin_df = rbind(citation_origin_df, res)
+    }
+    citation_origin_df = citation_origin_df[-1,]
+    
+    quote_origin_df = NA
+    for(curr_origin in unique(name_df$name_origin)){
+        print(curr_origin)
+        res = get_subboot(curr_origin, 
+                          curr_corpus="quote",
+                          name_df)
+        quote_origin_df = rbind(quote_origin_df, res)
+    }
+    quote_origin_df = quote_origin_df[-1,]
+    
+    
+    springer_origin_df = NA
+    for(curr_origin in unique(name_df$name_origin)){
+        print(curr_origin)
+        res = get_subboot(curr_origin, 
+                          curr_corpus="springer_last",
+                          name_df)
+        springer_origin_df = rbind(springer_origin_df, res)
+    }
+    springer_origin_df = springer_origin_df[-1,]
+    
+    nature_origin_df = NA
+    for(curr_origin in unique(name_df$name_origin)){
+        print(curr_origin)
+        res = get_subboot(curr_origin, 
+                          curr_corpus="nature_last",
+                          name_df)
+        nature_origin_df = rbind(nature_origin_df, res)
+    }
+    nature_origin_df = nature_origin_df[-1,]
+    
+    
+    # re-add corpus column for easy reference later
+    citation_origin_df$corpus = "citation"
+    quote_origin_df$corpus = "quote"
+    springer_origin_df$corpus = "springer_last"
+    nature_origin_df$corpus = "nature_last"
+    
+    all_bootstrap_df = Reduce(rbind, list(quote_origin_df,
+                                       citation_origin_df,
+                                       nature_origin_df,
+                                       springer_origin_df))
+    all_bootstrap_df$corpus = factor(all_bootstrap_df$corpus, levels = QUOTE_ANALYSIS_ORDER)
+    
+    outfile = file.path(proj_dir,"/figure_notebooks/tmp_files/fig3_tmp/all_bootstrap_df.tsv")
+    write.table(all_bootstrap_df, outfile, sep="\t", quote=F, row.names=F)
+}else{
+    
+    all_bootstrap_file = file.path(proj_dir,
+                                      "/figure_notebooks/tmp_files/fig3_tmp/all_bootstrap_df.tsv")
+    all_bootstrap_df = data.frame(fread(all_bootstrap_file))
+    
+    citation_origin_df = subset(all_bootstrap_df, corpus == "citation")
+    quote_origin_df = subset(all_bootstrap_df, corpus == "quote")
+    springer_origin_df = subset(all_bootstrap_df, corpus == "springer_last")
+    nature_origin_df = subset(all_bootstrap_df, corpus == "nature_last")
+    
 }
-```
-
-    ## [1] "EastAsian"
-    ## [1] "SouthAsian"
-    ## [1] "European"
-    ## [1] "CelticEnglish"
-    ## [1] "ArabTurkPers"
-    ## [1] "Hispanic"
-    ## [1] "Jewish"
-    ## [1] "Greek"
-    ## [1] "Nordic"
-    ## [1] "African"
-
-``` r
-citation_origin_df = citation_origin_df[-1,]
-
-quote_origin_df = NA
-for(curr_origin in unique(name_df$name_origin)){
-    print(curr_origin)
-    res = get_subboot(curr_origin, 
-                      curr_corpus="quote",
-                      name_df)
-    quote_origin_df = rbind(quote_origin_df, res)
-}
-```
-
-    ## [1] "EastAsian"
-    ## [1] "SouthAsian"
-    ## [1] "European"
-    ## [1] "CelticEnglish"
-    ## [1] "ArabTurkPers"
-    ## [1] "Hispanic"
-    ## [1] "Jewish"
-    ## [1] "Greek"
-    ## [1] "Nordic"
-    ## [1] "African"
-
-``` r
-quote_origin_df = quote_origin_df[-1,]
-
-
-springer_origin_df = NA
-for(curr_origin in unique(name_df$name_origin)){
-    print(curr_origin)
-    res = get_subboot(curr_origin, 
-                      curr_corpus="springer_last",
-                      name_df)
-    springer_origin_df = rbind(springer_origin_df, res)
-}
-```
-
-    ## [1] "EastAsian"
-    ## [1] "SouthAsian"
-    ## [1] "European"
-    ## [1] "CelticEnglish"
-    ## [1] "ArabTurkPers"
-    ## [1] "Hispanic"
-    ## [1] "Jewish"
-    ## [1] "Greek"
-    ## [1] "Nordic"
-    ## [1] "African"
-
-``` r
-springer_origin_df = springer_origin_df[-1,]
-
-nature_origin_df = NA
-for(curr_origin in unique(name_df$name_origin)){
-    print(curr_origin)
-    res = get_subboot(curr_origin, 
-                      curr_corpus="nature_last",
-                      name_df)
-    nature_origin_df = rbind(nature_origin_df, res)
-}
-```
-
-    ## [1] "EastAsian"
-    ## [1] "SouthAsian"
-    ## [1] "European"
-    ## [1] "CelticEnglish"
-    ## [1] "ArabTurkPers"
-    ## [1] "Hispanic"
-    ## [1] "Jewish"
-    ## [1] "Greek"
-    ## [1] "Nordic"
-    ## [1] "African"
-
-``` r
-nature_origin_df = nature_origin_df[-1,]
-
-
-# re-add corpus column for easy reference later
-citation_origin_df$corpus = "citation"
-quote_origin_df$corpus = "quote"
-springer_origin_df$corpus = "springer_last"
-nature_origin_df$corpus = "nature_last"
-
-all_bootstrap_df = Reduce(rbind, list(quote_origin_df,
-                                   citation_origin_df,
-                                   nature_origin_df,
-                                   springer_origin_df))
-all_bootstrap_df$corpus = factor(all_bootstrap_df$corpus, levels = QUOTE_ANALYSIS_ORDER)
 ```
 
 ## Make the Figures
@@ -427,22 +388,29 @@ ggsave(file.path(proj_dir, "/figure_notebooks/tmp_files/fig3_tmp/quote_nature_in
 ``` r
 plot_overview = image_read_pdf(file.path(proj_dir,
                                   "/figure_notebooks/illustrator_pdfs/nature_news_name_origin_schematic.pdf"))
+plot_overview = image_annotate(plot_overview, "a", size = 20)
 
 citation_overview_gg = image_read_pdf(file.path(proj_dir,
                                   "/figure_notebooks/tmp_files/fig3_tmp/citation_overview_gg.pdf"))
+citation_overview_gg = image_annotate(citation_overview_gg, "d", size = 30)
+
 citation_nature_indiv_sub_gg = image_read_pdf(file.path(proj_dir,
                                   "/figure_notebooks/tmp_files/fig3_tmp/citation_nature_indiv_sub_gg.pdf"))
+citation_nature_indiv_sub_gg = image_annotate(citation_nature_indiv_sub_gg, "e", size = 30)
 
 
 quote_overview_gg = image_read_pdf(file.path(proj_dir,
                                   "/figure_notebooks/tmp_files/fig3_tmp/quote_overview_gg.pdf"))
+quote_overview_gg = image_annotate(quote_overview_gg, "b", size = 30)
+
 quote_nature_indiv_sub_gg = image_read_pdf(file.path(proj_dir,
                                   "/figure_notebooks/tmp_files/fig3_tmp/quote_nature_indiv_sub_gg.pdf"))
+quote_nature_indiv_sub_gg = image_annotate(quote_nature_indiv_sub_gg, "c", size = 30)
 
 
-middle_image <- image_append(image_scale(c(quote_overview_gg, quote_nature_indiv_sub_gg),1000), stack = FALSE)
-bottom_image <- image_append(image_scale(c(citation_overview_gg, citation_nature_indiv_sub_gg),1000), stack = FALSE)
-full_image <- image_append(image_scale(c(plot_overview, middle_image, bottom_image), 1000), stack = TRUE)
+middle_image <- image_append(image_scale(c(quote_overview_gg, quote_nature_indiv_sub_gg),3000), stack = FALSE)
+bottom_image <- image_append(image_scale(c(citation_overview_gg, citation_nature_indiv_sub_gg),3000), stack = FALSE)
+full_image <- image_append(image_scale(c(plot_overview, middle_image, bottom_image), 3000), stack = TRUE)
 
 print(full_image)
 ```
@@ -450,13 +418,16 @@ print(full_image)
     ## # A tibble: 1 x 7
     ##   format width height colorspace matte filesize density
     ##   <chr>  <int>  <int> <chr>      <lgl>    <int> <chr>  
-    ## 1 PNG     1000   1046 sRGB       TRUE         0 300x300
+    ## 1 PNG     3000   3140 sRGB       TRUE         0 300x300
 
-<img src="figure3_files/figure-markdown_github/make_fig1-1.png" width="1000" />
+<img src="figure3_files/figure-markdown_github/make_fig1-1.png" width="3000" />
 
 ``` r
 outfile = file.path(proj_dir,"/figure_notebooks/tmp_files/fig3_tmp/fig3_main.pdf")
 image_write(full_image, format = "pdf", outfile)
+
+outfile = file.path(proj_dir,"/figure_notebooks/tmp_files/fig3_tmp/fig3_main.png")
+image_write(full_image, format = "png", outfile)
 ```
 
 ### format supp. figure
@@ -464,25 +435,33 @@ image_write(full_image, format = "pdf", outfile)
 ``` r
 tot_art_gg = image_read_pdf(file.path(proj_dir,
                                   "/figure_notebooks/tmp_files/fig3_tmp/tot_art_gg.pdf"))
+tot_art_gg = image_annotate(tot_art_gg, "a", size = 20)
 
 citation_nature_indiv_full_gg = image_read_pdf(file.path(proj_dir,
                                   "/figure_notebooks/tmp_files/fig3_tmp/citation_nature_indiv_full_gg.pdf"))
+citation_nature_indiv_full_gg = image_annotate(citation_nature_indiv_full_gg, "b", size = 30)
+
 citation_springer_indiv_full_gg = image_read_pdf(file.path(proj_dir,
                                   "/figure_notebooks/tmp_files/fig3_tmp/citation_springer_indiv_full_gg.pdf"))
+citation_springer_indiv_full_gg = image_annotate(citation_springer_indiv_full_gg, "c", size = 30)
+
 quote_nature_indiv_full_gg = image_read_pdf(file.path(proj_dir,
                                   "/figure_notebooks/tmp_files/fig3_tmp/quote_nature_indiv_full_gg.pdf"))
+quote_nature_indiv_full_gg = image_annotate(quote_nature_indiv_full_gg, "d", size = 30)
+
 quote_springer_indiv_full_gg = image_read_pdf(file.path(proj_dir,
                                   "/figure_notebooks/tmp_files/fig3_tmp/quote_springer_indiv_full_gg.pdf"))
+quote_springer_indiv_full_gg = image_annotate(quote_springer_indiv_full_gg, "e", size = 30)
 
 springer_left = image_append(image_scale(c(citation_nature_indiv_full_gg, 
-                                         quote_nature_indiv_full_gg), 1000), 
+                                         quote_nature_indiv_full_gg), 3000), 
                            stack = TRUE)
 nature_right = image_append(image_scale(c(citation_springer_indiv_full_gg, 
-                                         quote_springer_indiv_full_gg), 1000), 
+                                         quote_springer_indiv_full_gg), 3000), 
                            stack = TRUE)
 bottom_panel = image_append(c(springer_left, nature_right), stack = FALSE)
 
-full_image <- image_append(c(image_scale(tot_art_gg, 500),  image_scale(bottom_panel, 1000)), 
+full_image <- image_append(c(image_scale(tot_art_gg, 1500),  image_scale(bottom_panel, 3000)), 
                            stack = TRUE)
 print(full_image)
 ```
@@ -490,11 +469,13 @@ print(full_image)
     ## # A tibble: 1 x 7
     ##   format width height colorspace matte filesize density
     ##   <chr>  <int>  <int> <chr>      <lgl>    <int> <chr>  
-    ## 1 PNG     1000   1214 sRGB       TRUE         0 300x300
+    ## 1 PNG     3000   3643 sRGB       TRUE         0 300x300
 
-<img src="figure3_files/figure-markdown_github/make_supp_fig-1.png" width="1000" />
+<img src="figure3_files/figure-markdown_github/make_supp_fig-1.png" width="3000" />
 
 ``` r
 outfile = file.path(proj_dir,"/figure_notebooks/tmp_files/fig3_tmp/fig3_supp.pdf")
 image_write(full_image, format = "pdf", outfile)
+outfile = file.path(proj_dir,"/figure_notebooks/tmp_files/fig3_tmp/fig3_supp.png")
+image_write(full_image, format = "png", outfile)
 ```

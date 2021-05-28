@@ -101,15 +101,15 @@ head(springer_author_df)
     ## 1          (aegis      doi:10.1007/s10751-019-1553-3 2019       last       <NA>
     ## 2 [authorinst]the doi:10.1140/epjc/s10052-016-4346-8 2016       last       <NA>
     ## 3            a-mf         doi:10.1038/sj.onc.1210387 2007      first       <NA>
-    ## 4          aaltje        doi:10.1186/1471-2318-12-19 2012       last       MALE
-    ## 5           aalya     doi:10.1186/1753-6561-6-S5-O16 2012      first       MALE
+    ## 4          aaltje        doi:10.1186/1471-2318-12-19 2012       last     FEMALE
+    ## 5           aalya     doi:10.1186/1753-6561-6-S5-O16 2012      first     FEMALE
     ## 6             aam          doi:10.1186/1479-0556-4-1 2006      first       MALE
     ##   gender
     ## 1   <NA>
     ## 2   <NA>
     ## 3   <NA>
-    ## 4   MALE
-    ## 5   MALE
+    ## 4 FEMALE
+    ## 5 FEMALE
     ## 6   MALE
 
 ``` r
@@ -224,79 +224,95 @@ quote_author_df = unique(quote_author_df)
 ### Get bootstrap estimates
 
 ``` r
-#### Quote data
-quote_prop_df = compute_bootstrap_gender(full_quote_df, 
-                                           year_col_id = "year", 
-                                           article_col_id = "quote",
-                                           conf_int=0.95)
-quote_prop_df$corpus = "quote"
-
-#### Quote data broken down by article type
-get_subboot <- function(type_id, type_names, in_df){
-    bootstrap_res = compute_bootstrap_gender(subset(in_df, type %in% type_id), 
-                                           year_col_id = "year", 
-                                           article_col_id = "quote",
-                                           conf_int=0.95)
-    bootstrap_res$corpus = type_names
-    return(bootstrap_res)
-
-}
-
-type_df = NA
-for(curr_type in unique(full_quote_df$type)){
-    res = get_subboot(curr_type, curr_type, full_quote_df)
-    type_df = rbind(type_df, res)
-}
-type_df = type_df[-1,]
-
-#### Quote data broken down by article type career vs non-career
-career_df = NA
-non_career = setdiff(unique(full_quote_df$type), c("career-column", "career-feature"))
-career_type = list("career-column", "career-feature", non_career)
-career_name = c("career-column", "career-feature", "non_career")
-for(curr_type_idx in 1:length(career_type)){
-    curr_type = unlist(career_type[curr_type_idx])
-    curr_name = career_name[curr_type_idx]
-    res = get_subboot(curr_type, 
-                      curr_name,
-                      full_quote_df)
-    career_df = rbind(career_df, res)
-}
-career_df = career_df[-1,]
-
-
-
-#### Background data
-springer_first_prop_df = compute_bootstrap_gender(subset(springer_author_df, author_pos == "first"), 
-                                           year_col_id = "year", 
-                                           article_col_id = "doi",
-                                           conf_int=0.95)
-springer_last_prop_df = compute_bootstrap_gender(subset(springer_author_df, author_pos == "last"), 
-                                           year_col_id = "year", 
-                                           article_col_id = "doi",
-                                           conf_int=0.95)
-nature_first_prop_df = compute_bootstrap_gender(subset(nature_author_df, author_pos == "first"), 
-                                           year_col_id = "year", 
-                                           article_col_id = "doi",
-                                           conf_int=0.95)
-nature_last_prop_df = compute_bootstrap_gender(subset(nature_author_df, author_pos == "last"), 
-                                           year_col_id = "year", 
-                                           article_col_id = "doi",
-                                           conf_int=0.95)
-springer_first_prop_df$corpus = "springer_first"
-springer_last_prop_df$corpus = "springer_last"
-nature_first_prop_df$corpus = "nature_first"
-nature_last_prop_df$corpus = "nature_last"
-
-
-#### first v last author quotes
-first_cited_prop_df = compute_bootstrap_first_author(quote_author_df, 
+if(RERUN_BOOTSTRAP){
+        
+    
+    #### Quote data
+    quote_prop_df = compute_bootstrap_gender(full_quote_df, 
                                                year_col_id = "year", 
-                                               article_col_id = "file_id",
+                                               article_col_id = "quote",
                                                conf_int=0.95)
+    quote_prop_df$corpus = "quote"
+    
+    #### Quote data broken down by article type
+    get_subboot <- function(type_id, type_names, in_df){
+        bootstrap_res = compute_bootstrap_gender(subset(in_df, type %in% type_id), 
+                                               year_col_id = "year", 
+                                               article_col_id = "quote",
+                                               conf_int=0.95)
+        bootstrap_res$corpus = type_names
+        return(bootstrap_res)
+    
+    }
+    
+    type_df = NA
+    for(curr_type in unique(full_quote_df$type)){
+        res = get_subboot(curr_type, curr_type, full_quote_df)
+        type_df = rbind(type_df, res)
+    }
+    type_df = type_df[-1,]
+    
+    #### Quote data broken down by article type career vs non-career
+    career_df = NA
+    non_career = setdiff(unique(full_quote_df$type), c("career-feature"))
+    career_type = list("career-feature", non_career)
+    career_name = c("career-feature", "other")
+    for(curr_type_idx in 1:length(career_type)){
+        curr_type = unlist(career_type[curr_type_idx])
+        curr_name = career_name[curr_type_idx]
+        res = get_subboot(curr_type, 
+                          curr_name,
+                          full_quote_df)
+        career_df = rbind(career_df, res)
+    }
+    career_df = career_df[-1,]
+    
+    
+    
+    #### Background data
+    springer_first_prop_df = compute_bootstrap_gender(
+                                subset(springer_author_df, author_pos == "first"), 
+                                year_col_id = "year", 
+                                article_col_id = "doi",
+                                conf_int=0.95)
+    springer_last_prop_df = compute_bootstrap_gender(
+                                subset(springer_author_df, author_pos == "last"), 
+                                year_col_id = "year", 
+                                article_col_id = "doi",
+                                conf_int=0.95)
+    nature_first_prop_df = compute_bootstrap_gender(
+                                subset(nature_author_df, author_pos == "first"), 
+                                year_col_id = "year", 
+                                article_col_id = "doi",
+                                conf_int=0.95)
+    nature_last_prop_df = compute_bootstrap_gender(
+                                subset(nature_author_df, author_pos == "last"), 
+                                year_col_id = "year", 
+                                article_col_id = "doi",
+                                conf_int=0.95)
+    springer_first_prop_df$corpus = "springer_first"
+    springer_last_prop_df$corpus = "springer_last"
+    nature_first_prop_df$corpus = "nature_first"
+    nature_last_prop_df$corpus = "nature_last"
+    
+    
+    #### first v last author quotes
+    first_cited_prop_df = compute_bootstrap_first_author(quote_author_df, 
+                                                   year_col_id = "year", 
+                                                   article_col_id = "file_id",
+                                                   conf_int=0.95)
+    all_bootstrap_file = file.path(proj_dir,
+                            "/figure_notebooks/tmp_files/fig2_tmp/fig2.RData")
+    save(quote_prop_df, type_df, career_df, 
+         springer_first_prop_df, springer_last_prop_df, 
+         nature_first_prop_df, nature_last_prop_df, 
+         first_cited_prop_df, file = "fig2.RData")
+}else{
+    all_bootstrap_file = file.path(proj_dir,
+                                "/figure_notebooks/tmp_files/fig2_tmp/fig2.RData")
+    load(all_bootstrap_file)
+}
 ```
-
-    ## [1] 2
 
 ## Make the Figures
 
@@ -332,7 +348,7 @@ quotes_nature_gg =
                           fill=corpus)) +
     geom_point() + geom_ribbon(alpha=0.5) + geom_line(alpha=0.5) + theme_bw() + 
     xlab("Year of Article") + ylab("Male Percentage") +
-    ggtitle("Comparison of News Quotes vs First+Last Author Research Citations") + 
+    ggtitle("News Quotes vs First+Last Author Research Citations") + 
     ylim(c(0, 1)) +
     geom_hline(yintercept=0.5, color="red") +
     scale_fill_manual(values=QUOTE_ANALYSIS_COLOR) +
@@ -349,7 +365,7 @@ quotes_springer_gg =
                           fill=corpus)) +
     geom_point() + geom_ribbon(alpha=0.5) + geom_line(alpha=0.5) + theme_bw() + 
     xlab("Year of Article") + ylab("Percentage of Quotes from Est. Male Speaker") +
-    ggtitle("Comparison of News Quotes vs First+Last Author Springer Article Citations") + 
+    ggtitle("News Quotes vs First+Last Author Springer Article Citations") + 
     ylim(c(0, 1)) +
     geom_hline(yintercept=0.5, color="red") +
     scale_fill_manual(values=QUOTE_ANALYSIS_COLOR) +
@@ -386,7 +402,7 @@ career_gg = ggplot(career_df, aes(x=as.numeric(year), y=mean,
     theme_bw() + ylim(c(0,1)) +
     xlab("Year of Article") + ylab("Male Quote Percentage") + 
     ylim(c(0, 1)) +
-    ggtitle("Male Proportion of Quotes in Career vs Non-Career related Articles") + 
+    ggtitle("Male Proportion of Quotes in Career-Feature vs Other Articles") + 
     geom_hline(yintercept=0.5, color="red") +
     scale_fill_manual(values=QUOTE_ANALYSIS_COLOR) +
     theme(legend.position="bottom")
@@ -414,18 +430,27 @@ ggsave(file.path(proj_dir, "/figure_notebooks/tmp_files/fig2_tmp/first_v_last_gg
 ``` r
 plot_overview = image_read_pdf(file.path(proj_dir,
                                   "/figure_notebooks/illustrator_pdfs/nature_news_quote_gender_schematic.pdf"))
+plot_overview = image_annotate(plot_overview, "a", size = 20)
+
 quotes_nature_gg = image_read_pdf(file.path(proj_dir,
                                   "/figure_notebooks/tmp_files/fig2_tmp/quotes_nature_gg.pdf"))
+quotes_nature_gg = image_annotate(quotes_nature_gg, "c", size = 30)
+
 tot_quotes_gg = image_read_pdf(file.path(proj_dir,
                                   "/figure_notebooks/tmp_files/fig2_tmp/tot_quotes_gg.pdf"))
+tot_quotes_gg = image_annotate(tot_quotes_gg, "b", size = 30)
+
 first_v_last_gg = image_read_pdf(file.path(proj_dir,
                                   "/figure_notebooks/tmp_files/fig2_tmp/first_v_last_gg.pdf"))
+first_v_last_gg = image_annotate(first_v_last_gg, "d", size = 30)
+
 career_gg = image_read_pdf(file.path(proj_dir,
                                   "/figure_notebooks/tmp_files/fig2_tmp/career_gg.pdf"))
+career_gg = image_annotate(career_gg, "e", size = 30)
 
-middle_image <- image_append(image_scale(c(tot_quotes_gg, quotes_nature_gg),1000), stack = FALSE)
-bottom_image <- image_append(image_scale(c(first_v_last_gg, career_gg),1000), stack = FALSE)
-full_image <- image_append(image_scale(c(plot_overview, middle_image, bottom_image), 500), stack = TRUE)
+middle_image <- image_append(image_scale(c(tot_quotes_gg, quotes_nature_gg),3000), stack = FALSE)
+bottom_image <- image_append(image_scale(c(first_v_last_gg, career_gg),3000), stack = FALSE)
+full_image <- image_append(image_scale(c(plot_overview, middle_image, bottom_image), 3000), stack = TRUE)
 
 print(full_image)
 ```
@@ -433,17 +458,28 @@ print(full_image)
     ## # A tibble: 1 x 7
     ##   format width height colorspace matte filesize density
     ##   <chr>  <int>  <int> <chr>      <lgl>    <int> <chr>  
-    ## 1 PNG      500    575 sRGB       TRUE         0 300x300
+    ## 1 PNG     3000   3453 sRGB       TRUE         0 300x300
 
-<img src="figure2_files/figure-markdown_github/make_fig1-1.png" width="500" />
+<img src="figure2_files/figure-markdown_github/make_fig1-1.png" width="3000" />
+
+``` r
+outfile = file.path(proj_dir,"/figure_notebooks/tmp_files/fig2_tmp/fig2_main.pdf")
+image_write(full_image, format = "pdf", outfile)
+
+outfile = file.path(proj_dir,"/figure_notebooks/tmp_files/fig2_tmp/fig2_main.png")
+image_write(full_image, format = "png", outfile)
+```
 
 ### format supp. figure
 
 ``` r
 all_type_gg = image_read_pdf(file.path(proj_dir,
                                   "/figure_notebooks/tmp_files/fig2_tmp/all_type_gg.pdf"))
+all_type_gg = image_annotate(all_type_gg, "b", size = 30)
+
 quotes_springer_gg = image_read_pdf(file.path(proj_dir,
                                   "/figure_notebooks/tmp_files/fig2_tmp/quotes_springer_gg.pdf"))
+quotes_springer_gg = image_annotate(quotes_springer_gg, "a", size = 30)
 
 full_image <- image_append(image_scale(c(quotes_springer_gg, all_type_gg), 500), stack = FALSE)
 print(full_image)
@@ -455,3 +491,10 @@ print(full_image)
     ## 1 PNG     1000    417 sRGB       TRUE         0 300x300
 
 <img src="figure2_files/figure-markdown_github/make_supp_fig-1.png" width="1000" />
+
+``` r
+outfile = file.path(proj_dir,"/figure_notebooks/tmp_files/fig2_tmp/fig2_supp.pdf")
+image_write(full_image, format = "pdf", outfile)
+outfile = file.path(proj_dir,"/figure_notebooks/tmp_files/fig2_tmp/fig2_supp.png")
+image_write(full_image, format = "png", outfile)
+```

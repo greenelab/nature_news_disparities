@@ -12,6 +12,8 @@ require(data.table)
 require(here)
 require(ggplot2)
 require(ggrepel)
+options(ggrepel.max.overlaps = Inf)
+
 require(pheatmap)
 require(tidytext)
 require(stringr)
@@ -29,6 +31,7 @@ MIN_ART = 5
 MIN_PROP = 0.05
 MIN_WORD_FREQ = 100
 NUM_COUNTRIES_PLOT = 10
+RERUN_BOOTSTRAP = FALSE
 
 data(stop_words)
 
@@ -217,52 +220,75 @@ get_subboot <- function(country_id, curr_corpus, in_df, bootstrap_col_id="file_i
 
 }
 
+# we only run the bootstraps if we want to update them
+# this is an expensive process > 1hr
+if(RERUN_BOOTSTRAP){
+        
+    citation_country_df = NA
+    for(curr_country in top_countries_citation$country[1:NUM_COUNTRIES_PLOT]){
+        print(curr_country)
+        res = get_subboot(curr_country, 
+                          curr_corpus="naturenews_citations", 
+                          country_df)
+        citation_country_df = rbind(citation_country_df, res)
+    }
+    citation_country_df = citation_country_df[-1,]
+    citation_country_df$label = ""
+    citation_country_df$label[citation_country_df$year == 2020] = 
+        citation_country_df$country[citation_country_df$year == 2020]
+    citation_country_df$corpus = "citation"
+    outfile = file.path(proj_dir,"/figure_notebooks/tmp_files/fig4_tmp/citation_country_df.tsv")
+    write.table(citation_country_df, outfile, sep="\t", quote=F, row.names=F)
+    
+    
+    springer_country_df = NA
+    for(curr_country in top_countries_citation$country[1:NUM_COUNTRIES_PLOT]){
+        print(curr_country)
+        res = get_subboot(curr_country, 
+                          curr_corpus="springer_articles", 
+                          country_df,
+                          bootstrap_col_id = "doi")
+        springer_country_df = rbind(springer_country_df, res)
+    }
+    springer_country_df = springer_country_df[-1,]
+    springer_country_df$label = ""
+    springer_country_df$label[springer_country_df$year == 2020] = 
+        springer_country_df$country[springer_country_df$year == 2020]
+    springer_country_df$corpus = "springer_last"
+    outfile = file.path(proj_dir,"/figure_notebooks/tmp_files/fig4_tmp/springer_country_df.tsv")
+    write.table(springer_country_df, outfile, sep="\t", quote=F, row.names=F)
+    
+    
+    nature_country_df = NA
+    for(curr_country in top_countries_citation$country[1:NUM_COUNTRIES_PLOT]){
+        print(curr_country)
+        res = get_subboot(curr_country, 
+                          curr_corpus="nature_articles", 
+                          country_df)
+        nature_country_df = rbind(nature_country_df, res)
+    }
+    nature_country_df = nature_country_df[-1,]
+    nature_country_df$label = ""
+    nature_country_df$label[nature_country_df$year == 2020] = 
+        nature_country_df$country[nature_country_df$year == 2020]
+    nature_country_df$corpus = "nature_last"
+    outfile = file.path(proj_dir,"/figure_notebooks/tmp_files/fig4_tmp/nature_country_df.tsv")
+    write.table(nature_country_df, outfile, sep="\t", quote=F, row.names=F)
+}else{
+    
+    citation_country_file = file.path(proj_dir,
+                                      "/figure_notebooks/tmp_files/fig4_tmp/citation_country_df.tsv")
+    citation_country_df = data.frame(fread(citation_country_file))
 
-citation_country_df = NA
-for(curr_country in top_countries_citation$country[1:NUM_COUNTRIES_PLOT]){
-    print(curr_country)
-    res = get_subboot(curr_country, 
-                      curr_corpus="naturenews_citations", 
-                      country_df)
-    citation_country_df = rbind(citation_country_df, res)
+    springer_country_file = file.path(proj_dir,
+                                      "/figure_notebooks/tmp_files/fig4_tmp/springer_country_df.tsv")
+    springer_country_df = data.frame(fread(springer_country_file))
+    
+    nature_country_file = file.path(proj_dir,
+                                      "/figure_notebooks/tmp_files/fig4_tmp/nature_country_df.tsv")
+    nature_country_df = data.frame(fread(nature_country_file))
+
 }
-citation_country_df = citation_country_df[-1,]
-citation_country_df$label = ""
-citation_country_df$label[citation_country_df$year == 2020] = 
-    citation_country_df$country[citation_country_df$year == 2020]
-citation_country_df$corpus = "citation"
-
-
-springer_country_df = NA
-for(curr_country in top_countries_citation$country[1:NUM_COUNTRIES_PLOT]){
-    print(curr_country)
-    res = get_subboot(curr_country, 
-                      curr_corpus="springer_articles", 
-                      country_df,
-                      bootstrap_col_id = "doi")
-    springer_country_df = rbind(springer_country_df, res)
-}
-springer_country_df = springer_country_df[-1,]
-springer_country_df$label = ""
-springer_country_df$label[springer_country_df$year == 2020] = 
-    springer_country_df$country[springer_country_df$year == 2020]
-springer_country_df$corpus = "springer_last"
-
-
-nature_country_df = NA
-for(curr_country in top_countries_citation$country[1:NUM_COUNTRIES_PLOT]){
-    print(curr_country)
-    res = get_subboot(curr_country, 
-                      curr_corpus="nature_articles", 
-                      country_df)
-    nature_country_df = rbind(nature_country_df, res)
-}
-nature_country_df = nature_country_df[-1,]
-nature_country_df$label = ""
-nature_country_df$label[nature_country_df$year == 2020] = 
-    nature_country_df$country[nature_country_df$year == 2020]
-nature_country_df$corpus = "nature_last"
-
 
 
 ```
@@ -431,7 +457,7 @@ class_c_mentions = subset(class_c_mentions,
                           !address.country_code %in% country_overlap )
 class_m_mentions = subset(class_m_mentions, 
                           !address.country_code %in% country_overlap )
-
+print(country_overlap)
 
 ```
 
@@ -731,28 +757,44 @@ ggsave(file.path(proj_dir, "/figure_notebooks/tmp_files/fig4_tmp/word_count_clas
 
 plot_overview = image_read_pdf(file.path(proj_dir,
                                   "/figure_notebooks/illustrator_pdfs/nature_news_mention_citation_schematic.pdf"))
+plot_overview = image_annotate(plot_overview, "a", size = 20)
+
 
 citation_overview_gg = image_read_pdf(file.path(proj_dir,
                                   "/figure_notebooks/tmp_files/fig4_tmp/citation_full_gg.pdf"))
+citation_overview_gg = image_annotate(citation_overview_gg, "b", size = 40)
+
+
 citation_nature_indiv_sub_gg = image_read_pdf(file.path(proj_dir,
                                   "/figure_notebooks/tmp_files/fig4_tmp/citation_indiv_3_gg.pdf"))
+citation_nature_indiv_sub_gg = image_extent(citation_nature_indiv_sub_gg, '2150x1500', 
+                                            color = 'white', gravity = "northeast")
+citation_nature_indiv_sub_gg = image_annotate(citation_nature_indiv_sub_gg, "c", size = 40)
 
 
 heatmap_gg = image_read_pdf(file.path(proj_dir,
                                   "/figure_notebooks/tmp_files/fig4_tmp/full_heatmap.pdf"))
+heatmap_gg = image_extent(heatmap_gg, '3100x1500', color = 'white', gravity = "northeast")
+heatmap_gg = image_annotate(heatmap_gg, "d", size = 40)
+
+
 word_ratio_gg = image_read_pdf(file.path(proj_dir,
                                   "/figure_notebooks/tmp_files/fig4_tmp/word_ratio_gg.pdf"))
+word_ratio_gg = image_annotate(word_ratio_gg, "e", size = 40)
+
 #heatmap_gg = image_scale(heatmap_gg, 750)
 #word_ratio_gg = image_scale(word_ratio_gg, 250)
 
 middle_image <- image_append(image_scale(c(citation_overview_gg, citation_nature_indiv_sub_gg),1000), stack = FALSE)
-bottom_image <- image_append(image_scale(c(heatmap_gg, word_ratio_gg), "x500"), stack = FALSE)
+bottom_image <- image_append(image_scale(c(heatmap_gg, word_ratio_gg), "x1000"), stack = FALSE)
 full_image <- image_append(image_scale(c(plot_overview, middle_image, bottom_image), 1000), stack = TRUE)
 
 print(full_image)
 
 outfile = file.path(proj_dir,"/figure_notebooks/tmp_files/fig4_tmp/fig4_main.pdf")
 image_write(full_image, format = "pdf", outfile)
+outfile = file.path(proj_dir,"/figure_notebooks/tmp_files/fig4_tmp/fig4_main.png")
+image_write(full_image, format = "png", outfile)
 
 
 ```
@@ -763,22 +805,37 @@ image_write(full_image, format = "pdf", outfile)
 
 ```{r make_supp_fig, echo=TRUE, warning=FALSE, message=F}
 
+citation_indiv_10_springer_gg = image_read_pdf(file.path(proj_dir,
+                                  "/figure_notebooks/tmp_files/fig4_tmp/citation_indiv_10_springer_gg.pdf"))
+citation_indiv_10_springer_gg = image_annotate(citation_indiv_10_springer_gg, "a", size = 20)
 
 c_vs_m_filter_gg = image_read_pdf(file.path(proj_dir,
                                   "/figure_notebooks/tmp_files/fig4_tmp/c_vs_m_filter_gg.pdf"))
+c_vs_m_filter_gg = image_annotate(c_vs_m_filter_gg, "b", size = 30)
+
 word_count_class_c_gg = image_read_pdf(file.path(proj_dir,
                                   "/figure_notebooks/tmp_files/fig4_tmp/word_count_class_c_gg.pdf"))
+word_count_class_c_gg = image_annotate(word_count_class_c_gg, "c", size = 30)
+
 word_count_class_m_gg = image_read_pdf(file.path(proj_dir,
                                   "/figure_notebooks/tmp_files/fig4_tmp/word_count_class_m_gg.pdf"))
+word_count_class_m_gg = image_annotate(word_count_class_m_gg, "d", size = 30)
 
 
-bottom_image <- image_append(image_scale(c(word_count_class_c_gg, word_count_class_m_gg), "x500"), stack = FALSE)
-full_image <- image_append(image_scale(c(c_vs_m_filter_gg, bottom_image), 1000), stack = TRUE)
+
+bottom_image <- image_append(image_scale(c(word_count_class_c_gg, word_count_class_m_gg), "x1500"), stack = FALSE)
+full_image <- image_append(image_scale(c(citation_indiv_10_springer_gg, 
+                                         c_vs_m_filter_gg, 
+                                         bottom_image), 3000), stack = TRUE)
 
 print(full_image)
 
 outfile = file.path(proj_dir,"/figure_notebooks/tmp_files/fig4_tmp/fig4_supp.pdf")
 image_write(full_image, format = "pdf", outfile)
+
+
+outfile = file.path(proj_dir,"/figure_notebooks/tmp_files/fig4_tmp/fig4_supp.png")
+image_write(full_image, format = "png", outfile)
 
 
 
