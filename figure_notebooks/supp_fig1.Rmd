@@ -261,6 +261,7 @@ gg_loc_hist = image_annotate(gg_loc_hist, "b", size = 30)
 
 gg_loc_line = image_read_pdf(file.path(proj_dir,
                                   "/figure_notebooks/tmp_files/supp_fig1_tmp/gg_loc_line.pdf"))
+gg_loc_line = image_extent(gg_loc_line, '2150x1500', color = 'white', gravity = "northeast")
 gg_loc_line = image_annotate(gg_loc_line, "c", size = 30)
 
 

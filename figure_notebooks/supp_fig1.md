@@ -253,6 +253,7 @@ gg_loc_hist = image_annotate(gg_loc_hist, "b", size = 30)
 
 gg_loc_line = image_read_pdf(file.path(proj_dir,
                                   "/figure_notebooks/tmp_files/supp_fig1_tmp/gg_loc_line.pdf"))
+gg_loc_line = image_extent(gg_loc_line, '2150x1500', color = 'white', gravity = "northeast")
 gg_loc_line = image_annotate(gg_loc_line, "c", size = 30)
 
 
@@ -265,7 +266,7 @@ print(full_image)
     ## # A tibble: 1 x 7
     ##   format width height colorspace matte filesize density
     ##   <chr>  <int>  <int> <chr>      <lgl>    <int> <chr>  
-    ## 1 PNG     3000   3643 sRGB       TRUE         0 300x300
+    ## 1 PNG     3000   3593 sRGB       TRUE         0 300x300
 
 <img src="supp_fig1_files/figure-markdown_github/make_supp_fig1-1.png" width="3000" />
 
