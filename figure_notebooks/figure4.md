@@ -758,12 +758,13 @@ cite_plot_df$corpus = factor(cite_plot_df$corpus, levels = QUOTE_ANALYSIS_ORDER)
 citation_indiv_10_springer_gg = ggplot(cite_plot_df, 
        aes(x=as.numeric(year), y=mean,
           ymin=bottom_CI, ymax=top_CI,
-          fill=corpus)) +
+          fill=corpus, color=corpus)) +
     geom_point() + geom_ribbon(alpha=0.5) + geom_line(alpha=0.5) +
     theme_bw()  + xlim(c(2005,2021)) + 
     xlab("Year of Article") + ylab("Proportion of Articles") +
     ggtitle("Proportion of Articles with at least 1 Author Affiliation in Top 10 Cited Countries") + 
     scale_fill_manual(values=QUOTE_ANALYSIS_COLOR, labels = c("nature", "springer", "citation")) +
+    scale_color_manual(values=QUOTE_ANALYSIS_COLOR, labels = c("nature", "springer", "citation")) +
     theme(legend.position = "bottom") +
     facet_wrap(~ country, scales = "free")
 
@@ -921,13 +922,16 @@ plot_overview = image_read_pdf(file.path(proj_dir,
                                   "/figure_notebooks/illustrator_pdfs/nature_news_mention_citation_schematic.pdf"))
 plot_overview = image_annotate(plot_overview, "a", size = 20)
 
+
 citation_overview_gg = image_read_pdf(file.path(proj_dir,
                                   "/figure_notebooks/tmp_files/fig4_tmp/citation_full_gg.pdf"))
 citation_overview_gg = image_annotate(citation_overview_gg, "b", size = 40)
 
+
 citation_nature_indiv_sub_gg = image_read_pdf(file.path(proj_dir,
                                   "/figure_notebooks/tmp_files/fig4_tmp/citation_indiv_3_gg.pdf"))
-citation_nature_indiv_sub_gg = image_extent(citation_nature_indiv_sub_gg, '2150x1500', color = 'white', gravity = "northeast")
+citation_nature_indiv_sub_gg = image_extent(citation_nature_indiv_sub_gg, '2150x1500', 
+                                            color = 'white', gravity = "northeast")
 citation_nature_indiv_sub_gg = image_annotate(citation_nature_indiv_sub_gg, "c", size = 40)
 
 
@@ -935,6 +939,7 @@ heatmap_gg = image_read_pdf(file.path(proj_dir,
                                   "/figure_notebooks/tmp_files/fig4_tmp/full_heatmap.pdf"))
 heatmap_gg = image_extent(heatmap_gg, '3100x1500', color = 'white', gravity = "northeast")
 heatmap_gg = image_annotate(heatmap_gg, "d", size = 40)
+
 
 word_ratio_gg = image_read_pdf(file.path(proj_dir,
                                   "/figure_notebooks/tmp_files/fig4_tmp/word_ratio_gg.pdf"))

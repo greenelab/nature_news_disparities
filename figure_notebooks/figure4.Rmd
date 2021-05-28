@@ -547,6 +547,23 @@ compare_freq = compare_freq[order(compare_freq$compare_ratio, decreasing=T),]
 compare_freq_extreme = compare_freq[c(1:15,(nrow(compare_freq)-14):nrow(compare_freq)),]
 compare_freq_extreme$word_type = c(rep("Citation", 15), rep("Mention", 15))
 
+# now lets take bootstrap estimates
+word_vec = compare_freq_extreme$word
+
+if(RERUN_BOOTSTRAP){
+    BOOTSTRAP_SIZE = 1000 # we set this for only this bootstrap calculation
+    bootstrap_ratio = get_bootstrap_word_ratio(class_c_mentions, 
+                                               class_m_mentions, 
+                                               word_vec,
+                                               conf_int = 0.95)
+    bootstrap_file = file.path(proj_dir,
+                        "/figure_notebooks/tmp_files/fig4_tmp/fig4_bootstrap_ratio.RData")
+    save(bootstrap_ratio, file = bootstrap_file)
+}else{
+    bootstrap_file = file.path(proj_dir,
+                        "/figure_notebooks/tmp_files/fig4_tmp/fig4_bootstrap_ratio.RData")
+    load(bootstrap_file)
+}
 # show the enrichment
 compare_freq_extreme$word = factor(compare_freq_extreme$word, 
                                       levels = compare_freq_extreme$word)
@@ -584,12 +601,13 @@ cite_plot_df$corpus = factor(cite_plot_df$corpus, levels = QUOTE_ANALYSIS_ORDER)
 citation_indiv_10_springer_gg = ggplot(cite_plot_df, 
        aes(x=as.numeric(year), y=mean,
           ymin=bottom_CI, ymax=top_CI,
-          fill=corpus)) +
+          fill=corpus, color=corpus)) +
     geom_point() + geom_ribbon(alpha=0.5) + geom_line(alpha=0.5) +
     theme_bw()  + xlim(c(2005,2021)) + 
     xlab("Year of Article") + ylab("Proportion of Articles") +
     ggtitle("Proportion of Articles with at least 1 Author Affiliation in Top 10 Cited Countries") + 
     scale_fill_manual(values=QUOTE_ANALYSIS_COLOR, labels = c("nature", "springer", "citation")) +
+    scale_color_manual(values=QUOTE_ANALYSIS_COLOR, labels = c("nature", "springer", "citation")) +
     theme(legend.position = "bottom") +
     facet_wrap(~ country, scales = "free")
 
