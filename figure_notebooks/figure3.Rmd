@@ -436,24 +436,24 @@ plot_overview = image_annotate(plot_overview, "a", size = 20)
 
 citation_overview_gg = image_read_pdf(file.path(proj_dir,
                                   "/figure_notebooks/tmp_files/fig3_tmp/citation_overview_gg.pdf"))
-citation_overview_gg = image_annotate(citation_overview_gg, "d", size = 30)
+citation_overview_gg = image_annotate(citation_overview_gg, "b", size = 30)
 
 citation_nature_indiv_sub_gg = image_read_pdf(file.path(proj_dir,
                                   "/figure_notebooks/tmp_files/fig3_tmp/citation_nature_indiv_sub_gg.pdf"))
-citation_nature_indiv_sub_gg = image_annotate(citation_nature_indiv_sub_gg, "e", size = 30)
+citation_nature_indiv_sub_gg = image_annotate(citation_nature_indiv_sub_gg, "c", size = 30)
 
 
 quote_overview_gg = image_read_pdf(file.path(proj_dir,
                                   "/figure_notebooks/tmp_files/fig3_tmp/quote_overview_gg.pdf"))
-quote_overview_gg = image_annotate(quote_overview_gg, "b", size = 30)
+quote_overview_gg = image_annotate(quote_overview_gg, "d", size = 30)
 
 quote_nature_indiv_sub_gg = image_read_pdf(file.path(proj_dir,
                                   "/figure_notebooks/tmp_files/fig3_tmp/quote_nature_indiv_sub_gg.pdf"))
-quote_nature_indiv_sub_gg = image_annotate(quote_nature_indiv_sub_gg, "c", size = 30)
+quote_nature_indiv_sub_gg = image_annotate(quote_nature_indiv_sub_gg, "e", size = 30)
 
 
-middle_image <- image_append(image_scale(c(quote_overview_gg, quote_nature_indiv_sub_gg),3000), stack = FALSE)
-bottom_image <- image_append(image_scale(c(citation_overview_gg, citation_nature_indiv_sub_gg),3000), stack = FALSE)
+bottom_image <- image_append(image_scale(c(quote_overview_gg, quote_nature_indiv_sub_gg),3000), stack = FALSE)
+middle_image <- image_append(image_scale(c(citation_overview_gg, citation_nature_indiv_sub_gg),3000), stack = FALSE)
 full_image <- image_append(image_scale(c(plot_overview, middle_image, bottom_image), 3000), stack = TRUE)
 
 print(full_image)
