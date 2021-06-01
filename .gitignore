@@ -1,7 +1,6 @@
 .venv
 .history
 *.pyc
-/data/benchmark_data/coreNLP_output/*
 /data/benchmark_data/coreNLP_input/*
 /data/scraped_data/*
 /data/doi_data/*
