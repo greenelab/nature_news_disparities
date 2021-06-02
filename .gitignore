@@ -2,7 +2,8 @@
 .history
 *.pyc
 /data/benchmark_data/coreNLP_input/*
-/data/scraped_data/*
+/data/scraped_data/downloads
+/data/scraped_data/coreNLP_input*/*
 /data/doi_data/*
 .DS_Store
 .Rhistory
