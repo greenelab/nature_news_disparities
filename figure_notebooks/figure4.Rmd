@@ -32,6 +32,8 @@ MIN_PROP = 0.05
 MIN_WORD_FREQ = 100
 NUM_COUNTRIES_PLOT = 10
 RERUN_BOOTSTRAP = FALSE
+NUM_WORDS_BOOTSTRAP = 100
+NUM_WORDS_REPORT = 15
 
 data(stop_words)
 
@@ -444,9 +446,10 @@ class_m_mentions = subset(class_m_mentions,
                           !file_idx %in% class_m_citations$file_idx )
 
 
-# filter out 2020 for this analysis to avoind covid terms
+# filter out 2020 for this analysis to avoid covid terms
 class_c_mentions = subset(class_c_mentions, year != 2020)
 class_m_mentions = subset(class_m_mentions, year != 2020)
+full_mention_df = subset(full_mention_df, year != 2020)
 
 # filter out countries that may be in both class_c and class_m
 # this can be caused by mentions and citations being significantly
@@ -535,27 +538,34 @@ compare_freq = merge(compare_freq, class_m_word_freq)
 
 # write out the tables
 compare_freq = compare_freq[order(compare_freq$compare_ratio, decreasing=T),]
-print(knitr::kable(head(compare_freq,15), 
+print(knitr::kable(head(compare_freq, 15), 
                        caption = "Overall Class Citation, top terms"))
 
 compare_freq = compare_freq[order(compare_freq$compare_ratio, decreasing=F),]
-print(knitr::kable(head(compare_freq,15), 
+print(knitr::kable(head(compare_freq, 15), 
                        caption = "Overall Class Mention, top terms"))
 
 # now take the top and bottom
 compare_freq = compare_freq[order(compare_freq$compare_ratio, decreasing=T),]
-compare_freq_extreme = compare_freq[c(1:15,(nrow(compare_freq)-14):nrow(compare_freq)),]
-compare_freq_extreme$word_type = c(rep("Citation", 15), rep("Mention", 15))
+compare_freq_extreme = compare_freq
+compare_freq_extreme$word_type = c(rep("Citation", sum(compare_freq$compare_ratio > 1)), 
+                                   rep("Mention", sum(compare_freq$compare_ratio <= 1)))
 
 # now lets take bootstrap estimates
 word_vec = compare_freq_extreme$word
 
 if(RERUN_BOOTSTRAP){
-    BOOTSTRAP_SIZE = 1000 # we set this for only this bootstrap calculation
-    bootstrap_ratio = get_bootstrap_word_ratio(class_c_mentions, 
+    BOOTSTRAP_SIZE = 1000
+    start_time <- Sys.time()
+    res = get_bootstrap_word_ratio(class_c_mentions, 
                                                class_m_mentions, 
                                                word_vec,
                                                conf_int = 0.95)
+    bootstrap_ratio = res[[1]]
+    full_boot = res[[2]]
+    end_time <- Sys.time()
+    elapsed_time = end_time - start_time
+    print(elapsed_time)
     bootstrap_file = file.path(proj_dir,
                         "/figure_notebooks/tmp_files/fig4_tmp/fig4_bootstrap_ratio.RData")
     save(bootstrap_ratio, file = bootstrap_file)
@@ -564,10 +574,22 @@ if(RERUN_BOOTSTRAP){
                         "/figure_notebooks/tmp_files/fig4_tmp/fig4_bootstrap_ratio.RData")
     load(bootstrap_file)
 }
-# show the enrichment
+# format the enrichment
+bootstrap_ratio = bootstrap_ratio[order(bootstrap_ratio$mean, decreasing=T),]
+compare_freq_extreme = compare_freq_extreme[order(bootstrap_ratio$mean, decreasing=T),]
+
+bootstrap_ratio$word = factor(bootstrap_ratio$word, 
+                                      levels = bootstrap_ratio$word)
 compare_freq_extreme$word = factor(compare_freq_extreme$word, 
                                       levels = compare_freq_extreme$word)
-
+bootstrap_ratio = 
+    bootstrap_ratio[c(1:NUM_WORDS_REPORT,
+                    (nrow(bootstrap_ratio)-NUM_WORDS_REPORT+1):nrow(bootstrap_ratio)),]
+bootstrap_ratio$word_type = c(rep("Citation", NUM_WORDS_REPORT), 
+                              rep("Mention", NUM_WORDS_REPORT))
+compare_freq_extreme = 
+    compare_freq_extreme[c(1:NUM_WORDS_REPORT,
+                    (nrow(compare_freq_extreme)-NUM_WORDS_REPORT+1):nrow(compare_freq_extreme)),]
 
 ```
 
@@ -728,10 +750,12 @@ ggsave(file.path(proj_dir, "/figure_notebooks/tmp_files/fig4_tmp/full_heatmap.pd
 ```{r make_c-vs-m_word_gg, echo=TRUE, warning=FALSE, message=F}
 
 
-word_ratio_gg = ggplot(compare_freq_extreme, aes(x=log10(compare_freq_extreme$compare_ratio), 
-                                 y=as.factor(compare_freq_extreme$word),
+word_ratio_gg = ggplot(bootstrap_ratio, aes(x=log10(bootstrap_ratio$mean), 
+                                 y=as.factor(bootstrap_ratio$word),
                                  fill=word_type)) +
-    geom_bar(stat="identity") + theme_bw() + 
+    geom_bar(stat="identity") + 
+    geom_errorbar(aes(xmin=log10(bottom_CI), xmax=log10(top_ci)), color="black") +
+    theme_bw() + 
     ylab("Words") + xlab("log10 Ratio Citation : Mention Frequencies") + 
     ggtitle("Top 15 Most Divergent Words by Class") + 
     scale_fill_brewer(palette="Set2")

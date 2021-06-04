@@ -536,9 +536,10 @@ class_m_mentions = subset(class_m_mentions,
                           !file_idx %in% class_m_citations$file_idx )
 
 
-# filter out 2020 for this analysis to avoind covid terms
+# filter out 2020 for this analysis to avoid covid terms
 class_c_mentions = subset(class_c_mentions, year != 2020)
 class_m_mentions = subset(class_m_mentions, year != 2020)
+full_mention_df = subset(full_mention_df, year != 2020)
 
 # filter out countries that may be in both class_c and class_m
 # this can be caused by mentions and citations being significantly
@@ -587,13 +588,13 @@ print(knitr::kable(head(citations_freq,15),
     ## |research    |     1364|     3858|     1870|     1348|      214|     2117|      322|      481|      533|      773|      220|      620|        696.5|
     ## |cells       |      853|     1671|     2291|      613|       72|      862|       82|       53|      899|      722|       48|      409|        667.5|
     ## |researchers |     1184|     2859|     1361|     1252|      147|     1767|      275|      364|      545|      771|      245|      304|        658.0|
-    ## |time        |      767|     1887|      906|      827|      125|     1125|      143|      223|      433|      569|      186|      172|        501.0|
+    ## |time        |      767|     1887|      847|      827|      125|     1125|      143|      223|      433|      569|      186|      172|        501.0|
     ## |scientists  |      787|     2276|     1037|      815|      134|     1192|      170|      262|      405|      470|      145|      227|        437.5|
     ## |cell        |      430|     1295|     1150|      423|       63|      492|       84|       35|      497|      420|       25|      432|        426.5|
     ## |science     |      643|     2045|     1194|      732|      169|     1132|      190|      319|      344|      309|      161|      456|        400.0|
     ## |human       |      444|     1456|      659|      419|       51|      645|       69|      100|      376|      407|      102|      266|        391.5|
     ## |team        |      721|     1695|      762|      650|      110|      994|      131|      215|      320|      452|      171|      194|        386.0|
-    ## |data        |     1026|     2100|      857|     1239|      153|     1211|      147|      263|      271|      487|      212|      204|        379.0|
+    ## |data        |     1024|     2100|      857|     1239|      151|     1211|      147|      263|      271|      487|      212|      204|        379.0|
     ## |found       |      467|     1309|      517|      518|       61|      766|      139|      134|      309|      431|      138|      111|        370.0|
     ## |institute   |      576|     1745|      785|      410|      141|      551|       81|      133|      332|      370|       90|      185|        351.0|
     ## |people      |      904|     1449|      895|      717|      106|      941|      167|      141|      264|      424|      119|      149|        344.0|
@@ -627,11 +628,11 @@ print(knitr::kable(head(mentions_freq,15),
     ## |science     |     1760|      182|     1176|      108|     1021|      508|      188|      449|      145|       20|        318.5|
     ## |researchers |     2997|      121|     1316|      197|      631|      380|      186|      504|      107|       87|        288.5|
     ## |scientists  |     1951|       79|      969|      106|      685|      377|      182|      363|       94|       48|        272.5|
-    ## |time        |     2081|      217|      885|      264|      595|      285|      111|      266|       75|       60|        265.0|
+    ## |time        |     2022|      217|      826|      264|      536|      226|      111|      266|       75|       60|        245.0|
     ## |people      |     1888|       44|      818|      128|      495|      195|      182|      407|      101|      283|        239.0|
-    ## |data        |     1962|       86|      728|      157|      488|      327|       38|      298|       79|       99|        227.5|
+    ## |data        |     1960|       86|      726|      157|      488|      327|       38|      298|       79|       99|        227.5|
     ## |climate     |     1006|       19|      452|      322|      324|      235|      112|      166|       79|       13|        200.5|
-    ## |million     |     1230|      112|      828|      153|      445|      248|       59|      250|      116|       37|        200.5|
+    ## |million     |     1229|      112|      827|      153|      445|      248|       59|      250|      116|       37|        200.5|
     ## |study       |     1720|       72|      543|      140|      292|      156|       80|      214|       60|       30|        148.0|
     ## |world       |     1050|       63|      645|      127|      387|      173|      107|      164|      107|       68|        145.5|
     ## |health      |      803|       17|      545|       47|      328|       87|       53|      233|       72|      201|        144.0|
@@ -666,7 +667,7 @@ compare_freq = merge(compare_freq, class_m_word_freq)
 
 # write out the tables
 compare_freq = compare_freq[order(compare_freq$compare_ratio, decreasing=T),]
-print(knitr::kable(head(compare_freq,15), 
+print(knitr::kable(head(compare_freq, 15), 
                        caption = "Overall Class Citation, top terms"))
 ```
 
@@ -694,7 +695,7 @@ print(knitr::kable(head(compare_freq,15),
 
 ``` r
 compare_freq = compare_freq[order(compare_freq$compare_ratio, decreasing=F),]
-print(knitr::kable(head(compare_freq,15), 
+print(knitr::kable(head(compare_freq, 15), 
                        caption = "Overall Class Mention, top terms"))
 ```
 
@@ -702,33 +703,70 @@ print(knitr::kable(head(compare_freq,15),
     ## 
     ## Table: Overall Class Mention, top terms
     ## 
-    ## |word        | median_count_citations| median_count_mentions| compare_ratio| class_c_count| class_m_count|
-    ## |:-----------|----------------------:|---------------------:|-------------:|-------------:|-------------:|
-    ## |br          |                    0.5|                   6.5|     0.0769231|            24|            54|
-    ## |pesticide   |                    0.5|                   5.5|     0.0909091|            20|            69|
-    ## |bt          |                    0.5|                   3.0|     0.1666667|            52|           109|
-    ## |herd        |                    0.5|                   3.0|     0.1666667|            20|            35|
-    ## |spores      |                    0.5|                   3.0|     0.1666667|            19|            33|
-    ## |dams        |                    1.5|                   8.5|     0.1764706|            70|           124|
-    ## |indigenous  |                    2.5|                  12.5|     0.2000000|           137|           147|
-    ## |rainforest  |                    0.5|                   2.5|     0.2000000|            31|           109|
-    ## |tectonic    |                    0.5|                   2.5|     0.2000000|            66|            52|
-    ## |plantations |                    1.5|                   7.0|     0.2142857|            62|            51|
-    ## |epa         |                    1.0|                   4.5|     0.2222222|            43|            84|
-    ## |ethiopia    |                    1.0|                   4.5|     0.2222222|            37|            51|
-    ## |sierra      |                    1.0|                   4.5|     0.2222222|            35|            47|
-    ## |drought     |                    5.5|                  24.5|     0.2244898|           102|           210|
-    ## |paulo       |                    1.5|                   6.5|     0.2307692|            27|           156|
+    ## |word          | median_count_citations| median_count_mentions| compare_ratio| class_c_count| class_m_count|
+    ## |:-------------|----------------------:|---------------------:|-------------:|-------------:|-------------:|
+    ## |pesticide     |                    0.5|                   5.5|     0.0909091|            20|            69|
+    ## |bt            |                    0.5|                   3.0|     0.1666667|            52|           109|
+    ## |spores        |                    0.5|                   3.0|     0.1666667|            19|            33|
+    ## |dams          |                    1.5|                   8.5|     0.1764706|            70|           124|
+    ## |indigenous    |                    2.5|                  12.5|     0.2000000|           137|           147|
+    ## |rainforest    |                    0.5|                   2.5|     0.2000000|            31|           109|
+    ## |tectonic      |                    0.5|                   2.5|     0.2000000|            66|            52|
+    ## |plantations   |                    1.5|                   7.0|     0.2142857|            62|            51|
+    ## |epa           |                    1.0|                   4.5|     0.2222222|            43|            84|
+    ## |ethiopia      |                    1.0|                   4.5|     0.2222222|            37|            51|
+    ## |sierra        |                    1.0|                   4.5|     0.2222222|            35|            47|
+    ## |drought       |                    5.5|                  24.5|     0.2244898|           102|           210|
+    ## |paulo         |                    1.5|                   6.5|     0.2307692|            27|           156|
+    ## |corn          |                    2.5|                  10.5|     0.2380952|            50|            87|
+    ## |deforestation |                    2.5|                  10.5|     0.2380952|           122|           300|
 
 ``` r
 # now take the top and bottom
 compare_freq = compare_freq[order(compare_freq$compare_ratio, decreasing=T),]
-compare_freq_extreme = compare_freq[c(1:15,(nrow(compare_freq)-14):nrow(compare_freq)),]
-compare_freq_extreme$word_type = c(rep("Citation", 15), rep("Mention", 15))
+compare_freq_extreme = compare_freq
+compare_freq_extreme$word_type = c(rep("Citation", sum(compare_freq$compare_ratio > 1)), 
+                                   rep("Mention", sum(compare_freq$compare_ratio <= 1)))
 
-# show the enrichment
+# now lets take bootstrap estimates
+word_vec = compare_freq_extreme$word
+
+if(RERUN_BOOTSTRAP){
+    BOOTSTRAP_SIZE = 1000
+    start_time <- Sys.time()
+    res = get_bootstrap_word_ratio(class_c_mentions, 
+                                               class_m_mentions, 
+                                               word_vec,
+                                               conf_int = 0.95)
+    bootstrap_ratio = res[[1]]
+    full_boot = res[[2]]
+    end_time <- Sys.time()
+    elapsed_time = end_time - start_time
+    print(elapsed_time)
+    bootstrap_file = file.path(proj_dir,
+                        "/figure_notebooks/tmp_files/fig4_tmp/fig4_bootstrap_ratio.RData")
+    save(bootstrap_ratio, file = bootstrap_file)
+}else{
+    bootstrap_file = file.path(proj_dir,
+                        "/figure_notebooks/tmp_files/fig4_tmp/fig4_bootstrap_ratio.RData")
+    load(bootstrap_file)
+}
+# format the enrichment
+bootstrap_ratio = bootstrap_ratio[order(bootstrap_ratio$mean, decreasing=T),]
+compare_freq_extreme = compare_freq_extreme[order(bootstrap_ratio$mean, decreasing=T),]
+
+bootstrap_ratio$word = factor(bootstrap_ratio$word, 
+                                      levels = bootstrap_ratio$word)
 compare_freq_extreme$word = factor(compare_freq_extreme$word, 
                                       levels = compare_freq_extreme$word)
+bootstrap_ratio = 
+    bootstrap_ratio[c(1:NUM_WORDS_REPORT,
+                    (nrow(bootstrap_ratio)-NUM_WORDS_REPORT+1):nrow(bootstrap_ratio)),]
+bootstrap_ratio$word_type = c(rep("Citation", NUM_WORDS_REPORT), 
+                              rep("Mention", NUM_WORDS_REPORT))
+compare_freq_extreme = 
+    compare_freq_extreme[c(1:NUM_WORDS_REPORT,
+                    (nrow(compare_freq_extreme)-NUM_WORDS_REPORT+1):nrow(compare_freq_extreme)),]
 ```
 
 ## Make the Figures
@@ -878,10 +916,12 @@ ggsave(file.path(proj_dir, "/figure_notebooks/tmp_files/fig4_tmp/full_heatmap.pd
 ### generate the mention v citation word plots
 
 ``` r
-word_ratio_gg = ggplot(compare_freq_extreme, aes(x=log10(compare_freq_extreme$compare_ratio), 
-                                 y=as.factor(compare_freq_extreme$word),
+word_ratio_gg = ggplot(bootstrap_ratio, aes(x=log10(bootstrap_ratio$mean), 
+                                 y=as.factor(bootstrap_ratio$word),
                                  fill=word_type)) +
-    geom_bar(stat="identity") + theme_bw() + 
+    geom_bar(stat="identity") + 
+    geom_errorbar(aes(xmin=log10(bottom_CI), xmax=log10(top_ci)), color="black") +
+    theme_bw() + 
     ylab("Words") + xlab("log10 Ratio Citation : Mention Frequencies") + 
     ggtitle("Top 15 Most Divergent Words by Class") + 
     scale_fill_brewer(palette="Set2")
