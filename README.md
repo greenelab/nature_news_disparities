@@ -84,7 +84,7 @@ We do provide the coreNLP processed data, word frequencies for each article, and
 
      - For Figure 4, the key files are the following:
 
-          - 3) `/data/scraped_data/location_table_raw_YEAR_ARTICLE-TYPE.tsv`, which maps a country mention to a source articles id 
+          - 3) `/data/scraped_data/location_table_raw_[YEAR]_[ARTICLE-TYPE].tsv`, which maps a country mention to a source articles id 
 
 
 
@@ -115,6 +115,7 @@ We do provide the coreNLP processed data, word frequencies for each article, and
 - ` ./process_scraped_data/*`
 
      - this contains the scripts to pre-process the output from coreNLP into a format that will be used for comparison. 
+     To run the scripts in this folder, you must run the scraper yourself in order to get the Nature News text.
 
      - to make the benchmark quote and location data, you run `run_process_all_years.sh` which runs the other scripts in the folder in the following order
 
