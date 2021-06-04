@@ -2,8 +2,13 @@
 
 The code consists of scraping, text processing, and analysis sections.
 An overview of the process is shown in the figure below.
-![Overview Text Extracted](https://github.com/nrosed/nature_news_disparities/blob/main/figure_notebooks/illustrator_pdfs/nature_news_ex_fig1a.pdf)
-![Overview Processing](https://github.com/nrosed/nature_news_disparities/blob/main/figure_notebooks/illustrator_pdfs/nature_news_ex_fig1b.pdf)
+
+
+**Overview of type of text extracted**
+![Overview Text Extracted](figure_notebooks/illustrator_pdfs/nature_news_ex_fig1a.png)
+
+**Overview of processing**
+![Overview Processing](figure_notebooks/illustrator_pdfs/nature_news_ex_fig1b.png)
 
 To run our code, we provide a docker container that has the required packages, reference data, and processed data.
 Due to copyright issues, we can not provide the scraped text, but we do provide our scraping code in `./nature_news_scraper`.
