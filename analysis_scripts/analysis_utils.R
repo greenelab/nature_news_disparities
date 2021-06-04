@@ -1,13 +1,20 @@
-library(jsonlite)
-library(data.table)
-library(dplyr)
-library(here)
+require(jsonlite)
+require(data.table)
+require(dplyr)
+require(here)
 
 
 proj_dir = here()
 source(file.path(proj_dir, "/utils/scraper_processing_utils.R"))
 
 BOOTSTRAP_SIZE=5000
+
+# read in all word frequencies for faster compute
+FREQ_FILE = file.path(proj_dir, "data/scraped_data/freq_table_raw.tsv")
+if(!exists("FREQ_DF")){
+    FREQ_DF = data.frame(fread(FREQ_FILE))
+}
+
 
 #' Read in the quote information from processed coreNLP TSV output
 #'
@@ -320,52 +327,6 @@ compute_bootstrap_location <- function(full_data_df, year_col_id, article_col_id
 }
 
 
-#' Get the word frequencies from a JSON file containing
-#' file_ids and the body of an articles
-#'
-#' @param json_file This contains all the text from a specific year and news-type
-#' @param file_ids_pass optional parameter to only include specific file_ids
-#' @return word_freq a dataframe of word counts
-calc_word_freq <- function(json_file, file_ids_pass=NA){
-    
-        # read in the json
-        all_articles_df = read_json(json_file)
-        
-        # get the articles we are interested in
-        if(!is.na(file_ids_pass)){
-            all_articles_df = subset(all_articles_df, file_id %in% file_ids_pass)
-        }
-        all_articles_df = data.table(all_articles_df)
-        
-        # tokenize
-        all_articles_df <- all_articles_df %>%
-                unnest_tokens(word, body)
-        
-        # remove stop words
-        all_articles_df <- all_articles_df %>%
-                anti_join(stop_words)
-        
-        # make sure its ASCII
-        all_articles_df$word = iconv(all_articles_df$word, from = "UTF-8", to = "ASCII", sub = "")
-        
-        # remove punctuations
-        all_articles_df$word = gsub('[[:punct:] ]+', '', all_articles_df$word)
-        
-        # make sure its not a number
-        non_num = which(is.na(as.numeric(all_articles_df$word)))
-        all_articles_df = all_articles_df[non_num,]
-        
-        # make sure its not an empty string
-        non_whitespace = which(trimws(all_articles_df$word)!="")
-        all_articles_df = all_articles_df[non_whitespace,]
-
-        # get counts
-        word_freq = all_articles_df %>%
-                count(word, sort = TRUE)
-        
-        return(word_freq)
-}
-
 format_country_names <- function(country_vec){
 
     country_vec = lapply(country_vec, 
@@ -409,40 +370,20 @@ get_author_country <- function(loc_df){
 #' article_type - year mapping
 #' @param class_str name of country class of interest
 #' @return word_freq a dataframe of word counts across all relevant articles
-get_word_freq_per_class <- function(class_ids, class_str){
-        
-    # get the word frequencies for class C articles
-    class_word_freq = NA
-    for(curr_year in unique(class_ids$year)){
-        # subset for each year
-        curr_year_df = subset(class_ids, year == curr_year)
-        
-        for(curr_type in unique(curr_year_df$type)){
-            # subset for each type within a year
-            curr_year_type_df = subset(curr_year_df, type == curr_type)
+get_word_freq_per_class <- function(class_ids, class_str, run_bootstrap=FALSE){
     
-            # make the file name
-            curr_file = file.path(proj_dir, "/data/scraped_data/downloads/",
-                                  paste("links_crawled_", 
-                                        curr_year, "_", 
-                                        curr_type, ".json", sep=""))
-            
-            # calculate the word frequency
-            curr_word_freq = calc_word_freq(curr_file, unique(curr_year_type_df$file_id))
-            curr_word_freq = as.data.frame(curr_word_freq)
-            curr_word_freq$year = curr_year
-            curr_word_freq$type = curr_type
-            class_word_freq = rbind(class_word_freq, curr_word_freq)
-        }
+    # calculate the word frequency
+    curr_file_ids = unique(class_ids$file_id)
+    if(run_bootstrap){
+        curr_file_ids = sample(curr_file_ids, length(curr_file_ids), replace=T)
     }
-    class_word_freq_total = class_word_freq[-1,]
-    class_word_freq = class_word_freq[-1,]
-    
+    all_articles_df = subset(FREQ_DF, file_id %in% curr_file_ids)
+
     # sum word frequencies across the different JSON files
-    class_word_freq = class_word_freq %>%
-                    select("word", "n") %>%
+    class_word_freq = all_articles_df %>%
+                    select("word", "count") %>%
                     group_by(word) %>% 
-                    summarise(sum(n)) 
+                    summarise(sum(count)) 
     col_id = paste(class_str, "_count", sep="")
     colnames(class_word_freq)[2] = col_id
     
@@ -453,6 +394,7 @@ get_word_freq_per_class <- function(class_ids, class_str){
      
     return(class_word_freq)
 }
+
 
 
 
@@ -504,3 +446,91 @@ get_word_freq_per_country <- function(mentions_df, class_str,
 
     return(all_country_word_freq)
 }
+
+
+#' Get the word frequencies across multiple JSON files containing
+#' for all years and news types. This additionally processes the counts
+#' and normalizes the frequency of the word by all observed articles
+#'
+#' @param class_c_mentions This contains at a minimum a file_id - country - 
+#' article_type - year mapping for all class c countries
+#' @param class_c_mentions This contains at a minimum a file_id - country - 
+#' article_type - year mapping for all class m countries
+#' @param word_vec the word of interest to calculate the bootstrap over
+#' @return boot_res data frame of the bootstrap stats for each word
+get_bootstrap_word_ratio <- function(class_c_mentions, class_m_mentions, word_vec, conf_int=0.95){
+
+    set.seed(5)
+
+    # run bootstrap samples
+    boot_res = data.frame(matrix(ncol = BOOTSTRAP_SIZE, nrow = length(word_vec)))
+    for(idx in 1:BOOTSTRAP_SIZE){
+    
+        # first calculate word counts for M countries
+        all_country_word_freq_m = list()
+        for(curr_country in unique(class_m_mentions$address.country_code)){
+            
+            # get the word freq for class M mentions
+            class_word_freq = get_word_freq_per_class(
+                                    subset(class_m_mentions, address.country_code == curr_country), 
+                                    class_str = "class_m",
+                                    run_bootstrap = TRUE)
+            class_word_freq = subset(class_word_freq, word %in% word_vec)
+            
+            all_country_word_freq_m[[curr_country]] = class_word_freq
+    
+        }
+        # now that we have it for each country, take the median across all countries
+        mentions_m_freq = Reduce(function(x, y) merge(x, y, by = "word", all = T), 
+                           all_country_word_freq_m)
+        mentions_m_freq[is.na(mentions_m_freq)] = 0
+        mentions_m_freq$median_m = apply(mentions_m_freq[,2:ncol(mentions_m_freq)], 
+                                           1, median)
+        
+        # first calculate word counts for C countries
+        all_country_word_freq_c = list()
+        for(curr_country in unique(class_c_mentions$address.country_code)){
+            
+            # get the word freq for class C mentions
+            class_word_freq = get_word_freq_per_class(
+                                    subset(class_c_mentions, address.country_code == curr_country), 
+                                    class_str = "class_c",
+                                    run_bootstrap = TRUE)
+            class_word_freq = subset(class_word_freq, word %in% word_vec)
+            
+            all_country_word_freq_c[[curr_country]] = class_word_freq
+    
+        }
+        # now that we have it for each country, take the median across all countries
+        mentions_c_freq = Reduce(function(x, y) merge(x, y, by = "word", all = T), 
+                           all_country_word_freq_c)
+        mentions_c_freq[is.na(mentions_c_freq)] = 0
+        mentions_c_freq$median_c = apply(mentions_c_freq[,2:ncol(mentions_c_freq)], 
+                                           1, median)
+        
+        # now lets compare class C and M countries by taking the ratio
+        mentions_joint = merge(mentions_m_freq[,c("word", "median_m")],
+                               mentions_c_freq[,c("word", "median_c")])
+        mentions_joint$ratio = (mentions_joint$median_c+1) / (mentions_joint$median_m+1)
+
+        # format table
+        rownames(mentions_joint) = mentions_joint$word
+        mentions_joint = mentions_joint[word_vec,]
+        boot_res[,idx] = mentions_joint$ratio
+        
+        print(idx)
+    }
+
+    # now take the quantiles to return bootstrap estimates
+    rownames(boot_res) = word_vec
+    quantile_res = data.frame(rownames(boot_res), 
+                        apply(boot_res, 1, quantile, 1-conf_int, na.rm=TRUE),
+                        apply(boot_res, 1, quantile, conf_int, na.rm=TRUE),
+                        apply(boot_res, 1, mean, na.rm=TRUE))
+
+    colnames(quantile_res) = c("word", "bottom_CI", "top_ci", "mean")
+
+
+    return(list(quantile_res, boot_res))
+}
+
