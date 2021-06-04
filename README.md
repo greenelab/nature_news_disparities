@@ -1,35 +1,138 @@
 # Analysis Pipeline for Nature News Articles
 
-Note: This is currently a work in progress -- many things will change and may also be undocumented at this moment.
+The code is made of scraping, text processing, and analysis sections.
+An overview of the process is shown in the figure below.
+![Overview Text Extracted](https://github.com/nrosed/nature_news_disparities/blob/main/figure_notebooks/illustrator_pdfs/nature_news_ex_fig1a.pdf)
+![Overview Processing](https://github.com/nrosed/nature_news_disparities/blob/main/figure_notebooks/illustrator_pdfs/nature_news_ex_fig1b.pdf)
 
-The code is made of 2 parts currently: 
-1. Scrape Nature News Articles
-2. Analyze the text of the articles to identify possible speaker biases
+To run our code, we provide a docker container that has the required packages, reference data, and processed data.
+Due to copyright issues, we can not provide the scraped text, but we do provide our scraping code in `./nature_news_scraper`.
+We do provide the coreNLP processed data and following derived data in our github repo and in the docker container.
 
-To download neccessary software and reference data, you must run [setup.sh](https://github.com/nrosed/nature_news_disparities/blob/main/nature_news_scraper/setup.sh)
+## Quick data folder overview
 
-Quick data folder overview:
 -  `./data/reference_data/*`
-     - has all annotation data for country mapping
-- `./ benchmark_data/*`
+
+     - has all annotation data and cached API data. 
+
+- `./benchmark_data/*`
+
      - this contains the generated benchmark scraped output (`*_raw.tsv`) and the hand annotated benchmark `*_hand_annotated.tsv`
+
      - all links considered for scraping can be found here in `links.json`
+
      - all text scraped is in `links_crawled.json`
 
-Quick code overview:
+     - coreNLP output for each article is in `./coreNLP_output.json`
+
+- `./author_data/*`
+
+     - contains gender, name origin, and affiliations of the authors of either cited or background articles (Springer / Nature)
+     
+     - For Figure 2, the key files are the following:
+
+          1) `./data/author_data/springer_author_gender.tsv` has the gender of first and last authors from a randomly selected 36K Springer articles from 2005-2020.
+
+          2) `./data/author_data/nature_author_gender.tsv` has the gender of first and last authors from all Nature articles from 2005-2020.
+
+          3) `./data/author_data/all_author_fullname.tsv` is the output after scraping and processing the citations from nature news articles for the first and last author information.
+
+     - For figure 3, the key files are the following:
+
+          - The quote data file is: `./data/author_data/all_speaker_fullname_pred.tsv`
+          
+          - The bg data file is: `./data/author_data/all_author_fullname_pred.tsv`
+
+               - The three corpi are indexed by the `corpus` column:
+
+                    1) `news_quotes`: __foreground__ est. name origin of Nature News quoted speaker 
+
+                    2) `nature_last`: __background__ est. name origin of last author of Nature articles. 
+
+                    3) `springer_last`: __background__ est. name origin of last author of a random subset of Springer articles. 
+
+     - For Figure 4, the key files are the following:
+
+          - `./data/author_data/all_author_country.tsv`
+
+               - The four corpi are indexed by the `corpus` column:
+
+               1) `nature_news`: __foreground__ country of a location mentioned in any Nature News article
+
+               2) `news_citation`: __foreground__ country of Nature News cited authors affiliation. 
+
+               3) `nature_articles`: __background__ country of author affiliation from Nature articles. 
+
+               4) `springer`: __background__ country of author affiliation from random subset of Springer articles. 
+
+               - The `num_entries` column denotes the number of articles with at least ONE author from a particular country
+
+               - The `address.country_code` column denotes the UN 2-digit country code
+
+          - `/data/author_data/all_author_country_95CI.tsv`
+
+               - Bootstrap estimate of country mentions and citations
+
+
+- `./scraped_data/*`
+
+     - This contains all the scraped and processed data from the Nature News articles. This consists of coreNLP output, and processed quote and locations files. 
+
+     - For Figure 2, the key files are the following:
+
+          - `./data/scraped_data/quote_table_raw_20*.tsv` has all quotes with estimated gender for the speaker
+
+     - For Figure 4, the key files are the following:
+
+          - 3) `/data/scraped_data/location_table_raw_YEAR_ARTICLE-TYPE.tsv`, which maps a country mention to a source articles id 
+
+
+
+
+
+## Quick code overview
+
 - `./utils/*` 
+
      - has all R helper functions for processing scraped text and plotting
+
 - `./nature_news_scraper/*`
+
      - This contains all scraping code. Most is auto-generated by scrapy
+
 - ` ./process_scraped_data/*`
+
      - this contains the scripts to pre-process the output from coreNLP into a format that will be used for comparison. 
+
      - to make the benchmark quote and location data, you run `run_process_scrape.sh` which runs the other scripts in the folder in the following order
+
      1. `process_scrape.R` processes the scrapy output before running coreNLP.
+
      2. coreNLP is run on the output
+
      3. files with `*location*` process coreNLP output for country comparisons
+
      4. files with `*quote*` process coreNLP output for quoted gender comparisons
+
+- `./process_doi_data/*`
+
+     - this contains all Springer API calls and processing scripts for articles from the background set or that were cited by a Nature News article. To re-run these scripts, you only need to run `process_doi_data/run_background_scrapes.sh`. However, you will need to provide your personal Springer API key. You can get a key by registering here: [https://dev.springernature.com/](https://dev.springernature.com/). Also note that this script may exceed your API key allocation.
+
+- `./analysis_scripts/*`
+
+     - this contains all in-depth analysis scripts. Each analysis is summarized in an R markdown notebook. The analysis may be out of date and need to be re-run. The most up-to-date analyses are located in `./figure_notebooks/`
+
+- `./figure_notebooks/*`
+
+     - this contains all analysis scripts to generate the main and supplemental figures. Each analysis is summarized in an R markdown notebook.
+
 - `./analyze_benchmark_data/*`
-     - this contains all analysis scripts. To view the analysis on github you can view it in `benchmark_analysis.md`
+
+     - this contains all benchmark analysis scripts. To view the analysis on github you can view it in `supp_fig1.md`
+
+- `./name_lstm_models/*`
+
+     - this contains the models for predicting name origin. This model is taken from the following github repository: [github repo](https://github.com/greenelab/wiki-nationality-estimate/raw/7425af1021f8a5c00aad789ebcaef67c5fe427bb/models/). It is described in this manuscript: [Analysis of ISCB honorees and keynotes reveals disparities](https://doi.org/ggr64p)
 
 
 
@@ -41,10 +144,8 @@ To run the scraper tool, you run the shell script found here: [run_scrape_benchm
 This runs an initial scrape to identify all articles in 2020, 2015, and 2010, then randomly chooses 10 from each year to write to a file. 
 This will later be extended.
   
-## Analysis
+## Analysis and Results
   
-Currently, we look at the proportion of MALE:FEMALE quoted speakers in each article and which countries are mentioned in each article.
-All analysis functions and markdown code that utilizes the functions can be found in [here](https://github.com/nrosed/nature_news_disparities/tree/main/analyze_benchmark_data/).
+All analyses are described in detail in our manuscript on github which was created using [Manubot](https://manubot.org/): [manuscript github repo](https://github.com/greenelab/nature_news_manuscript).
 
-To view the current state of the analysis on github, click [here](https://github.com/nrosed/nature_news_disparities/tree/main/analyze_benchmark_data/benchmark_analysis.md).
-
+All main and supplemental figures can be re-created by re-running the associated R markdown file in `./figure_notebooks/*`.
