@@ -285,7 +285,7 @@ if(RERUN_BOOTSTRAP){
     save(quote_prop_df, type_df, career_df, 
          springer_first_prop_df, springer_last_prop_df, 
          nature_first_prop_df, nature_last_prop_df, 
-         first_cited_prop_df, file = "fig2.RData")
+         first_cited_prop_df, file = all_bootstrap_file)
 }else{
     all_bootstrap_file = file.path(proj_dir,
                                 "/figure_notebooks/tmp_files/fig2_tmp/fig2.RData")

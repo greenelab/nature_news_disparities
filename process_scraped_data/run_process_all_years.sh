@@ -18,3 +18,5 @@ do
     done
 done
 
+FREQ_RES_FILE="${DIR}/../data/scraped_data/freq_table_raw.tsv"
+RScript ${DIR}/process_corenlp_freq_corenlp_output.R ${FREQ_RES_FILE}

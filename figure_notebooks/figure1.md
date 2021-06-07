@@ -32,29 +32,31 @@ The **setting + helper functions** to generate the plots are here:
 ``` r
 # read in the scraped news articles for each year
 news_scraped_dir = file.path(proj_dir,
-                    "/data/scraped_data/downloads/")
-news_scraped_dir_files = list.files(news_scraped_dir, full.names = T)
+                    "/data/scraped_data/")
+news_scraped_dir_files = list.dirs(news_scraped_dir, full.names = T)
+news_scraped_dir_files = grep("coreNLP_output", news_scraped_dir_files, value=T)
 
 news_df = NA
-for(curr_file in news_scraped_dir_files){
+for(curr_dir in news_scraped_dir_files){
     
-    curr_df = read_json(curr_file)
+    curr_files = list.files(curr_dir, full.names = T)
+
     
     # if the json file was empty, skip
-    if(all(is.na(curr_df))){
+    if(length(curr_files) == 0 ){
         next
     }
     
     # get the year form the file name
-    file_name_year = substring(basename(curr_file), 
-                            15, 18)
+    file_name_year = substring(basename(curr_dir), 
+                            16, 19)
     
     # get the news article type from the file name
-    file_name_type = substring(basename(curr_file), 
-                            20, nchar(basename(curr_file))-5)
+    file_name_type = substring(basename(curr_dir), 
+                            21, nchar(basename(curr_dir)))
     
     # format the output
-    article_ids = curr_df$file_id
+    article_ids = gsub(".txt.json", "", basename(curr_files))
     num_articles = length(article_ids)
     curr_info_df = data.frame(year=file_name_year, 
                                 type=file_name_type, 
@@ -67,13 +69,13 @@ news_df = news_df[-1,]
 head(news_df)
 ```
 
-    ##   year           type  file_id
-    ## 2 2005 news-and-views 4381089a
-    ## 3 2005 news-and-views 4381092a
-    ## 4 2005 news-and-views  438750a
-    ## 5 2005 news-and-views  438752a
-    ## 6 2005 news-and-views  438925a
-    ## 7 2005 news-and-views  438747a
+    ##   year type        file_id
+    ## 2 2005 news  041220-1.html
+    ## 3 2005 news  050103-1.html
+    ## 4 2005 news 050103-10.html
+    ## 5 2005 news 050103-11.html
+    ## 6 2005 news 050103-12.html
+    ## 7 2005 news  050103-2.html
 
 ### Read in the nature + springer research author information
 

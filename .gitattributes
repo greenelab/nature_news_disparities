@@ -1,0 +1,2 @@
+data/scraped_data/coreNLP_output_*/**/* filter=lfs diff=lfs merge=lfs -text
+data/scraped_data/*_raw*.tsv filter=lfs diff=lfs merge=lfs -text
