@@ -202,7 +202,9 @@ This may take a while, building the r packages can take 30 minutes to an hour.
 
 If you would like to re-run the scraper all downstream processing, you will need to re-run the shell scripts in the following folders:
 
-     - `./nature_news_scraper/*`
-     - `./process_scraped_data/*`
-     - `./process_doi_data/*`
+     ./nature_news_scraper/*
+     ./process_scraped_data/*
+     ./process_doi_data/*
+
 The directions on how to run them are provided in the [Quick code overview](#quick-code-overview) section above.
+Once the scraping and pre-processing has completed successfully, you can run `./entrypoint.sh all` to recreate all the figures.
