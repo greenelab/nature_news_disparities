@@ -173,4 +173,36 @@ All main and supplemental figures can be re-created by re-running the associated
 
 ## Running Docker
 
-TODO
+### set-up environment
+1) You must have git-lfs and docker installed.
+2) (optional) You will need to obtain a _Springer_ API key if you want to re-run the processing code after scraping. Once you have a key, update the `.env_template` with your _Springer_ API key (or you can keep the dummy key if you will not run the API calls)
+3) rename the .env_template to .env
+
+### build image
+1) run `./build_image.sh`. 
+This may take a while, building the r packages can take 30 minutes to an hour.
+
+### remake figures
+1) To recreate figures, run the entrypoint script, described below 
+```
+./entrypoint.sh figures [--rerun-bootstrap] <figure_name|clean>
+
+     --rerun-bootstrap: (optional) recomputes bootstrap estimates 
+                        from scratch (expensive)
+
+     figure_name: recreates a specific figure, or if 
+                  "all" is specified all of them.
+                  available options: 'figure1', 'figure2',
+                                    'figure3', 'figure4', 
+                                    'supplemental1', 'all'
+
+     clean: removes all intermediate and final figure artifacts,
+            and the bootstrap data cache"
+```
+
+If you would like to re-run the scraper all downstream processing, you will need to re-run the shell scripts in the following folders:
+
+     - `./nature_news_scraper/*`
+     - `./process_scraped_data/*`
+     - `./process_doi_data/*`
+The directions on how to run them are provided in the [Quick code overview](quick-code-overview) section above.
