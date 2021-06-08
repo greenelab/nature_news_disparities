@@ -103,8 +103,23 @@ sub_figures() {
     if [[ $1 == '--rerun-bootstrap' ]]; then
         shift
         RERUN_BOOTSTRAP=1
+    fi
+
+    # double check that they want to do a destructive operation
+    if [[ $RERUN_BOOTSTRAP -eq 1 ]] || [[ $1 == 'clean']]; then
+        read -r -p "delete and re-create temporary files? (this is very expensive, maybe >11 hrs per figure) [y/N]" response
+        case "$response" in
+            [yY][eE][sS]|[yY])
+                # pass
+                ;;
+            *)
+                echo "aborting file destruction..."
+                exit 1
+                ;;
+        esac
         echo "Clearing and recreating cached bootstrap data; recomputing may take several hours..."
     fi
+
 
     # # in order to use git lfs, we need an https remote, not ssh; make sure that it's set now
     # OLD_ORIGIN=$( git remote get-url origin )
