@@ -205,4 +205,4 @@ If you would like to re-run the scraper all downstream processing, you will need
      - `./nature_news_scraper/*`
      - `./process_scraped_data/*`
      - `./process_doi_data/*`
-The directions on how to run them are provided in the [Quick code overview](quick-code-overview) section above.
+The directions on how to run them are provided in the [Quick code overview](#quick-code-overview) section above.
