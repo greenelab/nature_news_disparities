@@ -106,7 +106,7 @@ sub_figures() {
     fi
 
     # double check that they want to do a destructive operation
-    if [[ $RERUN_BOOTSTRAP -eq 1 || $1 == 'clean']]; then
+    if [[ $RERUN_BOOTSTRAP -eq 1 || $1 == 'clean' ]]; then
         read -r -p "delete and re-create temporary files? (this is very expensive, maybe >11 hrs per figure) [y/N]" response
         case "$response" in
             [yY][eE][sS]|[yY])
