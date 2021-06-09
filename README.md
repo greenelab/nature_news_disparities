@@ -185,7 +185,7 @@ This may take a while, building the r packages can take 30 minutes to an hour.
 ### remake figures
 1) To recreate figures, run the entrypoint script, described below 
 ```
-./entrypoint.sh figures [--rerun-bootstrap] <figure_name|clean>
+./run_docker.sh figures [--rerun-bootstrap] <figure_name|clean>
 
      --rerun-bootstrap: (optional) recomputes bootstrap estimates 
                         from scratch (expensive)
@@ -207,4 +207,4 @@ If you would like to re-run the scraper all downstream processing, you will need
      ./process_doi_data/*
 
 The directions on how to run them are provided in the [Quick code overview](#quick-code-overview) section above.
-Once the scraping and pre-processing has completed successfully, you can run `./entrypoint.sh all` to recreate all the figures.
+Once the scraping and pre-processing has completed successfully, you can run `./run_docker.sh all` to recreate all the figures.
