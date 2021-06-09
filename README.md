@@ -5,6 +5,7 @@ It also contains the instructions on how to re-run the analyses using Docker.
 
 ## Contents
 - [Overview](#overview)
+- [Requirements](#Requirements)
 - [Data overview](#Quick-data-folder-overview)
 - [Code overview](#quick-code-overview)
 - [Scraping](#Scraping)
@@ -26,6 +27,13 @@ An overview of the process is shown in the figure below.
 To run our code, we provide a docker container that has the required packages, reference data, and processed data.
 Due to copyright issues, we can not provide the scraped text, but we do provide our scraping code in `./nature_news_scraper`.
 We do provide the coreNLP processed data, word frequencies for each article, and further downstream derived data in our github repo and in the docker container.
+
+## Requirements
+
+To run re-run the analyses, you will need the following:
+
+- 50GB of disk space (22GB for the data, 22GB for git-lfs cache, ~5GB for additional processes)
+- At least 8G of RAM
 
 ## Quick data folder overview
 
