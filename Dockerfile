@@ -7,8 +7,8 @@ RUN \
   apt-get install -y \
     curl git git-lfs python3 python3-pip openjdk-8-jdk \
     pandoc qpdf libcurl4-openssl-dev libmagick++-6.q16-dev libudunits2-dev libpoppler-cpp-dev \
-    && \
-  git lfs install
+&& rm -rf /var/lib/apt/lists/* \
+&&  git lfs install
 
 WORKDIR /app
 
