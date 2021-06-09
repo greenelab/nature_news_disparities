@@ -20,7 +20,12 @@ fi
 if [[ ! -f .env ]]; then
     echo "please create a .env file, a template file (.env_template) should be updated and renamed"
 else
-    echo "environment file found"
+    source .env
+    if [[ ${SPRINGER_API_KEY} == "REPLACE_ME" ]]; then
+        echo "Your Springer key will need to be replaced for you to access the API."
+        echo "This is only needed if you would like to re-scrape and re-process the data."
+    fi
+
 fi
 
 
