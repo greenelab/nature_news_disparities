@@ -1,8 +1,21 @@
 # Analysis Pipeline for Nature News Articles
 
+This README contains a description of all the data and code within this git.
+It also contains the instructions on how to re-run the analyses using Docker.
+
+## Contents
+- [Overview](#overview)
+- [Data overview](#Quick-data-folder-overview)
+- [Code overview](#quick-code-overview)
+- [Scraping](#Scraping)
+- [Analysis Description](#Analysis-and-Results)
+- [Running Docker](#Running-Docker)
+
+
+## Overview
+
 The code consists of scraping, text processing, and analysis sections.
 An overview of the process is shown in the figure below.
-
 
 **Overview of type of text extracted**
 ![Overview Text Extracted](figure_notebooks/illustrator_pdfs/nature_news_ex_fig1a.png)
@@ -200,11 +213,11 @@ This may take a while, building the r packages can take 30 minutes to an hour.
             and the bootstrap data cache"
 ```
 
-If you would like to re-run the scraper all downstream processing, you will need to re-run the shell scripts in the following folders:
+If you would like to re-run the scraper and therefore all downstream processing, you will need to re-run the shell scripts in the following folders:
 
      ./nature_news_scraper/*
      ./process_scraped_data/*
      ./process_doi_data/*
 
 The directions on how to run them are provided in the [Quick code overview](#quick-code-overview) section above.
-Once the scraping and pre-processing has completed successfully, you can run `./run_docker.sh all` to recreate all the figures.
+Once the scraping and pre-processing has completed successfully, you can run `./run_docker.sh figures all` to recreate all the figures.
