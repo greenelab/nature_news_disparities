@@ -22,7 +22,7 @@ source(file.path(proj_dir, "/analysis_scripts/analysis_utils.R"))
 source(file.path(proj_dir, "/utils/plotting_utils.R"))
 source(file.path(proj_dir, "/process_doi_data/springer_scripts/springer_scrape_utils.R"))
 
-RERUN_BOOTSTRAP = FALSE
+RERUN_BOOTSTRAP = TRUE
 
 
 ```
@@ -91,10 +91,23 @@ for(quote_file in quote_files){
 full_quote_df = full_quote_df[-1,]
 full_quote_df = full_quote_df[full_quote_df$est_gender %in% c("FEMALE", "MALE"), ]
 
-head(full_quote_df)
-
 # remove quotes where no gender could be estimated
 full_quote_df = subset(full_quote_df, !is.na(est_gender))
+
+# filter out career column and news-and-views
+full_quote_df = subset(full_quote_df, !type %in% c("career-column", "news-and-views"))
+
+# remove names with single name, that do not have a pronoun
+space_idx = grep(" ", full_quote_df$est_speaker)
+gendered_pronouns = c("he", "him", "his", "himself",
+                    "she", "her", "hers", "herself")
+pronoun_idx_canonical = which(full_quote_df$canonical_speaker %in% gendered_pronouns)
+pronoun_idx_partial = which(full_quote_df$partial_name %in% gendered_pronouns)
+allowed_idx = unique(c(space_idx, pronoun_idx_canonical, pronoun_idx_partial))
+length(allowed_idx)
+full_quote_df = full_quote_df[allowed_idx,]
+
+head(full_quote_df)
 
 
 ```
@@ -168,8 +181,8 @@ for(curr_id in file_id_intersect){
     for(idx in 1:nrow(names_df)){
         curr_text = names_df$est_speaker[idx]
         
-        # remove punctuations just in case
-        curr_text = gsub('[[:punct:] ]+', '', curr_text)
+        # remove punctuations just in case, except for space
+        curr_text = gsub('(?![ ])[[:punct:] ]+', '', curr_text, perl=T)
         
         # get_matched_string tries to find the name with the 
         # closest substring with no penalty for deletions.
@@ -187,10 +200,11 @@ for(curr_id in file_id_intersect){
     merged_df = merge(curr_quote[,c("author", "year", "est_speaker", "type", "file_id", "quote")], 
                       curr_author[,c("author", "doi", "author_pos")],
                       by = "author")
-    quote_author_df = rbind(quote_author_df, merged_df)
-
-
     
+    if(nrow(merged_df) > 0){
+        quote_author_df = rbind(quote_author_df, merged_df)
+    }
+
 }
 quote_author_df = quote_author_df[-1,]
 quote_author_df = unique(quote_author_df)
