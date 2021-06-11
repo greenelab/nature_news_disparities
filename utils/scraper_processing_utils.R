@@ -116,8 +116,21 @@ format_author_fullname_internal <- function(in_name){
 
     # extract name
     in_name = parse_names(in_name)
-    in_name = in_name[c("first_name", "middle_name", "last_name")]
+
+    # format first name
+    in_name$first_name = format_author_firstnames(in_name$first_name)
+    if(in_name$first_name == "" | is.na(in_name$first_name)){
+        return("")
+    }
+
+    in_name = in_name[c("first_name", "last_name")]
     in_name = paste(na.omit(unlist(in_name[1,])), collapse=" ")
+    in_name = str_trim(in_name)
+
+    # if the name is less than 3 characters remove
+    if(nchar(in_name) <= 3){
+        in_name = ""
+    }
 
     return(in_name)
 
@@ -302,7 +315,7 @@ get_osm_locations <- function(json_res){
 
 
 #' get all individual names from coreNLP output
-#' The names either come from NERs or coref.
+#' The names either come from NERs.
 #' Partial names are also matched to full names
 #' using the function get_matched_string
 #' 
@@ -312,6 +325,9 @@ get_persons <- function(json_res){
 
     # get named entities --names
     ner_df = get_ner(json_res)
+    if(length(ner_df) == 0){
+        return(NA)
+    }
 
     ner_names_df = subset(ner_df, ner=="PERSON")
     ner_names_df = subset(ner_names_df, !tolower(text) %in% pronouns)
@@ -322,19 +338,6 @@ get_persons <- function(json_res){
         return(NA)
     }
     ner_names_df = data.frame(text=ner_names_df$text, gender="UNKNOWN")
-
-
-    # get coreferenced names for later merging
-    coref_list = json_res$corefs
-    coref_df = do.call(rbind, coref_list)
-    coref_names_df = subset(coref_df, type=="PROPER" & 
-                                animacy == "ANIMATE" & 
-                                number == "SINGULAR")
-
-    coref_names_df = coref_names_df[,c("text", "gender")]
-    if(nrow(coref_names_df) != 0){
-        coref_names_df$gender = "UNKNOWN"
-    }
 
  
     # now find the longest strings and gender
@@ -365,7 +368,6 @@ get_persons <- function(json_res){
     }
 
     # now convert names
-    names_df = rbind(ner_names_df, coref_names_df)
     names_df = ner_names_df
     names_df$full_name = NA
     for(idx in 1:nrow(names_df)){

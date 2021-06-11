@@ -50,4 +50,9 @@ else
                                             -o ${OUT_DIR}/all_speaker_fullname_pred.tsv
 
 
+    python ${DIR}/springer_scripts/process_author_fullnames.py -m ${MODEL_DIR} \
+                                            -n ${OUT_DIR}/all_mentioned_fullname.tsv \
+                                            -o ${OUT_DIR}/all_mentioned_fullname_pred.tsv
+
+
 fi
