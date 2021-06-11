@@ -191,9 +191,56 @@ get_springer_bg <- function(){
 #' @return a dataframe of the CI estimates
 get_bootstrapped_CI_country_corpus <- function(sum_country){
 
+
+    # read in the scraped news articles for each year
+    # we will need this later for filtering out articles in columns
+    # we would like to ignore
+    news_scraped_dir = file.path(proj_dir,
+                        "/data/scraped_data/")
+    news_scraped_dir_files = list.dirs(news_scraped_dir, full.names = T)
+    news_scraped_dir_files = grep("coreNLP_output", news_scraped_dir_files, value=T)
+
+    news_df = NA
+    for(curr_dir in news_scraped_dir_files){
+        
+        curr_files = list.files(curr_dir, full.names = T)
+
+        
+        # if the json file was empty, skip
+        if(length(curr_files) == 0 ){
+            next
+        }
+        
+        # get the year form the file name
+        file_name_year = substring(basename(curr_dir), 
+                                16, 19)
+        
+        # get the news article type from the file name
+        file_name_type = substring(basename(curr_dir), 
+                                21, nchar(basename(curr_dir)))
+        
+        # format the output
+        article_ids = gsub(".txt.json", "", basename(curr_files))
+        num_articles = length(article_ids)
+        curr_info_df = data.frame(year=file_name_year, 
+                                    type=file_name_type, 
+                                    file_id=article_ids)
+        news_df = rbind(news_df, curr_info_df)
+        
+    }
+    news_df = news_df[-1,]
+
+    # filter out career column and news-and-views
+    news_df = subset(news_df, !type %in% c("career-column", "news-and-views"))
+    file_id_keep = news_df$file_id
+    bg_df = subset(sum_country, corpus %in% c("nature_articles", "springer_articles"))
+    to_filter_df = subset(sum_country, corpus %in% c("naturenews_citations", "naturenews_mentions"))
+    to_filter_df = subset(to_filter_df, file_id %in% file_id_keep)
+    sum_country_filt = rbind(bg_df, to_filter_df)
+
     # get the full country info
     un_info = get_country_info()
-    country_df = merge(sum_country, un_info)
+    country_df = merge(sum_country_filt, un_info)
 
     # for each country, in each corpus calculate the bootstrap CI
     bootstrap_country_df = NA
