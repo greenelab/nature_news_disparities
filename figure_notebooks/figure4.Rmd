@@ -31,7 +31,7 @@ MIN_ART = 5
 MIN_PROP = 0.05
 MIN_WORD_FREQ = 100
 NUM_COUNTRIES_PLOT = 10
-RERUN_BOOTSTRAP = TRUE
+RERUN_BOOTSTRAP = FALSE
 NUM_WORDS_BOOTSTRAP = 100
 NUM_WORDS_REPORT = 15
 
@@ -241,6 +241,9 @@ tot_prop_citation = citation_total %>%
                 group_by(year) %>% 
                 summarise(n()) 
 tot_prop_citation$corpus = "naturenews_citations"
+print("num articles with citation")
+length(unique(citation_total$file_id))
+length(unique(subset(country_df, corpus == "naturenews_citations")))
 
 # get num or articles with a country citation
 tot_prop_df = rbind(tot_prop_mention, tot_prop_citation)

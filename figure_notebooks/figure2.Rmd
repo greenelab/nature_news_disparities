@@ -22,7 +22,7 @@ source(file.path(proj_dir, "/analysis_scripts/analysis_utils.R"))
 source(file.path(proj_dir, "/utils/plotting_utils.R"))
 source(file.path(proj_dir, "/process_doi_data/springer_scripts/springer_scrape_utils.R"))
 
-RERUN_BOOTSTRAP = TRUE
+RERUN_BOOTSTRAP = FALSE
 
 
 ```
@@ -89,13 +89,19 @@ for(quote_file in quote_files){
     full_quote_df = rbind(full_quote_df, quote_df)
 }
 full_quote_df = full_quote_df[-1,]
+
+# filter out career column and news-and-views
+full_quote_df = subset(full_quote_df, !type %in% c("career-column", "news-and-views"))
+full_quote_df = unique(full_quote_df)
+
+print("Total Quotes")
+print(dim(full_quote_df))
+
 full_quote_df = full_quote_df[full_quote_df$est_gender %in% c("FEMALE", "MALE"), ]
 
 # remove quotes where no gender could be estimated
 full_quote_df = subset(full_quote_df, !is.na(est_gender))
 
-# filter out career column and news-and-views
-full_quote_df = subset(full_quote_df, !type %in% c("career-column", "news-and-views"))
 
 # remove names with single name, that do not have a pronoun
 space_idx = grep(" ", full_quote_df$est_speaker)
@@ -107,8 +113,19 @@ allowed_idx = unique(c(space_idx, pronoun_idx_canonical, pronoun_idx_partial))
 length(allowed_idx)
 full_quote_df = full_quote_df[allowed_idx,]
 
-head(full_quote_df)
+full_quote_df = unique(full_quote_df)
 
+head(full_quote_df)
+print("Total with Gender Prediction")
+print(dim(full_quote_df))
+
+print("Male Quote Ratio:")
+table(subset(full_quote_df, year == 2005)$est_gender)
+table(subset(full_quote_df, year == 2020)$est_gender)
+
+print("Career-feature info:")
+dim(subset(full_quote_df, type == "career-feature"))
+table(subset(full_quote_df, type == "career-feature")$est_gender)
 
 ```
 
@@ -132,7 +149,9 @@ head(nature_author_df)
 springer_author_df = subset(springer_author_df, !is.na(est_gender))
 nature_author_df = subset(nature_author_df, !is.na(est_gender))
 
-
+nature_author_df = unique(nature_author_df)
+print("Number of Nature Authors")
+print(table(nature_author_df$author_pos))
 
 ```
 
@@ -209,6 +228,9 @@ for(curr_id in file_id_intersect){
 quote_author_df = quote_author_df[-1,]
 quote_author_df = unique(quote_author_df)
 
+print("Quote Stats")
+dim(quote_author_df)
+table(quote_author_df$author_pos)
 
 
 ```

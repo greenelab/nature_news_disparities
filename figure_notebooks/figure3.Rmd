@@ -23,7 +23,7 @@ source(file.path(proj_dir, "/analysis_scripts/analysis_utils.R"))
 source(file.path(proj_dir, "/utils/plotting_utils.R"))
 source(file.path(proj_dir, "/process_doi_data/springer_scripts/springer_scrape_utils.R"))
 
-RERUN_BOOTSTRAP = TRUE
+RERUN_BOOTSTRAP = FALSE
 
 
 ```
@@ -184,7 +184,7 @@ name_df = rbind(cite_name_df[,col_ids],
                 quote_name_df[,col_ids], 
                 mentioned_name_df[,col_ids])
 head(name_df)
-
+name_df = unique(name_df)
 
 
 ```
@@ -241,8 +241,15 @@ num_art_tot = Reduce(rbind, list(tot_prop_citation_j,
                                  tot_prop_mention))
 num_art_tot = data.frame(num_art_tot)
 colnames(num_art_tot)[2] = "tot_articles"
- 
 
+print("median of observations")
+num_art_tot %>% 
+    group_by(corpus) %>% 
+    summarise(median(tot_articles)) 
+print("min of observations")
+num_art_tot %>% 
+    group_by(corpus) %>% 
+    summarise(min(tot_articles)) 
 
 ```
 
@@ -371,6 +378,27 @@ if(RERUN_BOOTSTRAP){
     mention_origin_df = subset(all_bootstrap_df, corpus == "mention")
     
 }
+
+print("range of European and CelticEnglish names")
+summary(subset(citation_j_origin_df, 
+               name_origin %in% c("European", "CelticEnglish"))$mean)
+summary(subset(citation_s_origin_df, 
+               name_origin %in% c("European", "CelticEnglish"))$mean)
+
+print("range of East names")
+summary(subset(citation_j_origin_df, 
+               name_origin == "EastAsian")$mean)
+summary(subset(citation_s_origin_df, 
+               name_origin == "EastAsian")$mean)
+summary(subset(quote_origin_df, 
+               name_origin == "EastAsian")$mean)
+
+
+print("range of non European or non CelticEnglish or non EastAsian names")
+summary(subset(citation_j_origin_df, 
+               !name_origin %in% c("European", "CelticEnglish", "EastAsian"))$mean)
+summary(subset(citation_s_origin_df, 
+               !name_origin %in% c("European", "CelticEnglish", "EastAsian"))$mean)
 
 ```
 

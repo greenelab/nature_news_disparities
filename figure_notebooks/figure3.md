@@ -172,6 +172,10 @@ head(name_df)
     ## 24  doi:10.1007/s00381-011-1423-z
     ## 28           doi:10.1038/35078008
 
+``` r
+name_df = unique(name_df)
+```
+
 ## Process Data
 
 ### summarize the number of articles/quotes/citations considered in each corpus
@@ -222,7 +226,49 @@ num_art_tot = Reduce(rbind, list(tot_prop_citation_j,
                                  tot_prop_mention))
 num_art_tot = data.frame(num_art_tot)
 colnames(num_art_tot)[2] = "tot_articles"
+
+print("median of observations")
 ```
+
+    ## [1] "median of observations"
+
+``` r
+num_art_tot %>% 
+    group_by(corpus) %>% 
+    summarise(median(tot_articles)) 
+```
+
+    ## # A tibble: 6 x 2
+    ##   corpus              `median(tot_articles)`
+    ##   <chr>                                <dbl>
+    ## 1 citation_journalist                   267 
+    ## 2 citation_scientist                    660.
+    ## 3 mention                              5002 
+    ## 4 nature_last                           679 
+    ## 5 quote                                6194 
+    ## 6 springer_last                        1684.
+
+``` r
+print("min of observations")
+```
+
+    ## [1] "min of observations"
+
+``` r
+num_art_tot %>% 
+    group_by(corpus) %>% 
+    summarise(min(tot_articles)) 
+```
+
+    ## # A tibble: 6 x 2
+    ##   corpus              `min(tot_articles)`
+    ##   <chr>                             <int>
+    ## 1 citation_journalist                 139
+    ## 2 citation_scientist                  503
+    ## 3 mention                            3634
+    ## 4 nature_last                         565
+    ## 5 quote                              4577
+    ## 6 springer_last                      1298
 
 ### Get bootstrap estimates
 
@@ -348,68 +394,79 @@ if(RERUN_BOOTSTRAP){
     mention_origin_df = subset(all_bootstrap_df, corpus == "mention")
     
 }
+
+print("range of European and CelticEnglish names")
 ```
 
-    ## [1] "European"
-    ## [1] "Nordic"
-    ## [1] "CelticEnglish"
-    ## [1] "Hebrew"
-    ## [1] "SouthAsian"
-    ## [1] "Hispanic"
-    ## [1] "ArabTurkPers"
-    ## [1] "EastAsian"
-    ## [1] "African"
-    ## [1] "Greek"
-    ## [1] "European"
-    ## [1] "Nordic"
-    ## [1] "CelticEnglish"
-    ## [1] "Hebrew"
-    ## [1] "SouthAsian"
-    ## [1] "Hispanic"
-    ## [1] "ArabTurkPers"
-    ## [1] "EastAsian"
-    ## [1] "African"
-    ## [1] "Greek"
-    ## [1] "European"
-    ## [1] "Nordic"
-    ## [1] "CelticEnglish"
-    ## [1] "Hebrew"
-    ## [1] "SouthAsian"
-    ## [1] "Hispanic"
-    ## [1] "ArabTurkPers"
-    ## [1] "EastAsian"
-    ## [1] "African"
-    ## [1] "Greek"
-    ## [1] "European"
-    ## [1] "Nordic"
-    ## [1] "CelticEnglish"
-    ## [1] "Hebrew"
-    ## [1] "SouthAsian"
-    ## [1] "Hispanic"
-    ## [1] "ArabTurkPers"
-    ## [1] "EastAsian"
-    ## [1] "African"
-    ## [1] "Greek"
-    ## [1] "European"
-    ## [1] "Nordic"
-    ## [1] "CelticEnglish"
-    ## [1] "Hebrew"
-    ## [1] "SouthAsian"
-    ## [1] "Hispanic"
-    ## [1] "ArabTurkPers"
-    ## [1] "EastAsian"
-    ## [1] "African"
-    ## [1] "Greek"
-    ## [1] "European"
-    ## [1] "Nordic"
-    ## [1] "CelticEnglish"
-    ## [1] "Hebrew"
-    ## [1] "SouthAsian"
-    ## [1] "Hispanic"
-    ## [1] "ArabTurkPers"
-    ## [1] "EastAsian"
-    ## [1] "African"
-    ## [1] "Greek"
+    ## [1] "range of European and CelticEnglish names"
+
+``` r
+summary(subset(citation_j_origin_df, 
+               name_origin %in% c("European", "CelticEnglish"))$mean)
+```
+
+    ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+    ##  0.2480  0.3185  0.3353  0.3382  0.3617  0.4134
+
+``` r
+summary(subset(citation_s_origin_df, 
+               name_origin %in% c("European", "CelticEnglish"))$mean)
+```
+
+    ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+    ##  0.2654  0.3148  0.3676  0.3550  0.3993  0.4301
+
+``` r
+print("range of East names")
+```
+
+    ## [1] "range of East names"
+
+``` r
+summary(subset(citation_j_origin_df, 
+               name_origin == "EastAsian")$mean)
+```
+
+    ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+    ## 0.05732 0.11168 0.14414 0.14659 0.17382 0.24845
+
+``` r
+summary(subset(citation_s_origin_df, 
+               name_origin == "EastAsian")$mean)
+```
+
+    ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+    ## 0.09758 0.11725 0.13309 0.13492 0.15222 0.17043
+
+``` r
+summary(subset(quote_origin_df, 
+               name_origin == "EastAsian")$mean)
+```
+
+    ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+    ## 0.04894 0.06105 0.06923 0.06720 0.07424 0.07898
+
+``` r
+print("range of non European or non CelticEnglish or non EastAsian names")
+```
+
+    ## [1] "range of non European or non CelticEnglish or non EastAsian names"
+
+``` r
+summary(subset(citation_j_origin_df, 
+               !name_origin %in% c("European", "CelticEnglish", "EastAsian"))$mean)
+```
+
+    ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+    ## 0.00000 0.01118 0.02108 0.02530 0.03722 0.08139
+
+``` r
+summary(subset(citation_s_origin_df, 
+               !name_origin %in% c("European", "CelticEnglish", "EastAsian"))$mean)
+```
+
+    ##     Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
+    ## 0.003277 0.011912 0.021403 0.022150 0.031179 0.050843
 
 ## Make the Figures
 
