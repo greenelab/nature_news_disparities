@@ -27,12 +27,14 @@ QUOTE_ANALYSIS_ORDER = c("nature_first",
                             "career-column",
                             "citation_scientist",
                             "citation",
-                            "mention"
+                            "mention",
+                            "career-feature",
+                            "other"
 )
 
 
 QUOTE_ANALYSIS_COLOR = c("#8DD3C7", "#1D4942", "#FFFFB3", "#98c700", "#BC80BD", 
-                        "#FB8072", "#BEBADA", "#94e283", "#FFED6F", "#FCCDE5")
+                        "#FB8072", "#BEBADA", "#94e283", "#FFED6F", "#FCCDE5", "#FB8072", "#FCCDE5")
 names(QUOTE_ANALYSIS_COLOR) = QUOTE_ANALYSIS_ORDER
 
 QUOTE_ANALYSIS_LABELS = c("Nature First",
@@ -44,7 +46,9 @@ QUOTE_ANALYSIS_LABELS = c("Nature First",
                             "career-column",
                             "Citation (scientist)",
                             "Citation",
-                            "Mention"
+                            "Mention",
+                            "Career Feature",
+                            "other"
 )
 
 ###################################
