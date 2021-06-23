@@ -29,11 +29,28 @@ source(file.path(proj_dir, "/process_doi_data/springer_scripts/springer_scrape_u
 This notebook generates supplemental tables 1-4
 
 
-The **data** it uses to build the plots are here:
+The **data** it uses to build the tables are here:
 
-1. nature news scraped data: `/data/scraped_data/downloads/`
+1. nature news scraped data after coreNLP: `/data/scraped_data/downloads/coreNLP_output*`
 
-2. nature research articles and letters author data: `/data/author_data/downloads/`
+2. nature news quotes: `/data/scraped_data/downloads/quote_table_raw*`
+
+3. quoted speakers and name origin prediction: 
+    `/data/author_data/all_speaker_fullname_pred.tsv`
+    `/data/author_data/all_speaker_fullname.tsv`
+
+4. springer authors: `/data/reference_data/springer_bg_author_cache.tsv`
+
+5. Nature News cited authors in a springer journal: `/data/reference_data/springer_cited_author_cache.tsv`
+
+6. All cited DOIs: `data/doi_data/downloads/*`
+
+7. All authors' names and name origin predictions: `/data/author_data/all_author_fullname_pred.tsv`
+
+8. Nature and Springer Authors' gender predictions: 
+    `/data/author_data/nature_author_gender.tsv`
+    `/data/author_data/springer_author_gender.tsv`
+
 
 
 The **setting + helper functions** to generate the plots are here:
@@ -301,7 +318,7 @@ springer_citations = data.frame(table(cite_name_df$corpus))
 colnames(springer_citations) = c("type", "total_springer_citations")
 print(springer_citations)
 
-
+# format the author names and add the correct corpus
 cited_author_df_full = format_authors(cite_name_df, use_fullname=T)
 cited_author_df_full = subset(cited_author_df_full, author != "")
 journalist_idx = which(cited_author_df_full$file_id %in% news_df$file_id)
@@ -317,6 +334,7 @@ named_citations = dcast(Var1 ~ Var2, data = named_citations, value.var="Freq")
 colnames(named_citations) = c("type", "fullname_first_author_citations", "fullname_last_author_citations")
 print(named_citations)
 
+# filter to the authors with a name prediciton
 pred_cite = subset(origin_cite_name_df, corpus %in% c("citation_journalist", "citation_scientist"))
 print("Number of Citations with prediction")
 pred_cite = unique(pred_cite)
