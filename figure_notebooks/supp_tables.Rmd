@@ -147,7 +147,7 @@ quote_name_origin_df = subset(quote_name_origin_df, !type %in% c("career-column"
 ```
 
 ### Read in the authorship info (springer, nature, and cited articles)
-```{r quotes_gender_pred_table1, echo=TRUE, warning=FALSE, message=F}
+```{r read_authorship, echo=TRUE, warning=FALSE, message=F}
 
 # we have 3 source files for author info
 # springer background authorship
@@ -424,7 +424,7 @@ print("Number of nature Full name")
 nature_author_df_gender = subset(nature_author_df_gender, 
                                    !is.na(guessed_gender))
 
-num_gender_nature = unique(num_gender_nature)
+nature_author_df_gender = unique(nature_author_df_gender)
 num_gender_nature = nrow(nature_author_df_gender)
 print("Number of nature Gender Prediction")
 print(num_gender_nature)
