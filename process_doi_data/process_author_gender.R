@@ -8,40 +8,6 @@ proj_dir = here()
 source(file.path(proj_dir, "/utils/scraper_processing_utils.R"))
 source(file.path(proj_dir, "/process_doi_data/springer_scripts/springer_scrape_utils.R"))
 
-get_author_gender <- function(unknown_gendered_df){
-
-    unknown_gendered_df$author = tolower(unknown_gendered_df$author)
-    names_missing = data.frame(author=unique(unknown_gendered_df$author))
-
-    gender_io_file = file.path(proj_dir, "/data/reference_data/genderize.tsv")
-    names_processed = data.frame(fread(gender_io_file))
-    gender_io_file = file.path(proj_dir, "/data/reference_data/genderize_update.tsv")
-    names_processed = rbind(names_processed, data.frame(fread(gender_io_file)))
-
-    colnames(names_processed)[1] = "author"
-    names_processed$guessed_gender = NA
-    names_processed$guessed_gender[names_processed$probability_male < 0.5] = "FEMALE"
-    names_processed$guessed_gender[names_processed$probability_male >= 0.5] = "MALE"
-
-    # guess genders from reference
-    names_processed = merge(data.table(names_missing), 
-                            data.table(names_processed),
-                            all.x=T)
-
-    names_processed = data.frame(unique(names_processed))
-
-    # save these to add to the reference dataset later
-    names_not_processed = names_processed$author[is.na(names_processed$query_date)]
-
-    unknown_gendered_df = merge(unknown_gendered_df, 
-                                unique(names_processed[,c("author", "guessed_gender")]),
-                                all.x=T)
-    unknown_gendered_df$gender = unknown_gendered_df$guessed_gender
-
-    return(list(names_not_processed, unknown_gendered_df))
-
-}
-
 
 
 #' Read all json files to do the gender prediction

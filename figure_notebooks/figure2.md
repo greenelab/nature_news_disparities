@@ -56,37 +56,124 @@ for(quote_file in quote_files){
     full_quote_df = rbind(full_quote_df, quote_df)
 }
 full_quote_df = full_quote_df[-1,]
+
+# filter out career column and news-and-views
+full_quote_df = subset(full_quote_df, !type %in% c("career-column", "news-and-views"))
+full_quote_df = unique(full_quote_df)
+
+print("Total Quotes")
+```
+
+    ## [1] "Total Quotes"
+
+``` r
+print(dim(full_quote_df))
+```
+
+    ## [1] 119998      8
+
+``` r
 full_quote_df = full_quote_df[full_quote_df$est_gender %in% c("FEMALE", "MALE"), ]
+
+# remove quotes where no gender could be estimated
+full_quote_df = subset(full_quote_df, !is.na(est_gender))
+
+
+# remove names with single name, that do not have a pronoun
+space_idx = grep(" ", full_quote_df$est_speaker)
+gendered_pronouns = c("he", "him", "his", "himself",
+                    "she", "her", "hers", "herself")
+pronoun_idx_canonical = which(full_quote_df$canonical_speaker %in% gendered_pronouns)
+pronoun_idx_partial = which(full_quote_df$partial_name %in% gendered_pronouns)
+allowed_idx = unique(c(space_idx, pronoun_idx_canonical, pronoun_idx_partial))
+length(allowed_idx)
+```
+
+    ## [1] 109723
+
+``` r
+full_quote_df = full_quote_df[allowed_idx,]
+
+full_quote_df = unique(full_quote_df)
 
 head(full_quote_df)
 ```
 
-    ##   file_id       est_speaker est_gender canonical_speaker     partial_name
-    ## 2 434970a Arnold Sommerfeld       MALE     Edward Teller       Sommerfeld
-    ## 3 438567a      Arthur Smith       MALE   Arthur E. Smith  Arthur E. Smith
-    ## 4 437634a  Bertrand Russell       MALE  Bertrand Russell Bertrand Russell
-    ## 5 434029a             Boxma       MALE           Unknown            Boxma
-    ## 6 438031a           Bradley       MALE     F. H. Bradley    F. H. Bradley
-    ## 7 435748a            Brooks       MALE   C. E. P. Brooks  C. E. P. Brooks
-    ##                                                                                          quote
-    ## 2     as if I was born in Germany only by mistake, and only came to my true homeland at age 28
-    ## 3                                                                                       tongue
-    ## 4 If ever these evils are eradicated, his name should stand very high indeed among the heroes.
-    ## 5                                                                            true missing link
-    ## 6                                          Finding bad reasons for what we believe on instinct
-    ## 7                                                                                 Fog and Soot
-    ##   year           type
-    ## 2 2005 news-and-views
-    ## 3 2005 news-and-views
-    ## 4 2005 news-and-views
-    ## 5 2005 news-and-views
-    ## 6 2005 news-and-views
-    ## 7 2005 news-and-views
+    ##     file_id     est_speaker est_gender canonical_speaker    partial_name
+    ## 175 434954a    Aaron Rundus       MALE            Rundus          Rundus
+    ## 176 433798a Achim Schneider       MALE           Unknown Achim Schneider
+    ## 177 437610a      Adam Riess       MALE        Adam Riess      Adam Riess
+    ## 178 435014a Adrian Almquist       MALE          Almquist        Almquist
+    ## 179 434816a Adrian Chappell       MALE           Unknown        Chappell
+    ## 180 434816a Adrian Chappell       MALE          Chappell        Chappell
+    ##                                                             quote year
+    ## 175                  This is long overdue in behavioural biology, 2005
+    ## 176                                               flexible eaters 2005
+    ## 177     would leave us without any observatory to fill this niche 2005
+    ## 178  The problem is that devices are getting smaller and smaller, 2005
+    ## 179 Things start getting going at around 12–15 metres per second, 2005
+    ## 180                      It's like flying a plane on instruments, 2005
+    ##             type
+    ## 175 news-feature
+    ## 176 news-feature
+    ## 177 news-feature
+    ## 178 news-feature
+    ## 179 news-feature
+    ## 180 news-feature
 
 ``` r
-# remove quotes where no gender could be estimated
-full_quote_df = subset(full_quote_df, !is.na(est_gender))
+print("Total with Gender Prediction")
 ```
+
+    ## [1] "Total with Gender Prediction"
+
+``` r
+print(dim(full_quote_df))
+```
+
+    ## [1] 109723      8
+
+``` r
+print("Male Quote Ratio:")
+```
+
+    ## [1] "Male Quote Ratio:"
+
+``` r
+table(subset(full_quote_df, year == 2005)$est_gender)
+```
+
+    ## 
+    ## FEMALE   MALE 
+    ##    839   5552
+
+``` r
+table(subset(full_quote_df, year == 2020)$est_gender)
+```
+
+    ## 
+    ## FEMALE   MALE 
+    ##   1604   3494
+
+``` r
+print("Career-feature info:")
+```
+
+    ## [1] "Career-feature info:"
+
+``` r
+dim(subset(full_quote_df, type == "career-feature"))
+```
+
+    ## [1] 1454    8
+
+``` r
+table(subset(full_quote_df, type == "career-feature")$est_gender)
+```
+
+    ## 
+    ## FEMALE   MALE 
+    ##    759    695
 
 ### Read in the nature + springer research author information
 
@@ -138,7 +225,20 @@ head(nature_author_df)
 # remove citations where no gender could be estimated
 springer_author_df = subset(springer_author_df, !is.na(est_gender))
 nature_author_df = subset(nature_author_df, !is.na(est_gender))
+
+nature_author_df = unique(nature_author_df)
+print("Number of Nature Authors")
 ```
+
+    ## [1] "Number of Nature Authors"
+
+``` r
+print(table(nature_author_df$author_pos))
+```
+
+    ## 
+    ## first  last 
+    ## 10454 10488
 
 ### reading in the first and last author data
 
@@ -155,18 +255,18 @@ head(name_info_df)
 
     ##   year author_pos           author            file_id
     ## 1 2010      first Michael Heinrich            463436a
-    ## 2 2012      first     Kai K. Ewert            489372b
-    ## 3 2019      first     Grace E. Kim d41586-019-00245-3
-    ## 4 2011      first    M. R. Elphick            473161a
-    ## 5 2006      first  Nicole Dubilier        nature05208
-    ## 6 2010      first Martin Moskovits            464357a
+    ## 2 2012      first        Kai Ewert            489372b
+    ## 3 2019      first        Grace Kim d41586-019-00245-3
+    ## 4 2006      first  Nicole Dubilier        nature05208
+    ## 5 2010      first Martin Moskovits            464357a
+    ## 6 2011      first    Ivano Bertini            470469a
     ##                            doi               corpus
     ## 1 doi:10.1007/0-306-46826-3_33 naturenews_citations
     ## 2      doi:10.1007/128_2010_70 naturenews_citations
     ## 3      doi:10.1007/164_2016_82 naturenews_citations
-    ## 4  doi:10.1007/3-540-26573-2_9 naturenews_citations
-    ## 5 doi:10.1007/3-540-28221-1_12 naturenews_citations
-    ## 6 doi:10.1007/3-540-44948-5_10 naturenews_citations
+    ## 4 doi:10.1007/3-540-28221-1_12 naturenews_citations
+    ## 5 doi:10.1007/3-540-44948-5_10 naturenews_citations
+    ## 6  doi:10.1007/3-540-59105-2_1 naturenews_citations
 
 ## Process Data
 
@@ -194,8 +294,8 @@ for(curr_id in file_id_intersect){
     for(idx in 1:nrow(names_df)){
         curr_text = names_df$est_speaker[idx]
         
-        # remove punctuations just in case
-        curr_text = gsub('[[:punct:] ]+', '', curr_text)
+        # remove punctuations just in case, except for space
+        curr_text = gsub('(?![ ])[[:punct:] ]+', '', curr_text, perl=T)
         
         # get_matched_string tries to find the name with the 
         # closest substring with no penalty for deletions.
@@ -213,13 +313,33 @@ for(curr_id in file_id_intersect){
     merged_df = merge(curr_quote[,c("author", "year", "est_speaker", "type", "file_id", "quote")], 
                       curr_author[,c("author", "doi", "author_pos")],
                       by = "author")
-    quote_author_df = rbind(quote_author_df, merged_df)
-
     
+    if(nrow(merged_df) > 0){
+        quote_author_df = rbind(quote_author_df, merged_df)
+    }
+
 }
 quote_author_df = quote_author_df[-1,]
 quote_author_df = unique(quote_author_df)
+
+print("Quote Stats")
 ```
+
+    ## [1] "Quote Stats"
+
+``` r
+dim(quote_author_df)
+```
+
+    ## [1] 8064    8
+
+``` r
+table(quote_author_df$author_pos)
+```
+
+    ## 
+    ## first  last 
+    ##  3382  4682
 
 ### Get bootstrap estimates
 
@@ -306,7 +426,7 @@ if(RERUN_BOOTSTRAP){
     save(quote_prop_df, type_df, career_df, 
          springer_first_prop_df, springer_last_prop_df, 
          nature_first_prop_df, nature_last_prop_df, 
-         first_cited_prop_df, file = "fig2.RData")
+         first_cited_prop_df, file = all_bootstrap_file)
 }else{
     all_bootstrap_file = file.path(proj_dir,
                                 "/figure_notebooks/tmp_files/fig2_tmp/fig2.RData")

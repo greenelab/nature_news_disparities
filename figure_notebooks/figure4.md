@@ -56,9 +56,68 @@ The **setting + helper functions** to generate the plots are here:
 ## Read in the data
 
 ``` r
+# read in the scraped news articles for each year
+# we will need this later for filtering out articles in columns
+# we would like to ignore
+news_scraped_dir = file.path(proj_dir,
+                    "/data/scraped_data/")
+news_scraped_dir_files = list.dirs(news_scraped_dir, full.names = T)
+news_scraped_dir_files = grep("coreNLP_output", news_scraped_dir_files, value=T)
+
+news_df = NA
+for(curr_dir in news_scraped_dir_files){
+    
+    curr_files = list.files(curr_dir, full.names = T)
+
+    
+    # if the json file was empty, skip
+    if(length(curr_files) == 0 ){
+        next
+    }
+    
+    # get the year form the file name
+    file_name_year = substring(basename(curr_dir), 
+                            16, 19)
+    
+    # get the news article type from the file name
+    file_name_type = substring(basename(curr_dir), 
+                            21, nchar(basename(curr_dir)))
+    
+    # format the output
+    article_ids = gsub(".txt.json", "", basename(curr_files))
+    num_articles = length(article_ids)
+    curr_info_df = data.frame(year=file_name_year, 
+                                type=file_name_type, 
+                                file_id=article_ids)
+    news_df = rbind(news_df, curr_info_df)
+    
+}
+news_df = news_df[-1,]
+
+# filter out career column and news-and-views
+news_df = subset(news_df, !type %in% c("career-column", "news-and-views"))
+head(news_df)
+```
+
+    ##   year type        file_id
+    ## 2 2005 news  041220-1.html
+    ## 3 2005 news  050103-1.html
+    ## 4 2005 news 050103-10.html
+    ## 5 2005 news 050103-11.html
+    ## 6 2005 news 050103-12.html
+    ## 7 2005 news  050103-2.html
+
+``` r
 #### read in the cited author data
 country_file = file.path(proj_dir, "/data/author_data/all_author_country.tsv")
 country_df = data.frame(fread(country_file))
+
+# filter to only the articles we care about
+file_id_keep = news_df$file_id
+bg_df = subset(country_df, corpus %in% c("nature_articles", "springer_articles"))
+to_filter_df = subset(country_df, corpus %in% c("naturenews_citations", "naturenews_mentions"))
+to_filter_df = subset(to_filter_df, file_id %in% file_id_keep)
+country_df = rbind(bg_df, to_filter_df)
 
 # get UN info
 un_info = get_country_info()
@@ -66,34 +125,20 @@ country_df = merge(country_df, un_info)
 head(country_df)
 ```
 
-    ##   address.country_code
-    ## 1                   ad
-    ## 2                   ae
-    ## 3                   ae
-    ## 4                   ae
-    ## 5                   ae
-    ## 6                   ae
-    ##                                                        file_id
-    ## 1                                                      446937a
-    ## 2 funding-uncertainty-strands-spain-s-young-scientists-1.10177
-    ## 3                                           d41586-020-03563-z
-    ## 4                                                         <NA>
-    ## 5                                                 468609a.html
-    ## 6                                           news.2010.491.html
-    ##                                                                        doi year
-    ## 1                                                      doi:10.1038/446937a 2007
-    ## 2 doi:10.1038/funding-uncertainty-strands-spain-s-young-scientists-1.10177 2012
-    ## 3                                           doi:10.1038/d41586-020-03563-z 2020
-    ## 4                                            doi:10.1007/s10967-008-1005-z 2008
-    ## 5                                                 doi:10.1038/468609a.html 2010
-    ## 6                                           doi:10.1038/news.2010.491.html 2010
+    ##   address.country_code     file_id                           doi year
+    ## 1                   ad     446937a           doi:10.1038/446937a 2007
+    ## 2                   ae        <NA> doi:10.1186/s12887-017-0865-1 2017
+    ## 3                   ae        <NA> doi:10.1186/s12935-014-0118-4 2014
+    ## 4                   ae        <NA>            doi:10.1186/gb4177 2014
+    ## 5                   ae nature22053       doi:10.1038/nature22053 2017
+    ## 6                   ae        <NA> doi:10.1007/s10577-007-1154-x 2007
     ##                corpus              country un_region    un_subregion
     ## 1 naturenews_mentions              Andorra    Europe Southern Europe
-    ## 2 naturenews_mentions United Arab Emirates      Asia    Western Asia
-    ## 3 naturenews_mentions United Arab Emirates      Asia    Western Asia
+    ## 2   springer_articles United Arab Emirates      Asia    Western Asia
+    ## 3   springer_articles United Arab Emirates      Asia    Western Asia
     ## 4   springer_articles United Arab Emirates      Asia    Western Asia
-    ## 5 naturenews_mentions United Arab Emirates      Asia    Western Asia
-    ## 6 naturenews_mentions United Arab Emirates      Asia    Western Asia
+    ## 5     nature_articles United Arab Emirates      Asia    Western Asia
+    ## 6   springer_articles United Arab Emirates      Asia    Western Asia
 
 ``` r
 #### read in the bootstrapped author data
@@ -105,12 +150,12 @@ head(ci_df)
 ```
 
     ##       country address.country_code un_region  un_subregion year bottom_CI
-    ## 1 Afghanistan                   af      Asia Southern Asia 2012         0
-    ## 2 Afghanistan                   af      Asia Southern Asia 2008         0
+    ## 1 Afghanistan                   af      Asia Southern Asia 2009         0
+    ## 2 Afghanistan                   af      Asia Southern Asia 2015         0
     ## 3 Afghanistan                   af      Asia Southern Asia 2016         0
-    ## 4 Afghanistan                   af      Asia Southern Asia 2020         0
-    ## 5 Afghanistan                   af      Asia Southern Asia 2015         0
-    ## 6 Afghanistan                   af      Asia Southern Asia 2014         0
+    ## 4 Afghanistan                   af      Asia Southern Asia 2017         0
+    ## 5 Afghanistan                   af      Asia Southern Asia 2019         0
+    ## 6 Afghanistan                   af      Asia Southern Asia 2012         0
     ##   top_CI mean               corpus
     ## 1      0    0 naturenews_citations
     ## 2      0    0 naturenews_citations
@@ -159,12 +204,15 @@ head(full_loc_df)
     ## 7      Americas    South America 2005 news-and-views
 
 ``` r
+full_loc_df = subset(full_loc_df, file_id %in% file_id_keep)
+
 #### read in all the cited articles
 cited_country_file = file.path(proj_dir, 
                                 "/data/author_data/cited_author_country.tsv")
 cited_country_df = data.frame(fread(cited_country_file))
 cited_country_df = subset(cited_country_df, country != "")
 cited_country_df$country = format_country_names(cited_country_df$country)
+cited_country_df = subset(cited_country_df, file_id %in% file_id_keep)
 
 # format the countries
 cited_country_df_formatted = get_author_country(cited_country_df)
@@ -193,7 +241,24 @@ tot_prop_citation = citation_total %>%
                 group_by(year) %>% 
                 summarise(n()) 
 tot_prop_citation$corpus = "naturenews_citations"
+print("num articles with citation")
+```
 
+    ## [1] "num articles with citation"
+
+``` r
+length(unique(citation_total$file_id))
+```
+
+    ## [1] 1989
+
+``` r
+length(unique(subset(country_df, corpus == "naturenews_citations")))
+```
+
+    ## [1] 8
+
+``` r
 # get num or articles with a country citation
 tot_prop_df = rbind(tot_prop_mention, tot_prop_citation)
 tot_prop_df = data.frame(tot_prop_df)
@@ -216,12 +281,12 @@ head(top_countries_citation)
     ## # A tibble: 6 x 2
     ##   country        overall_mean
     ##   <chr>                 <dbl>
-    ## 1 United States         0.819
-    ## 2 United Kingdom        0.358
-    ## 3 Germany               0.260
-    ## 4 France                0.167
-    ## 5 Japan                 0.142
-    ## 6 Canada                0.138
+    ## 1 United States         0.798
+    ## 2 United Kingdom        0.347
+    ## 3 Germany               0.252
+    ## 4 France                0.158
+    ## 5 Canada                0.139
+    ## 6 Japan                 0.132
 
 ``` r
 # make the df into proportions for eachcountry
@@ -240,6 +305,9 @@ get_subboot <- function(country_id, curr_corpus, in_df, bootstrap_col_id="file_i
 # we only run the bootstraps if we want to update them
 # this is an expensive process > 1hr
 if(RERUN_BOOTSTRAP){
+    
+    BOOTSTRAP_SIZE=1000
+
         
     citation_country_df = NA
     for(curr_country in top_countries_citation$country[1:NUM_COUNTRIES_PLOT]){
@@ -385,89 +453,89 @@ for(curr_year in unique(top_diff_MC$year)){
 ```
 
     ##        95% 
-    ## 0.02259009 
+    ## 0.04229125 
     ##          5% 
-    ## -0.06711471 
+    ## -0.04156287 
     ##        95% 
-    ## 0.03692688 
+    ## 0.05152213 
     ##          5% 
-    ## -0.02711303 
+    ## -0.03191058 
     ##        95% 
-    ## 0.03964871 
+    ## 0.05434049 
     ##          5% 
-    ## -0.01765817 
+    ## -0.01425049 
     ##        95% 
-    ## 0.04254716 
+    ## 0.06791174 
     ##          5% 
-    ## -0.03370415 
+    ## -0.01193596 
     ##        95% 
-    ## 0.05228889 
+    ## 0.09193692 
+    ##          5% 
+    ## -0.00642026 
+    ##        95% 
+    ## 0.08552343 
     ##           5% 
-    ## -0.009949715 
+    ## -0.002113657 
+    ##        95% 
+    ## 0.08677525 
+    ##           5% 
+    ## -0.005936301 
+    ##        95% 
+    ## 0.03308685 
+    ##          5% 
+    ## -0.04526807 
+    ##        95% 
+    ## 0.03250907 
+    ##          5% 
+    ## -0.05063106 
+    ##        95% 
+    ## 0.03892006 
+    ##         5% 
+    ## -0.0467101 
+    ##        95% 
+    ## 0.01903477 
+    ##         5% 
+    ## -0.1051345 
+    ##        95% 
+    ## 0.02853643 
+    ##          5% 
+    ## -0.06482855 
+    ##        95% 
+    ## 0.03194377 
+    ##          5% 
+    ## -0.07188929 
+    ##        95% 
+    ## 0.04759033 
+    ##          5% 
+    ## -0.04114857 
+    ##        95% 
+    ## 0.03771047 
+    ##          5% 
+    ## -0.08006611 
     ##       95% 
-    ## 0.0551451 
-    ##           5% 
-    ## -0.009888312 
-    ##        95% 
-    ## 0.05571896 
+    ## 0.1261979 
     ##          5% 
-    ## -0.01206763 
-    ##        95% 
-    ## 0.02721797 
-    ##          5% 
-    ## -0.02826491 
-    ##        95% 
-    ## 0.02761623 
-    ##          5% 
-    ## -0.04259051 
-    ##        95% 
-    ## 0.03404551 
-    ##          5% 
-    ## -0.04304287 
-    ##        95% 
-    ## 0.01790664 
-    ##          5% 
-    ## -0.08150624 
-    ##        95% 
-    ## 0.01985705 
-    ##          5% 
-    ## -0.07693836 
-    ##        95% 
-    ## 0.02462379 
-    ##          5% 
-    ## -0.06428023 
-    ##        95% 
-    ## 0.02743434 
-    ##          5% 
-    ## -0.06395108 
-    ##        95% 
-    ## 0.01901346 
-    ##          5% 
-    ## -0.09668138 
-    ##        95% 
-    ## 0.02826572 
-    ##          5% 
-    ## -0.07293272
+    ## -0.02044634
 
 ``` r
 top_diff_MC_filt = top_diff_MC_filt[-1,]
 head(top_diff_MC_filt)
 ```
 
-    ##    year   country address.country_code tot_citations tot_mentions
-    ## 15 2005  Colombia                   co             1           13
-    ## 19 2005   Germany                   de            79           62
-    ## 27 2005    France                   fr            65           28
-    ## 34 2005 Indonesia                   id             2            5
-    ## 37 2005     India                   in             5           21
-    ## 42 2005     Japan                   jp            65           47
-    ##    naturenews_citations naturenews_mentions         M_C
-    ## 15          0.003107788          0.04218688  0.03907909
-    ## 19          0.246350779          0.13660416 -0.10974662
-    ## 27          0.202298442          0.10505273 -0.09724572
-    ## 34          0.006267290          0.04157740  0.03531011
-    ## 37          0.015712773          0.08260558  0.06689281
-    ## 42          0.202223676          0.09599065 -0.10623303
+    ##    year                    country address.country_code tot_citations
+    ## 13 2005 People's Republic of China                   cn             4
+    ## 18 2005                    Germany                   de            23
+    ## 33 2005                  Indonesia                   id             0
+    ## 36 2005                      India                   in             0
+    ## 41 2005                      Japan                   jp            16
+    ## 50 2005                Netherlands                   nl            18
+    ##    tot_mentions naturenews_citations naturenews_mentions         M_C
+    ## 13           24           0.03673394          0.08749842  0.05076448
+    ## 18           59           0.21064220          0.14738644 -0.06325577
+    ## 33            5           0.00000000          0.04508991  0.04508991
+    ## 36           20           0.00000000          0.08763170  0.08763170
+    ## 41           46           0.14702752          0.10202050 -0.04500702
+    ## 50           16           0.16437615          0.04110883 -0.12326731
 
 ``` r
 # make sure there are enough articles
@@ -553,7 +621,7 @@ class_m_mentions = subset(class_m_mentions,
 print(country_overlap)
 ```
 
-    ## [1] "fr" "gb" "us"
+    ## [1] "au" "ca" "cn" "fr" "gb" "jp"
 
 ### Analysis 3 part2: Get the tokens associated with C vs M
 
@@ -582,23 +650,23 @@ print(knitr::kable(head(citations_freq,15),
     ## 
     ## Table: Overall Class Citation, top terms, count is per country frequency
     ## 
-    ## |word        | count_ch| count_de| count_jp| count_nl| count_at| count_au| count_be| count_es| count_il| count_se| count_dk| count_kr| median_count|
-    ## |:-----------|--------:|--------:|--------:|--------:|--------:|--------:|--------:|--------:|--------:|--------:|--------:|--------:|------------:|
-    ## |university  |     1367|     3473|     1803|     1510|      308|     2280|      324|      391|      662|      954|      397|      549|        808.0|
-    ## |research    |     1364|     3858|     1870|     1348|      214|     2117|      322|      481|      533|      773|      220|      620|        696.5|
-    ## |cells       |      853|     1671|     2291|      613|       72|      862|       82|       53|      899|      722|       48|      409|        667.5|
-    ## |researchers |     1184|     2859|     1361|     1252|      147|     1767|      275|      364|      545|      771|      245|      304|        658.0|
-    ## |time        |      767|     1887|      847|      827|      125|     1125|      143|      223|      433|      569|      186|      172|        501.0|
-    ## |scientists  |      787|     2276|     1037|      815|      134|     1192|      170|      262|      405|      470|      145|      227|        437.5|
-    ## |cell        |      430|     1295|     1150|      423|       63|      492|       84|       35|      497|      420|       25|      432|        426.5|
-    ## |science     |      643|     2045|     1194|      732|      169|     1132|      190|      319|      344|      309|      161|      456|        400.0|
-    ## |human       |      444|     1456|      659|      419|       51|      645|       69|      100|      376|      407|      102|      266|        391.5|
-    ## |team        |      721|     1695|      762|      650|      110|      994|      131|      215|      320|      452|      171|      194|        386.0|
-    ## |data        |     1024|     2100|      857|     1239|      151|     1211|      147|      263|      271|      487|      212|      204|        379.0|
-    ## |found       |      467|     1309|      517|      518|       61|      766|      139|      134|      309|      431|      138|      111|        370.0|
-    ## |institute   |      576|     1745|      785|      410|      141|      551|       81|      133|      332|      370|       90|      185|        351.0|
-    ## |people      |      904|     1449|      895|      717|      106|      941|      167|      141|      264|      424|      119|      149|        344.0|
-    ## |study       |      557|     1165|      464|      565|      100|      767|      132|      112|      293|      391|      135|      115|        342.0|
+    ## |word        | count_at| count_be| count_ch| count_de| count_es| count_il| count_nl| count_se| count_dk| median_count|
+    ## |:-----------|--------:|--------:|--------:|--------:|--------:|--------:|--------:|--------:|--------:|------------:|
+    ## |university  |      308|      323|     1362|     3450|      389|      658|     1505|      953|      397|          658|
+    ## |cells       |       72|       80|      834|     1665|       53|      899|      613|      722|       48|          613|
+    ## |researchers |      147|      273|     1183|     2852|      358|      545|     1250|      770|      245|          545|
+    ## |research    |      214|      310|     1360|     3837|      480|      529|     1347|      768|      220|          529|
+    ## |time        |      122|      136|      762|     1861|      208|      433|      816|      568|      186|          433|
+    ## |cell        |       63|       84|      421|     1293|       35|      497|      423|      420|       25|          420|
+    ## |scientists  |      134|      169|      785|     2268|      260|      404|      815|      466|      145|          404|
+    ## |human       |       51|       68|      440|     1451|       85|      376|      419|      404|      102|          376|
+    ## |institute   |      141|       81|      568|     1736|      133|      332|      409|      370|       90|          332|
+    ## |team        |      110|      129|      721|     1691|      215|      320|      650|      451|      171|          320|
+    ## |science     |      169|      190|      636|     2032|      314|      336|      731|      307|      161|          314|
+    ## |found       |       60|      136|      458|     1301|      129|      308|      513|      431|      138|          308|
+    ## |study       |       97|      131|      548|     1155|      106|      293|      563|      388|      135|          293|
+    ## |data        |      151|      142|     1010|     2088|      254|      271|     1236|      487|      212|          271|
+    ## |people      |      106|      162|      903|     1448|      141|      264|      716|      424|      119|          264|
 
 ``` r
 #### get the word frequencies for all articles associated with class M countries
@@ -621,23 +689,23 @@ print(knitr::kable(head(mentions_freq,15),
     ## 
     ## Table: Overall Class Mention, top terms, count is per country frequency
     ## 
-    ## |word        | count_ca| count_cl| count_cn| count_co| count_in| count_br| count_mx| count_za| count_ph| count_cd| median_count|
-    ## |:-----------|--------:|--------:|--------:|--------:|--------:|--------:|--------:|--------:|--------:|--------:|------------:|
-    ## |research    |     2983|      139|     1819|      197|     1374|      545|      300|      754|      191|       54|        422.5|
-    ## |university  |     4039|      166|     1929|      215|      805|      476|      246|      674|      113|       54|        361.0|
-    ## |science     |     1760|      182|     1176|      108|     1021|      508|      188|      449|      145|       20|        318.5|
-    ## |researchers |     2997|      121|     1316|      197|      631|      380|      186|      504|      107|       87|        288.5|
-    ## |scientists  |     1951|       79|      969|      106|      685|      377|      182|      363|       94|       48|        272.5|
-    ## |time        |     2022|      217|      826|      264|      536|      226|      111|      266|       75|       60|        245.0|
-    ## |people      |     1888|       44|      818|      128|      495|      195|      182|      407|      101|      283|        239.0|
-    ## |data        |     1960|       86|      726|      157|      488|      327|       38|      298|       79|       99|        227.5|
-    ## |climate     |     1006|       19|      452|      322|      324|      235|      112|      166|       79|       13|        200.5|
-    ## |million     |     1229|      112|      827|      153|      445|      248|       59|      250|      116|       37|        200.5|
-    ## |study       |     1720|       72|      543|      140|      292|      156|       80|      214|       60|       30|        148.0|
-    ## |world       |     1050|       63|      645|      127|      387|      173|      107|      164|      107|       68|        145.5|
-    ## |health      |      803|       17|      545|       47|      328|       87|       53|      233|       72|      201|        144.0|
-    ## |national    |      812|       86|      645|       76|      438|      211|      116|      171|       56|       37|        143.5|
-    ## |government  |      788|       37|      738|       62|      548|      240|       81|      205|       59|       54|        143.0|
+    ## |word          | count_br| count_in| count_us| count_co| count_ru| median_count|
+    ## |:-------------|--------:|--------:|--------:|--------:|--------:|------------:|
+    ## |research      |      542|     1359|    24315|      186|      544|          544|
+    ## |science       |      506|     1005|    15333|      102|      513|          513|
+    ## |university    |      473|      796|    23739|      215|      323|          473|
+    ## |scientists    |      376|      682|    14131|       97|      404|          404|
+    ## |researchers   |      379|      629|    19423|      188|      265|          379|
+    ## |data          |      325|      483|    14716|      101|      226|          325|
+    ## |nuclear       |       16|      295|     3335|       17|      345|          295|
+    ## |carbon        |      253|      154|     3956|      336|       47|          253|
+    ## |million       |      248|      444|     9539|      104|      167|          248|
+    ## |government    |      239|      546|     5605|       62|      233|          239|
+    ## |institute     |      153|      503|     8422|       80|      237|          237|
+    ## |climate       |      233|      323|     7034|      227|       78|          233|
+    ## |time          |      225|      517|    12396|      219|      228|          228|
+    ## |international |      120|      366|     4705|       57|      217|          217|
+    ## |national      |      210|      436|     8553|       76|      132|          210|
 
 ### Analysis 3 part3: Find tokens that differentiate articles related to class C / M countries
 
@@ -675,23 +743,23 @@ print(knitr::kable(head(compare_freq, 15),
     ## 
     ## Table: Overall Class Citation, top terms
     ## 
-    ## |word          | median_count_citations| median_count_mentions| compare_ratio| class_c_count| class_m_count|
-    ## |:-------------|----------------------:|---------------------:|-------------:|-------------:|-------------:|
-    ## |ips           |                   20.0|                   0.5|          40.0|           561|           117|
-    ## |entanglement  |                   15.0|                   0.5|          30.0|           137|           103|
-    ## |graphene      |                   14.0|                   0.5|          28.0|           226|           103|
-    ## |classical     |                   25.0|                   1.0|          25.0|           228|           126|
-    ## |epigenetic    |                   12.5|                   0.5|          25.0|           144|            56|
-    ## |es            |                   12.0|                   0.5|          24.0|           173|            52|
-    ## |mitochondrial |                   12.0|                   0.5|          24.0|           267|           113|
-    ## |yeast         |                   22.5|                   1.0|          22.5|           252|           128|
-    ## |cultured      |                   10.5|                   0.5|          21.0|            89|            51|
-    ## |amino         |                   10.0|                   0.5|          20.0|           123|            71|
-    ## |autism        |                    9.5|                   0.5|          19.0|           206|           117|
-    ## |cas9          |                   19.0|                   1.0|          19.0|           228|           109|
-    ## |pigs          |                   19.0|                   1.0|          19.0|           165|           130|
-    ## |tubes         |                    9.0|                   0.5|          18.0|           125|            63|
-    ## |higgs         |                    8.5|                   0.5|          17.0|           161|            44|
+    ## |word           | median_count_citations| median_count_mentions| compare_ratio| class_c_count| class_m_count|
+    ## |:--------------|----------------------:|---------------------:|-------------:|-------------:|-------------:|
+    ## |classical      |                     27|                     1|      27.00000|           195|           249|
+    ## |yeast          |                     23|                     1|      23.00000|           224|           456|
+    ## |antibiotics    |                     16|                     1|      16.00000|           118|           516|
+    ## |archaeologists |                     16|                     1|      16.00000|           144|           238|
+    ## |cas9           |                     16|                     1|      16.00000|           182|           337|
+    ## |metabolic      |                     15|                     1|      15.00000|            92|           252|
+    ## |entangled      |                     14|                     1|      14.00000|           113|            56|
+    ## |geneticists    |                     14|                     1|      14.00000|           123|           232|
+    ## |gut            |                     14|                     1|      14.00000|           145|           423|
+    ## |tumour         |                     28|                     2|      14.00000|           314|           784|
+    ## |neurons        |                     40|                     3|      13.33333|           473|          1004|
+    ## |sex            |                     13|                     1|      13.00000|           140|           553|
+    ## |organs         |                     12|                     1|      12.00000|           146|           366|
+    ## |variants       |                     12|                     1|      12.00000|           145|           455|
+    ## |consent        |                     11|                     1|      11.00000|           103|           354|
 
 ``` r
 compare_freq = compare_freq[order(compare_freq$compare_ratio, decreasing=F),]
@@ -703,23 +771,23 @@ print(knitr::kable(head(compare_freq, 15),
     ## 
     ## Table: Overall Class Mention, top terms
     ## 
-    ## |word          | median_count_citations| median_count_mentions| compare_ratio| class_c_count| class_m_count|
-    ## |:-------------|----------------------:|---------------------:|-------------:|-------------:|-------------:|
-    ## |pesticide     |                    0.5|                   5.5|     0.0909091|            20|            69|
-    ## |bt            |                    0.5|                   3.0|     0.1666667|            52|           109|
-    ## |spores        |                    0.5|                   3.0|     0.1666667|            19|            33|
-    ## |dams          |                    1.5|                   8.5|     0.1764706|            70|           124|
-    ## |indigenous    |                    2.5|                  12.5|     0.2000000|           137|           147|
-    ## |rainforest    |                    0.5|                   2.5|     0.2000000|            31|           109|
-    ## |tectonic      |                    0.5|                   2.5|     0.2000000|            66|            52|
-    ## |plantations   |                    1.5|                   7.0|     0.2142857|            62|            51|
-    ## |epa           |                    1.0|                   4.5|     0.2222222|            43|            84|
-    ## |ethiopia      |                    1.0|                   4.5|     0.2222222|            37|            51|
-    ## |sierra        |                    1.0|                   4.5|     0.2222222|            35|            47|
-    ## |drought       |                    5.5|                  24.5|     0.2244898|           102|           210|
-    ## |paulo         |                    1.5|                   6.5|     0.2307692|            27|           156|
-    ## |corn          |                    2.5|                  10.5|     0.2380952|            50|            87|
-    ## |deforestation |                    2.5|                  10.5|     0.2380952|           122|           300|
+    ## |word             | median_count_citations| median_count_mentions| compare_ratio| class_c_count| class_m_count|
+    ## |:----------------|----------------------:|---------------------:|-------------:|-------------:|-------------:|
+    ## |dams             |                      1|                    26|     0.0384615|            32|           230|
+    ## |rio              |                      1|                    20|     0.0500000|            33|           195|
+    ## |civilian         |                      1|                    17|     0.0588235|            20|           158|
+    ## |gigawatts        |                      1|                    17|     0.0588235|            40|            98|
+    ## |colombia         |                      1|                    16|     0.0625000|            20|            89|
+    ## |usa              |                      1|                    16|     0.0625000|            19|           132|
+    ## |turbines         |                      1|                    15|     0.0666667|            70|           187|
+    ## |eruptions        |                      1|                    13|     0.0769231|            42|           213|
+    ## |shuttle          |                      1|                    13|     0.0769231|            58|           561|
+    ## |conservationists |                      1|                    12|     0.0833333|            24|           218|
+    ## |hydropower       |                      1|                    12|     0.0833333|            25|            80|
+    ## |suppliers        |                      1|                    11|     0.0909091|            23|           109|
+    ## |weapons          |                      6|                    65|     0.0923077|           175|           873|
+    ## |astronauts       |                      2|                    21|     0.0952381|            34|           476|
+    ## |bush             |                      1|                    10|     0.1000000|            38|           644|
 
 ``` r
 # now take the top and bottom

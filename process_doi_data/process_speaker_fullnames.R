@@ -55,10 +55,88 @@ process_all_quote_fullnames <- function(quote_dir, outdir){
 
 }
 
+
+#' Read in coreNLP speaker information and query the gender information
+#' in the genderize.io cache. All names not found in the cache will 
+#' be written to a file for later querying in corenlp_output_dir
+#' named "missed_generize_io_names"
+#' 
+#' @param corenlp_output_dir, directory containing coreNLP JSON output 
+#' 
+#' @return dataframe, all_quotes_gender all gender information from speakers
+process_all_mentioned_fullnames <- function(corenlp_output_dir, outdir){
+  
+    json_res_files = list.files(corenlp_output_dir, full.names = TRUE, recursive=T)
+    json_res_files = grep("coreNLP_output", json_res_files, value=T)
+    json_res_files = grep(".txt.json", json_res_files, value=T)
+    
+    all_persons = NA
+    for(curr_file in json_res_files){
+
+        print(curr_file)
+        
+        # get metadata
+        file_id = basename(curr_file)
+        file_id = substr(file_id, 1, nchar(file_id)-9)
+
+        # get year
+        folder_name = basename(dirname(curr_file))
+        file_name_year = substring(basename(folder_name), 
+                            16, 19)
+    
+        # get the news article type from the file name
+        file_name_type = substring(basename(folder_name), 
+                                21, nchar(basename(folder_name)))
+            
+        json_res = fromJSON(curr_file)
+
+        ## get all person info
+        print(file_id)
+        speaker_df = get_persons(json_res)
+        if(is.na(speaker_df)){
+            next
+        }
+
+        speaker_df$year = file_name_year
+        speaker_df$type = file_name_type
+        speaker_df$file_id = file_id
+        speaker_df = speaker_df[,c("year", "type", "full_name", "file_id")]
+        colnames(speaker_df)[3] = "author"
+        speaker_df = unique(speaker_df)
+
+        all_persons = rbind(all_persons, speaker_df)
+
+    }
+    all_persons = all_persons[-1,]
+
+    # only keep the name if there are atleast 2 parts
+    # this means there must be a space
+    space_idx = grep(" ", all_persons$author)
+    all_persons = all_persons[space_idx, ]
+
+
+    # now format the author name
+    all_persons$author = format_author_fullname(all_persons$author)
+    all_persons = subset(all_persons, author != "")
+    all_persons = subset(all_persons, author != " ")
+
+    outfile = file.path(outdir, "all_mentioned_fullname.tsv")
+    write.table(all_persons, file=outfile, sep="\t", quote=F, row.names=F)
+
+
+
+    return(all_quotes_gender)
+}
+
+
+}
+
 ### read in arguments
 args = commandArgs(trailingOnly=TRUE)
 quote_dir = args[1]
-outdir = args[2]
+corenlp_output_dir = args[2]
+outdir = args[3]
 
 process_all_quote_fullnames(quote_dir, outdir)
+process_all_mentioned_fullnames(corenlp_output_dir, outdir)
 
