@@ -65,20 +65,42 @@ for(curr_dir in news_scraped_dir_files){
     
 }
 news_df = news_df[-1,]
+print("Total Articles")
+```
 
+    ## [1] "Total Articles"
+
+``` r
+print(dim(news_df))
+```
+
+    ## [1] 37748     3
+
+``` r
 # filter out career column and news-and-views
 news_df = subset(news_df, !type %in% c("career-column", "news-and-views"))
+print("Total Articles, journalist")
+```
 
+    ## [1] "Total Articles, journalist"
+
+``` r
+print(dim(news_df))
+```
+
+    ## [1] 31827     3
+
+``` r
 head(news_df)
 ```
 
-    ##   year type        file_id
-    ## 2 2005 news  041220-1.html
-    ## 3 2005 news  050103-1.html
-    ## 4 2005 news 050103-10.html
-    ## 5 2005 news 050103-11.html
-    ## 6 2005 news 050103-12.html
-    ## 7 2005 news  050103-2.html
+    ##   year     type                                               file_id
+    ## 2 2005 guardian                          missed_generize_io_names.tsv
+    ## 3 2005 guardian news.2005.apr.28.thisweekssciencequestions.psychology
+    ## 4 2005 guardian                 news.2005.dec.06.topstories3.genetics
+    ## 5 2005 guardian                       news.2005.dec.21.food.christmas
+    ## 6 2005 guardian        news.2005.feb.05.guardianobituaries.obituaries
+    ## 7 2005 guardian            news.2005.feb.10.thisweekssciencequestions
 
 ### Read in the nature + springer research author information
 

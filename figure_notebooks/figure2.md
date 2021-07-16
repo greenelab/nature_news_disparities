@@ -61,6 +61,36 @@ full_quote_df = full_quote_df[-1,]
 full_quote_df = subset(full_quote_df, !type %in% c("career-column", "news-and-views"))
 full_quote_df = unique(full_quote_df)
 
+# filter out articles with more than 25 quotes
+num_quotes = table(full_quote_df$file_id)
+too_many_quotes_idx = which(num_quotes > 25)
+too_many_quotes_file_id = names(num_quotes)[too_many_quotes_idx]
+full_quote_df = subset(full_quote_df, !file_id %in% too_many_quotes_file_id)
+
+print("Num Removed Articles")
+```
+
+    ## [1] "Num Removed Articles"
+
+``` r
+print(length(too_many_quotes_file_id))
+```
+
+    ## [1] 704
+
+``` r
+print("Num Total Articles")
+```
+
+    ## [1] "Num Total Articles"
+
+``` r
+print(length(num_quotes))
+```
+
+    ## [1] 27652
+
+``` r
 print("Total Quotes")
 ```
 
@@ -70,7 +100,7 @@ print("Total Quotes")
 print(dim(full_quote_df))
 ```
 
-    ## [1] 119998      8
+    ## [1] 177134      8
 
 ``` r
 full_quote_df = full_quote_df[full_quote_df$est_gender %in% c("FEMALE", "MALE"), ]
@@ -89,7 +119,7 @@ allowed_idx = unique(c(space_idx, pronoun_idx_canonical, pronoun_idx_partial))
 length(allowed_idx)
 ```
 
-    ## [1] 109723
+    ## [1] 157955
 
 ``` r
 full_quote_df = full_quote_df[allowed_idx,]
@@ -99,27 +129,34 @@ full_quote_df = unique(full_quote_df)
 head(full_quote_df)
 ```
 
-    ##     file_id     est_speaker est_gender canonical_speaker    partial_name
-    ## 175 434954a    Aaron Rundus       MALE            Rundus          Rundus
-    ## 176 433798a Achim Schneider       MALE           Unknown Achim Schneider
-    ## 177 437610a      Adam Riess       MALE        Adam Riess      Adam Riess
-    ## 178 435014a Adrian Almquist       MALE          Almquist        Almquist
-    ## 179 434816a Adrian Chappell       MALE           Unknown        Chappell
-    ## 180 434816a Adrian Chappell       MALE          Chappell        Chappell
-    ##                                                             quote year
-    ## 175                  This is long overdue in behavioural biology, 2005
-    ## 176                                               flexible eaters 2005
-    ## 177     would leave us without any observatory to fill this niche 2005
-    ## 178  The problem is that devices are getting smaller and smaller, 2005
-    ## 179 Things start getting going at around 12–15 metres per second, 2005
-    ## 180                      It's like flying a plane on instruments, 2005
-    ##             type
-    ## 175 news-feature
-    ## 176 news-feature
-    ## 177 news-feature
-    ## 178 news-feature
-    ## 179 news-feature
-    ## 180 news-feature
+    ##                                    file_id       est_speaker est_gender
+    ## 2 science.2005.nov.11.medicalresearch.food       Aaron Hsueh       MALE
+    ## 3    science.2005.jun.09.internationalnews Abdul Qadeer Khan       MALE
+    ## 4    science.2005.jun.09.internationalnews Abdul Qadeer Khan       MALE
+    ## 5    science.2005.jun.09.internationalnews Abdul Qadeer Khan       MALE
+    ## 6    science.2005.jun.09.internationalnews Abdul Qadeer Khan       MALE
+    ## 7    science.2005.jun.09.internationalnews Abdul Qadeer Khan       MALE
+    ##   canonical_speaker partial_name
+    ## 2       Aaron Hsueh  Aaron Hsueh
+    ## 3           Unknown         Khan
+    ## 4           Unknown         Khan
+    ## 5          diplomat         Khan
+    ## 6          diplomat         Khan
+    ## 7           Unknown         Khan
+    ##                                                                                                                                                                                                                                                                                                                                                                                                                                                             quote
+    ## 2 We knew before that a hormone called ghrelin that was produced into the gut and then secreted into the bloodstream, stimulates eating. The new work shows us that a new hormone, aptly called obestatin, is encoded by the same gene but exerts opposing effects - it inhibits food intake. This is a completely unexpected finding and it's really extraordinary to think the hormone had been sitting there in plain sight until these authors discovered it.
+    ## 3                                                                                                                                                                                                                                                 We are still missing something from the picture in terms of critical equipment, certain parts of centrifuges ... There is equipment missing important enough for us to search, an amount that makes us worried,
+    ## 4                                                                                                                                                                                                                                                                                                                                                                                                               We know there were several sets of them prepared,
+    ## 5                                                                                                                                                                                                                 So who got those electronic drawings? We have only actually got to the one full set from Libya. So who got the rest, the copies? We have no evidence they were destroyed. One possibility is another client. We just don't know where they are.
+    ## 6                                                                                                                                                                                                                                                                                                                                                                                        The big question is who else got this stuff [apart from Iran and Libya],
+    ## 7                                                                                                                                                                                                                                                                                                                                          There is reason to believe that there might even be some drawings related to nuclear weaponisation in electronic form,
+    ##   year     type
+    ## 2 2005 guardian
+    ## 3 2005 guardian
+    ## 4 2005 guardian
+    ## 5 2005 guardian
+    ## 6 2005 guardian
+    ## 7 2005 guardian
 
 ``` r
 print("Total with Gender Prediction")
@@ -131,7 +168,7 @@ print("Total with Gender Prediction")
 print(dim(full_quote_df))
 ```
 
-    ## [1] 109723      8
+    ## [1] 157955      8
 
 ``` r
 print("Male Quote Ratio:")
@@ -145,7 +182,7 @@ table(subset(full_quote_df, year == 2005)$est_gender)
 
     ## 
     ## FEMALE   MALE 
-    ##    839   5552
+    ##   1418   8622
 
 ``` r
 table(subset(full_quote_df, year == 2020)$est_gender)
@@ -153,7 +190,7 @@ table(subset(full_quote_df, year == 2020)$est_gender)
 
     ## 
     ## FEMALE   MALE 
-    ##   1604   3494
+    ##   2018   5143
 
 ``` r
 print("Career-feature info:")
@@ -165,7 +202,7 @@ print("Career-feature info:")
 dim(subset(full_quote_df, type == "career-feature"))
 ```
 
-    ## [1] 1454    8
+    ## [1] 898   8
 
 ``` r
 table(subset(full_quote_df, type == "career-feature")$est_gender)
@@ -173,7 +210,7 @@ table(subset(full_quote_df, type == "career-feature")$est_gender)
 
     ## 
     ## FEMALE   MALE 
-    ##    759    695
+    ##    449    449
 
 ### Read in the nature + springer research author information
 
@@ -331,7 +368,7 @@ print("Quote Stats")
 dim(quote_author_df)
 ```
 
-    ## [1] 8064    8
+    ## [1] 6539    8
 
 ``` r
 table(quote_author_df$author_pos)
@@ -339,7 +376,7 @@ table(quote_author_df$author_pos)
 
     ## 
     ## first  last 
-    ##  3382  4682
+    ##  2864  3675
 
 ### Get bootstrap estimates
 
@@ -348,11 +385,18 @@ if(RERUN_BOOTSTRAP){
         
     
     #### Quote data
-    quote_prop_df = compute_bootstrap_gender(full_quote_df, 
+    quote_prop_df = compute_bootstrap_gender(subset(full_quote_df, type != "guardian"), 
                                                year_col_id = "year", 
                                                article_col_id = "quote",
                                                conf_int=0.95)
     quote_prop_df$corpus = "quote"
+    
+    #### Guardian Quote data
+    guardian_quote_prop_df = compute_bootstrap_gender(subset(full_quote_df, type == "guardian"), 
+                                               year_col_id = "year", 
+                                               article_col_id = "quote",
+                                               conf_int=0.95)
+    guardian_quote_prop_df$corpus = "guardian"
     
     #### Quote data broken down by article type
     get_subboot <- function(type_id, type_names, in_df){
@@ -374,7 +418,7 @@ if(RERUN_BOOTSTRAP){
     
     #### Quote data broken down by article type career vs non-career
     career_df = NA
-    non_career = setdiff(unique(full_quote_df$type), c("career-feature"))
+    non_career = setdiff(unique(full_quote_df$type), c("career-feature", "guardian"))
     career_type = list("career-feature", non_career)
     career_name = c("career-feature", "other")
     for(curr_type_idx in 1:length(career_type)){
@@ -426,7 +470,8 @@ if(RERUN_BOOTSTRAP){
     save(quote_prop_df, type_df, career_df, 
          springer_first_prop_df, springer_last_prop_df, 
          nature_first_prop_df, nature_last_prop_df, 
-         first_cited_prop_df, file = all_bootstrap_file)
+         first_cited_prop_df, guardian_quote_prop_df,
+         file = all_bootstrap_file)
 }else{
     all_bootstrap_file = file.path(proj_dir,
                                 "/figure_notebooks/tmp_files/fig2_tmp/fig2.RData")
@@ -458,11 +503,12 @@ compare_df = rbind(springer_first_prop_df,
                    springer_last_prop_df,
                    nature_first_prop_df,
                    nature_last_prop_df,
-                   quote_prop_df[,colnames(springer_last_prop_df)])
+                   quote_prop_df[,colnames(springer_last_prop_df)],
+                   guardian_quote_prop_df[,colnames(springer_last_prop_df)])
 compare_df$corpus = factor(compare_df$corpus, levels = QUOTE_ANALYSIS_ORDER)
 
 quotes_nature_gg = 
-    ggplot(subset(compare_df, corpus %in% c("nature_last", "nature_first", "quote")), 
+    ggplot(subset(compare_df, corpus %in% c("nature_last", "nature_first", "quote", "guardian")), 
       aes(x=as.numeric(year), y=mean,
                           ymin=bottom_CI, ymax=top_CI,
                           fill=corpus)) +
@@ -479,7 +525,7 @@ ggsave(file.path(proj_dir, "/figure_notebooks/tmp_files/fig2_tmp/quotes_nature_g
 
 
 quotes_springer_gg = 
-    ggplot(subset(compare_df, corpus %in% c("springer_last", "springer_first", "quote")), 
+    ggplot(subset(compare_df, corpus %in% c("springer_last", "springer_first", "quote", "guardian")), 
       aes(x=as.numeric(year), y=mean,
                           ymin=bottom_CI, ymax=top_CI,
                           fill=corpus)) +

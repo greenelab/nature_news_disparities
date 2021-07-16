@@ -94,6 +94,18 @@ full_quote_df = full_quote_df[-1,]
 full_quote_df = subset(full_quote_df, !type %in% c("career-column", "news-and-views"))
 full_quote_df = unique(full_quote_df)
 
+# filter out articles with more than 25 quotes
+num_quotes = table(full_quote_df$file_id)
+too_many_quotes_idx = which(num_quotes > 25)
+too_many_quotes_file_id = names(num_quotes)[too_many_quotes_idx]
+full_quote_df = subset(full_quote_df, !file_id %in% too_many_quotes_file_id)
+
+print("Num Removed Articles")
+print(length(too_many_quotes_file_id))
+
+print("Num Total Articles")
+print(length(num_quotes))
+
 print("Total Quotes")
 print(dim(full_quote_df))
 
@@ -243,11 +255,18 @@ if(RERUN_BOOTSTRAP){
         
     
     #### Quote data
-    quote_prop_df = compute_bootstrap_gender(full_quote_df, 
+    quote_prop_df = compute_bootstrap_gender(subset(full_quote_df, type != "guardian"), 
                                                year_col_id = "year", 
                                                article_col_id = "quote",
                                                conf_int=0.95)
     quote_prop_df$corpus = "quote"
+    
+    #### Guardian Quote data
+    guardian_quote_prop_df = compute_bootstrap_gender(subset(full_quote_df, type == "guardian"), 
+                                               year_col_id = "year", 
+                                               article_col_id = "quote",
+                                               conf_int=0.95)
+    guardian_quote_prop_df$corpus = "guardian"
     
     #### Quote data broken down by article type
     get_subboot <- function(type_id, type_names, in_df){
@@ -269,7 +288,7 @@ if(RERUN_BOOTSTRAP){
     
     #### Quote data broken down by article type career vs non-career
     career_df = NA
-    non_career = setdiff(unique(full_quote_df$type), c("career-feature"))
+    non_career = setdiff(unique(full_quote_df$type), c("career-feature", "guardian"))
     career_type = list("career-feature", non_career)
     career_name = c("career-feature", "other")
     for(curr_type_idx in 1:length(career_type)){
@@ -321,7 +340,8 @@ if(RERUN_BOOTSTRAP){
     save(quote_prop_df, type_df, career_df, 
          springer_first_prop_df, springer_last_prop_df, 
          nature_first_prop_df, nature_last_prop_df, 
-         first_cited_prop_df, file = all_bootstrap_file)
+         first_cited_prop_df, guardian_quote_prop_df,
+         file = all_bootstrap_file)
 }else{
     all_bootstrap_file = file.path(proj_dir,
                                 "/figure_notebooks/tmp_files/fig2_tmp/fig2.RData")
@@ -357,11 +377,12 @@ compare_df = rbind(springer_first_prop_df,
                    springer_last_prop_df,
                    nature_first_prop_df,
                    nature_last_prop_df,
-                   quote_prop_df[,colnames(springer_last_prop_df)])
+                   quote_prop_df[,colnames(springer_last_prop_df)],
+                   guardian_quote_prop_df[,colnames(springer_last_prop_df)])
 compare_df$corpus = factor(compare_df$corpus, levels = QUOTE_ANALYSIS_ORDER)
 
 quotes_nature_gg = 
-    ggplot(subset(compare_df, corpus %in% c("nature_last", "nature_first", "quote")), 
+    ggplot(subset(compare_df, corpus %in% c("nature_last", "nature_first", "quote", "guardian")), 
       aes(x=as.numeric(year), y=mean,
                           ymin=bottom_CI, ymax=top_CI,
                           fill=corpus)) +
@@ -378,7 +399,7 @@ ggsave(file.path(proj_dir, "/figure_notebooks/tmp_files/fig2_tmp/quotes_nature_g
 
 
 quotes_springer_gg = 
-    ggplot(subset(compare_df, corpus %in% c("springer_last", "springer_first", "quote")), 
+    ggplot(subset(compare_df, corpus %in% c("springer_last", "springer_first", "quote", "guardian")), 
       aes(x=as.numeric(year), y=mean,
                           ymin=bottom_CI, ymax=top_CI,
                           fill=corpus)) +
