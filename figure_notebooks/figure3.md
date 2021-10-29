@@ -79,15 +79,36 @@ news_df = subset(news_df, !type %in% c("career-column", "news-and-views"))
 head(news_df)
 ```
 
-    ##   year type        file_id
-    ## 2 2005 news  041220-1.html
-    ## 3 2005 news  050103-1.html
-    ## 4 2005 news 050103-10.html
-    ## 5 2005 news 050103-11.html
-    ## 6 2005 news 050103-12.html
-    ## 7 2005 news  050103-2.html
+    ##   year     type                                               file_id
+    ## 2 2005 guardian                          missed_generize_io_names.tsv
+    ## 3 2005 guardian news.2005.apr.28.thisweekssciencequestions.psychology
+    ## 4 2005 guardian                 news.2005.dec.06.topstories3.genetics
+    ## 5 2005 guardian                       news.2005.dec.21.food.christmas
+    ## 6 2005 guardian        news.2005.feb.05.guardianobituaries.obituaries
+    ## 7 2005 guardian            news.2005.feb.10.thisweekssciencequestions
 
 ``` r
+# read in raw quotes data for filtering
+full_quote_df = NA
+quote_files = list.files(file.path(proj_dir,"/data/scraped_data/", sep=""), full.names = T)
+quote_files = grep("quote_table_raw_", quote_files, value=T)
+for(quote_file in quote_files){
+    
+    quote_df = read_corenlp_quote_files(quote_file)
+    quote_df$year = str_extract(quote_file, "[1-9][0-9]+") # curr_year
+    quote_df$type = substring(basename(quote_file), 
+                            22, nchar(basename(quote_file))-4)
+    
+    full_quote_df = rbind(full_quote_df, quote_df)
+}
+full_quote_df = full_quote_df[-1,]
+
+# filter out articles with more than 25 quotes
+num_quotes = table(full_quote_df$file_id)
+too_many_quotes_idx = which(num_quotes > 25)
+too_many_quotes_file_id = names(num_quotes)[too_many_quotes_idx]
+
+
 # first read in the quote data
 name_pred_file = file.path(proj_dir, 
                              "/data/author_data/all_speaker_fullname_pred.tsv")
@@ -96,6 +117,7 @@ name_info_file = file.path(proj_dir,
 
 quote_name_df = read_name_origin(name_pred_file, name_info_file)
 quote_name_df$name_origin[quote_name_df$name_origin == "Jewish"] = "Hebrew"
+quote_name_df = subset(quote_name_df, !file_id %in% too_many_quotes_file_id)
 
 # second read in the names mentioned data
 name_pred_file = file.path(proj_dir, 
@@ -105,6 +127,7 @@ name_info_file = file.path(proj_dir,
 
 mentioned_name_df = read_name_origin(name_pred_file, name_info_file)
 mentioned_name_df$name_origin[mentioned_name_df$name_origin == "Jewish"] = "Hebrew"
+mentioned_name_df = subset(mentioned_name_df, !file_id %in% too_many_quotes_file_id)
 
 
 # now read in the BG data
@@ -137,6 +160,7 @@ cite_name_df$corpus[scientist_idx] = "citation_scientist"
 # so we will have a quote set as a doi
 quote_name_df$doi = quote_name_df$quote
 quote_name_df$corpus = "quote"
+quote_name_df$corpus[which(quote_name_df$type == "guardian")] = "guardian_quote"
 
 # we assume a name mentioned is comparable to a publication
 # so we will have a name + file_id as a doi
@@ -144,6 +168,7 @@ mentioned_name_df$doi = paste(mentioned_name_df$author,
                               mentioned_name_df$file_id, 
                               sep="_")
 mentioned_name_df$corpus = "mention"
+mentioned_name_df$corpus[which(mentioned_name_df$type == "guardian")] = "guardian_mention"
 
 # filter the article types we don't want to use
 quote_name_df = subset(quote_name_df, !type %in% c("career-column", "news-and-views"))
@@ -199,6 +224,12 @@ tot_prop_quote = quote_total %>%
                 summarise(n()) 
 tot_prop_quote$corpus = "quote"
 
+quote_total = unique(subset(name_df, corpus == "guardian_quote", select=c(doi, year)) )
+tot_prop_g_quote = quote_total %>% 
+                group_by(year) %>% 
+                summarise(n()) 
+tot_prop_g_quote$corpus = "guardian_quote"
+
 springer_total = unique(subset(name_df, corpus == "springer_last", select=c(doi, year)) )
 tot_prop_springer = springer_total %>% 
                 group_by(year) %>% 
@@ -218,12 +249,20 @@ tot_prop_mention = mention_total %>%
                 summarise(n()) 
 tot_prop_mention$corpus = "mention"
 
+mention_total = unique(subset(name_df, corpus == "guardian_mention", select=c(doi, year)) )
+tot_prop_g_mention = mention_total %>% 
+                group_by(year) %>% 
+                summarise(n()) 
+tot_prop_g_mention$corpus = "guardian_mention"
+
 num_art_tot = Reduce(rbind, list(tot_prop_citation_j, 
                                  tot_prop_citation_s,
                                  tot_prop_quote,
+                                 tot_prop_g_quote,
                                  tot_prop_springer, 
                                  tot_prop_nature,
-                                 tot_prop_mention))
+                                 tot_prop_mention,
+                                 tot_prop_g_mention))
 num_art_tot = data.frame(num_art_tot)
 colnames(num_art_tot)[2] = "tot_articles"
 
@@ -238,15 +277,17 @@ num_art_tot %>%
     summarise(median(tot_articles)) 
 ```
 
-    ## # A tibble: 6 x 2
+    ## # A tibble: 8 x 2
     ##   corpus              `median(tot_articles)`
     ##   <chr>                                <dbl>
     ## 1 citation_journalist                   267 
     ## 2 citation_scientist                    660.
-    ## 3 mention                              5002 
-    ## 4 nature_last                           679 
-    ## 5 quote                                6194 
-    ## 6 springer_last                        1684.
+    ## 3 guardian_mention                     3271 
+    ## 4 guardian_quote                       2898 
+    ## 5 mention                              4726.
+    ## 6 nature_last                           679 
+    ## 7 quote                                5662 
+    ## 8 springer_last                        1684.
 
 ``` r
 print("min of observations")
@@ -260,15 +301,17 @@ num_art_tot %>%
     summarise(min(tot_articles)) 
 ```
 
-    ## # A tibble: 6 x 2
+    ## # A tibble: 8 x 2
     ##   corpus              `min(tot_articles)`
     ##   <chr>                             <int>
     ## 1 citation_journalist                 139
     ## 2 citation_scientist                  503
-    ## 3 mention                            3634
-    ## 4 nature_last                         565
-    ## 5 quote                              4577
-    ## 6 springer_last                      1298
+    ## 3 guardian_mention                   2192
+    ## 4 guardian_quote                     2240
+    ## 5 mention                            3177
+    ## 6 nature_last                         565
+    ## 7 quote                              3751
+    ## 8 springer_last                      1298
 
 ### Get bootstrap estimates
 
@@ -276,7 +319,7 @@ num_art_tot %>%
 # helper method for calling the bootstrap
 get_subboot <- function(origin_id, curr_corpus, in_df, bootstrap_col_id="doi"){
     bootstrap_res = compute_bootstrap_location(subset(in_df, 
-                                                      corpus==curr_corpus), 
+                                                      corpus==curr_corpus & year == 2016), 
                                               year_col_id = "year", 
                                               article_col_id = bootstrap_col_id, 
                                               country_col_id = "name_origin",
@@ -286,8 +329,8 @@ get_subboot <- function(origin_id, curr_corpus, in_df, bootstrap_col_id="doi"){
     
     # add a label for plotting later
     bootstrap_res$label = ""
-    bootstrap_res$label[bootstrap_res$year == 2020] = 
-        bootstrap_res$name_origin[bootstrap_res$year == 2020]
+    #bootstrap_res$label[bootstrap_res$year == 2020] = 
+    #    bootstrap_res$name_origin[bootstrap_res$year == 2020]
         
 
     return(bootstrap_res)
@@ -330,6 +373,16 @@ if(RERUN_BOOTSTRAP){
     }
     quote_origin_df = quote_origin_df[-1,]
     
+    g_quote_origin_df = NA
+    for(curr_origin in unique(name_df$name_origin)){
+        print(curr_origin)
+        res = get_subboot(curr_origin, 
+                          curr_corpus="guardian_quote",
+                          name_df)
+        g_quote_origin_df = rbind(g_quote_origin_df, res)
+    }
+    g_quote_origin_df = g_quote_origin_df[-1,]
+    g_quote_origin_df_2016 = g_quote_origin_df
     
     springer_origin_df = NA
     for(curr_origin in unique(name_df$name_origin)){
@@ -361,21 +414,35 @@ if(RERUN_BOOTSTRAP){
     }
     mention_origin_df = mention_origin_df[-1,]
     
+    g_mention_origin_df = NA
+    for(curr_origin in unique(name_df$name_origin)){
+        print(curr_origin)
+        res = get_subboot(curr_origin, 
+                          curr_corpus="guardian_mention",
+                          name_df)
+        g_mention_origin_df = rbind(g_mention_origin_df, res)
+    }
+    g_mention_origin_df = g_mention_origin_df[-1,]
+    g_mention_origin_df_2016 = g_mention_origin_df
     
     # re-add corpus column for easy reference later
     citation_j_origin_df$corpus = "citation_journalist"
     citation_s_origin_df$corpus = "citation_scientist"
     quote_origin_df$corpus = "quote"
+    g_quote_origin_df$corpus = "guardian_quote"
     springer_origin_df$corpus = "springer_last"
     nature_origin_df$corpus = "nature_last"
     mention_origin_df$corpus = "mention"
-    
+    g_mention_origin_df$corpus = "guardian_mention"
+
     all_bootstrap_df = Reduce(rbind, list(quote_origin_df,
+                                          g_quote_origin_df,
                                        citation_j_origin_df,
                                        citation_s_origin_df,
                                        nature_origin_df,
                                        springer_origin_df,
-                                       mention_origin_df))
+                                       mention_origin_df,
+                                       g_mention_origin_df))
     all_bootstrap_df$corpus = factor(all_bootstrap_df$corpus, levels = QUOTE_ANALYSIS_ORDER)
     
     outfile = file.path(proj_dir,"/figure_notebooks/tmp_files/fig3_tmp/all_bootstrap_df.tsv")
@@ -389,9 +456,11 @@ if(RERUN_BOOTSTRAP){
     citation_j_origin_df = subset(all_bootstrap_df, corpus == "citation_journalist")
     citation_s_origin_df = subset(all_bootstrap_df, corpus == "citation_scientist")
     quote_origin_df = subset(all_bootstrap_df, corpus == "quote")
+    g_quote_origin_df = subset(all_bootstrap_df, corpus == "guardian_quote")
     springer_origin_df = subset(all_bootstrap_df, corpus == "springer_last")
     nature_origin_df = subset(all_bootstrap_df, corpus == "nature_last")
     mention_origin_df = subset(all_bootstrap_df, corpus == "mention")
+    g_mention_origin_df = subset(all_bootstrap_df, corpus == "guardian_mention")
     
 }
 
@@ -444,7 +513,7 @@ summary(subset(quote_origin_df,
 ```
 
     ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-    ## 0.04894 0.06105 0.06923 0.06720 0.07424 0.07898
+    ## 0.04928 0.05464 0.06448 0.06268 0.06819 0.07446
 
 ``` r
 print("range of non European or non CelticEnglish or non EastAsian names")
@@ -615,7 +684,8 @@ ggsave(file.path(proj_dir, "/figure_notebooks/tmp_files/fig3_tmp/quote_overview_
 
 # plot by each name origin individually
 quote_nature_indiv_full_gg = ggplot(subset(all_bootstrap_df, 
-                                         corpus %in% c("nature_last", "quote")), 
+                                         corpus %in% 
+                                             c("nature_last", "quote", "guardian_quote")), 
                                 aes(x=as.numeric(year), y=mean,
                                       ymin=bottom_CI, ymax=top_CI,
                                       fill=corpus)) +
@@ -631,7 +701,8 @@ ggsave(file.path(proj_dir, "/figure_notebooks/tmp_files/fig3_tmp/quote_nature_in
        quote_nature_indiv_full_gg, width = 7, height = 5, units = "in", device = "pdf")
 
 quote_springer_indiv_full_gg = ggplot(subset(all_bootstrap_df, 
-                                         corpus %in% c("springer_last", "quote")), 
+                                         corpus %in% 
+                                             c("springer_last", "quote", "guardian_quote")), 
                                 aes(x=as.numeric(year), y=mean,
                                       ymin=bottom_CI, ymax=top_CI,
                                       fill=corpus)) +
@@ -648,7 +719,8 @@ ggsave(file.path(proj_dir, "/figure_notebooks/tmp_files/fig3_tmp/quote_springer_
 
 
 quote_nature_indiv_sub_gg = ggplot(subset(all_bootstrap_df, 
-                                         corpus %in% c("nature_last", "quote") &
+                                         corpus %in% 
+                                             c("nature_last", "quote", "guardian_quote") &
                                          name_origin %in% c("CelticEnglish", "EastAsian", "European")), 
                                 aes(x=as.numeric(year), y=mean,
                                       ymin=bottom_CI, ymax=top_CI,
@@ -685,7 +757,8 @@ ggsave(file.path(proj_dir, "/figure_notebooks/tmp_files/fig3_tmp/mention_overvie
 
 # plot by each name origin individually
 mention_nature_indiv_full_gg = ggplot(subset(all_bootstrap_df, 
-                                         corpus %in% c("nature_last", "mention")), 
+                                         corpus %in% 
+                                             c("nature_last", "mention", "guardian_mention")), 
                                 aes(x=as.numeric(year), y=mean,
                                       ymin=bottom_CI, ymax=top_CI,
                                       fill=corpus)) +
@@ -701,7 +774,8 @@ ggsave(file.path(proj_dir, "/figure_notebooks/tmp_files/fig3_tmp/mention_nature_
        mention_nature_indiv_full_gg, width = 7, height = 5, units = "in", device = "pdf")
 
 mention_springer_indiv_full_gg = ggplot(subset(all_bootstrap_df, 
-                                         corpus %in% c("springer_last", "mention")), 
+                                         corpus %in% 
+                                             c("springer_last", "mention", "guardian_mention")), 
                                 aes(x=as.numeric(year), y=mean,
                                       ymin=bottom_CI, ymax=top_CI,
                                       fill=corpus)) +
@@ -718,7 +792,8 @@ ggsave(file.path(proj_dir, "/figure_notebooks/tmp_files/fig3_tmp/mention_springe
 
 
 mention_nature_indiv_sub_gg = ggplot(subset(all_bootstrap_df, 
-                                         corpus %in% c("nature_last", "mention") &
+                                         corpus %in%
+                                             c("nature_last", "mention", "guardian_mention") &
                                          name_origin %in% c("CelticEnglish", "EastAsian", "European")), 
                                 aes(x=as.numeric(year), y=mean,
                                       ymin=bottom_CI, ymax=top_CI,
