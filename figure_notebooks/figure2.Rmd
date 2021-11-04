@@ -131,9 +131,14 @@ head(full_quote_df)
 print("Total with Gender Prediction")
 print(dim(full_quote_df))
 
-print("Male Quote Ratio:")
-table(subset(full_quote_df, year == 2005)$est_gender)
-table(subset(full_quote_df, year == 2020)$est_gender)
+print("Male Quote Ratio Nature:")
+table(subset(full_quote_df, year == 2005 & type != "guardian")$est_gender)
+table(subset(full_quote_df, year == 2020 & type != "guardian")$est_gender)
+
+print("Male Quote Ratio Guardian:")
+table(subset(full_quote_df, year == 2005 & type == "guardian")$est_gender)
+table(subset(full_quote_df, year == 2020 & type == "guardian")$est_gender)
+
 
 print("Career-feature info:")
 dim(subset(full_quote_df, type == "career-feature"))
@@ -347,6 +352,8 @@ if(RERUN_BOOTSTRAP){
                                 "/figure_notebooks/tmp_files/fig2_tmp/fig2.RData")
     load(all_bootstrap_file)
 }
+
+
 
 ```
 

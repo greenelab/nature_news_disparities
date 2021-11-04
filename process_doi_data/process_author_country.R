@@ -71,6 +71,7 @@ get_nature_news_mentions <- function(){
     full_loc_df = NA
     loc_files = list.files(paste(proj_dir,"/data/scraped_data/", sep=""), full.names = T)
     loc_files = grep("location_table_raw_", loc_files, value=T)
+    loc_files = grep("guardian", loc_files, value=T, invert=T)
     for(loc_file in loc_files){
 
         loc_df = read_corenlp_location_files(loc_file)

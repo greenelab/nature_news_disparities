@@ -6,6 +6,7 @@
 .Rhistory
 .Rproj.user
 *.Rproj
+.vscode
 
 /data/benchmark_data/coreNLP_input/*
 /data/scraped_data/downloads

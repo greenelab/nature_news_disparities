@@ -14,7 +14,7 @@ source(file.path(proj_dir, "/process_doi_data/springer_scripts/springer_scrape_u
 #' the nature background authors
 #' @param nature_dir, directory containing scraped nature JSON output 
 #' 
-process_all_author_fullnames <- function(nature_dir, cited_dois_dir, outdir){
+process_all_author_fullnames <- function(nature_dir, cited_dois_dir, journo_dir, outdir){
 
     # we have 3 source files for author info
     # springer background authorship
@@ -35,24 +35,31 @@ process_all_author_fullnames <- function(nature_dir, cited_dois_dir, outdir){
     # then all the nature articles
     nature_author_df = read_nature_author_json_files(nature_dir)
 
+    # then all the nature journalists
+    nature_journo_df = read_nature_journo_files(journo_dir)
+
     # now process them to get the first and last authors
     cited_author_df = format_authors(cited_author_df, use_fullname=T)
     springer_author_df = format_authors(springer_author_df, use_fullname=T)
     nature_author_df = format_authors(nature_author_df, use_fullname=T)
+    nature_journo_df = format_journo(nature_journo_df, use_fullname=T)
 
     # remove any blank authors
     cited_author_df = subset(cited_author_df, author != "")
     springer_author_df = subset(springer_author_df, author != "")
     nature_author_df = subset(nature_author_df, author != "")
+    nature_journo_df = subset(nature_journo_df, author != "")
 
     cited_author_df$corpus = "naturenews_citations"
     springer_author_df$corpus = "springer_articles"
     nature_author_df$corpus = "nature_articles"
+    nature_journo_df$corpus = "nature_journo"
 
     col_ids = c("year", "author_pos", "author", "file_id", "doi", "corpus")
     all_author_df = Reduce(rbind, list(cited_author_df[,col_ids],
                                         springer_author_df[,col_ids],
-                                        nature_author_df[,col_ids]))
+                                        nature_author_df[,col_ids]),
+                                        nature_journo_df[,col_ids])
 
     all_author_file = file.path(outdir, "all_author_fullname.tsv")
     write.table(all_author_df, file=all_author_file, sep="\t", quote=F, row.names=F)
@@ -64,7 +71,8 @@ process_all_author_fullnames <- function(nature_dir, cited_dois_dir, outdir){
 args = commandArgs(trailingOnly=TRUE)
 nature_dir = args[1]
 cited_dois_dir = args[2]
-outdir = args[3]
+journo_dir = args[3]
+outdir = args[4]
 
-process_all_author_fullnames(nature_dir, cited_dois_dir, outdir)
+process_all_author_fullnames(nature_dir, cited_dois_dir, journo_dir, outdir)
 

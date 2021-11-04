@@ -19,7 +19,7 @@ require(tidytext)
 require(stringr)
 require(magick)
 require(pdftools)
-
+require(dplyr)
 proj_dir = here()
 
 

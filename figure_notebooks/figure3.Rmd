@@ -281,6 +281,10 @@ num_art_tot = Reduce(rbind, list(tot_prop_citation_j,
 num_art_tot = data.frame(num_art_tot)
 colnames(num_art_tot)[2] = "tot_articles"
 
+print("total of observations")
+num_art_tot %>% 
+    group_by(corpus) %>% 
+    summarise(n()) 
 print("median of observations")
 num_art_tot %>% 
     group_by(corpus) %>% 
@@ -299,7 +303,7 @@ num_art_tot %>%
 # helper method for calling the bootstrap
 get_subboot <- function(origin_id, curr_corpus, in_df, bootstrap_col_id="doi"){
     bootstrap_res = compute_bootstrap_location(subset(in_df, 
-                                                      corpus==curr_corpus & year == 2016), 
+                                                      corpus==curr_corpus), 
                                               year_col_id = "year", 
                                               article_col_id = bootstrap_col_id, 
                                               country_col_id = "name_origin",
@@ -308,9 +312,8 @@ get_subboot <- function(origin_id, curr_corpus, in_df, bootstrap_col_id="doi"){
     bootstrap_res$name_origin = origin_id
     
     # add a label for plotting later
-    bootstrap_res$label = ""
-    #bootstrap_res$label[bootstrap_res$year == 2020] = 
-    #    bootstrap_res$name_origin[bootstrap_res$year == 2020]
+    bootstrap_res$label[bootstrap_res$year == 2020] = 
+        bootstrap_res$name_origin[bootstrap_res$year == 2020]
         
 
     return(bootstrap_res)
@@ -362,8 +365,7 @@ if(RERUN_BOOTSTRAP){
         g_quote_origin_df = rbind(g_quote_origin_df, res)
     }
     g_quote_origin_df = g_quote_origin_df[-1,]
-    g_quote_origin_df_2016 = g_quote_origin_df
-    
+
     springer_origin_df = NA
     for(curr_origin in unique(name_df$name_origin)){
         print(curr_origin)
@@ -403,8 +405,7 @@ if(RERUN_BOOTSTRAP){
         g_mention_origin_df = rbind(g_mention_origin_df, res)
     }
     g_mention_origin_df = g_mention_origin_df[-1,]
-    g_mention_origin_df_2016 = g_mention_origin_df
-    
+
     # re-add corpus column for easy reference later
     citation_j_origin_df$corpus = "citation_journalist"
     citation_s_origin_df$corpus = "citation_scientist"
@@ -457,7 +458,8 @@ summary(subset(citation_s_origin_df,
                name_origin == "EastAsian")$mean)
 summary(subset(quote_origin_df, 
                name_origin == "EastAsian")$mean)
-
+summary(subset(g_quote_origin_df, 
+               name_origin == "EastAsian")$mean)
 
 print("range of non European or non CelticEnglish or non EastAsian names")
 summary(subset(citation_j_origin_df, 

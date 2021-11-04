@@ -14,7 +14,7 @@ source(file.path(proj_dir, "/process_doi_data/springer_scripts/springer_scrape_u
 #' the nature background authors
 #' @param nature_dir, directory containing scraped nature JSON output 
 #' 
-process_all_author_gender <- function(nature_dir, cited_dois_dir, outdir){
+process_all_author_gender <- function(nature_dir, cited_dois_dir, journo_dir, outdir){
 
     # we have 3 source files for author info
     # springer background authorship
@@ -34,15 +34,20 @@ process_all_author_gender <- function(nature_dir, cited_dois_dir, outdir){
     # then all the nature articles
     nature_author_df = read_nature_author_json_files(nature_dir)
 
+    # and all the nature journalists
+    nature_journo_df = read_nature_journo_files(journo_dir)
+
     # now process them to get the first and last authors
     cited_author_df = format_authors(cited_author_df)
     springer_author_df = format_authors(springer_author_df)
     nature_author_df = format_authors(nature_author_df)
+    nature_journo_df = format_journo(nature_journo_df)
 
     # remove any blank authors
     cited_author_df = subset(cited_author_df, author != "")
     springer_author_df = subset(springer_author_df, author != "")
     nature_author_df = subset(nature_author_df, author != "")
+    nature_journo_df = subset(nature_journo_df, author != "")
 
     # now get the genders
     res = get_author_gender(cited_author_df)
@@ -57,6 +62,10 @@ process_all_author_gender <- function(nature_dir, cited_dois_dir, outdir){
     missed_names = unique(c(missed_names, res[[1]]))
     nature_author_df_gender = res[[2]]
 
+    res = get_author_gender(nature_journo_df)
+    missed_names = unique(c(missed_names, res[[1]]))
+    nature_journo_df_gender = res[[2]]
+
     missing_gender_file = file.path(outdir, "missed_generize_io_names.tsv")
     write.table(missed_names, file=missing_gender_file, sep="\t", quote=F, row.names=F)
 
@@ -69,6 +78,9 @@ process_all_author_gender <- function(nature_dir, cited_dois_dir, outdir){
     nature_author_gender_file = file.path(outdir, "nature_author_gender.tsv")
     write.table(nature_author_df_gender, file=nature_author_gender_file, sep="\t", quote=F, row.names=F)
 
+    nature_journo_gender_file = file.path(outdir, "nature_journo_gender.tsv")
+    write.table(nature_journo_df_gender, file=nature_journo_gender_file, sep="\t", quote=F, row.names=F)
+
 
 
 
@@ -78,7 +90,8 @@ process_all_author_gender <- function(nature_dir, cited_dois_dir, outdir){
 args = commandArgs(trailingOnly=TRUE)
 nature_dir = args[1]
 cited_dois_dir = args[2]
-outdir = args[3]
+journo_dir = args[3]
+outdir = args[4]
 
-process_all_author_gender(nature_dir, cited_dois_dir, outdir)
+process_all_author_gender(nature_dir, cited_dois_dir, journo_dir, outdir)
 

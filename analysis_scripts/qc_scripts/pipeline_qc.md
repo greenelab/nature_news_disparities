@@ -34,6 +34,8 @@ Now lets do a quick plot of article specific stats. So far in the pipeline, we o
     ## ### 2005 has a consistent number of articles
     ## ### 2005 has a consistent number of articles
     ## ### 2005 has a consistent number of articles
+    ## ### 2005 has a consistent number of articles
+    ## ### 2006 has a consistent number of articles
     ## ### 2006 has a consistent number of articles
     ## ### 2006 has a consistent number of articles
     ## ### 2006 has a consistent number of articles
@@ -42,6 +44,8 @@ Now lets do a quick plot of article specific stats. So far in the pipeline, we o
     ## ### 2007 has a consistent number of articles
     ## ### 2007 has a consistent number of articles
     ## ### 2007 has a consistent number of articles
+    ## ### 2007 has a consistent number of articles
+    ## ### 2008 has a consistent number of articles
     ## ### 2008 has a consistent number of articles
     ## ### 2008 has a consistent number of articles
     ## ### 2008 has a consistent number of articles
@@ -50,6 +54,8 @@ Now lets do a quick plot of article specific stats. So far in the pipeline, we o
     ## ### 2009 has a consistent number of articles
     ## ### 2009 has a consistent number of articles
     ## ### 2009 has a consistent number of articles
+    ## ### 2009 has a consistent number of articles
+    ## ### 2010 has a consistent number of articles
     ## ### 2010 has a consistent number of articles
     ## ### 2010 has a consistent number of articles
     ## ### 2010 has a consistent number of articles
@@ -58,6 +64,8 @@ Now lets do a quick plot of article specific stats. So far in the pipeline, we o
     ## ### 2011 has a consistent number of articles
     ## ### 2011 has a consistent number of articles
     ## ### 2011 has a consistent number of articles
+    ## ### 2011 has a consistent number of articles
+    ## ### 2012 has a consistent number of articles
     ## ### 2012 has a consistent number of articles
     ## ### 2012 has a consistent number of articles
     ## ### 2012 has a consistent number of articles
@@ -66,6 +74,8 @@ Now lets do a quick plot of article specific stats. So far in the pipeline, we o
     ## ### 2013 has a consistent number of articles
     ## ### 2013 has a consistent number of articles
     ## ### 2013 has a consistent number of articles
+    ## ### 2013 has a consistent number of articles
+    ## ### 2014 has a consistent number of articles
     ## ### 2014 has a consistent number of articles
     ## ### 2014 has a consistent number of articles
     ## ### 2014 has a consistent number of articles
@@ -76,11 +86,14 @@ Now lets do a quick plot of article specific stats. So far in the pipeline, we o
     ## ### 2015 has a consistent number of articles
     ## ### 2015 has a consistent number of articles
     ## ### 2015 has a consistent number of articles
+    ## ### 2015 has a consistent number of articles
     ## ### 2016 has a consistent number of articles
     ## ### 2016 has a consistent number of articles
     ## ### 2016 has a consistent number of articles
     ## ### 2016 has a consistent number of articles
     ## ### 2016 has a consistent number of articles
+    ## ### 2016 has a consistent number of articles
+    ## ### 2017 has a consistent number of articles
     ## ### 2017 has a consistent number of articles
     ## ### 2017 has a consistent number of articles
     ## ### 2017 has a consistent number of articles
@@ -95,6 +108,7 @@ Now lets do a quick plot of article specific stats. So far in the pipeline, we o
     ## ### 2018 has a consistent number of articles
     ## ### 2018 has a consistent number of articles
     ## ### 2018 has a consistent number of articles
+    ## ### 2018 has a consistent number of articles
     ## ### 2019 has a consistent number of articles
     ## ### 2019 has a consistent number of articles
     ## ### 2019 has a consistent number of articles
@@ -102,6 +116,8 @@ Now lets do a quick plot of article specific stats. So far in the pipeline, we o
     ## ### 2019 has a consistent number of articles
     ## ### 2019 has a consistent number of articles
     ## ### 2019 has a consistent number of articles
+    ## ### 2019 has a consistent number of articles
+    ## ### 2020 has a consistent number of articles
     ## ### 2020 has a consistent number of articles
     ## ### 2020 has a consistent number of articles
     ## ### 2020 has a consistent number of articles
@@ -126,8 +142,14 @@ Now lets do a quick plot of article specific stats. So far in the pipeline, we o
     ## [1] "2005"
     ## ### 2005 has a consistent number of articles
     ## [1] "2005"
+    ## ### 2005 has a consistent number of articles
+    ## [1] "2005"
     ## [1] "2006"
     ## [1] "2006"
+    ## [1] "2006"
+    ## [1] "/Users/natalie/Documents/projects/greenelab/checkouts/nature_news_disparities/data/scraped_data//coreNLP_output_2006_guardian \n num files missing beyond empty+duplicates"
+    ## [1] "/Users/natalie/Documents/projects/greenelab/checkouts/nature_news_disparities/data/scraped_data//coreNLP_output_2006_guardian"
+    ## ### 2006 has a consistent number of articles
     ## [1] "2006"
     ## ### 2006 has a consistent number of articles
     ## [1] "2006"
@@ -148,8 +170,12 @@ Now lets do a quick plot of article specific stats. So far in the pipeline, we o
     ## [1] "2007"
     ## ### 2007 has a consistent number of articles
     ## [1] "2007"
+    ## ### 2007 has a consistent number of articles
+    ## [1] "2007"
     ## [1] "2008"
     ## [1] "2008"
+    ## [1] "2008"
+    ## ### 2008 has a consistent number of articles
     ## [1] "2008"
     ## ### 2008 has a consistent number of articles
     ## [1] "2008"
@@ -170,8 +196,12 @@ Now lets do a quick plot of article specific stats. So far in the pipeline, we o
     ## [1] "2009"
     ## ### 2009 has a consistent number of articles
     ## [1] "2009"
+    ## ### 2009 has a consistent number of articles
+    ## [1] "2009"
     ## [1] "2010"
     ## [1] "2010"
+    ## [1] "2010"
+    ## ### 2010 has a consistent number of articles
     ## [1] "2010"
     ## ### 2010 has a consistent number of articles
     ## [1] "2010"
@@ -192,8 +222,12 @@ Now lets do a quick plot of article specific stats. So far in the pipeline, we o
     ## [1] "2011"
     ## ### 2011 has a consistent number of articles
     ## [1] "2011"
+    ## ### 2011 has a consistent number of articles
+    ## [1] "2011"
     ## [1] "2012"
     ## [1] "2012"
+    ## [1] "2012"
+    ## ### 2012 has a consistent number of articles
     ## [1] "2012"
     ## ### 2012 has a consistent number of articles
     ## [1] "2012"
@@ -214,8 +248,12 @@ Now lets do a quick plot of article specific stats. So far in the pipeline, we o
     ## [1] "2013"
     ## ### 2013 has a consistent number of articles
     ## [1] "2013"
+    ## ### 2013 has a consistent number of articles
+    ## [1] "2013"
     ## [1] "2014"
     ## [1] "2014"
+    ## [1] "2014"
+    ## ### 2014 has a consistent number of articles
     ## [1] "2014"
     ## ### 2014 has a consistent number of articles
     ## [1] "2014"
@@ -238,9 +276,13 @@ Now lets do a quick plot of article specific stats. So far in the pipeline, we o
     ## ### 2015 has a consistent number of articles
     ## [1] "2015"
     ## ### 2015 has a consistent number of articles
+    ## [1] "2015"
+    ## ### 2015 has a consistent number of articles
     ## [1] "2016"
     ## [1] "2016"
     ## [1] "2016"
+    ## [1] "/Users/natalie/Documents/projects/greenelab/checkouts/nature_news_disparities/data/scraped_data//coreNLP_output_2016_guardian \n num files missing beyond empty+duplicates"
+    ## [1] "/Users/natalie/Documents/projects/greenelab/checkouts/nature_news_disparities/data/scraped_data//coreNLP_output_2016_guardian"
     ## ### 2016 has a consistent number of articles
     ## [1] "2016"
     ## ### 2016 has a consistent number of articles
@@ -250,6 +292,10 @@ Now lets do a quick plot of article specific stats. So far in the pipeline, we o
     ## ### 2016 has a consistent number of articles
     ## [1] "2016"
     ## ### 2016 has a consistent number of articles
+    ## [1] "2016"
+    ## ### 2016 has a consistent number of articles
+    ## [1] "2017"
+    ## ### 2017 has a consistent number of articles
     ## [1] "2017"
     ## ### 2017 has a consistent number of articles
     ## [1] "2017"
@@ -278,6 +324,8 @@ Now lets do a quick plot of article specific stats. So far in the pipeline, we o
     ## ### 2018 has a consistent number of articles
     ## [1] "2018"
     ## ### 2018 has a consistent number of articles
+    ## [1] "2018"
+    ## ### 2018 has a consistent number of articles
     ## [1] "2019"
     ## ### 2019 has a consistent number of articles
     ## [1] "2019"
@@ -292,6 +340,10 @@ Now lets do a quick plot of article specific stats. So far in the pipeline, we o
     ## ### 2019 has a consistent number of articles
     ## [1] "2019"
     ## ### 2019 has a consistent number of articles
+    ## [1] "2019"
+    ## ### 2019 has a consistent number of articles
+    ## [1] "2020"
+    ## ### 2020 has a consistent number of articles
     ## [1] "2020"
     ## ### 2020 has a consistent number of articles
     ## [1] "2020"

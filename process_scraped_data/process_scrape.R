@@ -72,6 +72,10 @@ bm_data_df = read_json(infile)
 bm_data_df = process_body(bm_data_df)
 
 # write out the files for coreNLP
+set.seed(5)
+bm_data_df = bm_data_df[sample(nrow(bm_data_df)),]
+
+
 write_sep_files(bm_data_df, outdir)
 id_year_file = file.path(outdir, "/fileID_year.tsv")
 write.table(bm_data_df[,c("file_id", "year")], id_year_file, sep="\t", quote=F, row.names=F)
