@@ -301,6 +301,14 @@ if(RERUN_BOOTSTRAP){
 ## Make Plots
 
 ``` r
+#### write out tables to show the raw frequencies
+journo_f_df = subset(gender_res, est_gender=="FEMALE")
+journo_f_tab = table(journo_f_df$type, journo_f_df$year)
+
+journo_m_df = subset(gender_res, est_gender=="MALE")
+journo_m_tab = table(journo_m_df$type, journo_m_df$year)
+
+
 #### plot the overview of gender
 journo_gender_gg = 
     ggplot(journo_gender_prop_df, 
@@ -371,6 +379,32 @@ journo_gender_gg
 ![](journalist_analysis_files/figure-markdown_github/make_citation_gg-1.png)
 
 ``` r
+knitr::kable(journo_f_tab, format = "pipe", 
+             caption = "Number of Articles written by predicted female journalist")
+```
+
+|                    |  2005|  2006|  2007|  2008|  2009|  2010|  2011|  2012|  2013|  2014|  2015|  2016|  2017|  2018|  2019|  2020|
+|:-------------------|-----:|-----:|-----:|-----:|-----:|-----:|-----:|-----:|-----:|-----:|-----:|-----:|-----:|-----:|-----:|-----:|
+| career-feature     |     0|     0|     0|     0|     0|     0|     0|     0|     0|     0|     0|     0|     2|    27|    20|    23|
+| news               |   420|   476|   448|   504|   461|   446|   391|   659|   553|   540|   470|   479|   494|   375|   330|   266|
+| news-feature       |    66|    66|   110|    49|    42|    45|    57|    50|    42|    52|    54|    42|    38|    43|    41|    53|
+| technology-feature |     3|     2|     3|     1|     1|     6|     6|     6|     6|     6|     7|     8|     7|     4|     7|    17|
+| toolbox            |     0|     0|     0|     0|     0|     0|     0|     0|     0|    13|     1|     4|     1|     5|     4|     0|
+
+``` r
+knitr::kable(journo_m_tab, format = "pipe", 
+             caption = "Number of Articles written by predicted male journalist")
+```
+
+|                    |  2005|  2006|  2007|  2008|  2009|  2010|  2011|  2012|  2013|  2014|  2015|  2016|  2017|  2018|  2019|  2020|
+|:-------------------|-----:|-----:|-----:|-----:|-----:|-----:|-----:|-----:|-----:|-----:|-----:|-----:|-----:|-----:|-----:|-----:|
+| career-feature     |     0|     0|     0|     0|     0|     0|     0|     0|     0|     0|     0|     0|     2|    23|    21|    18|
+| news               |   624|   512|   564|   537|   596|   533|   501|   697|   593|   440|   487|   464|   356|   302|   294|   157|
+| news-feature       |    66|    62|   153|    67|    61|    60|    51|    60|    50|    39|    46|    41|    23|    33|    38|    27|
+| technology-feature |     3|     4|     4|     5|     6|     0|     0|     0|     0|     0|     2|     4|     6|     7|     9|    18|
+| toolbox            |     0|     0|     0|     0|     0|     0|     0|     0|     0|    13|    10|     9|     9|    10|    10|     0|
+
+``` r
 journo_gender_type_m_gg
 ```
 
@@ -381,6 +415,25 @@ journo_gender_type_f_gg
 ```
 
 ![](journalist_analysis_files/figure-markdown_github/make_citation_gg-3.png)
+
+``` r
+journo_name_tab = table(journo_name_df$name_origin, journo_name_df$year)
+knitr::kable(journo_name_tab, format = "pipe", 
+             caption = "Number of Articles written by a journalist with predicted name-origin ")
+```
+
+|               |  2005|  2006|  2007|  2008|  2009|  2010|  2011|  2012|  2013|  2014|  2015|  2016|  2017|  2018|  2019|  2020|
+|:--------------|-----:|-----:|-----:|-----:|-----:|-----:|-----:|-----:|-----:|-----:|-----:|-----:|-----:|-----:|-----:|-----:|
+| African       |     0|     3|     1|     0|     1|     2|    23|     4|     0|     4|     6|     2|     1|     5|     3|     0|
+| ArabTurkPers  |     2|     5|     2|     8|    10|    25|    15|    45|    12|     3|     6|    27|     4|     5|     4|     2|
+| CelticEnglish |   685|   744|   809|   721|   613|   577|   545|   853|   648|   527|   487|   487|   507|   360|   345|   220|
+| EastAsian     |    15|    20|    16|    17|    49|    48|    27|    76|    63|    42|    51|    41|    11|    28|    18|    14|
+| European      |   445|   337|   417|   368|   385|   310|   321|   433|   453|   455|   456|   404|   335|   348|   319|   225|
+| Greek         |     0|     0|     0|     0|     0|     0|     0|     0|     0|     0|     2|     0|     0|     0|     1|     0|
+| Hebrew        |     4|     6|     1|     5|    21|    13|    14|    12|     0|     1|     4|     4|     3|     4|     2|     3|
+| Hispanic      |     0|     0|     1|     3|     1|     4|     7|     5|    10|     8|     1|     6|    15|     5|    13|     3|
+| Nordic        |    30|     0|    30|    40|    71|   111|    58|    71|    59|    50|    59|    67|    55|    56|    42|    22|
+| SouthAsian    |     3|     9|     6|     2|    21|    10|    22|    23|     7|    17|    10|    16|    15|    25|    40|    95|
 
 ``` r
 journo_name_origin_gg

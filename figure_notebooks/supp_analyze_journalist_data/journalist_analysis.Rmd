@@ -268,6 +268,14 @@ if(RERUN_BOOTSTRAP){
 
 ```{r make_citation_gg, echo=TRUE, warning=FALSE, message=F}
 
+#### write out tables to show the raw frequencies
+journo_f_df = subset(gender_res, est_gender=="FEMALE")
+journo_f_tab = table(journo_f_df$type, journo_f_df$year)
+
+journo_m_df = subset(gender_res, est_gender=="MALE")
+journo_m_tab = table(journo_m_df$type, journo_m_df$year)
+
+
 #### plot the overview of gender
 journo_gender_gg = 
     ggplot(journo_gender_prop_df, 
@@ -333,7 +341,21 @@ ggsave(file.path(proj_dir,  "/figure_notebooks/supp_analyze_journalist_data/tmp_
        journo_name_origin_gg, width = 7, height = 5, units = "in", device = "pdf")
 
 journo_gender_gg
+
+
+knitr::kable(journo_f_tab, format = "pipe", 
+             caption = "Number of Articles written by predicted female journalist")
+
+knitr::kable(journo_m_tab, format = "pipe", 
+             caption = "Number of Articles written by predicted male journalist")
+
+
 journo_gender_type_m_gg
 journo_gender_type_f_gg
+
+journo_name_tab = table(journo_name_df$name_origin, journo_name_df$year)
+knitr::kable(journo_name_tab, format = "pipe", 
+             caption = "Number of Articles written by a journalist with predicted name-origin ")
+
 journo_name_origin_gg
 ```
