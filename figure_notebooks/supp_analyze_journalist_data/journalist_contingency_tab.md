@@ -1054,6 +1054,8 @@ knitr::kable(tab_quote_us_percent, format = "pipe",
 
 ## Make Plots
 
+We would lilke to see if predicted male speakers are overrepresented in news quotes regardless of predicted journalist gender. We depicts two trend lines: Yellow: Proportion of predicted male quotes in an article written by a predicted female journalist; Blue: Proportion of predicted male quotesin an article written by a predicted male journalist. We find that male quote bias is very similar between male and femal journalists since both trend lines closely follow each other.
+
 ``` r
 #### plot the overview of gender
 journo_gender_quote_df = rbind(female_j_prop_df, male_j_prop_df)
