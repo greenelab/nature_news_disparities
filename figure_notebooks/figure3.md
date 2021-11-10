@@ -185,17 +185,17 @@ head(name_df)
     ##               author year   name_origin              corpus
     ## 7      Aaltje Jansen 2012      European       springer_last
     ## 16   Aarne Oikarinen 2010        Nordic       springer_last
-    ## 17       Aaron Bauer 2014      European       springer_last
-    ## 21     Aaron Clauset 2020      European citation_journalist
-    ## 24 Aaron Cohen-Gadol 2011 CelticEnglish       springer_last
-    ## 28       Aaron Evans 2006 CelticEnglish  citation_scientist
+    ## 18       Aaron Bauer 2014      European       springer_last
+    ## 23     Aaron Clauset 2020      European citation_journalist
+    ## 25 Aaron Cohen-Gadol 2011 CelticEnglish       springer_last
+    ## 30       Aaron Evans 2006 CelticEnglish  citation_scientist
     ##                               doi
     ## 7     doi:10.1186/1471-2318-12-19
     ## 16             doi:10.1186/cc8938
-    ## 17    doi:10.1186/1471-213X-14-29
-    ## 21 doi:10.1038/s41467-019-08746-5
-    ## 24  doi:10.1007/s00381-011-1423-z
-    ## 28           doi:10.1038/35078008
+    ## 18    doi:10.1186/1471-213X-14-29
+    ## 23 doi:10.1038/s41467-019-08746-5
+    ## 25  doi:10.1007/s00381-011-1423-z
+    ## 30           doi:10.1038/35078008
 
 ``` r
 name_df = unique(name_df)
@@ -266,6 +266,30 @@ num_art_tot = Reduce(rbind, list(tot_prop_citation_j,
 num_art_tot = data.frame(num_art_tot)
 colnames(num_art_tot)[2] = "tot_articles"
 
+print("total of observations")
+```
+
+    ## [1] "total of observations"
+
+``` r
+num_art_tot %>% 
+    group_by(corpus) %>% 
+    summarise(n()) 
+```
+
+    ## # A tibble: 8 x 2
+    ##   corpus              `n()`
+    ##   <chr>               <int>
+    ## 1 citation_journalist    16
+    ## 2 citation_scientist     16
+    ## 3 guardian_mention       16
+    ## 4 guardian_quote         16
+    ## 5 mention                16
+    ## 6 nature_last            16
+    ## 7 quote                  16
+    ## 8 springer_last          16
+
+``` r
 print("median of observations")
 ```
 
@@ -319,7 +343,7 @@ num_art_tot %>%
 # helper method for calling the bootstrap
 get_subboot <- function(origin_id, curr_corpus, in_df, bootstrap_col_id="doi"){
     bootstrap_res = compute_bootstrap_location(subset(in_df, 
-                                                      corpus==curr_corpus & year == 2016), 
+                                                      corpus==curr_corpus), 
                                               year_col_id = "year", 
                                               article_col_id = bootstrap_col_id, 
                                               country_col_id = "name_origin",
@@ -328,9 +352,8 @@ get_subboot <- function(origin_id, curr_corpus, in_df, bootstrap_col_id="doi"){
     bootstrap_res$name_origin = origin_id
     
     # add a label for plotting later
-    bootstrap_res$label = ""
-    #bootstrap_res$label[bootstrap_res$year == 2020] = 
-    #    bootstrap_res$name_origin[bootstrap_res$year == 2020]
+    bootstrap_res$label[bootstrap_res$year == 2020] = 
+        bootstrap_res$name_origin[bootstrap_res$year == 2020]
         
 
     return(bootstrap_res)
@@ -382,8 +405,7 @@ if(RERUN_BOOTSTRAP){
         g_quote_origin_df = rbind(g_quote_origin_df, res)
     }
     g_quote_origin_df = g_quote_origin_df[-1,]
-    g_quote_origin_df_2016 = g_quote_origin_df
-    
+
     springer_origin_df = NA
     for(curr_origin in unique(name_df$name_origin)){
         print(curr_origin)
@@ -423,8 +445,7 @@ if(RERUN_BOOTSTRAP){
         g_mention_origin_df = rbind(g_mention_origin_df, res)
     }
     g_mention_origin_df = g_mention_origin_df[-1,]
-    g_mention_origin_df_2016 = g_mention_origin_df
-    
+
     # re-add corpus column for easy reference later
     citation_j_origin_df$corpus = "citation_journalist"
     citation_s_origin_df$corpus = "citation_scientist"
@@ -514,6 +535,14 @@ summary(subset(quote_origin_df,
 
     ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
     ## 0.04928 0.05464 0.06448 0.06268 0.06819 0.07446
+
+``` r
+summary(subset(g_quote_origin_df, 
+               name_origin == "EastAsian")$mean)
+```
+
+    ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+    ## 0.01562 0.02505 0.03150 0.03134 0.03586 0.04867
 
 ``` r
 print("range of non European or non CelticEnglish or non EastAsian names")

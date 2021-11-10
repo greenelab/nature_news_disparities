@@ -119,7 +119,7 @@ allowed_idx = unique(c(space_idx, pronoun_idx_canonical, pronoun_idx_partial))
 length(allowed_idx)
 ```
 
-    ## [1] 157955
+    ## [1] 157996
 
 ``` r
 full_quote_df = full_quote_df[allowed_idx,]
@@ -168,29 +168,51 @@ print("Total with Gender Prediction")
 print(dim(full_quote_df))
 ```
 
-    ## [1] 157955      8
+    ## [1] 157996      8
 
 ``` r
-print("Male Quote Ratio:")
+print("Male Quote Ratio Nature:")
 ```
 
-    ## [1] "Male Quote Ratio:"
+    ## [1] "Male Quote Ratio Nature:"
 
 ``` r
-table(subset(full_quote_df, year == 2005)$est_gender)
-```
-
-    ## 
-    ## FEMALE   MALE 
-    ##   1418   8622
-
-``` r
-table(subset(full_quote_df, year == 2020)$est_gender)
+table(subset(full_quote_df, year == 2005 & type != "guardian")$est_gender)
 ```
 
     ## 
     ## FEMALE   MALE 
-    ##   2018   5143
+    ##    784   5291
+
+``` r
+table(subset(full_quote_df, year == 2020 & type != "guardian")$est_gender)
+```
+
+    ## 
+    ## FEMALE   MALE 
+    ##   1298   2870
+
+``` r
+print("Male Quote Ratio Guardian:")
+```
+
+    ## [1] "Male Quote Ratio Guardian:"
+
+``` r
+table(subset(full_quote_df, year == 2005 & type == "guardian")$est_gender)
+```
+
+    ## 
+    ## FEMALE   MALE 
+    ##    634   3331
+
+``` r
+table(subset(full_quote_df, year == 2020 & type == "guardian")$est_gender)
+```
+
+    ## 
+    ## FEMALE   MALE 
+    ##    720   2273
 
 ``` r
 print("Career-feature info:")
@@ -290,20 +312,20 @@ name_info_df = subset(name_info_df, corpus == "naturenews_citations")
 head(name_info_df)
 ```
 
-    ##   year author_pos           author            file_id
-    ## 1 2010      first Michael Heinrich            463436a
-    ## 2 2012      first        Kai Ewert            489372b
-    ## 3 2019      first        Grace Kim d41586-019-00245-3
-    ## 4 2006      first  Nicole Dubilier        nature05208
-    ## 5 2010      first Martin Moskovits            464357a
-    ## 6 2011      first    Ivano Bertini            470469a
-    ##                            doi               corpus
-    ## 1 doi:10.1007/0-306-46826-3_33 naturenews_citations
-    ## 2      doi:10.1007/128_2010_70 naturenews_citations
-    ## 3      doi:10.1007/164_2016_82 naturenews_citations
-    ## 4 doi:10.1007/3-540-28221-1_12 naturenews_citations
-    ## 5 doi:10.1007/3-540-44948-5_10 naturenews_citations
-    ## 6  doi:10.1007/3-540-59105-2_1 naturenews_citations
+    ##       year author_pos           author            file_id
+    ## 22672 2010      first Michael Heinrich            463436a
+    ## 22673 2012      first        Kai Ewert            489372b
+    ## 22674 2019      first        Grace Kim d41586-019-00245-3
+    ## 22675 2006      first  Nicole Dubilier        nature05208
+    ## 22676 2010      first Martin Moskovits            464357a
+    ## 22677 2011      first    Ivano Bertini            470469a
+    ##                                doi               corpus
+    ## 22672 doi:10.1007/0-306-46826-3_33 naturenews_citations
+    ## 22673      doi:10.1007/128_2010_70 naturenews_citations
+    ## 22674      doi:10.1007/164_2016_82 naturenews_citations
+    ## 22675 doi:10.1007/3-540-28221-1_12 naturenews_citations
+    ## 22676 doi:10.1007/3-540-44948-5_10 naturenews_citations
+    ## 22677  doi:10.1007/3-540-59105-2_1 naturenews_citations
 
 ## Process Data
 
