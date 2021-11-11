@@ -884,8 +884,8 @@ print(full_image)
 <img src="country_specific_analysis_files/figure-markdown_github/make_supp_fig-1.png" width="3000" />
 
 ``` r
-outfile = file.path(proj_dir,"/figure_notebooks/tmp_files/supp_country_specific_analysis_tmp/supp_fig.pdf")
+outfile = file.path(proj_dir,"/figure_notebooks/manuscript_figs/supp_country_specific_analysis_tmp/supp_fig.pdf")
 image_write(full_image, format = "pdf", outfile)
-outfile = file.path(proj_dir,"/figure_notebooks/tmp_files/supp_country_specific_analysis_tmp/supp_fig.png")
+outfile = file.path(proj_dir,"/figure_notebooks/manuscript_figs/supp_country_specific_analysis_tmp/supp_fig.png")
 image_write(full_image, format = "png", outfile)
 ```

@@ -336,7 +336,7 @@ if(RERUN_BOOTSTRAP){
     citation_country_df$label[citation_country_df$year == 2020] = 
         citation_country_df$country[citation_country_df$year == 2020]
     citation_country_df$corpus = "citation"
-    outfile = file.path(proj_dir,"/figure_notebooks/tmp_files/fig4_tmp/citation_country_df.tsv")
+    outfile = file.path(proj_dir,"/figure_notebooks/manuscript_figs/fig4_tmp/citation_country_df.tsv")
     write.table(citation_country_df, outfile, sep="\t", quote=F, row.names=F)
     
     
@@ -354,7 +354,7 @@ if(RERUN_BOOTSTRAP){
     springer_country_df$label[springer_country_df$year == 2020] = 
         springer_country_df$country[springer_country_df$year == 2020]
     springer_country_df$corpus = "springer_last"
-    outfile = file.path(proj_dir,"/figure_notebooks/tmp_files/fig4_tmp/springer_country_df.tsv")
+    outfile = file.path(proj_dir,"/figure_notebooks/manuscript_figs/fig4_tmp/springer_country_df.tsv")
     write.table(springer_country_df, outfile, sep="\t", quote=F, row.names=F)
     
     
@@ -371,20 +371,20 @@ if(RERUN_BOOTSTRAP){
     nature_country_df$label[nature_country_df$year == 2020] = 
         nature_country_df$country[nature_country_df$year == 2020]
     nature_country_df$corpus = "nature_last"
-    outfile = file.path(proj_dir,"/figure_notebooks/tmp_files/fig4_tmp/nature_country_df.tsv")
+    outfile = file.path(proj_dir,"/figure_notebooks/manuscript_figs/fig4_tmp/nature_country_df.tsv")
     write.table(nature_country_df, outfile, sep="\t", quote=F, row.names=F)
 }else{
     
     citation_country_file = file.path(proj_dir,
-                                      "/figure_notebooks/tmp_files/fig4_tmp/citation_country_df.tsv")
+                                      "/figure_notebooks/manuscript_figs/fig4_tmp/citation_country_df.tsv")
     citation_country_df = data.frame(fread(citation_country_file))
 
     springer_country_file = file.path(proj_dir,
-                                      "/figure_notebooks/tmp_files/fig4_tmp/springer_country_df.tsv")
+                                      "/figure_notebooks/manuscript_figs/fig4_tmp/springer_country_df.tsv")
     springer_country_df = data.frame(fread(springer_country_file))
     
     nature_country_file = file.path(proj_dir,
-                                      "/figure_notebooks/tmp_files/fig4_tmp/nature_country_df.tsv")
+                                      "/figure_notebooks/manuscript_figs/fig4_tmp/nature_country_df.tsv")
     nature_country_df = data.frame(fread(nature_country_file))
 
 }
@@ -826,11 +826,11 @@ if(RERUN_BOOTSTRAP){
     elapsed_time = end_time - start_time
     print(elapsed_time)
     bootstrap_file = file.path(proj_dir,
-                        "/figure_notebooks/tmp_files/fig4_tmp/fig4_bootstrap_ratio.RData")
+                        "/figure_notebooks/manuscript_figs/fig4_tmp/fig4_bootstrap_ratio.RData")
     save(bootstrap_ratio, file = bootstrap_file)
 }else{
     bootstrap_file = file.path(proj_dir,
-                        "/figure_notebooks/tmp_files/fig4_tmp/fig4_bootstrap_ratio.RData")
+                        "/figure_notebooks/manuscript_figs/fig4_tmp/fig4_bootstrap_ratio.RData")
     load(bootstrap_file)
 }
 # format the enrichment
@@ -867,7 +867,7 @@ citation_full_gg = ggplot(citation_country_df, aes(x=as.numeric(year), y=mean,
     scale_fill_brewer(palette="Set3") +
     theme(legend.position = "none")
 
-ggsave(file.path(proj_dir, "/figure_notebooks/tmp_files/fig4_tmp/citation_full_gg.pdf"),
+ggsave(file.path(proj_dir, "/figure_notebooks/manuscript_figs/fig4_tmp/citation_full_gg.pdf"),
        citation_full_gg, width = 7, height = 5, units = "in", device = "pdf")
 
 ### full plot of citations with bg
@@ -888,7 +888,7 @@ citation_indiv_10_springer_gg = ggplot(cite_plot_df,
     theme(legend.position = "bottom") +
     facet_wrap(~ country, scales = "free")
 
-ggsave(file.path(proj_dir, "/figure_notebooks/tmp_files/fig4_tmp/citation_indiv_10_springer_gg.pdf"),
+ggsave(file.path(proj_dir, "/figure_notebooks/manuscript_figs/fig4_tmp/citation_indiv_10_springer_gg.pdf"),
        citation_indiv_10_springer_gg, width = 7, height = 5, units = "in", device = "pdf")
 
 
@@ -909,7 +909,7 @@ citation_indiv_3_gg = ggplot(cite_plot_df,
     theme(legend.position = "bottom") +
     facet_wrap(~ country, scales = "free")
 
-ggsave(file.path(proj_dir, "/figure_notebooks/tmp_files/fig4_tmp/citation_indiv_3_gg.pdf"),
+ggsave(file.path(proj_dir, "/figure_notebooks/manuscript_figs/fig4_tmp/citation_indiv_3_gg.pdf"),
        citation_indiv_3_gg, width = 7, height = 5, units = "in", device = "pdf")
 ```
 
@@ -931,7 +931,7 @@ c_vs_m_filter_gg = ggplot(plot_df, aes(x=as.numeric(year),
     xlab("Corpus") + ylab("Mention % - Citation % for each country+year") +
     ggtitle("Diff. btw mentions and citations for each country+year (1 point is a country)") + 
     scale_fill_brewer(palette="Set2")
-ggsave(file.path(proj_dir, "/figure_notebooks/tmp_files/fig4_tmp/c_vs_m_filter_gg.pdf"),
+ggsave(file.path(proj_dir, "/figure_notebooks/manuscript_figs/fig4_tmp/c_vs_m_filter_gg.pdf"),
        c_vs_m_filter_gg, width = 10, height = 5, units = "in", device = "pdf")
 
 
@@ -991,7 +991,7 @@ full_heatmap = pheatmap(res_MC$plot_matr, cluster_rows = F,
 ![](figure4_files/figure-markdown_github/make_heatmap_gg-1.png)
 
 ``` r
-ggsave(file.path(proj_dir, "/figure_notebooks/tmp_files/fig4_tmp/full_heatmap.pdf"),
+ggsave(file.path(proj_dir, "/figure_notebooks/manuscript_figs/fig4_tmp/full_heatmap.pdf"),
        full_heatmap, width = 10, height = 5, units = "in", device = "pdf")
 ```
 
@@ -1008,7 +1008,7 @@ word_ratio_gg = ggplot(bootstrap_ratio, aes(x=log10(bootstrap_ratio$mean),
     ggtitle("Top 15 Most Divergent Words by Class") + 
     scale_fill_brewer(palette="Set2")
 
-ggsave(file.path(proj_dir, "/figure_notebooks/tmp_files/fig4_tmp/word_ratio_gg.pdf"),
+ggsave(file.path(proj_dir, "/figure_notebooks/manuscript_figs/fig4_tmp/word_ratio_gg.pdf"),
        word_ratio_gg, width = 5, height = 5, units = "in", device = "pdf")
 
 
@@ -1021,7 +1021,7 @@ word_count_class_c_gg = ggplot(compare_freq_extreme, aes(x=compare_freq_extreme$
     scale_fill_brewer(palette="Set2")
 
 
-ggsave(file.path(proj_dir, "/figure_notebooks/tmp_files/fig4_tmp/word_count_class_c_gg.pdf"),
+ggsave(file.path(proj_dir, "/figure_notebooks/manuscript_figs/fig4_tmp/word_count_class_c_gg.pdf"),
        word_count_class_c_gg, width = 5, height = 5, units = "in", device = "pdf")
 
 
@@ -1033,7 +1033,7 @@ word_count_class_m_gg = ggplot(compare_freq_extreme, aes(x=compare_freq_extreme$
     ggtitle("Top 15 Frequencies for Class M") + 
     scale_fill_brewer(palette="Set2")
 
-ggsave(file.path(proj_dir, "/figure_notebooks/tmp_files/fig4_tmp/word_count_class_m_gg.pdf"),
+ggsave(file.path(proj_dir, "/figure_notebooks/manuscript_figs/fig4_tmp/word_count_class_m_gg.pdf"),
        word_count_class_m_gg, width = 5, height = 5, units = "in", device = "pdf")
 ```
 
@@ -1046,25 +1046,25 @@ plot_overview = image_annotate(plot_overview, "a", size = 20)
 
 
 citation_overview_gg = image_read_pdf(file.path(proj_dir,
-                                  "/figure_notebooks/tmp_files/fig4_tmp/citation_full_gg.pdf"))
+                                  "/figure_notebooks/manuscript_figs/fig4_tmp/citation_full_gg.pdf"))
 citation_overview_gg = image_annotate(citation_overview_gg, "b", size = 40)
 
 
 citation_nature_indiv_sub_gg = image_read_pdf(file.path(proj_dir,
-                                  "/figure_notebooks/tmp_files/fig4_tmp/citation_indiv_3_gg.pdf"))
+                                  "/figure_notebooks/manuscript_figs/fig4_tmp/citation_indiv_3_gg.pdf"))
 citation_nature_indiv_sub_gg = image_extent(citation_nature_indiv_sub_gg, '2150x1500', 
                                             color = 'white', gravity = "northeast")
 citation_nature_indiv_sub_gg = image_annotate(citation_nature_indiv_sub_gg, "c", size = 40)
 
 
 heatmap_gg = image_read_pdf(file.path(proj_dir,
-                                  "/figure_notebooks/tmp_files/fig4_tmp/full_heatmap.pdf"))
+                                  "/figure_notebooks/manuscript_figs/fig4_tmp/full_heatmap.pdf"))
 heatmap_gg = image_extent(heatmap_gg, '3100x1500', color = 'white', gravity = "northeast")
 heatmap_gg = image_annotate(heatmap_gg, "d", size = 40)
 
 
 word_ratio_gg = image_read_pdf(file.path(proj_dir,
-                                  "/figure_notebooks/tmp_files/fig4_tmp/word_ratio_gg.pdf"))
+                                  "/figure_notebooks/manuscript_figs/fig4_tmp/word_ratio_gg.pdf"))
 word_ratio_gg = image_annotate(word_ratio_gg, "e", size = 40)
 
 #heatmap_gg = image_scale(heatmap_gg, 750)
@@ -1085,9 +1085,9 @@ print(full_image)
 <img src="figure4_files/figure-markdown_github/make_fig4-1.png" width="1000" />
 
 ``` r
-outfile = file.path(proj_dir,"/figure_notebooks/tmp_files/fig4_tmp/fig4_main.pdf")
+outfile = file.path(proj_dir,"/figure_notebooks/manuscript_figs/fig4_tmp/fig4_main.pdf")
 image_write(full_image, format = "pdf", outfile)
-outfile = file.path(proj_dir,"/figure_notebooks/tmp_files/fig4_tmp/fig4_main.png")
+outfile = file.path(proj_dir,"/figure_notebooks/manuscript_figs/fig4_tmp/fig4_main.png")
 image_write(full_image, format = "png", outfile)
 ```
 
@@ -1095,19 +1095,19 @@ image_write(full_image, format = "png", outfile)
 
 ``` r
 citation_indiv_10_springer_gg = image_read_pdf(file.path(proj_dir,
-                                  "/figure_notebooks/tmp_files/fig4_tmp/citation_indiv_10_springer_gg.pdf"))
+                                  "/figure_notebooks/manuscript_figs/fig4_tmp/citation_indiv_10_springer_gg.pdf"))
 citation_indiv_10_springer_gg = image_annotate(citation_indiv_10_springer_gg, "a", size = 20)
 
 c_vs_m_filter_gg = image_read_pdf(file.path(proj_dir,
-                                  "/figure_notebooks/tmp_files/fig4_tmp/c_vs_m_filter_gg.pdf"))
+                                  "/figure_notebooks/manuscript_figs/fig4_tmp/c_vs_m_filter_gg.pdf"))
 c_vs_m_filter_gg = image_annotate(c_vs_m_filter_gg, "b", size = 30)
 
 word_count_class_c_gg = image_read_pdf(file.path(proj_dir,
-                                  "/figure_notebooks/tmp_files/fig4_tmp/word_count_class_c_gg.pdf"))
+                                  "/figure_notebooks/manuscript_figs/fig4_tmp/word_count_class_c_gg.pdf"))
 word_count_class_c_gg = image_annotate(word_count_class_c_gg, "c", size = 30)
 
 word_count_class_m_gg = image_read_pdf(file.path(proj_dir,
-                                  "/figure_notebooks/tmp_files/fig4_tmp/word_count_class_m_gg.pdf"))
+                                  "/figure_notebooks/manuscript_figs/fig4_tmp/word_count_class_m_gg.pdf"))
 word_count_class_m_gg = image_annotate(word_count_class_m_gg, "d", size = 30)
 
 
@@ -1128,10 +1128,10 @@ print(full_image)
 <img src="figure4_files/figure-markdown_github/make_supp_fig-1.png" width="3000" />
 
 ``` r
-outfile = file.path(proj_dir,"/figure_notebooks/tmp_files/fig4_tmp/fig4_supp.pdf")
+outfile = file.path(proj_dir,"/figure_notebooks/manuscript_figs/fig4_tmp/fig4_supp.pdf")
 image_write(full_image, format = "pdf", outfile)
 
 
-outfile = file.path(proj_dir,"/figure_notebooks/tmp_files/fig4_tmp/fig4_supp.png")
+outfile = file.path(proj_dir,"/figure_notebooks/manuscript_figs/fig4_tmp/fig4_supp.png")
 image_write(full_image, format = "png", outfile)
 ```

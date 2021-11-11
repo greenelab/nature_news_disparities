@@ -1109,8 +1109,8 @@ print(top_image)
 <img src="journalist_contingency_tab_files/figure-markdown_github/make_supp_fig-1.png" width="6000" />
 
 ``` r
-outfile = file.path(proj_dir,"/figure_notebooks/tmp_files/supp_journalist_contingency_tab_tmp/supp_fig.pdf")
+outfile = file.path(proj_dir,"/figure_notebooks/manuscript_figs/supp_journalist_contingency_tab_tmp/supp_fig.pdf")
 image_write(top_image, format = "pdf", outfile)
-outfile = file.path(proj_dir,"/figure_notebooks/tmp_files/supp_journalist_contingency_tab_tmp/supp_fig.png")
+outfile = file.path(proj_dir,"/figure_notebooks/manuscript_figs/supp_journalist_contingency_tab_tmp/supp_fig.png")
 image_write(top_image, format = "png", outfile)
 ```

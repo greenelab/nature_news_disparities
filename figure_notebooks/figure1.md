@@ -239,9 +239,9 @@ all_gg = ggplot(full_df, aes(x=as.factor(year), fill=type)) +
                 scale_fill_manual(values=ARTICLE_TYPE_COLOR) +
                 xlab("Year of Article") + ylab("# articles") +
                     ggtitle("# Springer + Nature News and Research Articles Over Time")
-ggsave(file.path(proj_dir, "/figure_notebooks/tmp_files/fig1_tmp/news_nature_gg.png"),
+ggsave(file.path(proj_dir, "/figure_notebooks/manuscript_figs/fig1_tmp/news_nature_gg.png"),
        news_nature_gg, width = 10, height = 4, units = "in")
-ggsave(file.path(proj_dir, "/figure_notebooks/tmp_files/fig1_tmp/all_gg.png"),
+ggsave(file.path(proj_dir, "/figure_notebooks/manuscript_figs/fig1_tmp/all_gg.png"),
        all_gg)
 ```
 
@@ -255,7 +255,7 @@ plot_overview = image_extent(plot_overview, '2130x1236',
 plot_data_diagram = image_read_pdf(file.path(proj_dir,
                                   "/figure_notebooks/illustrator_pdfs/nature_news_ex_fig1b.pdf"))
 news_nature_gg = image_read(file.path(proj_dir,
-                                  "/figure_notebooks/tmp_files/fig1_tmp/news_nature_gg.png"))
+                                  "/figure_notebooks/manuscript_figs/fig1_tmp/news_nature_gg.png"))
 
 
 bottom_panel <- image_append(image_scale(c(plot_overview, plot_data_diagram), 3000), stack = FALSE)
@@ -277,9 +277,9 @@ print(full_image)
 <img src="figure1_files/figure-markdown_github/make_fig1-1.png" width="3000" />
 
 ``` r
-outfile = file.path(proj_dir,"/figure_notebooks/tmp_files/fig1_tmp/fig1_main.pdf")
+outfile = file.path(proj_dir,"/figure_notebooks/manuscript_figs/fig1_tmp/fig1_main.pdf")
 image_write(full_image, format = "pdf", outfile)
 
-outfile = file.path(proj_dir,"/figure_notebooks/tmp_files/fig1_tmp/fig1_main.png")
+outfile = file.path(proj_dir,"/figure_notebooks/manuscript_figs/fig1_tmp/fig1_main.png")
 image_write(full_image, format = "png", outfile)
 ```

@@ -466,12 +466,12 @@ if(RERUN_BOOTSTRAP){
                                        g_mention_origin_df))
     all_bootstrap_df$corpus = factor(all_bootstrap_df$corpus, levels = QUOTE_ANALYSIS_ORDER)
     
-    outfile = file.path(proj_dir,"/figure_notebooks/tmp_files/fig3_tmp/all_bootstrap_df.tsv")
+    outfile = file.path(proj_dir,"/figure_notebooks/manuscript_figs/fig3_tmp/all_bootstrap_df.tsv")
     write.table(all_bootstrap_df, outfile, sep="\t", quote=F, row.names=F)
 }else{
     
     all_bootstrap_file = file.path(proj_dir,
-                                      "/figure_notebooks/tmp_files/fig3_tmp/all_bootstrap_df.tsv")
+                                      "/figure_notebooks/manuscript_figs/fig3_tmp/all_bootstrap_df.tsv")
     all_bootstrap_df = data.frame(fread(all_bootstrap_file))
     
     citation_j_origin_df = subset(all_bootstrap_df, corpus == "citation_journalist")
@@ -581,7 +581,7 @@ tot_art_gg = ggplot(num_art_tot, aes(x=as.numeric(year), y=tot_articles,
     scale_color_manual(values=QUOTE_ANALYSIS_COLOR) +
     theme(legend.position="bottom")
 
-ggsave(file.path(proj_dir, "/figure_notebooks/tmp_files/fig3_tmp/tot_art_gg.pdf"),
+ggsave(file.path(proj_dir, "/figure_notebooks/manuscript_figs/fig3_tmp/tot_art_gg.pdf"),
        tot_art_gg, width = 5, height = 5, units = "in", device = "pdf")
 ```
 
@@ -599,7 +599,7 @@ citation_j_overview_gg = ggplot(citation_j_origin_df, aes(x=as.numeric(year), y=
     scale_fill_brewer(palette="Set2") +
     theme(legend.position = "none")
 
-ggsave(file.path(proj_dir, "/figure_notebooks/tmp_files/fig3_tmp/citation_j_overview_gg.pdf"),
+ggsave(file.path(proj_dir, "/figure_notebooks/manuscript_figs/fig3_tmp/citation_j_overview_gg.pdf"),
        citation_j_overview_gg, width = 7, height = 5, units = "in", device = "pdf")
 
 citation_s_overview_gg = ggplot(citation_s_origin_df, aes(x=as.numeric(year), y=mean,
@@ -612,7 +612,7 @@ citation_s_overview_gg = ggplot(citation_s_origin_df, aes(x=as.numeric(year), y=
     scale_fill_brewer(palette="Set2") +
     theme(legend.position = "none")
 
-ggsave(file.path(proj_dir, "/figure_notebooks/tmp_files/fig3_tmp/citation_s_overview_gg.pdf"),
+ggsave(file.path(proj_dir, "/figure_notebooks/manuscript_figs/fig3_tmp/citation_s_overview_gg.pdf"),
        citation_s_overview_gg, width = 7, height = 5, units = "in", device = "pdf")
 
 # plot by each name origin individually
@@ -631,7 +631,7 @@ citation_nature_indiv_full_gg = ggplot(subset(all_bootstrap_df,
     facet_wrap(~ name_origin, scales = "free_y") +
     theme(legend.position="bottom")
 
-ggsave(file.path(proj_dir, "/figure_notebooks/tmp_files/fig3_tmp/citation_nature_indiv_full_gg.pdf"),
+ggsave(file.path(proj_dir, "/figure_notebooks/manuscript_figs/fig3_tmp/citation_nature_indiv_full_gg.pdf"),
        citation_nature_indiv_full_gg, width = 7, height = 5, units = "in", device = "pdf")
 
 
@@ -651,7 +651,7 @@ citation_springer_indiv_full_gg = ggplot(subset(all_bootstrap_df,
     facet_wrap(~ name_origin, scales = "free_y") +
     theme(legend.position="bottom")
 
-ggsave(file.path(proj_dir, "/figure_notebooks/tmp_files/fig3_tmp/citation_springer_indiv_full_gg.pdf"),
+ggsave(file.path(proj_dir, "/figure_notebooks/manuscript_figs/fig3_tmp/citation_springer_indiv_full_gg.pdf"),
        citation_springer_indiv_full_gg, width = 7, height = 5, units = "in", device = "pdf")
 
 
@@ -671,7 +671,7 @@ citation_j_nature_indiv_sub_gg = ggplot(subset(all_bootstrap_df,
     facet_wrap(~ name_origin, dir="h", scales="free") +
     theme(legend.position="bottom")
 
-ggsave(file.path(proj_dir, "/figure_notebooks/tmp_files/fig3_tmp/citation_j_nature_indiv_sub_gg.pdf"),
+ggsave(file.path(proj_dir, "/figure_notebooks/manuscript_figs/fig3_tmp/citation_j_nature_indiv_sub_gg.pdf"),
        citation_j_nature_indiv_sub_gg, width = 7, height = 5, units = "in", device = "pdf")
 
 citation_s_nature_indiv_sub_gg = ggplot(subset(all_bootstrap_df, 
@@ -689,7 +689,7 @@ citation_s_nature_indiv_sub_gg = ggplot(subset(all_bootstrap_df,
     facet_wrap(~ name_origin, dir="h", scales="free") +
     theme(legend.position="bottom")
 
-ggsave(file.path(proj_dir, "/figure_notebooks/tmp_files/fig3_tmp/citation_s_nature_indiv_sub_gg.pdf"),
+ggsave(file.path(proj_dir, "/figure_notebooks/manuscript_figs/fig3_tmp/citation_s_nature_indiv_sub_gg.pdf"),
        citation_s_nature_indiv_sub_gg, width = 7, height = 5, units = "in", device = "pdf")
 ```
 
@@ -707,7 +707,7 @@ quote_overview_gg = ggplot(quote_origin_df, aes(x=as.numeric(year), y=mean,
     scale_fill_brewer(palette="Set2") +
     theme(legend.position = "none")
 
-ggsave(file.path(proj_dir, "/figure_notebooks/tmp_files/fig3_tmp/quote_overview_gg.pdf"),
+ggsave(file.path(proj_dir, "/figure_notebooks/manuscript_figs/fig3_tmp/quote_overview_gg.pdf"),
        quote_overview_gg, width = 7, height = 5, units = "in", device = "pdf")
 
 
@@ -726,7 +726,7 @@ quote_nature_indiv_full_gg = ggplot(subset(all_bootstrap_df,
     facet_wrap( ~ name_origin, scales = "free_y") +
     theme(legend.position="bottom")
 
-ggsave(file.path(proj_dir, "/figure_notebooks/tmp_files/fig3_tmp/quote_nature_indiv_full_gg.pdf"),
+ggsave(file.path(proj_dir, "/figure_notebooks/manuscript_figs/fig3_tmp/quote_nature_indiv_full_gg.pdf"),
        quote_nature_indiv_full_gg, width = 7, height = 5, units = "in", device = "pdf")
 
 quote_springer_indiv_full_gg = ggplot(subset(all_bootstrap_df, 
@@ -743,7 +743,7 @@ quote_springer_indiv_full_gg = ggplot(subset(all_bootstrap_df,
     facet_wrap( ~ name_origin, scales = "free_y") +
     theme(legend.position="bottom")
 
-ggsave(file.path(proj_dir, "/figure_notebooks/tmp_files/fig3_tmp/quote_springer_indiv_full_gg.pdf"),
+ggsave(file.path(proj_dir, "/figure_notebooks/manuscript_figs/fig3_tmp/quote_springer_indiv_full_gg.pdf"),
        quote_springer_indiv_full_gg, width = 7, height = 5, units = "in", device = "pdf")
 
 
@@ -762,7 +762,7 @@ quote_nature_indiv_sub_gg = ggplot(subset(all_bootstrap_df,
     facet_wrap(~ name_origin) +
     theme(legend.position="bottom")
 
-ggsave(file.path(proj_dir, "/figure_notebooks/tmp_files/fig3_tmp/quote_nature_indiv_sub_gg.pdf"),
+ggsave(file.path(proj_dir, "/figure_notebooks/manuscript_figs/fig3_tmp/quote_nature_indiv_sub_gg.pdf"),
        quote_nature_indiv_sub_gg, width = 7, height = 5, units = "in", device = "pdf")
 ```
 
@@ -780,7 +780,7 @@ mention_overview_gg = ggplot(mention_origin_df, aes(x=as.numeric(year), y=mean,
     scale_fill_brewer(palette="Set2") +
     theme(legend.position = "none")
 
-ggsave(file.path(proj_dir, "/figure_notebooks/tmp_files/fig3_tmp/mention_overview_gg.pdf"),
+ggsave(file.path(proj_dir, "/figure_notebooks/manuscript_figs/fig3_tmp/mention_overview_gg.pdf"),
        mention_overview_gg, width = 7, height = 5, units = "in", device = "pdf")
 
 
@@ -799,7 +799,7 @@ mention_nature_indiv_full_gg = ggplot(subset(all_bootstrap_df,
     facet_wrap( ~ name_origin, scales = "free_y") +
     theme(legend.position="bottom")
 
-ggsave(file.path(proj_dir, "/figure_notebooks/tmp_files/fig3_tmp/mention_nature_indiv_full_gg.pdf"),
+ggsave(file.path(proj_dir, "/figure_notebooks/manuscript_figs/fig3_tmp/mention_nature_indiv_full_gg.pdf"),
        mention_nature_indiv_full_gg, width = 7, height = 5, units = "in", device = "pdf")
 
 mention_springer_indiv_full_gg = ggplot(subset(all_bootstrap_df, 
@@ -816,7 +816,7 @@ mention_springer_indiv_full_gg = ggplot(subset(all_bootstrap_df,
     facet_wrap( ~ name_origin, scales = "free_y") +
     theme(legend.position="bottom")
 
-ggsave(file.path(proj_dir, "/figure_notebooks/tmp_files/fig3_tmp/mention_springer_indiv_full_gg.pdf"),
+ggsave(file.path(proj_dir, "/figure_notebooks/manuscript_figs/fig3_tmp/mention_springer_indiv_full_gg.pdf"),
        mention_springer_indiv_full_gg, width = 7, height = 5, units = "in", device = "pdf")
 
 
@@ -835,7 +835,7 @@ mention_nature_indiv_sub_gg = ggplot(subset(all_bootstrap_df,
     facet_wrap(~ name_origin) +
     theme(legend.position="bottom")
 
-ggsave(file.path(proj_dir, "/figure_notebooks/tmp_files/fig3_tmp/mention_nature_indiv_sub_gg.pdf"),
+ggsave(file.path(proj_dir, "/figure_notebooks/manuscript_figs/fig3_tmp/mention_nature_indiv_sub_gg.pdf"),
        mention_nature_indiv_sub_gg, width = 7, height = 5, units = "in", device = "pdf")
 ```
 
@@ -848,23 +848,23 @@ plot_overview = image_annotate(plot_overview, "a", size = 20)
 
 
 citation_j_nature_indiv_sub_gg = image_read_pdf(file.path(proj_dir,
-                                  "/figure_notebooks/tmp_files/fig3_tmp/citation_j_nature_indiv_sub_gg.pdf"))
+                                  "/figure_notebooks/manuscript_figs/fig3_tmp/citation_j_nature_indiv_sub_gg.pdf"))
 citation_j_nature_indiv_sub_gg = image_annotate(citation_j_nature_indiv_sub_gg, "b", size = 30)
 
 
 citation_s_nature_indiv_sub_gg = image_read_pdf(file.path(proj_dir,
-                                  "/figure_notebooks/tmp_files/fig3_tmp/citation_s_nature_indiv_sub_gg.pdf"))
+                                  "/figure_notebooks/manuscript_figs/fig3_tmp/citation_s_nature_indiv_sub_gg.pdf"))
 citation_s_nature_indiv_sub_gg = image_annotate(citation_s_nature_indiv_sub_gg, "c", size = 30)
 
 
 
 quote_nature_indiv_sub_gg = image_read_pdf(file.path(proj_dir,
-                                  "/figure_notebooks/tmp_files/fig3_tmp/quote_nature_indiv_sub_gg.pdf"))
+                                  "/figure_notebooks/manuscript_figs/fig3_tmp/quote_nature_indiv_sub_gg.pdf"))
 quote_nature_indiv_sub_gg = image_annotate(quote_nature_indiv_sub_gg, "d", size = 30)
 
 
 mention_nature_indiv_sub_gg = image_read_pdf(file.path(proj_dir,
-                                  "/figure_notebooks/tmp_files/fig3_tmp/mention_nature_indiv_sub_gg.pdf"))
+                                  "/figure_notebooks/manuscript_figs/fig3_tmp/mention_nature_indiv_sub_gg.pdf"))
 mention_nature_indiv_sub_gg = image_annotate(mention_nature_indiv_sub_gg, "e", size = 30)
 
 
@@ -886,10 +886,10 @@ print(full_image)
 <img src="figure3_files/figure-markdown_github/make_fig1-1.png" width="3000" />
 
 ``` r
-outfile = file.path(proj_dir,"/figure_notebooks/tmp_files/fig3_tmp/fig3_main.pdf")
+outfile = file.path(proj_dir,"/figure_notebooks/manuscript_figs/fig3_tmp/fig3_main.pdf")
 image_write(full_image, format = "pdf", outfile)
 
-outfile = file.path(proj_dir,"/figure_notebooks/tmp_files/fig3_tmp/fig3_main.png")
+outfile = file.path(proj_dir,"/figure_notebooks/manuscript_figs/fig3_tmp/fig3_main.png")
 image_write(full_image, format = "png", outfile)
 ```
 
@@ -897,26 +897,26 @@ image_write(full_image, format = "png", outfile)
 
 ``` r
 tot_art_gg = image_read_pdf(file.path(proj_dir,
-                                  "/figure_notebooks/tmp_files/fig3_tmp/tot_art_gg.pdf"))
+                                  "/figure_notebooks/manuscript_figs/fig3_tmp/tot_art_gg.pdf"))
 tot_art_gg = image_annotate(tot_art_gg, "a", size = 20)
 
 citation_j_overview_gg = image_read_pdf(file.path(proj_dir,
-                                  "/figure_notebooks/tmp_files/fig3_tmp/citation_j_overview_gg.pdf"))
+                                  "/figure_notebooks/manuscript_figs/fig3_tmp/citation_j_overview_gg.pdf"))
 citation_j_overview_gg = image_annotate(citation_j_overview_gg, "b", size = 30)
 
 
 citation_s_overview_gg = image_read_pdf(file.path(proj_dir,
-                                  "/figure_notebooks/tmp_files/fig3_tmp/citation_s_overview_gg.pdf"))
+                                  "/figure_notebooks/manuscript_figs/fig3_tmp/citation_s_overview_gg.pdf"))
 citation_s_overview_gg = image_annotate(citation_s_overview_gg, "c", size = 30)
 
 
 quote_overview_gg = image_read_pdf(file.path(proj_dir,
-                                  "/figure_notebooks/tmp_files/fig3_tmp/quote_overview_gg.pdf"))
+                                  "/figure_notebooks/manuscript_figs/fig3_tmp/quote_overview_gg.pdf"))
 quote_overview_gg = image_annotate(quote_overview_gg, "d", size = 30)
 
 
 mention_overview_gg = image_read_pdf(file.path(proj_dir,
-                                  "/figure_notebooks/tmp_files/fig3_tmp/mention_overview_gg.pdf"))
+                                  "/figure_notebooks/manuscript_figs/fig3_tmp/mention_overview_gg.pdf"))
 mention_overview_gg = image_annotate(mention_overview_gg, "e", size = 30)
 
 
@@ -939,9 +939,9 @@ print(full_image)
 <img src="figure3_files/figure-markdown_github/make_supp_fig-1.png" width="3000" />
 
 ``` r
-outfile = file.path(proj_dir,"/figure_notebooks/tmp_files/fig3_tmp/fig3_supp.pdf")
+outfile = file.path(proj_dir,"/figure_notebooks/manuscript_figs/fig3_tmp/fig3_supp.pdf")
 image_write(full_image, format = "pdf", outfile)
-outfile = file.path(proj_dir,"/figure_notebooks/tmp_files/fig3_tmp/fig3_supp.png")
+outfile = file.path(proj_dir,"/figure_notebooks/manuscript_figs/fig3_tmp/fig3_supp.png")
 image_write(full_image, format = "png", outfile)
 ```
 
@@ -949,32 +949,32 @@ image_write(full_image, format = "png", outfile)
 
 ``` r
 citation_nature_indiv_full_gg = image_read_pdf(file.path(proj_dir,
-                                  "/figure_notebooks/tmp_files/fig3_tmp/citation_nature_indiv_full_gg.pdf"))
+                                  "/figure_notebooks/manuscript_figs/fig3_tmp/citation_nature_indiv_full_gg.pdf"))
 citation_nature_indiv_full_gg = image_annotate(citation_nature_indiv_full_gg, "a", size = 30)
 
 
 citation_springer_indiv_full_gg = image_read_pdf(file.path(proj_dir,
-                                  "/figure_notebooks/tmp_files/fig3_tmp/citation_springer_indiv_full_gg.pdf"))
+                                  "/figure_notebooks/manuscript_figs/fig3_tmp/citation_springer_indiv_full_gg.pdf"))
 citation_springer_indiv_full_gg = image_annotate(citation_springer_indiv_full_gg, "b", size = 30)
 
 
 quote_nature_indiv_full_gg = image_read_pdf(file.path(proj_dir,
-                                  "/figure_notebooks/tmp_files/fig3_tmp/quote_nature_indiv_full_gg.pdf"))
+                                  "/figure_notebooks/manuscript_figs/fig3_tmp/quote_nature_indiv_full_gg.pdf"))
 quote_nature_indiv_full_gg = image_annotate(quote_nature_indiv_full_gg, "c", size = 30)
 
 
 quote_springer_indiv_full_gg = image_read_pdf(file.path(proj_dir,
-                                  "/figure_notebooks/tmp_files/fig3_tmp/quote_springer_indiv_full_gg.pdf"))
+                                  "/figure_notebooks/manuscript_figs/fig3_tmp/quote_springer_indiv_full_gg.pdf"))
 quote_springer_indiv_full_gg = image_annotate(quote_springer_indiv_full_gg, "d", size = 30)
 
 
 mention_nature_indiv_full_gg = image_read_pdf(file.path(proj_dir,
-                                  "/figure_notebooks/tmp_files/fig3_tmp/mention_nature_indiv_full_gg.pdf"))
+                                  "/figure_notebooks/manuscript_figs/fig3_tmp/mention_nature_indiv_full_gg.pdf"))
 mention_nature_indiv_full_gg = image_annotate(mention_nature_indiv_full_gg, "e", size = 30)
 
 
 mention_springer_indiv_full_gg = image_read_pdf(file.path(proj_dir,
-                                  "/figure_notebooks/tmp_files/fig3_tmp/mention_springer_indiv_full_gg.pdf"))
+                                  "/figure_notebooks/manuscript_figs/fig3_tmp/mention_springer_indiv_full_gg.pdf"))
 mention_springer_indiv_full_gg = image_annotate(mention_springer_indiv_full_gg, "f", size = 30)
 
 
@@ -998,8 +998,8 @@ print(full_image)
 <img src="figure3_files/figure-markdown_github/make_supp_fig_mentions-1.png" width="3000" />
 
 ``` r
-outfile = file.path(proj_dir,"/figure_notebooks/tmp_files/fig3_tmp/fig3_supp2.pdf")
+outfile = file.path(proj_dir,"/figure_notebooks/manuscript_figs/fig3_tmp/fig3_supp2.pdf")
 image_write(full_image, format = "pdf", outfile)
-outfile = file.path(proj_dir,"/figure_notebooks/tmp_files/fig3_tmp/fig3_supp2.png")
+outfile = file.path(proj_dir,"/figure_notebooks/manuscript_figs/fig3_tmp/fig3_supp2.png")
 image_write(full_image, format = "png", outfile)
 ```

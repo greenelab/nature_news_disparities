@@ -70,7 +70,7 @@ build_figure1() {
 }
 build_figure2() {
     if [[ $1 -eq 1 ]]; then
-        rm -f /app/figure_notebooks/tmp_files/fig2_tmp/fig2.RData
+        rm -f /app/figure_notebooks/manuscript_figs/fig2_tmp/fig2.RData
     fi
     echo "*** Building figure 2..."
     Rscript -e "library(rmarkdown); rmarkdown::render('figure2.Rmd')"
@@ -78,7 +78,7 @@ build_figure2() {
 }
 build_figure3() {
     if [[ $1 -eq 1 ]]; then
-        rm -f /app/figure_notebooks/tmp_files/fig3_tmp/all_bootstrap_df.tsv
+        rm -f /app/figure_notebooks/manuscript_figs/fig3_tmp/all_bootstrap_df.tsv
     fi
     echo "*** Building figure 3..."
     Rscript -e "library(rmarkdown); rmarkdown::render('figure3.Rmd')"
@@ -86,7 +86,7 @@ build_figure3() {
 }
 build_figure4() {
     if [[ $1 -eq 1 ]]; then
-        rm -f /app/figure_notebooks/tmp_files/fig4_tmp/*.tsv
+        rm -f /app/figure_notebooks/manuscript_figs/fig4_tmp/*.tsv
     fi
     echo "*** Building figure 4..."
     Rscript -e "library(rmarkdown); rmarkdown::render('figure4.Rmd')"
