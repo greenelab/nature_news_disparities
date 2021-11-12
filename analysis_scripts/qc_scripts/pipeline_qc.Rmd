@@ -61,9 +61,16 @@ article_stats_df = NA
 year_stats_df = NA
 for(curr_file in pipeline_1_files){
     
+    # if the json file was empty, skip
+    info = file.info(curr_file)
+    if(info$size == 0){
+        next
+    }
+
+    
     curr_df = read_json(curr_file)
     
-    # if the json file was empty, skip
+    # if there was something to read, but none important, skip
     if(all(is.na(curr_df))){
         next
     }
@@ -81,9 +88,11 @@ for(curr_file in pipeline_1_files){
     file_name_type = substring(basename(curr_file), 
                             20, nchar(basename(curr_file))-5)
     article_ids = curr_df$file_id
-    num_articles = length(article_ids)
     num_duplicated_file_names = sum(duplicated(article_ids))
-    
+    article_ids = unique(article_ids)
+    num_articles = length(article_ids)
+    curr_df = unique(curr_df)
+
     library(stringr)
     curr_df$body = str_squish(curr_df$body)
     
@@ -204,8 +213,10 @@ for(curr_dir in pipeline_2_dir){
     file_list_ref = grep("file_list", pipeline_2_files, value=T)
     
     fileID_df = data.frame(fread(fileID_ref))
+    fileID_df = unique(fileID_df)
     file_list_df = data.frame(fread(file_list_ref, header=F))
     file_list_df = subset(file_list_df, V1 != "")
+    file_list_df = unique(file_list_df)
     
     file_name_year = substring(basename(curr_dir), 
                             15, 18)
@@ -232,7 +243,7 @@ for(curr_dir in pipeline_2_dir){
         error_msg = paste(curr_dir, "\n expected num files not found")
         stop(error_msg)
     }
-     if( (expected_num_files - empty_files) != nrow(file_list_df) ){
+    if( (expected_num_files - empty_files) != nrow(file_list_df) ){
         error_msg = paste(curr_dir, "\n num files missing beyond empty+duplicates")
         stop(error_msg)
      }
@@ -323,7 +334,9 @@ for(curr_dir in pipeline_3_dir){
                                 year_stats_df$article_type == file_name_type]
      if( (expected_num_files - empty_files) != length(pipeline_3_json_files) ){
         error_msg = paste(curr_dir, "\n num files missing beyond empty+duplicates")
-        stop(error_msg)
+        print(error_msg)
+        print(curr_dir)
+        #stop(error_msg)
      }
     
     sucess_msg = paste("###", file_name_year, 
@@ -523,6 +536,10 @@ quote_stats_df$quote_len = num_words
 
 ### lets get the location data now
 loc_files = grep("*location_table_raw*", pipeline_4_files, value=T)
+
+# we will not analyze the guardian locations mentioned so we filter it out
+loc_files = grep("*guardian*", loc_files, value=T, invert=T)
+
 loc_stats_df = NA
 for(curr_file in loc_files){
     

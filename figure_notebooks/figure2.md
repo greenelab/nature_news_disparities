@@ -119,7 +119,7 @@ allowed_idx = unique(c(space_idx, pronoun_idx_canonical, pronoun_idx_partial))
 length(allowed_idx)
 ```
 
-    ## [1] 157955
+    ## [1] 157996
 
 ``` r
 full_quote_df = full_quote_df[allowed_idx,]
@@ -168,29 +168,51 @@ print("Total with Gender Prediction")
 print(dim(full_quote_df))
 ```
 
-    ## [1] 157955      8
+    ## [1] 157996      8
 
 ``` r
-print("Male Quote Ratio:")
+print("Male Quote Ratio Nature:")
 ```
 
-    ## [1] "Male Quote Ratio:"
+    ## [1] "Male Quote Ratio Nature:"
 
 ``` r
-table(subset(full_quote_df, year == 2005)$est_gender)
-```
-
-    ## 
-    ## FEMALE   MALE 
-    ##   1418   8622
-
-``` r
-table(subset(full_quote_df, year == 2020)$est_gender)
+table(subset(full_quote_df, year == 2005 & type != "guardian")$est_gender)
 ```
 
     ## 
     ## FEMALE   MALE 
-    ##   2018   5143
+    ##    784   5291
+
+``` r
+table(subset(full_quote_df, year == 2020 & type != "guardian")$est_gender)
+```
+
+    ## 
+    ## FEMALE   MALE 
+    ##   1298   2870
+
+``` r
+print("Male Quote Ratio Guardian:")
+```
+
+    ## [1] "Male Quote Ratio Guardian:"
+
+``` r
+table(subset(full_quote_df, year == 2005 & type == "guardian")$est_gender)
+```
+
+    ## 
+    ## FEMALE   MALE 
+    ##    634   3331
+
+``` r
+table(subset(full_quote_df, year == 2020 & type == "guardian")$est_gender)
+```
+
+    ## 
+    ## FEMALE   MALE 
+    ##    720   2273
 
 ``` r
 print("Career-feature info:")
@@ -290,20 +312,20 @@ name_info_df = subset(name_info_df, corpus == "naturenews_citations")
 head(name_info_df)
 ```
 
-    ##   year author_pos           author            file_id
-    ## 1 2010      first Michael Heinrich            463436a
-    ## 2 2012      first        Kai Ewert            489372b
-    ## 3 2019      first        Grace Kim d41586-019-00245-3
-    ## 4 2006      first  Nicole Dubilier        nature05208
-    ## 5 2010      first Martin Moskovits            464357a
-    ## 6 2011      first    Ivano Bertini            470469a
-    ##                            doi               corpus
-    ## 1 doi:10.1007/0-306-46826-3_33 naturenews_citations
-    ## 2      doi:10.1007/128_2010_70 naturenews_citations
-    ## 3      doi:10.1007/164_2016_82 naturenews_citations
-    ## 4 doi:10.1007/3-540-28221-1_12 naturenews_citations
-    ## 5 doi:10.1007/3-540-44948-5_10 naturenews_citations
-    ## 6  doi:10.1007/3-540-59105-2_1 naturenews_citations
+    ##       year author_pos           author            file_id
+    ## 22672 2010      first Michael Heinrich            463436a
+    ## 22673 2012      first        Kai Ewert            489372b
+    ## 22674 2019      first        Grace Kim d41586-019-00245-3
+    ## 22675 2006      first  Nicole Dubilier        nature05208
+    ## 22676 2010      first Martin Moskovits            464357a
+    ## 22677 2011      first    Ivano Bertini            470469a
+    ##                                doi               corpus
+    ## 22672 doi:10.1007/0-306-46826-3_33 naturenews_citations
+    ## 22673      doi:10.1007/128_2010_70 naturenews_citations
+    ## 22674      doi:10.1007/164_2016_82 naturenews_citations
+    ## 22675 doi:10.1007/3-540-28221-1_12 naturenews_citations
+    ## 22676 doi:10.1007/3-540-44948-5_10 naturenews_citations
+    ## 22677  doi:10.1007/3-540-59105-2_1 naturenews_citations
 
 ## Process Data
 
@@ -466,7 +488,7 @@ if(RERUN_BOOTSTRAP){
                                                    article_col_id = "file_id",
                                                    conf_int=0.95)
     all_bootstrap_file = file.path(proj_dir,
-                            "/figure_notebooks/tmp_files/fig2_tmp/fig2.RData")
+                            "/figure_notebooks/manuscript_figs/fig2_tmp/fig2.RData")
     save(quote_prop_df, type_df, career_df, 
          springer_first_prop_df, springer_last_prop_df, 
          nature_first_prop_df, nature_last_prop_df, 
@@ -474,7 +496,7 @@ if(RERUN_BOOTSTRAP){
          file = all_bootstrap_file)
 }else{
     all_bootstrap_file = file.path(proj_dir,
-                                "/figure_notebooks/tmp_files/fig2_tmp/fig2.RData")
+                                "/figure_notebooks/manuscript_figs/fig2_tmp/fig2.RData")
     load(all_bootstrap_file)
 }
 ```
@@ -494,7 +516,7 @@ tot_quotes_gg = ggplot(full_quote_df, aes(x=as.numeric(year), fill=type)) +
     scale_fill_manual(values=ARTICLE_TYPE_COLOR) +
     theme(legend.position="bottom")
 
-ggsave(file.path(proj_dir, "/figure_notebooks/tmp_files/fig2_tmp/tot_quotes_gg.pdf"),
+ggsave(file.path(proj_dir, "/figure_notebooks/manuscript_figs/fig2_tmp/tot_quotes_gg.pdf"),
        tot_quotes_gg, width = 6, height = 5, units = "in", device = "pdf")
 
 
@@ -520,7 +542,7 @@ quotes_nature_gg =
     scale_fill_manual(values=QUOTE_ANALYSIS_COLOR) +
     theme(legend.position="bottom")
 
-ggsave(file.path(proj_dir, "/figure_notebooks/tmp_files/fig2_tmp/quotes_nature_gg.pdf"),
+ggsave(file.path(proj_dir, "/figure_notebooks/manuscript_figs/fig2_tmp/quotes_nature_gg.pdf"),
        quotes_nature_gg, width = 6, height = 5, units = "in", device = "pdf")
 
 
@@ -537,7 +559,7 @@ quotes_springer_gg =
     scale_fill_manual(values=QUOTE_ANALYSIS_COLOR) +
     theme(legend.position="bottom")
 
-ggsave(file.path(proj_dir, "/figure_notebooks/tmp_files/fig2_tmp/quotes_springer_gg.pdf"),
+ggsave(file.path(proj_dir, "/figure_notebooks/manuscript_figs/fig2_tmp/quotes_springer_gg.pdf"),
        quotes_springer_gg, width = 6, height = 5, units = "in", device = "pdf")
 
 
@@ -555,7 +577,7 @@ all_type_gg = ggplot(type_df, aes(x=as.numeric(year), y=mean,
     scale_fill_manual(values=ARTICLE_TYPE_COLOR) +
     theme(legend.position="bottom")
 
-ggsave(file.path(proj_dir, "/figure_notebooks/tmp_files/fig2_tmp/all_type_gg.pdf"),
+ggsave(file.path(proj_dir, "/figure_notebooks/manuscript_figs/fig2_tmp/all_type_gg.pdf"),
        all_type_gg, width = 6, height = 5, units = "in", device = "pdf")
 
 
@@ -573,7 +595,7 @@ career_gg = ggplot(career_df, aes(x=as.numeric(year), y=mean,
     scale_fill_manual(values=QUOTE_ANALYSIS_COLOR) +
     theme(legend.position="bottom")
 
-ggsave(file.path(proj_dir, "/figure_notebooks/tmp_files/fig2_tmp/career_gg.pdf"),
+ggsave(file.path(proj_dir, "/figure_notebooks/manuscript_figs/fig2_tmp/career_gg.pdf"),
        career_gg, width = 6, height = 5, units = "in", device = "pdf")
 
 
@@ -587,7 +609,7 @@ first_v_last_gg = ggplot(first_cited_prop_df, aes(x=as.numeric(year), y=mean,
     geom_hline(yintercept=0.5, color="red") +
     theme(legend.position="bottom")
 
-ggsave(file.path(proj_dir, "/figure_notebooks/tmp_files/fig2_tmp/first_v_last_gg.pdf"),
+ggsave(file.path(proj_dir, "/figure_notebooks/manuscript_figs/fig2_tmp/first_v_last_gg.pdf"),
        first_v_last_gg, width = 6, height = 5, units = "in", device = "pdf")
 ```
 
@@ -599,19 +621,19 @@ plot_overview = image_read_pdf(file.path(proj_dir,
 plot_overview = image_annotate(plot_overview, "a", size = 20)
 
 quotes_nature_gg = image_read_pdf(file.path(proj_dir,
-                                  "/figure_notebooks/tmp_files/fig2_tmp/quotes_nature_gg.pdf"))
+                                  "/figure_notebooks/manuscript_figs/fig2_tmp/quotes_nature_gg.pdf"))
 quotes_nature_gg = image_annotate(quotes_nature_gg, "c", size = 30)
 
 tot_quotes_gg = image_read_pdf(file.path(proj_dir,
-                                  "/figure_notebooks/tmp_files/fig2_tmp/tot_quotes_gg.pdf"))
+                                  "/figure_notebooks/manuscript_figs/fig2_tmp/tot_quotes_gg.pdf"))
 tot_quotes_gg = image_annotate(tot_quotes_gg, "b", size = 30)
 
 first_v_last_gg = image_read_pdf(file.path(proj_dir,
-                                  "/figure_notebooks/tmp_files/fig2_tmp/first_v_last_gg.pdf"))
+                                  "/figure_notebooks/manuscript_figs/fig2_tmp/first_v_last_gg.pdf"))
 first_v_last_gg = image_annotate(first_v_last_gg, "d", size = 30)
 
 career_gg = image_read_pdf(file.path(proj_dir,
-                                  "/figure_notebooks/tmp_files/fig2_tmp/career_gg.pdf"))
+                                  "/figure_notebooks/manuscript_figs/fig2_tmp/career_gg.pdf"))
 career_gg = image_annotate(career_gg, "e", size = 30)
 
 middle_image <- image_append(image_scale(c(tot_quotes_gg, quotes_nature_gg),3000), stack = FALSE)
@@ -629,10 +651,10 @@ print(full_image)
 <img src="figure2_files/figure-markdown_github/make_fig1-1.png" width="3000" />
 
 ``` r
-outfile = file.path(proj_dir,"/figure_notebooks/tmp_files/fig2_tmp/fig2_main.pdf")
+outfile = file.path(proj_dir,"/figure_notebooks/manuscript_figs/fig2_tmp/fig2_main.pdf")
 image_write(full_image, format = "pdf", outfile)
 
-outfile = file.path(proj_dir,"/figure_notebooks/tmp_files/fig2_tmp/fig2_main.png")
+outfile = file.path(proj_dir,"/figure_notebooks/manuscript_figs/fig2_tmp/fig2_main.png")
 image_write(full_image, format = "png", outfile)
 ```
 
@@ -640,11 +662,11 @@ image_write(full_image, format = "png", outfile)
 
 ``` r
 all_type_gg = image_read_pdf(file.path(proj_dir,
-                                  "/figure_notebooks/tmp_files/fig2_tmp/all_type_gg.pdf"))
+                                  "/figure_notebooks/manuscript_figs/fig2_tmp/all_type_gg.pdf"))
 all_type_gg = image_annotate(all_type_gg, "b", size = 30)
 
 quotes_springer_gg = image_read_pdf(file.path(proj_dir,
-                                  "/figure_notebooks/tmp_files/fig2_tmp/quotes_springer_gg.pdf"))
+                                  "/figure_notebooks/manuscript_figs/fig2_tmp/quotes_springer_gg.pdf"))
 quotes_springer_gg = image_annotate(quotes_springer_gg, "a", size = 30)
 
 full_image <- image_append(image_scale(c(quotes_springer_gg, all_type_gg), 500), stack = FALSE)
@@ -659,8 +681,8 @@ print(full_image)
 <img src="figure2_files/figure-markdown_github/make_supp_fig-1.png" width="1000" />
 
 ``` r
-outfile = file.path(proj_dir,"/figure_notebooks/tmp_files/fig2_tmp/fig2_supp.pdf")
+outfile = file.path(proj_dir,"/figure_notebooks/manuscript_figs/fig2_tmp/fig2_supp.pdf")
 image_write(full_image, format = "pdf", outfile)
-outfile = file.path(proj_dir,"/figure_notebooks/tmp_files/fig2_tmp/fig2_supp.png")
+outfile = file.path(proj_dir,"/figure_notebooks/manuscript_figs/fig2_tmp/fig2_supp.png")
 image_write(full_image, format = "png", outfile)
 ```

@@ -15,7 +15,7 @@ OUT_DIR="${DIR}/../data/scraped_data/coreNLP_input_${TARGET_YEAR}_${TARGET_TYPE}
 CORENLP_OUTPUT="${DIR}/../data/scraped_data/coreNLP_output_${TARGET_YEAR}_${TARGET_TYPE}/"
 CORENLP_INPUT=${OUT_DIR}/file_list.txt
 
-# only run the coreNLP pipeline if the coreNLP results folder doesn't exist
+#only run the coreNLP pipeline if the coreNLP results folder doesn't exist
 if [ ! -d ${CORENLP_OUTPUT}  ]; then
     echo "running coreNLP pipeline for year ${TARGET_YEAR} ${TARGET_TYPE}"
 
@@ -45,9 +45,18 @@ if [ ! -d ${CORENLP_OUTPUT}  ]; then
 
 fi
 
+
 ## process the results, we do this always since this code is likely to change
 QUOTE_RES_FILE="${DIR}/../data/scraped_data/quote_table_raw_${TARGET_YEAR}_${TARGET_TYPE}.tsv"
 RScript ${DIR}/process_corenlp_quotes_corenlp_output.R ${CORENLP_OUTPUT} ${QUOTE_RES_FILE}
 
 LOC_RES_FILE="${DIR}/../data/scraped_data/location_table_raw_${TARGET_YEAR}_${TARGET_TYPE}.tsv"
 RScript ${DIR}/process_corenlp_locations_corenlp_output.R ${CORENLP_OUTPUT} ${LOC_RES_FILE}
+
+
+JOURNO_FILE="${DIR}/../data/journalist_data/downloads/links_crawled_${TARGET_YEAR}_${TARGET_TYPE}.json"
+BODY_FILE="${DIR}/../data/scraped_data/downloads/links_crawled_${TARGET_YEAR}_${TARGET_TYPE}.json"
+OUT_FILE="${DIR}/../data/journalist_data/journo_table_${TARGET_YEAR}_${TARGET_TYPE}.tsv"
+if [ -s ${JOURNO_FILE} ]; then
+    RScript ${DIR}/process_journo_scrape.R ${JOURNO_FILE} ${BODY_FILE} ${OUT_FILE}
+fi

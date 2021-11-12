@@ -218,7 +218,7 @@ compute_bootstrap_first_author <- function(full_data_df, year_col_id, article_co
 #' @param article_col_id This is column name containing article ids to be selected by
 #' @param conf_int between 0-1, this is the range the CI is calculated
 #' @return a dataframe of the CI estimates
-compute_bootstrap_gender <- function(full_data_df, year_col_id, article_col_id, conf_int){
+compute_bootstrap_gender <- function(full_data_df, year_col_id, article_col_id, conf_int, gender_search_str='MALE'){
 
     set.seed(5)
 
@@ -234,7 +234,7 @@ compute_bootstrap_gender <- function(full_data_df, year_col_id, article_col_id, 
     for(curr_year in unique(in_df$year)){
         year_df = subset(in_df, year == curr_year)
 
-        year_df = aggregate(year_df$est_gender, list(year_df$art_id), function(x) c(sum(x=='MALE'), length(x)))
+        year_df = aggregate(year_df$est_gender, list(year_df$art_id), function(x) c(sum(x==gender_search_str), length(x)))
         year_df = data.frame(as.matrix(year_df))
         colnames(year_df) = c("art_id", "num_male", "num_total")
         year_df$num_male = as.numeric(year_df$num_male)

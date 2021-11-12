@@ -131,9 +131,14 @@ head(full_quote_df)
 print("Total with Gender Prediction")
 print(dim(full_quote_df))
 
-print("Male Quote Ratio:")
-table(subset(full_quote_df, year == 2005)$est_gender)
-table(subset(full_quote_df, year == 2020)$est_gender)
+print("Male Quote Ratio Nature:")
+table(subset(full_quote_df, year == 2005 & type != "guardian")$est_gender)
+table(subset(full_quote_df, year == 2020 & type != "guardian")$est_gender)
+
+print("Male Quote Ratio Guardian:")
+table(subset(full_quote_df, year == 2005 & type == "guardian")$est_gender)
+table(subset(full_quote_df, year == 2020 & type == "guardian")$est_gender)
+
 
 print("Career-feature info:")
 dim(subset(full_quote_df, type == "career-feature"))
@@ -336,7 +341,7 @@ if(RERUN_BOOTSTRAP){
                                                    article_col_id = "file_id",
                                                    conf_int=0.95)
     all_bootstrap_file = file.path(proj_dir,
-                            "/figure_notebooks/tmp_files/fig2_tmp/fig2.RData")
+                            "/figure_notebooks/manuscript_figs/fig2_tmp/fig2.RData")
     save(quote_prop_df, type_df, career_df, 
          springer_first_prop_df, springer_last_prop_df, 
          nature_first_prop_df, nature_last_prop_df, 
@@ -344,9 +349,11 @@ if(RERUN_BOOTSTRAP){
          file = all_bootstrap_file)
 }else{
     all_bootstrap_file = file.path(proj_dir,
-                                "/figure_notebooks/tmp_files/fig2_tmp/fig2.RData")
+                                "/figure_notebooks/manuscript_figs/fig2_tmp/fig2.RData")
     load(all_bootstrap_file)
 }
+
+
 
 ```
 
@@ -368,7 +375,7 @@ tot_quotes_gg = ggplot(full_quote_df, aes(x=as.numeric(year), fill=type)) +
     scale_fill_manual(values=ARTICLE_TYPE_COLOR) +
     theme(legend.position="bottom")
 
-ggsave(file.path(proj_dir, "/figure_notebooks/tmp_files/fig2_tmp/tot_quotes_gg.pdf"),
+ggsave(file.path(proj_dir, "/figure_notebooks/manuscript_figs/fig2_tmp/tot_quotes_gg.pdf"),
        tot_quotes_gg, width = 6, height = 5, units = "in", device = "pdf")
 
 
@@ -394,7 +401,7 @@ quotes_nature_gg =
     scale_fill_manual(values=QUOTE_ANALYSIS_COLOR) +
     theme(legend.position="bottom")
 
-ggsave(file.path(proj_dir, "/figure_notebooks/tmp_files/fig2_tmp/quotes_nature_gg.pdf"),
+ggsave(file.path(proj_dir, "/figure_notebooks/manuscript_figs/fig2_tmp/quotes_nature_gg.pdf"),
        quotes_nature_gg, width = 6, height = 5, units = "in", device = "pdf")
 
 
@@ -411,7 +418,7 @@ quotes_springer_gg =
     scale_fill_manual(values=QUOTE_ANALYSIS_COLOR) +
     theme(legend.position="bottom")
 
-ggsave(file.path(proj_dir, "/figure_notebooks/tmp_files/fig2_tmp/quotes_springer_gg.pdf"),
+ggsave(file.path(proj_dir, "/figure_notebooks/manuscript_figs/fig2_tmp/quotes_springer_gg.pdf"),
        quotes_springer_gg, width = 6, height = 5, units = "in", device = "pdf")
 
 
@@ -429,7 +436,7 @@ all_type_gg = ggplot(type_df, aes(x=as.numeric(year), y=mean,
     scale_fill_manual(values=ARTICLE_TYPE_COLOR) +
     theme(legend.position="bottom")
 
-ggsave(file.path(proj_dir, "/figure_notebooks/tmp_files/fig2_tmp/all_type_gg.pdf"),
+ggsave(file.path(proj_dir, "/figure_notebooks/manuscript_figs/fig2_tmp/all_type_gg.pdf"),
        all_type_gg, width = 6, height = 5, units = "in", device = "pdf")
 
 
@@ -447,7 +454,7 @@ career_gg = ggplot(career_df, aes(x=as.numeric(year), y=mean,
     scale_fill_manual(values=QUOTE_ANALYSIS_COLOR) +
     theme(legend.position="bottom")
 
-ggsave(file.path(proj_dir, "/figure_notebooks/tmp_files/fig2_tmp/career_gg.pdf"),
+ggsave(file.path(proj_dir, "/figure_notebooks/manuscript_figs/fig2_tmp/career_gg.pdf"),
        career_gg, width = 6, height = 5, units = "in", device = "pdf")
 
 
@@ -461,7 +468,7 @@ first_v_last_gg = ggplot(first_cited_prop_df, aes(x=as.numeric(year), y=mean,
     geom_hline(yintercept=0.5, color="red") +
     theme(legend.position="bottom")
 
-ggsave(file.path(proj_dir, "/figure_notebooks/tmp_files/fig2_tmp/first_v_last_gg.pdf"),
+ggsave(file.path(proj_dir, "/figure_notebooks/manuscript_figs/fig2_tmp/first_v_last_gg.pdf"),
        first_v_last_gg, width = 6, height = 5, units = "in", device = "pdf")
 
 
@@ -478,19 +485,19 @@ plot_overview = image_read_pdf(file.path(proj_dir,
 plot_overview = image_annotate(plot_overview, "a", size = 20)
 
 quotes_nature_gg = image_read_pdf(file.path(proj_dir,
-                                  "/figure_notebooks/tmp_files/fig2_tmp/quotes_nature_gg.pdf"))
+                                  "/figure_notebooks/manuscript_figs/fig2_tmp/quotes_nature_gg.pdf"))
 quotes_nature_gg = image_annotate(quotes_nature_gg, "c", size = 30)
 
 tot_quotes_gg = image_read_pdf(file.path(proj_dir,
-                                  "/figure_notebooks/tmp_files/fig2_tmp/tot_quotes_gg.pdf"))
+                                  "/figure_notebooks/manuscript_figs/fig2_tmp/tot_quotes_gg.pdf"))
 tot_quotes_gg = image_annotate(tot_quotes_gg, "b", size = 30)
 
 first_v_last_gg = image_read_pdf(file.path(proj_dir,
-                                  "/figure_notebooks/tmp_files/fig2_tmp/first_v_last_gg.pdf"))
+                                  "/figure_notebooks/manuscript_figs/fig2_tmp/first_v_last_gg.pdf"))
 first_v_last_gg = image_annotate(first_v_last_gg, "d", size = 30)
 
 career_gg = image_read_pdf(file.path(proj_dir,
-                                  "/figure_notebooks/tmp_files/fig2_tmp/career_gg.pdf"))
+                                  "/figure_notebooks/manuscript_figs/fig2_tmp/career_gg.pdf"))
 career_gg = image_annotate(career_gg, "e", size = 30)
 
 middle_image <- image_append(image_scale(c(tot_quotes_gg, quotes_nature_gg),3000), stack = FALSE)
@@ -499,10 +506,10 @@ full_image <- image_append(image_scale(c(plot_overview, middle_image, bottom_ima
 
 print(full_image)
 
-outfile = file.path(proj_dir,"/figure_notebooks/tmp_files/fig2_tmp/fig2_main.pdf")
+outfile = file.path(proj_dir,"/figure_notebooks/manuscript_figs/fig2_tmp/fig2_main.pdf")
 image_write(full_image, format = "pdf", outfile)
 
-outfile = file.path(proj_dir,"/figure_notebooks/tmp_files/fig2_tmp/fig2_main.png")
+outfile = file.path(proj_dir,"/figure_notebooks/manuscript_figs/fig2_tmp/fig2_main.png")
 image_write(full_image, format = "png", outfile)
 
 ```
@@ -514,20 +521,20 @@ image_write(full_image, format = "png", outfile)
 ```{r make_supp_fig, echo=TRUE, warning=FALSE, message=F}
 
 all_type_gg = image_read_pdf(file.path(proj_dir,
-                                  "/figure_notebooks/tmp_files/fig2_tmp/all_type_gg.pdf"))
+                                  "/figure_notebooks/manuscript_figs/fig2_tmp/all_type_gg.pdf"))
 all_type_gg = image_annotate(all_type_gg, "b", size = 30)
 
 quotes_springer_gg = image_read_pdf(file.path(proj_dir,
-                                  "/figure_notebooks/tmp_files/fig2_tmp/quotes_springer_gg.pdf"))
+                                  "/figure_notebooks/manuscript_figs/fig2_tmp/quotes_springer_gg.pdf"))
 quotes_springer_gg = image_annotate(quotes_springer_gg, "a", size = 30)
 
 full_image <- image_append(image_scale(c(quotes_springer_gg, all_type_gg), 500), stack = FALSE)
 print(full_image)
 
 
-outfile = file.path(proj_dir,"/figure_notebooks/tmp_files/fig2_tmp/fig2_supp.pdf")
+outfile = file.path(proj_dir,"/figure_notebooks/manuscript_figs/fig2_tmp/fig2_supp.pdf")
 image_write(full_image, format = "pdf", outfile)
-outfile = file.path(proj_dir,"/figure_notebooks/tmp_files/fig2_tmp/fig2_supp.png")
+outfile = file.path(proj_dir,"/figure_notebooks/manuscript_figs/fig2_tmp/fig2_supp.png")
 image_write(full_image, format = "png", outfile)
 
 ```

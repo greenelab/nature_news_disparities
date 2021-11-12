@@ -205,7 +205,7 @@ country_errors = country_errors[-1,]
 ### gender plot
 
 ``` r
-ggsave(file.path(proj_dir, "/figure_notebooks/tmp_files/supp_fig1_tmp/gg_gender.pdf"),
+ggsave(file.path(proj_dir, "/figure_notebooks/manuscript_figs/supp_fig1_tmp/gg_gender.pdf"),
        draw_confusion_matrix(confusion_matrix, "FEMALE", "MALE", "Gender prediction Conf. Matr."),
        width = 5, height = 5, units = "in", device = "pdf")
 ```
@@ -220,7 +220,7 @@ gg_loc_hist = ggplot(country_errors, aes(x=as.factor(num_fp))) +
                 xlab("Number False Country Mentions Per Article") +
                 ggtitle("# False Country Mentions Per Article in Benchmark") + 
                 theme(legend.position = "none")
-ggsave(file.path(proj_dir, "/figure_notebooks/tmp_files/supp_fig1_tmp/gg_loc_hist.pdf"),
+ggsave(file.path(proj_dir, "/figure_notebooks/manuscript_figs/supp_fig1_tmp/gg_loc_hist.pdf"),
        gg_loc_hist, width = 5, height = 5, units = "in", device = "pdf")
 
 gg_loc_line = ggplot(country_errors, aes(x=num_true, 
@@ -234,7 +234,7 @@ gg_loc_line = ggplot(country_errors, aes(x=num_true,
     scale_fill_brewer(palette="Set3") +
     theme(legend.position = "none")
 
-ggsave(file.path(proj_dir, "/figure_notebooks/tmp_files/supp_fig1_tmp/gg_loc_line.pdf"),
+ggsave(file.path(proj_dir, "/figure_notebooks/manuscript_figs/supp_fig1_tmp/gg_loc_line.pdf"),
        gg_loc_line, width = 7, height = 5, units = "in", device = "pdf")
 ```
 
@@ -242,17 +242,17 @@ ggsave(file.path(proj_dir, "/figure_notebooks/tmp_files/supp_fig1_tmp/gg_loc_lin
 
 ``` r
 gg_gender = image_read_pdf(file.path(proj_dir,
-                                  "/figure_notebooks/tmp_files/supp_fig1_tmp/gg_gender.pdf"))
+                                  "/figure_notebooks/manuscript_figs/supp_fig1_tmp/gg_gender.pdf"))
 gg_gender = image_annotate(gg_gender, "a", size = 30)
 
 
 gg_loc_hist = image_read_pdf(file.path(proj_dir,
-                                  "/figure_notebooks/tmp_files/supp_fig1_tmp/gg_loc_hist.pdf"))
+                                  "/figure_notebooks/manuscript_figs/supp_fig1_tmp/gg_loc_hist.pdf"))
 gg_loc_hist = image_annotate(gg_loc_hist, "b", size = 30)
 
 
 gg_loc_line = image_read_pdf(file.path(proj_dir,
-                                  "/figure_notebooks/tmp_files/supp_fig1_tmp/gg_loc_line.pdf"))
+                                  "/figure_notebooks/manuscript_figs/supp_fig1_tmp/gg_loc_line.pdf"))
 gg_loc_line = image_extent(gg_loc_line, '2150x1500', color = 'white', gravity = "northeast")
 gg_loc_line = image_annotate(gg_loc_line, "c", size = 30)
 
@@ -271,6 +271,6 @@ print(full_image)
 <img src="supp_fig1_files/figure-markdown_github/make_supp_fig1-1.png" width="3000" />
 
 ``` r
-outfile = file.path(proj_dir,"/figure_notebooks/tmp_files/supp_fig1_tmp/supp_fig1.png")
+outfile = file.path(proj_dir,"/figure_notebooks/manuscript_figs/supp_fig1_tmp/supp_fig1.png")
 image_write(full_image, format = "png", outfile)
 ```

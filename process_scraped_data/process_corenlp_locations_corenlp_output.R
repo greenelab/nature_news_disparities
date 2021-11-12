@@ -14,7 +14,7 @@ read_result_files <- function(corenlp_output_dir){
     json_res_files = list.files(corenlp_output_dir, pattern=".txt.json", full.names = TRUE)
     
     all_locations = NA
-    for(curr_file in json_res_files){
+    for(curr_file in json_res_files[608:length(json_res_files)]){
         
         file_id = basename(curr_file)
         file_id = substr(file_id, 1, nchar(file_id)-9)

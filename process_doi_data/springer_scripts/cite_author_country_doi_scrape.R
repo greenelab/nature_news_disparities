@@ -23,7 +23,7 @@ source(file.path(proj_dir, "/process_doi_data/springer_scripts/springer_scrape_u
 #' @param curr_doi, a DOI
 #' @param api_key, personal API_KEY
 #' @return dataframe of author affiliation country info for each DOI
-springer_country_doi_query <- function(curr_file, curr_doi, api_key){
+springer_country_doi_query <- function(curr_doi, api_key){
 
     # we need to follow Springer guidelines
     # we MUST cache
@@ -44,7 +44,6 @@ springer_country_doi_query <- function(curr_file, curr_doi, api_key){
             resp_df = as.data.frame(resp$facets$values[5])
             colnames(resp_df) = c("country", "num_entries")
             resp_df$doi = curr_doi
-            resp_df$file_id = curr_file
         }
         
 
@@ -82,9 +81,8 @@ file_id_batch_springer_doi_query <- function(dois_found_df, api_key, outdir){
     idx = 1
     for(curr_doi in unique(dois_found_df$doi)){
         print(curr_doi)
-        curr_file = dois_found_df$file_id[idx]
 
-        curr_resp = springer_country_doi_query(curr_file, curr_doi, api_key)
+        curr_resp = springer_country_doi_query(curr_doi, api_key)
         if(!is.na(curr_resp)){
             batch_resp = rbind(batch_resp, curr_resp)
         }
@@ -93,7 +91,6 @@ file_id_batch_springer_doi_query <- function(dois_found_df, api_key, outdir){
         if(is.na(curr_resp)){
             # we don't want to query twice so even if its empty, we enter it as null
             curr_summ_df = data.frame(doi=curr_doi,
-                                    file_id=curr_file,
                                     country=NA,
                                     query_date=as.Date(Sys.Date(), format = "%B %d %Y"),
                                     num_entries=NA)
@@ -102,12 +99,19 @@ file_id_batch_springer_doi_query <- function(dois_found_df, api_key, outdir){
             curr_summ_df = curr_resp
             curr_summ_df$num_entries = as.numeric(curr_summ_df$num_entries)
             curr_summ_df = curr_summ_df %>% 
-                        group_by(doi, file_id, country, query_date) %>% 
+                        group_by(doi, country, query_date) %>% 
                         summarise(sum_entries=sum(num_entries)) 
             curr_summ_df = data.frame(curr_summ_df)
             colnames(curr_summ_df)[5] = "num_entries"
 
         }
+        # merge to get file_id
+        doi_file_id_df = subset(unique(dois_found_df[,c("doi", "file_id")]), doi == curr_doi)
+        curr_summ_df = merge(curr_summ_df, doi_file_id_df)
+        curr_summ_df = curr_summ_df[,c("doi", "file_id", 
+                                        "country", "query_date", 
+                                        "num_entries")]
+
         outfile = file.path(outdir, "cited_author_country.tsv")
         cached_df = data.frame(fread(outfile))
         cached_df = rbind(cached_df, curr_summ_df)
@@ -163,3 +167,4 @@ api_key = args[1]
 ref_dir = args[2]
 outdir = args[3]
 get_ref_authors(api_key, ref_dir, outdir)
+

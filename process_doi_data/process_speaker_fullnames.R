@@ -44,6 +44,13 @@ process_all_quote_fullnames <- function(quote_dir, outdir){
 
     # now format the author name
     full_quote_df$author = format_author_fullname(full_quote_df$est_speaker)
+    space_idx = grep(" ", full_quote_df$author)
+    full_quote_df = full_quote_df[space_idx, ]
+
+    # make sure its not an empty string
+    non_whitespace = which(trimws(full_quote_df$author)!="")
+    full_quote_df = full_quote_df[non_whitespace,]
+
 
     # format the output
     col_ids = c("year", "type", "author", "file_id", "quote")
@@ -119,24 +126,26 @@ process_all_mentioned_fullnames <- function(corenlp_output_dir, outdir){
     all_persons$author = format_author_fullname(all_persons$author)
     all_persons = subset(all_persons, author != "")
     all_persons = subset(all_persons, author != " ")
+    space_idx = grep(" ", all_persons$author)
+    all_persons = all_persons[space_idx, ]
+
+    # make sure its not an empty string
+    non_whitespace = which(trimws(all_persons$author)!="")
+    all_persons = all_persons[non_whitespace,]
+
 
     outfile = file.path(outdir, "all_mentioned_fullname.tsv")
     write.table(all_persons, file=outfile, sep="\t", quote=F, row.names=F)
 
 
-
-    return(all_quotes_gender)
 }
 
-
-}
 
 ### read in arguments
 args = commandArgs(trailingOnly=TRUE)
-quote_dir = args[1]
-corenlp_output_dir = args[2]
-outdir = args[3]
+corenlp_output_dir = args[1]
+outdir = args[2]
 
-process_all_quote_fullnames(quote_dir, outdir)
+process_all_quote_fullnames(corenlp_output_dir, outdir)
 process_all_mentioned_fullnames(corenlp_output_dir, outdir)
 

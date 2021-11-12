@@ -1,0 +1,467 @@
+---
+title: "journalist_contingency_tables"
+author: "Natalie Davidson"
+date: "10/22/2021"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+require(data.table)
+require(here)
+require(ggplot2)
+require(stringr)
+require(magick)
+require(pdftools)
+require(ggrepel)
+options(ggrepel.max.overlaps = Inf)
+
+
+proj_dir = here()
+source(file.path(proj_dir, "/analysis_scripts/analysis_utils.R"))
+source(file.path(proj_dir, "/utils/plotting_utils.R"))
+source(file.path(proj_dir, "/utils/scraper_processing_utils.R"))
+source(file.path(proj_dir, "/process_doi_data/springer_scripts/springer_scrape_utils.R"))
+
+RERUN_BOOTSTRAP=FALSE
+
+```
+
+## Dependencies
+
+This script assumes that `journallist_analysis.Rmd` has been run successfully/
+
+## Nature News comparison of journalists with quotes+mentions
+
+This document is a working analysis of the extracted journalists names and their gender and name origin predictions:
+
+1) Compare if predicted male/female journalists have different gendered quote/mention biases
+
+2) Compare if different predicted name origin journalists have different name origin quote/mention biases
+
+The data used to do the journalist specific analysis is here: `/data/journalist_data/*.tsv`
+
+The **setting + helper functions** to generate the plots are here:
+
+1. plotting related functions: `/utils/plotting_utils.R`
+
+2. reading + data processing related functions: `/utils/scraper_processing_utils.R` and `/analysis_scripts/analysis_utils.R`
+
+3. nature research article and springer specific data processing functions: `/process_doi_data/springer_scripts/springer_scrape_utils.R`
+
+
+## Read in data
+
+
+### reading in the journalist data
+
+```{r read_journalist_data, fig.align='center', echo=TRUE, warning=FALSE, message=F}
+
+
+# read in the scraped journalists info from nature news articles for each year
+journo_dir = file.path(proj_dir, "/data/journalist_data/")
+journo_files = list.files(journo_dir, full.names = T)
+
+all_authors = NA
+
+tab_res_files = list.files(journo_dir, pattern=".tsv", full.names = TRUE)
+
+all_authors = NA
+for(curr_file in tab_res_files){
+
+    print(curr_file)
+    
+    curr_type = substr(basename(curr_file), 19, nchar(basename(curr_file))-4)
+
+    # skip empty files
+    if(file.info(curr_file)$size == 0){
+        next
+    }
+    
+    res_df = data.frame(fread(curr_file))
+    res_df = subset(res_df, authors != "")
+    res_df$type = curr_type
+
+    # make df
+    authors_df = res_df[,c("file_id", "year", "authors", "type")]
+    all_authors = rbind(all_authors, authors_df)
+
+}
+
+all_authors = all_authors[-1,]
+
+# split up all the journalist names
+author_df_split = separate_rows(all_authors, "authors",sep = "; ")
+author_df_split = subset(author_df_split, authors != "")
+
+
+# remove the article types we are not interested in
+all_authors = subset(all_authors, !type %in% c("career-column", "news-and-views"))
+
+# format file_id into a doi
+all_authors$doi = paste("doi:10.1038/", all_authors$file_id, sep="")
+
+# plot number of articles scraped
+ggplot(unique(all_authors[,c("file_id", "year")]), aes(x=as.factor(year))) +
+    geom_bar() + theme_bw() +
+    xlab("Year of Article") + ylab("# articles") +
+        ggtitle("# Nature News Articles with Author Over Time")
+
+
+
+```
+
+
+### reading in the name origin + gender predictions for journalists
+
+```{r read_gender, fig.align='center', echo=TRUE, warning=FALSE, message=F}
+
+# read in the scraped nature data
+journo_gender = file.path(proj_dir,
+                    "/data/author_data/nature_journo_gender.tsv")
+journo_gender_res = data.frame(fread(journo_gender))
+journo_gender_res$est_gender = journo_gender_res$gender
+journo_gender_res = merge(journo_gender_res, all_authors[,c("type", "file_id", "year", "doi")])
+
+# remove the article types we are not interested in
+journo_gender_res = subset(journo_gender_res, !type %in% c("guardian", "career-column", "news-and-views"))
+
+# remove articles where no gender could be estimated
+journo_gender_res = journo_gender_res[journo_gender_res$est_gender %in% c("FEMALE", "MALE"), ]
+journo_gender_res = subset(journo_gender_res, !is.na(est_gender))
+
+```
+
+
+```{r read_name_origin, fig.align='center', echo=TRUE, warning=FALSE, message=F}
+
+# now read in the BG data
+name_pred_file = file.path(proj_dir, 
+                         "/data/author_data/all_author_fullname_pred.tsv")
+name_info_file = file.path(proj_dir, 
+                         "/data/author_data/all_author_fullname.tsv")
+journo_name_df = read_name_origin(name_pred_file, name_info_file)
+journo_name_df$name_origin[journo_name_df$name_origin == "Jewish"] = "Hebrew"
+journo_name_df = merge(journo_name_df, all_authors[,c("type", "file_id", "year", "doi")])
+
+# remove the article types we are not interested in
+journo_name_df = subset(journo_name_df, !type %in% c("guardian", "career-column", "news-and-views"))
+
+
+
+```
+
+
+
+### read in the quotes with name origin and gender predictions
+
+```{r read_name_pred, echo=TRUE, warning=FALSE, message=F}
+
+# read in raw quotes data for filtering
+full_quote_df = NA
+quote_files = list.files(file.path(proj_dir,"/data/scraped_data/", sep=""), full.names = T)
+quote_files = grep("quote_table_raw_", quote_files, value=T)
+for(quote_file in quote_files){
+    
+    quote_df = read_corenlp_quote_files(quote_file)
+    quote_df$year = str_extract(quote_file, "[1-9][0-9]+") # curr_year
+    quote_df$type = substring(basename(quote_file), 
+                            22, nchar(basename(quote_file))-4)
+    
+    full_quote_df = rbind(full_quote_df, quote_df)
+}
+full_quote_df = full_quote_df[-1,]
+
+# filter out articles with more than 25 quotes
+num_quotes = table(full_quote_df$file_id)
+too_many_quotes_idx = which(num_quotes > 25)
+too_many_quotes_file_id = names(num_quotes)[too_many_quotes_idx]
+full_quote_df = subset(full_quote_df, !file_id %in% too_many_quotes_file_id)
+
+
+# remove names with single name, that do not have a pronoun
+space_idx = grep(" ", full_quote_df$est_speaker)
+gendered_pronouns = c("he", "him", "his", "himself",
+                    "she", "her", "hers", "herself")
+pronoun_idx_canonical = which(full_quote_df$canonical_speaker %in% gendered_pronouns)
+pronoun_idx_partial = which(full_quote_df$partial_name %in% gendered_pronouns)
+allowed_idx = unique(c(space_idx, pronoun_idx_canonical, pronoun_idx_partial))
+length(allowed_idx)
+full_quote_df = full_quote_df[allowed_idx,]
+full_quote_df = unique(full_quote_df)
+
+# remove quotes where no gender could be estimated
+full_quote_df = full_quote_df[full_quote_df$est_gender %in% c("FEMALE", "MALE"), ]
+full_quote_df = subset(full_quote_df, !is.na(est_gender))
+
+# remove the article types we are not interested in
+full_quote_df = subset(full_quote_df, !type %in% c("guardian", "career-column", "news-and-views"))
+
+# make sure the file_ids don't have HTML, since journalist file_ids don't
+#full_quote_df$file_id = gsub(".html", "", full_quote_df$file_id)
+
+# first read in the quote data
+name_pred_file = file.path(proj_dir, 
+                             "/data/author_data/all_speaker_fullname_pred.tsv")
+name_info_file = file.path(proj_dir, 
+                             "/data/author_data/all_speaker_fullname.tsv")
+
+quote_name_df = read_name_origin(name_pred_file, name_info_file)
+quote_name_df$name_origin[quote_name_df$name_origin == "Jewish"] = "Hebrew"
+quote_name_df = subset(quote_name_df, !file_id %in% too_many_quotes_file_id)
+
+# remove the article types we are not interested in
+quote_name_df = subset(quote_name_df, !type %in% c("guardian", "career-column", "news-and-views"))
+
+
+
+```
+
+## Read in the country information for cited articles
+
+```{r country_citations, echo=TRUE, warning=FALSE, message=F}
+
+# first we need to match the citations from countries to names
+
+# springer cited authorship
+cited_author_file = file.path(proj_dir, 
+                                "/data/reference_data/springer_cited_author_cache.tsv")
+cited_dois_dir = file.path(proj_dir, 
+                                "/data/doi_data/downloads/")
+cited_country_file = file.path(proj_dir, 
+                                "/data/author_data/cited_author_country.tsv")
+cited_author_df = data.frame(fread(cited_author_file))
+cited_author_df = subset(cited_author_df, !is.na(authors))
+cited_author_df = subset(cited_author_df, select=-c(year))
+
+cited_country_df = data.frame(fread(cited_country_file))
+
+cited_doi_df = get_ref_dois(cited_dois_dir)
+
+cited_author_df = merge(cited_author_df, cited_doi_df[,c("doi", "year", "file_id")], by=c("doi"))
+cited_author_df = subset(cited_author_df, authors != "")
+cited_author_df = format_authors(cited_author_df, use_fullname=T)
+cited_author_df$corpus = "naturenews_citations"
+col_ids = c("year", "author_pos", "author", "file_id", "doi", "corpus")
+cited_author_df = cited_author_df[,col_ids]
+
+# now merge with the country map
+cited_author_country_df = merge(cited_author_df, cited_country_df)
+head(cited_author_country_df)
+
+# format the countries
+cited_author_country_df$country = format_country_names(cited_author_country_df$country)
+
+
+```
+
+
+### join gender predictions for journalists and quotes
+
+```{r join_gender, fig.align='center', echo=TRUE, warning=FALSE, message=F}
+
+journo_gender_res = journo_gender_res %>% rename(
+                                                journalist = author,
+                                                journo_gender = est_gender
+                                                )
+journo_gender_res = journo_gender_res[,c("journalist", "journo_gender", 
+                                         "file_id", "year", "type")]
+
+full_quote_df = full_quote_df[,c("est_speaker", "est_gender", 
+                                         "file_id", "quote", "year", "type")]
+
+gender_journo_quote = merge(journo_gender_res, full_quote_df)
+table(gender_journo_quote$type, gender_journo_quote$year)
+
+
+
+```
+
+
+### join name origin predictions for journalists and quotes
+
+```{r join_name_origin, fig.align='center', echo=TRUE, warning=FALSE, message=F}
+
+journo_name_df = journo_name_df %>% rename(
+                                            journalist = author,
+                                            journo_name_origin = name_origin
+                                            )
+journo_name_df = journo_name_df[,c("journalist", "journo_name_origin", 
+                                         "file_id", "doi", "year", "type")]
+quote_name_df = quote_name_df %>% rename(
+                                        speaker = author
+                                        )
+quote_name_df = quote_name_df[,c("speaker", "name_origin", 
+                                "file_id", "quote", "year", "type")]
+
+name_origin_journo_quote = merge(journo_name_df, quote_name_df)
+
+
+# now we only get the CelticEnglish / European names 
+#since there are n't much other journalist names names
+table(name_origin_journo_quote$journo_name_origin, name_origin_journo_quote$year)
+
+name_origin_journo_quote = subset(name_origin_journo_quote, journo_name_origin %in% c("CelticEnglish", "European", "EastAsian"))
+
+```
+
+### join name origin predictions for journalists and quotes ALSO with citations
+
+```{r join_cite_name_origin, fig.align='center', echo=TRUE, warning=FALSE, message=F}
+
+cited_author_country_df = cited_author_country_df[,c("file_id", "year", "author", "country")]
+colnames(cited_author_country_df)[3] = "speaker"
+cite_quote_df = merge(name_origin_journo_quote, cited_author_country_df)
+
+cite_quote_df_us = subset(cite_quote_df, country %in% c("united states"))
+table(cite_quote_df$journo_name_origin, cite_quote_df$year)
+
+
+```
+
+
+
+## Process Gender and Name Origin 
+
+### calculate bootstrap on gender
+
+```{r bootstrap_est_gender, echo=TRUE, warning=FALSE, message=F}
+
+if(RERUN_BOOTSTRAP){
+        
+    
+    #### Quote data
+    female_j_prop_df = compute_bootstrap_gender(subset(gender_journo_quote, journo_gender == "FEMALE"), 
+                                               year_col_id = "year", 
+                                               article_col_id = "quote",
+                                               conf_int=0.95)
+    female_j_prop_df$corpus = "female_journalist"
+    
+    male_j_prop_df = compute_bootstrap_gender(subset(gender_journo_quote, journo_gender == "MALE"), 
+                                               year_col_id = "year", 
+                                               article_col_id = "quote",
+                                               conf_int=0.95)
+    male_j_prop_df$corpus = "male_journalist"
+    
+    
+    all_bootstrap_file = file.path(proj_dir,
+                            "/figure_notebooks/supp_analyze_journalist_data/tmp_files/journo_quote_gender.RData")
+    save(female_j_prop_df, male_j_prop_df,
+         file = all_bootstrap_file)
+}else{
+    all_bootstrap_file = file.path(proj_dir,
+                            "/figure_notebooks/supp_analyze_journalist_data/tmp_files/journo_quote_gender.RData")
+    load(all_bootstrap_file)
+}
+female_j_prop_df$corpus = "female_journalist"
+male_j_prop_df$corpus = "male_journalist"
+
+
+
+```
+
+
+### now process name origin, write tables
+
+```{r process_name_origin_tables, echo=TRUE, warning=FALSE, message=F}
+
+# make the table, then scale by row (row sums to 1)
+tab_quote = table(name_origin_journo_quote$journo_name_origin, 
+                             name_origin_journo_quote$name_origin)
+tab_quote_percent = t(apply(tab_quote, 1, function(x) x/(sum(x))))
+
+tab_quote_cite = table(cite_quote_df$journo_name_origin, 
+                             cite_quote_df$name_origin)
+tab_quote_cite_percent = t(apply(tab_quote_cite, 1, function(x) x/(sum(x))))
+
+tab_quote_us = table(cite_quote_df_us$journo_name_origin, 
+                             cite_quote_df_us$name_origin)
+tab_quote_us_percent = t(apply(tab_quote_us, 1, function(x) x/(sum(x))))
+
+
+knitr::kable(tab_quote, format = "pipe", 
+             caption = "Quoted speaker name origin, by journalist name origin")
+
+knitr::kable(tab_quote_percent, format = "pipe", 
+             caption = "Quoted speaker name origin, by journalist name origin % ")
+
+knitr::kable(tab_quote_cite, format = "pipe", 
+             caption = "Quoted + cited speaker name origin, by journalist name origin")
+
+knitr::kable(tab_quote_cite_percent, format = "pipe", 
+             caption = "Quoted + cited speaker name origin, by journalist name origin %")
+
+
+knitr::kable(tab_quote_us, format = "pipe", 
+             caption = "Quoted + cited speaker name origin, by journalist name origin -- US affil")
+
+knitr::kable(tab_quote_us_percent, format = "pipe", 
+             caption = "Quoted + cited speaker name origin, by journalist name origin % -- US affil")
+
+```
+
+
+
+
+
+## Make Plots
+
+We would lilke to see if predicted male speakers are overrepresented in news quotes regardless of predicted journalist gender.
+We depicts two trend lines: Yellow: Proportion of predicted male quotes in an article written by a predicted female journalist; Blue: Proportion of predicted male quotesin an article  written by a predicted male journalist.
+We find that male quote bias is very similar between male and femal journalists since both trend lines closely follow each other.
+
+
+```{r make_citation_gg, echo=TRUE, warning=FALSE, message=F}
+
+#### plot the overview of gender
+journo_gender_quote_df = rbind(female_j_prop_df, male_j_prop_df)
+
+journo_gender_quote_gg = 
+    ggplot(journo_gender_quote_df, 
+      aes(x=as.numeric(year), y=mean,
+                          ymin=bottom_CI, ymax=top_CI,
+                          fill=corpus)) +
+    geom_point() + geom_ribbon(alpha=0.5) + geom_line(alpha=0.5) + theme_bw() + 
+    xlab("Year of Article") + ylab("Male Percentage") +
+    ggtitle("Est. Proportion Male Quotes by Journalist Est. Gender") + 
+    ylim(c(0, 1)) +
+    geom_hline(yintercept=0.5, color="red") +
+    scale_fill_manual(values=c("#E69F00", "#56B4E9")) +
+    theme(legend.position="bottom")
+
+ggsave(file.path(proj_dir,  "/figure_notebooks/supp_analyze_journalist_data/tmp_files/journo_gender_quote_gg.pdf"),
+       journo_gender_quote_gg, width = 6, height = 5, units = "in", device = "pdf")
+
+
+journo_gender_quote_gg
+
+```
+
+
+## format supp. figure XX
+
+```{r make_supp_fig, echo=TRUE, warning=FALSE, message=F}
+
+
+journo_gender_gg = image_read_pdf(file.path(proj_dir,
+                                  "/figure_notebooks/supp_analyze_journalist_data/tmp_files/journo_gender_gg.pdf"))
+journo_gender_gg = image_annotate(journo_gender_gg, "a", size = 30)
+
+
+journo_gender_quote_gg = image_read_pdf(file.path(proj_dir,
+                                  "/figure_notebooks/supp_analyze_journalist_data/tmp_files/journo_gender_quote_gg.pdf"))
+journo_gender_quote_gg = image_annotate(journo_gender_quote_gg, "b", size = 30)
+
+
+top_image <- image_append(image_scale(c(journo_gender_gg,
+                                           journo_gender_quote_gg),3000), stack = FALSE)
+
+print(top_image)
+
+outfile = file.path(proj_dir,"/figure_notebooks/manuscript_figs/supp_journalist_contingency_tab_tmp/supp_fig.pdf")
+image_write(top_image, format = "pdf", outfile)
+outfile = file.path(proj_dir,"/figure_notebooks/manuscript_figs/supp_journalist_contingency_tab_tmp/supp_fig.png")
+image_write(top_image, format = "png", outfile)
+
+```

@@ -224,6 +224,11 @@ read_nature_author_json_files <- function(nature_dir){
     for(curr_file in json_res_files){
 
         print(curr_file)
+
+        # skip empty files
+        if(file.info(curr_file)$size == 0){
+            next
+        }
         
         file_id = basename(curr_file)
         file_id = substr(file_id, 1, nchar(file_id)-9)
@@ -252,6 +257,82 @@ read_nature_author_json_files <- function(nature_dir){
 }
 
 
+#' Read all nature filed of journalist info
+#' @param nature_dir, directory containing scraped nature journalist info 
+#' 
+#' @return dataframe, all_authors author infos for nature articles
+read_nature_journo_files <- function(nature_dir){
+
+    tab_res_files = list.files(nature_dir, pattern=".tsv", full.names = TRUE)
+    
+    all_authors = NA
+    for(curr_file in tab_res_files){
+
+        print(curr_file)
+
+        # skip empty files
+        if(file.info(curr_file)$size == 0){
+            next
+        }
+        
+        res_df = data.frame(fread(curr_file))
+        res_df = subset(res_df, authors != "")
+
+        # make df
+        authors_df = res_df[,c("file_id", "year", "authors")]
+        all_authors = rbind(all_authors, authors_df)
+
+    }
+
+    all_authors = all_authors[-1,]
+
+    # format file_id into a doi
+    all_authors$doi = paste("doi:10.1038/", all_authors$file_id, sep="")
+
+    return(all_authors)
+
+}
+
+
+
+#' Read all nature json files and get journalist info
+#' @param author_df, data.frame with all journalist info 
+#' this is a sperate method because we are interested in all journalists listed
+#' 
+#' @return dataframe, reducing all author info to first and last authors only
+format_journo <- function(author_df, use_fullname=F){
+
+    library(stringr)
+
+    # remove all files where no name was found
+    author_df = subset(author_df, authors != "")
+
+    # split up all the journalist names
+    author_df_split = separate_rows(author_df, "authors",sep = "; ")
+    author_df_split = subset(author_df_split, authors != "")
+
+    if(!use_fullname){
+        authors = format_author_firstnames(author_df_split$authors)
+    }else{
+        authors = format_author_fullname(author_df_split$authors)
+    }
+
+    author_df_split$author = authors
+    author_df_split$author_pos = NA
+
+
+    if(length(grep("file_id", colnames(author_df))) != 0){
+        author_df_split = author_df_split[,c("doi", "year", "author_pos", "author", "file_id")]
+    }else{
+        author_df_split = author_df_split[,c("doi", "year", "author_pos", "author", "file_id")]        
+    }
+
+    author_df_split = unique(author_df_split)
+    return(author_df_split)
+
+}
+
+
 #' Read all nature json files and get author info
 #' @param author_df, data.frame with all author info 
 #' 
@@ -266,6 +347,7 @@ format_authors <- function(author_df, use_fullname=F){
     first_authors = unlist(lapply(author_df$authors, function(x) unlist(str_split(x, "; "))[1]))
     last_authors = unlist(lapply(author_df$authors, function(x) rev(unlist(str_split(x, "; ")))[1]))
 
+
     if(!use_fullname){
         first_authors = format_author_firstnames(first_authors)
         last_authors = format_author_firstnames(last_authors)
@@ -273,6 +355,7 @@ format_authors <- function(author_df, use_fullname=F){
         first_authors = format_author_fullname(first_authors)
         last_authors = format_author_fullname(last_authors)
     }
+
 
     first_author_df = data.frame(doi = author_df$doi,
                                 year = author_df$year,

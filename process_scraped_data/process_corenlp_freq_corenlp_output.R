@@ -11,7 +11,8 @@ source(file.path(proj_dir, "/analysis_scripts/analysis_utils.R"))
 
 YEARS=2005:2020
 TARGET_TYPES=c("news", "news-and-views", "news-feature", "toolbox", 
-                "technology-feature", "career-column", "career-feature")
+                "technology-feature", "career-column", "career-feature",
+                "guardian")
 
 
 #' Get the word frequencies from a JSON file containing

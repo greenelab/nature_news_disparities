@@ -8,6 +8,7 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 REF_DIR="${DIR}/../data/doi_data/downloads/"
 QUOTE_DIR="${DIR}/../data/scraped_data/"
 NATURE_DIR="${DIR}/../data/author_data/downloads/"
+JOURNO_DIR="${DIR}/../data/journalist_data/"
 OUT_DIR="${DIR}/../data/author_data/"
 SPRINGER_BG_AUTHOR="${DIR}/../data/reference_data/springer_bg_author_cache.tsv"
 MODEL_DIR="${DIR}/../name_lstm_models/"
@@ -34,22 +35,23 @@ else
 
 
     echo "processing Springer/Nature API calls"
-    RScript ${DIR}/process_author_gender.R ${NATURE_DIR} ${REF_DIR} ${OUT_DIR}
-    RScript ${DIR}/process_author_country.R ${NATURE_DIR} ${REF_DIR} ${OUT_DIR}
+    RScript ${DIR}/process_author_gender.R ${NATURE_DIR} ${REF_DIR} ${JOURNO_DIR} ${OUT_DIR}
+    RScript ${DIR}/process_author_country.R ${NATURE_DIR} ${REF_DIR} ${OUT_DIR} #1 
 
-    RScript ${DIR}/process_author_fullnames.R ${NATURE_DIR} ${REF_DIR} ${OUT_DIR}
-    RScript ${DIR}/process_speaker_fullnames.R ${QUOTE_DIR} ${OUT_DIR}
+    RScript ${DIR}/process_author_fullnames.R ${NATURE_DIR} ${REF_DIR} ${JOURNO_DIR} ${OUT_DIR}
+    RScript ${DIR}/process_speaker_fullnames.R ${QUOTE_DIR} ${OUT_DIR} #2
 
     conda activate nature_news_disparities
     python ${DIR}/springer_scripts/process_author_fullnames.py -m ${MODEL_DIR} \
                                             -n ${OUT_DIR}/all_author_fullname.tsv \
                                             -o ${OUT_DIR}/all_author_fullname_pred.tsv
 
+    #3
     python ${DIR}/springer_scripts/process_author_fullnames.py -m ${MODEL_DIR} \
                                             -n ${OUT_DIR}/all_speaker_fullname.tsv \
                                             -o ${OUT_DIR}/all_speaker_fullname_pred.tsv
 
-
+    #4
     python ${DIR}/springer_scripts/process_author_fullnames.py -m ${MODEL_DIR} \
                                             -n ${OUT_DIR}/all_mentioned_fullname.tsv \
                                             -o ${OUT_DIR}/all_mentioned_fullname_pred.tsv
