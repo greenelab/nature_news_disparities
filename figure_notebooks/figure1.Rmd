@@ -94,6 +94,11 @@ news_df = news_df[-1,]
 print("Total Articles")
 print(dim(news_df))
 
+news_df = subset(news_df, !type %in% c("guardian"))
+print("Total Articles Nature")
+print(dim(news_df))
+
+
 # filter out career column and news-and-views
 news_df = subset(news_df, !type %in% c("career-column", "news-and-views"))
 print("Total Articles, journalist")

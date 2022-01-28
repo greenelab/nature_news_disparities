@@ -58,7 +58,7 @@ for(quote_file in quote_files){
 full_quote_df = full_quote_df[-1,]
 
 # filter out career column and news-and-views
-full_quote_df = subset(full_quote_df, !type %in% c("career-column", "news-and-views"))
+full_quote_df = subset(full_quote_df, !type %in% c("career-column", "news-and-views", "guardian"))
 full_quote_df = unique(full_quote_df)
 
 # filter out articles with more than 25 quotes
@@ -76,7 +76,7 @@ print("Num Removed Articles")
 print(length(too_many_quotes_file_id))
 ```
 
-    ## [1] 704
+    ## [1] 433
 
 ``` r
 print("Num Total Articles")
@@ -88,7 +88,7 @@ print("Num Total Articles")
 print(length(num_quotes))
 ```
 
-    ## [1] 27652
+    ## [1] 15302
 
 ``` r
 print("Total Quotes")
@@ -100,7 +100,7 @@ print("Total Quotes")
 print(dim(full_quote_df))
 ```
 
-    ## [1] 177134      8
+    ## [1] 105457      8
 
 ``` r
 full_quote_df = full_quote_df[full_quote_df$est_gender %in% c("FEMALE", "MALE"), ]
@@ -119,7 +119,7 @@ allowed_idx = unique(c(space_idx, pronoun_idx_canonical, pronoun_idx_partial))
 length(allowed_idx)
 ```
 
-    ## [1] 157996
+    ## [1] 96390
 
 ``` r
 full_quote_df = full_quote_df[allowed_idx,]
@@ -129,34 +129,27 @@ full_quote_df = unique(full_quote_df)
 head(full_quote_df)
 ```
 
-    ##                                    file_id       est_speaker est_gender
-    ## 2 science.2005.nov.11.medicalresearch.food       Aaron Hsueh       MALE
-    ## 3    science.2005.jun.09.internationalnews Abdul Qadeer Khan       MALE
-    ## 4    science.2005.jun.09.internationalnews Abdul Qadeer Khan       MALE
-    ## 5    science.2005.jun.09.internationalnews Abdul Qadeer Khan       MALE
-    ## 6    science.2005.jun.09.internationalnews Abdul Qadeer Khan       MALE
-    ## 7    science.2005.jun.09.internationalnews Abdul Qadeer Khan       MALE
-    ##   canonical_speaker partial_name
-    ## 2       Aaron Hsueh  Aaron Hsueh
-    ## 3           Unknown         Khan
-    ## 4           Unknown         Khan
-    ## 5          diplomat         Khan
-    ## 6          diplomat         Khan
-    ## 7           Unknown         Khan
-    ##                                                                                                                                                                                                                                                                                                                                                                                                                                                             quote
-    ## 2 We knew before that a hormone called ghrelin that was produced into the gut and then secreted into the bloodstream, stimulates eating. The new work shows us that a new hormone, aptly called obestatin, is encoded by the same gene but exerts opposing effects - it inhibits food intake. This is a completely unexpected finding and it's really extraordinary to think the hormone had been sitting there in plain sight until these authors discovered it.
-    ## 3                                                                                                                                                                                                                                                 We are still missing something from the picture in terms of critical equipment, certain parts of centrifuges ... There is equipment missing important enough for us to search, an amount that makes us worried,
-    ## 4                                                                                                                                                                                                                                                                                                                                                                                                               We know there were several sets of them prepared,
-    ## 5                                                                                                                                                                                                                 So who got those electronic drawings? We have only actually got to the one full set from Libya. So who got the rest, the copies? We have no evidence they were destroyed. One possibility is another client. We just don't know where they are.
-    ## 6                                                                                                                                                                                                                                                                                                                                                                                        The big question is who else got this stuff [apart from Iran and Libya],
-    ## 7                                                                                                                                                                                                                                                                                                                                          There is reason to believe that there might even be some drawings related to nuclear weaponisation in electronic form,
-    ##   year     type
-    ## 2 2005 guardian
-    ## 3 2005 guardian
-    ## 4 2005 guardian
-    ## 5 2005 guardian
-    ## 6 2005 guardian
-    ## 7 2005 guardian
+    ##      file_id     est_speaker est_gender canonical_speaker    partial_name
+    ## 5020 434954a    Aaron Rundus       MALE            Rundus          Rundus
+    ## 5021 433798a Achim Schneider       MALE           Unknown Achim Schneider
+    ## 5022 437610a      Adam Riess       MALE        Adam Riess      Adam Riess
+    ## 5023 435014a Adrian Almquist       MALE          Almquist        Almquist
+    ## 5024 434816a Adrian Chappell       MALE           Unknown        Chappell
+    ## 5025 434816a Adrian Chappell       MALE          Chappell        Chappell
+    ##                                                              quote year
+    ## 5020                  This is long overdue in behavioural biology, 2005
+    ## 5021                                               flexible eaters 2005
+    ## 5022     would leave us without any observatory to fill this niche 2005
+    ## 5023  The problem is that devices are getting smaller and smaller, 2005
+    ## 5024 Things start getting going at around 12–15 metres per second, 2005
+    ## 5025                      It's like flying a plane on instruments, 2005
+    ##              type
+    ## 5020 news-feature
+    ## 5021 news-feature
+    ## 5022 news-feature
+    ## 5023 news-feature
+    ## 5024 news-feature
+    ## 5025 news-feature
 
 ``` r
 print("Total with Gender Prediction")
@@ -168,7 +161,7 @@ print("Total with Gender Prediction")
 print(dim(full_quote_df))
 ```
 
-    ## [1] 157996      8
+    ## [1] 96390     8
 
 ``` r
 print("Male Quote Ratio Nature:")
@@ -193,28 +186,11 @@ table(subset(full_quote_df, year == 2020 & type != "guardian")$est_gender)
     ##   1298   2870
 
 ``` r
-print("Male Quote Ratio Guardian:")
-```
+#print("Male Quote Ratio Guardian:")
+#table(subset(full_quote_df, year == 2005 & type == "guardian")$est_gender)
+#table(subset(full_quote_df, year == 2020 & type == "guardian")$est_gender)
 
-    ## [1] "Male Quote Ratio Guardian:"
 
-``` r
-table(subset(full_quote_df, year == 2005 & type == "guardian")$est_gender)
-```
-
-    ## 
-    ## FEMALE   MALE 
-    ##    634   3331
-
-``` r
-table(subset(full_quote_df, year == 2020 & type == "guardian")$est_gender)
-```
-
-    ## 
-    ## FEMALE   MALE 
-    ##    720   2273
-
-``` r
 print("Career-feature info:")
 ```
 
@@ -246,17 +222,17 @@ head(springer_author_df)
     ##            author                                doi year author_pos est_gender
     ## 1          (aegis      doi:10.1007/s10751-019-1553-3 2019       last       <NA>
     ## 2 [authorinst]the doi:10.1140/epjc/s10052-016-4346-8 2016       last       <NA>
-    ## 3            a-mf         doi:10.1038/sj.onc.1210387 2007      first       <NA>
-    ## 4          aaltje        doi:10.1186/1471-2318-12-19 2012       last     FEMALE
-    ## 5           aalya     doi:10.1186/1753-6561-6-S5-O16 2012      first     FEMALE
-    ## 6             aam          doi:10.1186/1479-0556-4-1 2006      first       MALE
+    ## 3              37            doi:10.1038/nature11858 2013       last       <NA>
+    ## 4            a-mf         doi:10.1038/sj.onc.1210387 2007      first       <NA>
+    ## 5              aa      doi:10.1186/2047-783X-15-2-59 2010      first       MALE
+    ## 6          aaltje        doi:10.1186/1471-2318-12-19 2012       last     FEMALE
     ##   gender
     ## 1   <NA>
     ## 2   <NA>
     ## 3   <NA>
-    ## 4 FEMALE
-    ## 5 FEMALE
-    ## 6   MALE
+    ## 4   <NA>
+    ## 5   MALE
+    ## 6 FEMALE
 
 ``` r
 # read in the nature author data
@@ -268,10 +244,10 @@ head(nature_author_df)
     ##       author                            doi year author_pos            file_id
     ## 1     aakash doi:10.1038/s41586-020-03052-3 2020      first s41586-020-03052-3
     ## 2 aanindeeta        doi:10.1038/nature17185 2016      first        nature17185
-    ## 3      aaron  doi:10.1038/s41586-020-3009-y 2020      first  s41586-020-3009-y
-    ## 4      aaron        doi:10.1038/nature07885 2009       last        nature07885
-    ## 5      aaron        doi:10.1038/nature03831 2005       last        nature03831
-    ## 6      aaron        doi:10.1038/nature04790 2006       last        nature04790
+    ## 3      aaron  doi:10.1038/s41586-019-1598-0 2019       last  s41586-019-1598-0
+    ## 4      aaron  doi:10.1038/s41586-020-2864-x 2020       last  s41586-020-2864-x
+    ## 5      aaron        doi:10.1038/nature23912 2017      first        nature23912
+    ## 6      aaron        doi:10.1038/nature20781 2016       last        nature20781
     ##   est_gender gender
     ## 1       MALE   MALE
     ## 2       <NA>   <NA>
@@ -297,7 +273,7 @@ print(table(nature_author_df$author_pos))
 
     ## 
     ## first  last 
-    ## 10454 10488
+    ## 10601 10572
 
 ### reading in the first and last author data
 
@@ -313,19 +289,19 @@ head(name_info_df)
 ```
 
     ##       year author_pos           author            file_id
-    ## 22672 2010      first Michael Heinrich            463436a
-    ## 22673 2012      first        Kai Ewert            489372b
-    ## 22674 2019      first        Grace Kim d41586-019-00245-3
-    ## 22675 2006      first  Nicole Dubilier        nature05208
-    ## 22676 2010      first Martin Moskovits            464357a
-    ## 22677 2011      first    Ivano Bertini            470469a
+    ## 22845 2010      first Michael Heinrich            463436a
+    ## 22846 2012      first        Kai Ewert            489372b
+    ## 22847 2019      first        Grace Kim d41586-019-00245-3
+    ## 22848 2006      first  Nicole Dubilier        nature05208
+    ## 22849 2010      first Martin Moskovits            464357a
+    ## 22850 2011      first    Ivano Bertini            470469a
     ##                                doi               corpus
-    ## 22672 doi:10.1007/0-306-46826-3_33 naturenews_citations
-    ## 22673      doi:10.1007/128_2010_70 naturenews_citations
-    ## 22674      doi:10.1007/164_2016_82 naturenews_citations
-    ## 22675 doi:10.1007/3-540-28221-1_12 naturenews_citations
-    ## 22676 doi:10.1007/3-540-44948-5_10 naturenews_citations
-    ## 22677  doi:10.1007/3-540-59105-2_1 naturenews_citations
+    ## 22845 doi:10.1007/0-306-46826-3_33 naturenews_citations
+    ## 22846      doi:10.1007/128_2010_70 naturenews_citations
+    ## 22847      doi:10.1007/164_2016_82 naturenews_citations
+    ## 22848 doi:10.1007/3-540-28221-1_12 naturenews_citations
+    ## 22849 doi:10.1007/3-540-44948-5_10 naturenews_citations
+    ## 22850  doi:10.1007/3-540-59105-2_1 naturenews_citations
 
 ## Process Data
 
@@ -390,7 +366,7 @@ print("Quote Stats")
 dim(quote_author_df)
 ```
 
-    ## [1] 6539    8
+    ## [1] 6545    8
 
 ``` r
 table(quote_author_df$author_pos)
@@ -398,7 +374,7 @@ table(quote_author_df$author_pos)
 
     ## 
     ## first  last 
-    ##  2864  3675
+    ##  2871  3674
 
 ### Get bootstrap estimates
 
@@ -414,11 +390,11 @@ if(RERUN_BOOTSTRAP){
     quote_prop_df$corpus = "quote"
     
     #### Guardian Quote data
-    guardian_quote_prop_df = compute_bootstrap_gender(subset(full_quote_df, type == "guardian"), 
-                                               year_col_id = "year", 
-                                               article_col_id = "quote",
-                                               conf_int=0.95)
-    guardian_quote_prop_df$corpus = "guardian"
+    #guardian_quote_prop_df = compute_bootstrap_gender(subset(full_quote_df, type == "guardian"), 
+    #                                           year_col_id = "year", 
+    #                                           article_col_id = "quote",
+    #                                           conf_int=0.95)
+    #guardian_quote_prop_df$corpus = "guardian"
     
     #### Quote data broken down by article type
     get_subboot <- function(type_id, type_names, in_df){
@@ -440,7 +416,7 @@ if(RERUN_BOOTSTRAP){
     
     #### Quote data broken down by article type career vs non-career
     career_df = NA
-    non_career = setdiff(unique(full_quote_df$type), c("career-feature", "guardian"))
+    non_career = setdiff(unique(full_quote_df$type), c("career-feature"))
     career_type = list("career-feature", non_career)
     career_name = c("career-feature", "other")
     for(curr_type_idx in 1:length(career_type)){
@@ -492,7 +468,7 @@ if(RERUN_BOOTSTRAP){
     save(quote_prop_df, type_df, career_df, 
          springer_first_prop_df, springer_last_prop_df, 
          nature_first_prop_df, nature_last_prop_df, 
-         first_cited_prop_df, guardian_quote_prop_df,
+         first_cited_prop_df, #guardian_quote_prop_df,
          file = all_bootstrap_file)
 }else{
     all_bootstrap_file = file.path(proj_dir,
@@ -513,7 +489,7 @@ tot_quotes_gg = ggplot(full_quote_df, aes(x=as.numeric(year), fill=type)) +
     theme_bw() +
     xlab("Year of Article") + ylab("# Quotes") +
     ggtitle("# of Quotes per News Article Type Over Time") + 
-    scale_fill_manual(values=ARTICLE_TYPE_COLOR) +
+    scale_fill_manual(values=ARTICLE_TYPE_COLOR[unique(full_quote_df$type)]) +
     theme(legend.position="bottom")
 
 ggsave(file.path(proj_dir, "/figure_notebooks/manuscript_figs/fig2_tmp/tot_quotes_gg.pdf"),
@@ -525,12 +501,13 @@ compare_df = rbind(springer_first_prop_df,
                    springer_last_prop_df,
                    nature_first_prop_df,
                    nature_last_prop_df,
-                   quote_prop_df[,colnames(springer_last_prop_df)],
-                   guardian_quote_prop_df[,colnames(springer_last_prop_df)])
+                   quote_prop_df[,colnames(springer_last_prop_df)])
+                   #guardian_quote_prop_df[,colnames(springer_last_prop_df)])
 compare_df$corpus = factor(compare_df$corpus, levels = QUOTE_ANALYSIS_ORDER)
 
+quote_sub = subset(compare_df, corpus %in% c("nature_last", "nature_first", "quote"))
 quotes_nature_gg = 
-    ggplot(subset(compare_df, corpus %in% c("nature_last", "nature_first", "quote", "guardian")), 
+    ggplot(quote_sub, 
       aes(x=as.numeric(year), y=mean,
                           ymin=bottom_CI, ymax=top_CI,
                           fill=corpus)) +
@@ -539,15 +516,15 @@ quotes_nature_gg =
     ggtitle("News Quotes vs First+Last Author Research Citations") + 
     ylim(c(0, 1)) +
     geom_hline(yintercept=0.5, color="red") +
-    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR) +
+    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR[unique(quote_sub$corpus)]) +
     theme(legend.position="bottom")
 
 ggsave(file.path(proj_dir, "/figure_notebooks/manuscript_figs/fig2_tmp/quotes_nature_gg.pdf"),
        quotes_nature_gg, width = 6, height = 5, units = "in", device = "pdf")
 
-
+quote_sub = subset(compare_df, corpus %in% c("springer_last", "springer_first", "quote"))
 quotes_springer_gg = 
-    ggplot(subset(compare_df, corpus %in% c("springer_last", "springer_first", "quote", "guardian")), 
+    ggplot(quote_sub, 
       aes(x=as.numeric(year), y=mean,
                           ymin=bottom_CI, ymax=top_CI,
                           fill=corpus)) +
@@ -556,7 +533,7 @@ quotes_springer_gg =
     ggtitle("News Quotes vs First+Last Author Springer Article Citations") + 
     ylim(c(0, 1)) +
     geom_hline(yintercept=0.5, color="red") +
-    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR) +
+    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR[unique(quote_sub$corpus)]) +
     theme(legend.position="bottom")
 
 ggsave(file.path(proj_dir, "/figure_notebooks/manuscript_figs/fig2_tmp/quotes_springer_gg.pdf"),
@@ -574,7 +551,7 @@ all_type_gg = ggplot(type_df, aes(x=as.numeric(year), y=mean,
     ggtitle("Male Proportion of Quotes Over Time") + 
     ylim(c(0, 1)) +
     geom_hline(yintercept=0.5, color="red") +
-    scale_fill_manual(values=ARTICLE_TYPE_COLOR) +
+    scale_fill_manual(values=ARTICLE_TYPE_COLOR[unique(type_df$corpus)]) +
     theme(legend.position="bottom")
 
 ggsave(file.path(proj_dir, "/figure_notebooks/manuscript_figs/fig2_tmp/all_type_gg.pdf"),
@@ -592,7 +569,7 @@ career_gg = ggplot(career_df, aes(x=as.numeric(year), y=mean,
     ylim(c(0, 1)) +
     ggtitle("Male Proportion of Quotes in Career-Feature vs Other Articles") + 
     geom_hline(yintercept=0.5, color="red") +
-    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR) +
+    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR[unique(career_df$corpus)]) +
     theme(legend.position="bottom")
 
 ggsave(file.path(proj_dir, "/figure_notebooks/manuscript_figs/fig2_tmp/career_gg.pdf"),
@@ -643,7 +620,7 @@ full_image <- image_append(image_scale(c(plot_overview, middle_image, bottom_ima
 print(full_image)
 ```
 
-    ## # A tibble: 1 x 7
+    ## # A tibble: 1 × 7
     ##   format width height colorspace matte filesize density
     ##   <chr>  <int>  <int> <chr>      <lgl>    <int> <chr>  
     ## 1 PNG     3000   3453 sRGB       TRUE         0 300x300
@@ -673,7 +650,7 @@ full_image <- image_append(image_scale(c(quotes_springer_gg, all_type_gg), 500),
 print(full_image)
 ```
 
-    ## # A tibble: 1 x 7
+    ## # A tibble: 1 × 7
     ##   format width height colorspace matte filesize density
     ##   <chr>  <int>  <int> <chr>      <lgl>    <int> <chr>  
     ## 1 PNG     1000    417 sRGB       TRUE         0 300x300

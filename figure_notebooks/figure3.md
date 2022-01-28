@@ -75,17 +75,17 @@ for(curr_dir in news_scraped_dir_files){
 news_df = news_df[-1,]
 
 # filter out career column and news-and-views
-news_df = subset(news_df, !type %in% c("career-column", "news-and-views"))
+news_df = subset(news_df, !type %in% c("career-column", "news-and-views", "guardian"))
 head(news_df)
 ```
 
-    ##   year     type                                               file_id
-    ## 2 2005 guardian                          missed_generize_io_names.tsv
-    ## 3 2005 guardian news.2005.apr.28.thisweekssciencequestions.psychology
-    ## 4 2005 guardian                 news.2005.dec.06.topstories3.genetics
-    ## 5 2005 guardian                       news.2005.dec.21.food.christmas
-    ## 6 2005 guardian        news.2005.feb.05.guardianobituaries.obituaries
-    ## 7 2005 guardian            news.2005.feb.10.thisweekssciencequestions
+    ##      year type        file_id
+    ## 1123 2005 news  041220-1.html
+    ## 1124 2005 news  050103-1.html
+    ## 1125 2005 news 050103-10.html
+    ## 1126 2005 news 050103-11.html
+    ## 1127 2005 news 050103-12.html
+    ## 1128 2005 news  050103-2.html
 
 ``` r
 # read in raw quotes data for filtering
@@ -139,28 +139,48 @@ cite_name_df = read_name_origin(name_pred_file, name_info_file)
 cite_name_df$name_origin[cite_name_df$name_origin == "Jewish"] = "Hebrew"
 
 
-
-# we will only use last authors in the citations
-cite_name_df = subset(cite_name_df, author_pos == "last")
+# get first authors in the citations
+cite_name_df_first = subset(cite_name_df, author_pos == "first")
 
 # format the corpus for consistent naming across figures
-cite_name_df$corpus[cite_name_df$corpus == "springer_articles"] = "springer_last"
-cite_name_df$corpus[cite_name_df$corpus == "nature_articles"] = "nature_last"
+cite_name_df_first$corpus[cite_name_df_first$corpus == "springer_articles"] = "springer_first"
+cite_name_df_first$corpus[cite_name_df_first$corpus == "nature_articles"] = "nature_first"
+cite_name_df_first$corpus[cite_name_df_first$corpus == "naturenews_citations"] = "news_first"
+
+
+# get last authors in the citations
+cite_name_df_last = subset(cite_name_df, author_pos == "last")
+
+# format the corpus for consistent naming across figures
+cite_name_df_last$corpus[cite_name_df_last$corpus == "springer_articles"] = "springer_last"
+cite_name_df_last$corpus[cite_name_df_last$corpus == "nature_articles"] = "nature_last"
+cite_name_df_last$corpus[cite_name_df_last$corpus == "naturenews_citations"] = "news_last"
+
+# join together
+cite_name_df = rbind(cite_name_df_first, cite_name_df_last)
 
 # seperate out citations from columns by journalists vs scientists
-journalist_idx = which(cite_name_df$corpus == "naturenews_citations" &
+journalist_idx = which(cite_name_df$corpus == "news_first" &
                          cite_name_df$file_id %in% news_df$file_id)
-scientist_idx = which(cite_name_df$corpus == "naturenews_citations" &
+scientist_idx = which(cite_name_df$corpus == "news_first" &
                          !cite_name_df$file_id %in% news_df$file_id)
-cite_name_df$corpus[journalist_idx] = "citation_journalist"
-cite_name_df$corpus[scientist_idx] = "citation_scientist"
+cite_name_df$corpus[journalist_idx] = "citation_journalist_first"
+cite_name_df$corpus[scientist_idx] = "citation_scientist_first"
+
+journalist_idx = which(cite_name_df$corpus == "news_last" &
+                         cite_name_df$file_id %in% news_df$file_id)
+scientist_idx = which(cite_name_df$corpus == "news_last" &
+                         !cite_name_df$file_id %in% news_df$file_id)
+cite_name_df$corpus[journalist_idx] = "citation_journalist_last"
+cite_name_df$corpus[scientist_idx] = "citation_scientist_last"
+
 
 # now we want to join these two datasets together
 # we assume a quote is comparable to a publication
 # so we will have a quote set as a doi
 quote_name_df$doi = quote_name_df$quote
 quote_name_df$corpus = "quote"
-quote_name_df$corpus[which(quote_name_df$type == "guardian")] = "guardian_quote"
+#quote_name_df$corpus[which(quote_name_df$type == "guardian")] = "guardian_quote"
 
 # we assume a name mentioned is comparable to a publication
 # so we will have a name + file_id as a doi
@@ -168,11 +188,11 @@ mentioned_name_df$doi = paste(mentioned_name_df$author,
                               mentioned_name_df$file_id, 
                               sep="_")
 mentioned_name_df$corpus = "mention"
-mentioned_name_df$corpus[which(mentioned_name_df$type == "guardian")] = "guardian_mention"
+#mentioned_name_df$corpus[which(mentioned_name_df$type == "guardian")] = "guardian_mention"
 
 # filter the article types we don't want to use
-quote_name_df = subset(quote_name_df, !type %in% c("career-column", "news-and-views"))
-mentioned_name_df = subset(mentioned_name_df, !type %in% c("career-column", "news-and-views"))
+quote_name_df = subset(quote_name_df, !type %in% c("career-column", "news-and-views", "guardian"))
+mentioned_name_df = subset(mentioned_name_df, !type %in% c("career-column", "news-and-views", "guardian"))
 
 
 col_ids = c("author", "year", "name_origin", "corpus", "doi")
@@ -182,20 +202,20 @@ name_df = rbind(cite_name_df[,col_ids],
 head(name_df)
 ```
 
-    ##               author year   name_origin              corpus
-    ## 7      Aaltje Jansen 2012      European       springer_last
-    ## 16   Aarne Oikarinen 2010        Nordic       springer_last
-    ## 18       Aaron Bauer 2014      European       springer_last
-    ## 23     Aaron Clauset 2020      European citation_journalist
-    ## 25 Aaron Cohen-Gadol 2011 CelticEnglish       springer_last
-    ## 30       Aaron Evans 2006 CelticEnglish  citation_scientist
+    ##                author year  name_origin         corpus
+    ## 5         A-Mf Jacobs 2007     European springer_first
+    ## 6            AA Hanke 2010    EastAsian springer_first
+    ## 7         Aakash Basu 2020   SouthAsian   nature_first
+    ## 9          Aalya Amin 2012 ArabTurkPers springer_first
+    ## 10 AAM Coelho-Castelo 2006     European springer_first
+    ## 11      Aamir Alamgir 2019 ArabTurkPers springer_first
     ##                               doi
-    ## 7     doi:10.1186/1471-2318-12-19
-    ## 16             doi:10.1186/cc8938
-    ## 18    doi:10.1186/1471-213X-14-29
-    ## 23 doi:10.1038/s41467-019-08746-5
-    ## 25  doi:10.1007/s00381-011-1423-z
-    ## 30           doi:10.1038/35078008
+    ## 5      doi:10.1038/sj.onc.1210387
+    ## 6   doi:10.1186/2047-783X-15-2-59
+    ## 7  doi:10.1038/s41586-020-03052-3
+    ## 9  doi:10.1186/1753-6561-6-S5-O16
+    ## 10      doi:10.1186/1479-0556-4-1
+    ## 11  doi:10.1007/s13201-019-1049-y
 
 ``` r
 name_df = unique(name_df)
@@ -206,17 +226,29 @@ name_df = unique(name_df)
 ### summarize the number of articles/quotes/citations considered in each corpus
 
 ``` r
-citation_j_total = unique(subset(name_df, corpus == "citation_journalist", select=c(doi, year)) )
-tot_prop_citation_j = citation_j_total %>% 
+citation_j_total1 = unique(subset(name_df, corpus == "citation_journalist_first", select=c(doi, year)) )
+tot_prop_citation_j1 = citation_j_total1 %>% 
                 group_by(year) %>% 
                 summarise(n()) 
-tot_prop_citation_j$corpus = "citation_journalist"
+tot_prop_citation_j1$corpus = "citation_journalist_first"
 
-citation_s_total = unique(subset(name_df, corpus == "citation_scientist", select=c(doi, year)) )
-tot_prop_citation_s = citation_s_total %>% 
+citation_s_total1 = unique(subset(name_df, corpus == "citation_scientist_first", select=c(doi, year)) )
+tot_prop_citation_s1 = citation_s_total1 %>% 
                 group_by(year) %>% 
                 summarise(n()) 
-tot_prop_citation_s$corpus = "citation_scientist"
+tot_prop_citation_s1$corpus = "citation_scientist_first"
+
+citation_j_total2 = unique(subset(name_df, corpus == "citation_journalist_last", select=c(doi, year)) )
+tot_prop_citation_j2 = citation_j_total2 %>% 
+                group_by(year) %>% 
+                summarise(n()) 
+tot_prop_citation_j2$corpus = "citation_journalist_last"
+
+citation_s_total2 = unique(subset(name_df, corpus == "citation_scientist_last", select=c(doi, year)) )
+tot_prop_citation_s2 = citation_s_total2 %>% 
+                group_by(year) %>% 
+                summarise(n()) 
+tot_prop_citation_s2$corpus = "citation_scientist_last"
 
 quote_total = unique(subset(name_df, corpus == "quote", select=c(doi, year)) )
 tot_prop_quote = quote_total %>% 
@@ -224,23 +256,36 @@ tot_prop_quote = quote_total %>%
                 summarise(n()) 
 tot_prop_quote$corpus = "quote"
 
-quote_total = unique(subset(name_df, corpus == "guardian_quote", select=c(doi, year)) )
-tot_prop_g_quote = quote_total %>% 
-                group_by(year) %>% 
-                summarise(n()) 
-tot_prop_g_quote$corpus = "guardian_quote"
+#quote_total = unique(subset(name_df, corpus == "guardian_quote", select=c(doi, year)) )
+#tot_prop_g_quote = quote_total %>% 
+#                group_by(year) %>% 
+#                summarise(n()) 
+#tot_prop_g_quote$corpus = "guardian_quote"
 
 springer_total = unique(subset(name_df, corpus == "springer_last", select=c(doi, year)) )
-tot_prop_springer = springer_total %>% 
+tot_prop_springer_last = springer_total %>% 
                 group_by(year) %>% 
                 summarise(n()) 
-tot_prop_springer$corpus = "springer_last"
+tot_prop_springer_last$corpus = "springer_last"
 
 nature_total = unique(subset(name_df, corpus == "nature_last", select=c(doi, year)) )
-tot_prop_nature = nature_total %>% 
+tot_prop_nature_last = nature_total %>% 
                 group_by(year) %>% 
                 summarise(n()) 
-tot_prop_nature$corpus = "nature_last"
+tot_prop_nature_last$corpus = "nature_last"
+
+
+springer_total = unique(subset(name_df, corpus == "springer_first", select=c(doi, year)) )
+tot_prop_springer_first = springer_total %>% 
+                group_by(year) %>% 
+                summarise(n()) 
+tot_prop_springer_first$corpus = "springer_first"
+
+nature_total = unique(subset(name_df, corpus == "nature_first", select=c(doi, year)) )
+tot_prop_nature_first = nature_total %>% 
+                group_by(year) %>% 
+                summarise(n()) 
+tot_prop_nature_first$corpus = "nature_first"
 
 
 mention_total = unique(subset(name_df, corpus == "mention", select=c(doi, year)) )
@@ -249,20 +294,22 @@ tot_prop_mention = mention_total %>%
                 summarise(n()) 
 tot_prop_mention$corpus = "mention"
 
-mention_total = unique(subset(name_df, corpus == "guardian_mention", select=c(doi, year)) )
-tot_prop_g_mention = mention_total %>% 
-                group_by(year) %>% 
-                summarise(n()) 
-tot_prop_g_mention$corpus = "guardian_mention"
+#mention_total = unique(subset(name_df, corpus == "guardian_mention", select=c(doi, year)) )
+#tot_prop_g_mention = mention_total %>% 
+#                group_by(year) %>% 
+#                summarise(n()) 
+#tot_prop_g_mention$corpus = "guardian_mention"
 
-num_art_tot = Reduce(rbind, list(tot_prop_citation_j, 
-                                 tot_prop_citation_s,
+num_art_tot = Reduce(rbind, list(tot_prop_citation_j1, 
+                                 tot_prop_citation_s1,
+                                 tot_prop_citation_j2, 
+                                 tot_prop_citation_s2,
                                  tot_prop_quote,
-                                 tot_prop_g_quote,
-                                 tot_prop_springer, 
-                                 tot_prop_nature,
-                                 tot_prop_mention,
-                                 tot_prop_g_mention))
+                                 tot_prop_springer_first, 
+                                 tot_prop_nature_first,
+                                 tot_prop_springer_last, 
+                                 tot_prop_nature_last,
+                                 tot_prop_mention))
 num_art_tot = data.frame(num_art_tot)
 colnames(num_art_tot)[2] = "tot_articles"
 
@@ -277,17 +324,19 @@ num_art_tot %>%
     summarise(n()) 
 ```
 
-    ## # A tibble: 8 x 2
-    ##   corpus              `n()`
-    ##   <chr>               <int>
-    ## 1 citation_journalist    16
-    ## 2 citation_scientist     16
-    ## 3 guardian_mention       16
-    ## 4 guardian_quote         16
-    ## 5 mention                16
-    ## 6 nature_last            16
-    ## 7 quote                  16
-    ## 8 springer_last          16
+    ## # A tibble: 10 × 2
+    ##    corpus                    `n()`
+    ##    <chr>                     <int>
+    ##  1 citation_journalist_first    16
+    ##  2 citation_journalist_last     16
+    ##  3 citation_scientist_first     16
+    ##  4 citation_scientist_last      16
+    ##  5 mention                      16
+    ##  6 nature_first                 16
+    ##  7 nature_last                  16
+    ##  8 quote                        16
+    ##  9 springer_first               16
+    ## 10 springer_last                16
 
 ``` r
 print("median of observations")
@@ -301,17 +350,19 @@ num_art_tot %>%
     summarise(median(tot_articles)) 
 ```
 
-    ## # A tibble: 8 x 2
-    ##   corpus              `median(tot_articles)`
-    ##   <chr>                                <dbl>
-    ## 1 citation_journalist                   267 
-    ## 2 citation_scientist                    660.
-    ## 3 guardian_mention                     3271 
-    ## 4 guardian_quote                       2898 
-    ## 5 mention                              4726.
-    ## 6 nature_last                           679 
-    ## 7 quote                                5662 
-    ## 8 springer_last                        1684.
+    ## # A tibble: 10 × 2
+    ##    corpus                    `median(tot_articles)`
+    ##    <chr>                                      <dbl>
+    ##  1 citation_journalist_first                   269 
+    ##  2 citation_journalist_last                    268 
+    ##  3 citation_scientist_first                    676.
+    ##  4 citation_scientist_last                     664 
+    ##  5 mention                                    4752 
+    ##  6 nature_first                                694.
+    ##  7 nature_last                                 684.
+    ##  8 quote                                      5696.
+    ##  9 springer_first                             1727 
+    ## 10 springer_last                              1710
 
 ``` r
 print("min of observations")
@@ -325,17 +376,19 @@ num_art_tot %>%
     summarise(min(tot_articles)) 
 ```
 
-    ## # A tibble: 8 x 2
-    ##   corpus              `min(tot_articles)`
-    ##   <chr>                             <int>
-    ## 1 citation_journalist                 139
-    ## 2 citation_scientist                  503
-    ## 3 guardian_mention                   2192
-    ## 4 guardian_quote                     2240
-    ## 5 mention                            3177
-    ## 6 nature_last                         565
-    ## 7 quote                              3751
-    ## 8 springer_last                      1298
+    ## # A tibble: 10 × 2
+    ##    corpus                    `min(tot_articles)`
+    ##    <chr>                                   <int>
+    ##  1 citation_journalist_first                 144
+    ##  2 citation_journalist_last                  142
+    ##  3 citation_scientist_first                  518
+    ##  4 citation_scientist_last                   512
+    ##  5 mention                                  3225
+    ##  6 nature_first                              573
+    ##  7 nature_last                               568
+    ##  8 quote                                    3788
+    ##  9 springer_first                           1341
+    ## 10 springer_last                            1332
 
 ### Get bootstrap estimates
 
@@ -363,27 +416,46 @@ get_subboot <- function(origin_id, curr_corpus, in_df, bootstrap_col_id="doi"){
 if(RERUN_BOOTSTRAP){
     
     # get the bootstrapped CI for each source data type
-    citation_j_origin_df = NA
+    citation_j_origin_df1 = NA
     for(curr_origin in unique(name_df$name_origin)){
         print(curr_origin)
         res = get_subboot(curr_origin, 
-                          curr_corpus="citation_journalist",
+                          curr_corpus="citation_journalist_first",
                           name_df)
-        citation_j_origin_df = rbind(citation_j_origin_df, res)
+        citation_j_origin_df1 = rbind(citation_j_origin_df1, res)
     }
-    citation_j_origin_df = citation_j_origin_df[-1,]
+    citation_j_origin_df1 = citation_j_origin_df1[-1,]
     
-    citation_s_origin_df = NA
+    citation_s_origin_df1 = NA
     for(curr_origin in unique(name_df$name_origin)){
         print(curr_origin)
         res = get_subboot(curr_origin, 
-                          curr_corpus="citation_scientist",
+                          curr_corpus="citation_scientist_first",
                           name_df)
-        citation_s_origin_df = rbind(citation_s_origin_df, res)
+        citation_s_origin_df1 = rbind(citation_s_origin_df1, res)
     }
-    citation_s_origin_df = citation_s_origin_df[-1,]
+    citation_s_origin_df1 = citation_s_origin_df1[-1,]
     
-
+    citation_j_origin_df2 = NA
+    for(curr_origin in unique(name_df$name_origin)){
+        print(curr_origin)
+        res = get_subboot(curr_origin, 
+                          curr_corpus="citation_journalist_last",
+                          name_df)
+        citation_j_origin_df2 = rbind(citation_j_origin_df2, res)
+    }
+    citation_j_origin_df2 = citation_j_origin_df2[-1,]
+    
+    citation_s_origin_df2 = NA
+    for(curr_origin in unique(name_df$name_origin)){
+        print(curr_origin)
+        res = get_subboot(curr_origin, 
+                          curr_corpus="citation_scientist_last",
+                          name_df)
+        citation_s_origin_df2 = rbind(citation_s_origin_df2, res)
+    }
+    citation_s_origin_df2 = citation_s_origin_df2[-1,]
+    
     
     
     quote_origin_df = NA
@@ -396,35 +468,56 @@ if(RERUN_BOOTSTRAP){
     }
     quote_origin_df = quote_origin_df[-1,]
     
-    g_quote_origin_df = NA
-    for(curr_origin in unique(name_df$name_origin)){
-        print(curr_origin)
-        res = get_subboot(curr_origin, 
-                          curr_corpus="guardian_quote",
-                          name_df)
-        g_quote_origin_df = rbind(g_quote_origin_df, res)
-    }
-    g_quote_origin_df = g_quote_origin_df[-1,]
+    #g_quote_origin_df = NA
+    #for(curr_origin in unique(name_df$name_origin)){
+    #    print(curr_origin)
+    #    res = get_subboot(curr_origin, 
+    #                      curr_corpus="guardian_quote",
+    #                      name_df)
+    #    g_quote_origin_df = rbind(g_quote_origin_df, res)
+    #}
+    #g_quote_origin_df = g_quote_origin_df[-1,]
 
-    springer_origin_df = NA
+    springer_origin_df_last = NA
     for(curr_origin in unique(name_df$name_origin)){
         print(curr_origin)
         res = get_subboot(curr_origin, 
                           curr_corpus="springer_last",
                           name_df)
-        springer_origin_df = rbind(springer_origin_df, res)
+        springer_origin_df_last = rbind(springer_origin_df_last, res)
     }
-    springer_origin_df = springer_origin_df[-1,]
+    springer_origin_df_last = springer_origin_df_last[-1,]
     
-    nature_origin_df = NA
+    nature_origin_df_last = NA
     for(curr_origin in unique(name_df$name_origin)){
         print(curr_origin)
         res = get_subboot(curr_origin, 
                           curr_corpus="nature_last",
                           name_df)
-        nature_origin_df = rbind(nature_origin_df, res)
+        nature_origin_df_last = rbind(nature_origin_df_last, res)
     }
-    nature_origin_df = nature_origin_df[-1,]
+    nature_origin_df_last = nature_origin_df_last[-1,]
+    
+    springer_origin_df_first = NA
+    for(curr_origin in unique(name_df$name_origin)){
+        print(curr_origin)
+        res = get_subboot(curr_origin, 
+                          curr_corpus="springer_first",
+                          name_df)
+        springer_origin_df_first = rbind(springer_origin_df_first, res)
+    }
+    springer_origin_df_first = springer_origin_df_first[-1,]
+    
+    nature_origin_df_first = NA
+    for(curr_origin in unique(name_df$name_origin)){
+        print(curr_origin)
+        res = get_subboot(curr_origin, 
+                          curr_corpus="nature_first",
+                          name_df)
+        nature_origin_df_first = rbind(nature_origin_df_first, res)
+    }
+    nature_origin_df_first = nature_origin_df_first[-1,]
+    
     
     mention_origin_df = NA
     for(curr_origin in unique(name_df$name_origin)){
@@ -436,34 +529,40 @@ if(RERUN_BOOTSTRAP){
     }
     mention_origin_df = mention_origin_df[-1,]
     
-    g_mention_origin_df = NA
-    for(curr_origin in unique(name_df$name_origin)){
-        print(curr_origin)
-        res = get_subboot(curr_origin, 
-                          curr_corpus="guardian_mention",
-                          name_df)
-        g_mention_origin_df = rbind(g_mention_origin_df, res)
-    }
-    g_mention_origin_df = g_mention_origin_df[-1,]
+    #g_mention_origin_df = NA
+    #for(curr_origin in unique(name_df$name_origin)){
+    #    print(curr_origin)
+    #    res = get_subboot(curr_origin, 
+    #                      curr_corpus="guardian_mention",
+    #                      name_df)
+    #    g_mention_origin_df = rbind(g_mention_origin_df, res)
+    #}
+    #g_mention_origin_df = g_mention_origin_df[-1,]
 
     # re-add corpus column for easy reference later
-    citation_j_origin_df$corpus = "citation_journalist"
-    citation_s_origin_df$corpus = "citation_scientist"
+    citation_j_origin_df1$corpus = "citation_journalist_first"
+    citation_s_origin_df1$corpus = "citation_scientist_first"
+    citation_j_origin_df2$corpus = "citation_journalist_last"
+    citation_s_origin_df2$corpus = "citation_scientist_last"
     quote_origin_df$corpus = "quote"
-    g_quote_origin_df$corpus = "guardian_quote"
-    springer_origin_df$corpus = "springer_last"
-    nature_origin_df$corpus = "nature_last"
+    #g_quote_origin_df$corpus = "guardian_quote"
+    springer_origin_df_first$corpus = "springer_first"
+    nature_origin_df_first$corpus = "nature_first"
+    springer_origin_df_last$corpus = "springer_last"
+    nature_origin_df_last$corpus = "nature_last"
     mention_origin_df$corpus = "mention"
-    g_mention_origin_df$corpus = "guardian_mention"
+    #g_mention_origin_df$corpus = "guardian_mention"
 
     all_bootstrap_df = Reduce(rbind, list(quote_origin_df,
-                                          g_quote_origin_df,
-                                       citation_j_origin_df,
-                                       citation_s_origin_df,
-                                       nature_origin_df,
-                                       springer_origin_df,
-                                       mention_origin_df,
-                                       g_mention_origin_df))
+                                       citation_j_origin_df1,
+                                       citation_s_origin_df1,
+                                       citation_j_origin_df2,
+                                       citation_s_origin_df2,
+                                       nature_origin_df_first,
+                                       springer_origin_df_first,
+                                       nature_origin_df_last,
+                                       springer_origin_df_last,
+                                       mention_origin_df))
     all_bootstrap_df$corpus = factor(all_bootstrap_df$corpus, levels = QUOTE_ANALYSIS_ORDER)
     
     outfile = file.path(proj_dir,"/figure_notebooks/manuscript_figs/fig3_tmp/all_bootstrap_df.tsv")
@@ -474,59 +573,116 @@ if(RERUN_BOOTSTRAP){
                                       "/figure_notebooks/manuscript_figs/fig3_tmp/all_bootstrap_df.tsv")
     all_bootstrap_df = data.frame(fread(all_bootstrap_file))
     
-    citation_j_origin_df = subset(all_bootstrap_df, corpus == "citation_journalist")
-    citation_s_origin_df = subset(all_bootstrap_df, corpus == "citation_scientist")
+    citation_j_origin_df1 = subset(all_bootstrap_df, corpus == "citation_journalist_first")
+    citation_s_origin_df1 = subset(all_bootstrap_df, corpus == "citation_scientist_first")
+    citation_j_origin_df2 = subset(all_bootstrap_df, corpus == "citation_journalist_last")
+    citation_s_origin_df2 = subset(all_bootstrap_df, corpus == "citation_scientist_last")
+
     quote_origin_df = subset(all_bootstrap_df, corpus == "quote")
-    g_quote_origin_df = subset(all_bootstrap_df, corpus == "guardian_quote")
-    springer_origin_df = subset(all_bootstrap_df, corpus == "springer_last")
-    nature_origin_df = subset(all_bootstrap_df, corpus == "nature_last")
+    #g_quote_origin_df = subset(all_bootstrap_df, corpus == "guardian_quote")
+    
+    springer_origin_df_first = subset(all_bootstrap_df, corpus == "springer_first")
+    nature_origin_df_first = subset(all_bootstrap_df, corpus == "nature_first")
+    springer_origin_df_last = subset(all_bootstrap_df, corpus == "springer_last")
+    nature_origin_df_last = subset(all_bootstrap_df, corpus == "nature_last")
+    
     mention_origin_df = subset(all_bootstrap_df, corpus == "mention")
-    g_mention_origin_df = subset(all_bootstrap_df, corpus == "guardian_mention")
+    #g_mention_origin_df = subset(all_bootstrap_df, corpus == "guardian_mention")
     
 }
 
-print("range of European and CelticEnglish names")
+print("citation range of European and CelticEnglish names First author")
 ```
 
-    ## [1] "range of European and CelticEnglish names"
+    ## [1] "citation range of European and CelticEnglish names First author"
 
 ``` r
-summary(subset(citation_j_origin_df, 
+summary(subset(citation_j_origin_df1, 
                name_origin %in% c("European", "CelticEnglish"))$mean)
 ```
 
     ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-    ##  0.2480  0.3185  0.3353  0.3382  0.3617  0.4134
+    ##  0.1919  0.2806  0.3018  0.2986  0.3279  0.3968
 
 ``` r
-summary(subset(citation_s_origin_df, 
+summary(subset(citation_s_origin_df1, 
                name_origin %in% c("European", "CelticEnglish"))$mean)
 ```
 
     ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-    ##  0.2654  0.3148  0.3676  0.3550  0.3993  0.4301
+    ##  0.2180  0.2583  0.2915  0.2966  0.3279  0.3709
 
 ``` r
-print("range of East names")
+print("citation range of European and CelticEnglish names Last author")
 ```
 
-    ## [1] "range of East names"
+    ## [1] "citation range of European and CelticEnglish names Last author"
 
 ``` r
-summary(subset(citation_j_origin_df, 
+summary(subset(citation_j_origin_df2, 
+               name_origin %in% c("European", "CelticEnglish"))$mean)
+```
+
+    ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+    ##  0.2480  0.3157  0.3333  0.3362  0.3595  0.4202
+
+``` r
+summary(subset(citation_s_origin_df2, 
+               name_origin %in% c("European", "CelticEnglish"))$mean)
+```
+
+    ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+    ##  0.2633  0.3151  0.3665  0.3532  0.3977  0.4277
+
+``` r
+print("citation range of East names first")
+```
+
+    ## [1] "citation range of East names first"
+
+``` r
+summary(subset(citation_j_origin_df1, 
                name_origin == "EastAsian")$mean)
 ```
 
     ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-    ## 0.05732 0.11168 0.14414 0.14659 0.17382 0.24845
+    ##  0.1111  0.1647  0.2070  0.2000  0.2324  0.2881
 
 ``` r
-summary(subset(citation_s_origin_df, 
+summary(subset(citation_s_origin_df1, 
                name_origin == "EastAsian")$mean)
 ```
 
     ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-    ## 0.09758 0.11725 0.13309 0.13492 0.15222 0.17043
+    ##  0.1897  0.2082  0.2250  0.2281  0.2452  0.2727
+
+``` r
+print("citation range of East names last")
+```
+
+    ## [1] "citation range of East names last"
+
+``` r
+summary(subset(citation_j_origin_df2, 
+               name_origin == "EastAsian")$mean)
+```
+
+    ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+    ## 0.06338 0.10955 0.14801 0.15047 0.17762 0.24845
+
+``` r
+summary(subset(citation_s_origin_df2, 
+               name_origin == "EastAsian")$mean)
+```
+
+    ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+    ##  0.1072  0.1209  0.1359  0.1384  0.1575  0.1720
+
+``` r
+print("quote range of East names first")
+```
+
+    ## [1] "quote range of East names first"
 
 ``` r
 summary(subset(quote_origin_df, 
@@ -534,37 +690,54 @@ summary(subset(quote_origin_df,
 ```
 
     ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-    ## 0.04928 0.05464 0.06448 0.06268 0.06819 0.07446
+    ## 0.05029 0.05850 0.06650 0.06533 0.07188 0.07680
 
 ``` r
-summary(subset(g_quote_origin_df, 
-               name_origin == "EastAsian")$mean)
+#summary(subset(g_quote_origin_df, 
+#               name_origin == "EastAsian")$mean)
+
+print("citation range of non European or non CelticEnglish or non EastAsian names first")
 ```
 
-    ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-    ## 0.01562 0.02505 0.03150 0.03134 0.03586 0.04867
+    ## [1] "citation range of non European or non CelticEnglish or non EastAsian names first"
 
 ``` r
-print("range of non European or non CelticEnglish or non EastAsian names")
-```
-
-    ## [1] "range of non European or non CelticEnglish or non EastAsian names"
-
-``` r
-summary(subset(citation_j_origin_df, 
+summary(subset(citation_j_origin_df1, 
                !name_origin %in% c("European", "CelticEnglish", "EastAsian"))$mean)
 ```
 
     ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-    ## 0.00000 0.01118 0.02108 0.02530 0.03722 0.08139
+    ## 0.00000 0.01471 0.02796 0.02898 0.04342 0.08078
 
 ``` r
-summary(subset(citation_s_origin_df, 
+summary(subset(citation_s_origin_df1, 
                !name_origin %in% c("European", "CelticEnglish", "EastAsian"))$mean)
 ```
 
     ##     Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
-    ## 0.003277 0.011912 0.021403 0.022150 0.031179 0.050843
+    ## 0.001947 0.013010 0.024593 0.025521 0.036302 0.058886
+
+``` r
+print("citation range of non European or non CelticEnglish or non EastAsian names last")
+```
+
+    ## [1] "citation range of non European or non CelticEnglish or non EastAsian names last"
+
+``` r
+summary(subset(citation_j_origin_df2, 
+               !name_origin %in% c("European", "CelticEnglish", "EastAsian"))$mean)
+```
+
+    ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+    ## 0.00000 0.01121 0.02165 0.02533 0.03661 0.07945
+
+``` r
+summary(subset(citation_s_origin_df2, 
+               !name_origin %in% c("European", "CelticEnglish", "EastAsian"))$mean)
+```
+
+    ##     Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
+    ## 0.003198 0.011646 0.021381 0.022155 0.030934 0.051644
 
 ## Make the Figures
 
@@ -572,13 +745,13 @@ summary(subset(citation_s_origin_df,
 
 ``` r
 #### Overview plot of the number of considered "articles" by type
-num_art_tot$corpus = factor(num_art_tot$corpus, levels = QUOTE_ANALYSIS_ORDER)
+num_art_tot$corpus = factor(num_art_tot$corpus, levels = intersect(QUOTE_ANALYSIS_ORDER, unique(num_art_tot$corpus)))
 tot_art_gg = ggplot(num_art_tot, aes(x=as.numeric(year), y=tot_articles,
-                              fill=corpus, color=corpus)) +
-    geom_point() + geom_line() + theme_bw() + 
+                              color=corpus)) +
+    geom_point() + geom_line(show.legend = F) + theme_bw() + 
     xlab("Year of Article") + ylab("Number of Total Articles/Quotes/Citations/Mentions") +
     ggtitle("Total number of Articles/Quotes/Citations/Mentions per Corpus") + 
-    scale_color_manual(values=QUOTE_ANALYSIS_COLOR) +
+    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR) +
     theme(legend.position="bottom")
 
 ggsave(file.path(proj_dir, "/figure_notebooks/manuscript_figs/fig3_tmp/tot_art_gg.pdf"),
@@ -589,7 +762,19 @@ ggsave(file.path(proj_dir, "/figure_notebooks/manuscript_figs/fig3_tmp/tot_art_g
 
 ``` r
 #### plot the overview of name origin by citation
-citation_j_overview_gg = ggplot(citation_j_origin_df, aes(x=as.numeric(year), y=mean,
+citation_j_overview_gg1 = ggplot(citation_j_origin_df1, aes(x=as.numeric(year), y=mean,
+                          ymin=bottom_CI, ymax=top_CI,
+                          fill=name_origin, label=label)) +
+    geom_point() + geom_ribbon(alpha=0.5) + geom_line(alpha=0.5) +
+    theme_bw() + geom_text_repel() + xlim(c(2005,2021))  +
+    xlab("Year of Article") + ylab("Proportion of Journalist Citations") +
+    ggtitle("Est. Proportion of the Cited First Author Name Origin (journalist written)") + 
+    scale_fill_brewer(palette="Set2") +
+    theme(legend.position = "none")
+ggsave(file.path(proj_dir, "/figure_notebooks/manuscript_figs/fig3_tmp/citation_j_overview_gg1.pdf"),
+       citation_j_overview_gg1, width = 7, height = 5, units = "in", device = "pdf")
+
+citation_j_overview_gg2 = ggplot(citation_j_origin_df2, aes(x=as.numeric(year), y=mean,
                           ymin=bottom_CI, ymax=top_CI,
                           fill=name_origin, label=label)) +
     geom_point() + geom_ribbon(alpha=0.5) + geom_line(alpha=0.5) +
@@ -599,10 +784,23 @@ citation_j_overview_gg = ggplot(citation_j_origin_df, aes(x=as.numeric(year), y=
     scale_fill_brewer(palette="Set2") +
     theme(legend.position = "none")
 
-ggsave(file.path(proj_dir, "/figure_notebooks/manuscript_figs/fig3_tmp/citation_j_overview_gg.pdf"),
-       citation_j_overview_gg, width = 7, height = 5, units = "in", device = "pdf")
+ggsave(file.path(proj_dir, "/figure_notebooks/manuscript_figs/fig3_tmp/citation_j_overview_gg2.pdf"),
+       citation_j_overview_gg2, width = 7, height = 5, units = "in", device = "pdf")
 
-citation_s_overview_gg = ggplot(citation_s_origin_df, aes(x=as.numeric(year), y=mean,
+citation_s_overview_gg1 = ggplot(citation_s_origin_df1, aes(x=as.numeric(year), y=mean,
+                          ymin=bottom_CI, ymax=top_CI,
+                          fill=name_origin, label=label)) +
+    geom_point() + geom_ribbon(alpha=0.5) + geom_line(alpha=0.5) +
+    theme_bw() + geom_text_repel() + xlim(c(2005,2021))  +
+    xlab("Year of Article") + ylab("Proportion of Scientist Citations") +
+    ggtitle("Est. Proportion of the Cited First Author Name Origin (scientist written)") + 
+    scale_fill_brewer(palette="Set2") +
+    theme(legend.position = "none")
+
+ggsave(file.path(proj_dir, "/figure_notebooks/manuscript_figs/fig3_tmp/citation_s_overview_gg1.pdf"),
+       citation_s_overview_gg1, width = 7, height = 5, units = "in", device = "pdf")
+
+citation_s_overview_gg2 = ggplot(citation_s_origin_df2, aes(x=as.numeric(year), y=mean,
                           ymin=bottom_CI, ymax=top_CI,
                           fill=name_origin, label=label)) +
     geom_point() + geom_ribbon(alpha=0.5) + geom_line(alpha=0.5) +
@@ -612,22 +810,27 @@ citation_s_overview_gg = ggplot(citation_s_origin_df, aes(x=as.numeric(year), y=
     scale_fill_brewer(palette="Set2") +
     theme(legend.position = "none")
 
-ggsave(file.path(proj_dir, "/figure_notebooks/manuscript_figs/fig3_tmp/citation_s_overview_gg.pdf"),
-       citation_s_overview_gg, width = 7, height = 5, units = "in", device = "pdf")
+ggsave(file.path(proj_dir, "/figure_notebooks/manuscript_figs/fig3_tmp/citation_s_overview_gg2.pdf"),
+       citation_s_overview_gg2, width = 7, height = 5, units = "in", device = "pdf")
+
 
 # plot by each name origin individually
-citation_nature_indiv_full_gg = ggplot(subset(all_bootstrap_df, 
-                                         corpus %in% c("nature_last", 
-                                                       "citation_journalist",
-                                                       "citation_scientist")), 
+cite_sub = subset(all_bootstrap_df, 
+                     corpus %in% c("nature_first", 
+                                   "nature_last", 
+                                   "citation_journalist_first",
+                                   "citation_scientist_first",
+                                   "citation_journalist_last",
+                                   "citation_scientist_last"))
+citation_nature_indiv_full_gg = ggplot(cite_sub, 
                                 aes(x=as.numeric(year), y=mean,
                                       ymin=bottom_CI, ymax=top_CI,
                                       fill=corpus)) +
     geom_point() + geom_ribbon(alpha=0.5) + geom_line(alpha=0.5) +
     theme_bw() + 
     xlab("Year of Article") + ylab("Percentage Citations or Articles") +
-    ggtitle(paste("Percentage Citations vs Last Authorship by Name Origin")) + 
-    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR) +
+    ggtitle(paste("Percentage Citations vs Authorship by Name Origin")) + 
+    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR[unique(cite_sub$corpus)]) +
     facet_wrap(~ name_origin, scales = "free_y") +
     theme(legend.position="bottom")
 
@@ -636,18 +839,22 @@ ggsave(file.path(proj_dir, "/figure_notebooks/manuscript_figs/fig3_tmp/citation_
 
 
 # plot by each name origin individually
-citation_springer_indiv_full_gg = ggplot(subset(all_bootstrap_df, 
-                                         corpus %in% c("springer_last", 
-                                                       "citation_journalist",
-                                                       "citation_scientist")), 
+
+cite_sub = subset(all_bootstrap_df, corpus %in% c("springer_last", 
+                                                   "springer_first", 
+                                                   "citation_journalist_first",
+                                                   "citation_scientist_first",
+                                                   "citation_journalist_last",
+                                                   "citation_scientist_last"))
+citation_springer_indiv_full_gg = ggplot(cite_sub, 
                                 aes(x=as.numeric(year), y=mean,
                                       ymin=bottom_CI, ymax=top_CI,
                                       fill=corpus)) +
     geom_point() + geom_ribbon(alpha=0.5) + geom_line(alpha=0.5) +
     theme_bw() + 
     xlab("Year of Article") + ylab("Percentage Citations or Articles") +
-    ggtitle(paste("Percentage Citations vs Last Authorship by Name Origin")) + 
-    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR) +
+    ggtitle(paste("Percentage Citations vs Authorship by Name Origin")) + 
+    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR[unique(cite_sub$corpus)]) +
     facet_wrap(~ name_origin, scales = "free_y") +
     theme(legend.position="bottom")
 
@@ -655,37 +862,38 @@ ggsave(file.path(proj_dir, "/figure_notebooks/manuscript_figs/fig3_tmp/citation_
        citation_springer_indiv_full_gg, width = 7, height = 5, units = "in", device = "pdf")
 
 
-
-citation_j_nature_indiv_sub_gg = ggplot(subset(all_bootstrap_df, 
-                                         corpus %in% c("nature_last", 
-                                                       "citation_journalist") &
-                                         name_origin %in% c("CelticEnglish", "EastAsian", "European")), 
+cite_sub = subset(all_bootstrap_df, corpus %in% c("nature_first", "nature_last", 
+                                                   "citation_journalist_first",
+                                                   "citation_journalist_last") &
+                                     name_origin %in% c("CelticEnglish", "EastAsian", "European"))
+citation_j_nature_indiv_sub_gg = ggplot(cite_sub, 
                                 aes(x=as.numeric(year), y=mean,
                                       ymin=bottom_CI, ymax=top_CI,
                                       fill=corpus)) +
     geom_point() + geom_ribbon(alpha=0.5) + geom_line(alpha=0.5) +
     theme_bw() + 
     xlab("Year of Article") + ylab("Percentage Citations or Articles") +
-    ggtitle(paste("Prop. Citations vs Last Authorship by Name Origin in Journalist Written Articles")) + 
-    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR) +
+    ggtitle(paste("Prop. Citations vs Authorship by Name Origin in Journalist Written Articles")) + 
+    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR[unique(cite_sub$corpus)]) +
     facet_wrap(~ name_origin, dir="h", scales="free") +
     theme(legend.position="bottom")
 
 ggsave(file.path(proj_dir, "/figure_notebooks/manuscript_figs/fig3_tmp/citation_j_nature_indiv_sub_gg.pdf"),
        citation_j_nature_indiv_sub_gg, width = 7, height = 5, units = "in", device = "pdf")
 
-citation_s_nature_indiv_sub_gg = ggplot(subset(all_bootstrap_df, 
-                                         corpus %in% c("nature_last", 
-                                                       "citation_scientist") &
-                                         name_origin %in% c("CelticEnglish", "EastAsian", "European")), 
+cite_sub = subset(all_bootstrap_df, corpus %in% c("nature_first", "nature_last", 
+                                                   "citation_scientist_first",
+                                                   "citation_scientist_last") &
+                                     name_origin %in% c("CelticEnglish", "EastAsian", "European"))
+citation_s_nature_indiv_sub_gg = ggplot(cite_sub, 
                                 aes(x=as.numeric(year), y=mean,
                                       ymin=bottom_CI, ymax=top_CI,
                                       fill=corpus)) +
     geom_point() + geom_ribbon(alpha=0.5) + geom_line(alpha=0.5) +
     theme_bw() + 
     xlab("Year of Article") + ylab("Percentage Citations or Articles") +
-    ggtitle(paste("Prop. Citations vs Last Authorship by Name Origin in Scientist Written Articles")) + 
-    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR) +
+    ggtitle(paste("Prop. Citations vs Authorship by Name Origin in Scientist Written Articles")) + 
+    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR[cite_sub$corpus]) +
     facet_wrap(~ name_origin, dir="h", scales="free") +
     theme(legend.position="bottom")
 
@@ -712,53 +920,53 @@ ggsave(file.path(proj_dir, "/figure_notebooks/manuscript_figs/fig3_tmp/quote_ove
 
 
 # plot by each name origin individually
-quote_nature_indiv_full_gg = ggplot(subset(all_bootstrap_df, 
-                                         corpus %in% 
-                                             c("nature_last", "quote", "guardian_quote")), 
+quote_sub = subset(all_bootstrap_df, corpus %in% 
+                                        c("nature_first", "nature_last", "quote"))
+quote_nature_indiv_full_gg = ggplot(quote_sub, 
                                 aes(x=as.numeric(year), y=mean,
                                       ymin=bottom_CI, ymax=top_CI,
                                       fill=corpus)) +
     geom_point() + geom_ribbon(alpha=0.5) + geom_line(alpha=0.5) +
     theme_bw() + 
     xlab("Year of Article") + ylab("Percentage Quotes or Articles") +
-    ggtitle(paste("Percentage Quotes vs Last Authorship by Name Origin")) + 
-    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR) +
+    ggtitle(paste("Percentage Quotes vs Authorship by Name Origin")) + 
+    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR[unique(quote_sub$corpus)]) +
     facet_wrap( ~ name_origin, scales = "free_y") +
     theme(legend.position="bottom")
 
 ggsave(file.path(proj_dir, "/figure_notebooks/manuscript_figs/fig3_tmp/quote_nature_indiv_full_gg.pdf"),
        quote_nature_indiv_full_gg, width = 7, height = 5, units = "in", device = "pdf")
 
-quote_springer_indiv_full_gg = ggplot(subset(all_bootstrap_df, 
-                                         corpus %in% 
-                                             c("springer_last", "quote", "guardian_quote")), 
+quote_sub = subset(all_bootstrap_df, corpus %in% 
+                                     c("springer_first", "springer_last", "quote"))
+quote_springer_indiv_full_gg = ggplot(quote_sub, 
                                 aes(x=as.numeric(year), y=mean,
                                       ymin=bottom_CI, ymax=top_CI,
                                       fill=corpus)) +
     geom_point() + geom_ribbon(alpha=0.5) + geom_line(alpha=0.5) +
     theme_bw() + 
     xlab("Year of Article") + ylab("Percentage Quotes or Articles") +
-    ggtitle(paste("Percentage Quotes vs Last Authorship by Name Origin")) + 
-    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR) +
+    ggtitle(paste("Percentage Quotes vs Authorship by Name Origin")) + 
+    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR[unique(quote_sub$corpus)]) +
     facet_wrap( ~ name_origin, scales = "free_y") +
     theme(legend.position="bottom")
 
 ggsave(file.path(proj_dir, "/figure_notebooks/manuscript_figs/fig3_tmp/quote_springer_indiv_full_gg.pdf"),
        quote_springer_indiv_full_gg, width = 7, height = 5, units = "in", device = "pdf")
 
-
-quote_nature_indiv_sub_gg = ggplot(subset(all_bootstrap_df, 
-                                         corpus %in% 
-                                             c("nature_last", "quote", "guardian_quote") &
-                                         name_origin %in% c("CelticEnglish", "EastAsian", "European")), 
+quote_sub = subset(all_bootstrap_df, 
+                     corpus %in% 
+                         c("nature_first", "nature_last", "quote") &
+                     name_origin %in% c("CelticEnglish", "EastAsian", "European"))
+quote_nature_indiv_sub_gg = ggplot(quote_sub, 
                                 aes(x=as.numeric(year), y=mean,
                                       ymin=bottom_CI, ymax=top_CI,
                                       fill=corpus)) +
     geom_point() + geom_ribbon(alpha=0.5) + geom_line(alpha=0.5) +
     theme_bw() + 
     xlab("Year of Article") + ylab("Percentage Quotes or Articles") +
-    ggtitle(paste("Percentage Quotes vs Last Authorship by Name Origin")) + 
-    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR) +
+    ggtitle(paste("Percentage Quotes vs Authorship by Name Origin")) + 
+    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR[unique(quote_sub$corpus)]) +
     facet_wrap(~ name_origin) +
     theme(legend.position="bottom")
 
@@ -785,34 +993,36 @@ ggsave(file.path(proj_dir, "/figure_notebooks/manuscript_figs/fig3_tmp/mention_o
 
 
 # plot by each name origin individually
-mention_nature_indiv_full_gg = ggplot(subset(all_bootstrap_df, 
-                                         corpus %in% 
-                                             c("nature_last", "mention", "guardian_mention")), 
+mention_sub = subset(all_bootstrap_df, 
+                         corpus %in% 
+                             c("nature_first", "nature_last", "mention"))
+mention_nature_indiv_full_gg = ggplot(mention_sub, 
                                 aes(x=as.numeric(year), y=mean,
                                       ymin=bottom_CI, ymax=top_CI,
                                       fill=corpus)) +
     geom_point() + geom_ribbon(alpha=0.5) + geom_line(alpha=0.5) +
     theme_bw() + 
     xlab("Year of Article") + ylab("Percentage Mentions or Articles") +
-    ggtitle(paste("Percentage Mentions vs Last Authorship by Name Origin")) + 
-    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR) +
+    ggtitle(paste("Percentage Mentions vs Authorship by Name Origin")) + 
+    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR[unique(mention_sub$corpus)]) +
     facet_wrap( ~ name_origin, scales = "free_y") +
     theme(legend.position="bottom")
 
 ggsave(file.path(proj_dir, "/figure_notebooks/manuscript_figs/fig3_tmp/mention_nature_indiv_full_gg.pdf"),
        mention_nature_indiv_full_gg, width = 7, height = 5, units = "in", device = "pdf")
 
-mention_springer_indiv_full_gg = ggplot(subset(all_bootstrap_df, 
-                                         corpus %in% 
-                                             c("springer_last", "mention", "guardian_mention")), 
+mention_sub = subset(all_bootstrap_df, 
+                         corpus %in% 
+                             c("springer_first", "springer_last", "mention"))
+mention_springer_indiv_full_gg = ggplot(mention_sub, 
                                 aes(x=as.numeric(year), y=mean,
                                       ymin=bottom_CI, ymax=top_CI,
                                       fill=corpus)) +
     geom_point() + geom_ribbon(alpha=0.5) + geom_line(alpha=0.5) +
     theme_bw() + 
     xlab("Year of Article") + ylab("Percentage Mentions or Articles") +
-    ggtitle(paste("Percentage Mentions vs Last Authorship by Name Origin")) + 
-    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR) +
+    ggtitle(paste("Percentage Mentions vs Authorship by Name Origin")) + 
+    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR[unique(mention_sub$corpus)]) +
     facet_wrap( ~ name_origin, scales = "free_y") +
     theme(legend.position="bottom")
 
@@ -820,23 +1030,80 @@ ggsave(file.path(proj_dir, "/figure_notebooks/manuscript_figs/fig3_tmp/mention_s
        mention_springer_indiv_full_gg, width = 7, height = 5, units = "in", device = "pdf")
 
 
-mention_nature_indiv_sub_gg = ggplot(subset(all_bootstrap_df, 
-                                         corpus %in%
-                                             c("nature_last", "mention", "guardian_mention") &
-                                         name_origin %in% c("CelticEnglish", "EastAsian", "European")), 
+mention_sub = subset(all_bootstrap_df, 
+                         corpus %in%
+                             c("nature_first", "nature_last", "mention") &
+                         name_origin %in% c("CelticEnglish", "EastAsian", "European"))
+mention_nature_indiv_sub_gg = ggplot(mention_sub, 
                                 aes(x=as.numeric(year), y=mean,
                                       ymin=bottom_CI, ymax=top_CI,
                                       fill=corpus)) +
     geom_point() + geom_ribbon(alpha=0.5) + geom_line(alpha=0.5) +
     theme_bw() + 
     xlab("Year of Article") + ylab("Percentage Mentions or Articles") +
-    ggtitle(paste("Percentage Mentions vs Last Authorship by Name Origin")) + 
-    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR) +
+    ggtitle(paste("Percentage Mentions vs Authorship by Name Origin")) + 
+    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR[unique(mention_sub$corpus)]) +
     facet_wrap(~ name_origin) +
     theme(legend.position="bottom")
 
 ggsave(file.path(proj_dir, "/figure_notebooks/manuscript_figs/fig3_tmp/mention_nature_indiv_sub_gg.pdf"),
        mention_nature_indiv_sub_gg, width = 7, height = 5, units = "in", device = "pdf")
+```
+
+``` r
+#### plot the overview of name origin by our background cohorts
+nature_first_overview_gg = ggplot(nature_origin_df_first, aes(x=as.numeric(year), y=mean,
+                          ymin=bottom_CI, ymax=top_CI,
+                          fill=name_origin, label=label)) +
+    geom_point() + geom_ribbon(alpha=0.5) + geom_line(alpha=0.5) +
+    theme_bw() + geom_text_repel() + xlim(c(2005,2021))  +
+    xlab("Year of Article") + ylab("Proportion of Nature First Authors") +
+    ggtitle("Est. Proportion of Nature First Authors' Name Origin") + 
+    scale_fill_brewer(palette="Set2") +
+    theme(legend.position = "none")
+
+ggsave(file.path(proj_dir, "/figure_notebooks/manuscript_figs/fig3_tmp/nature_first_overview_gg.pdf"),
+       nature_first_overview_gg, width = 7, height = 5, units = "in", device = "pdf")
+
+nature_last_overview_gg = ggplot(nature_origin_df_last, aes(x=as.numeric(year), y=mean,
+                          ymin=bottom_CI, ymax=top_CI,
+                          fill=name_origin, label=label)) +
+    geom_point() + geom_ribbon(alpha=0.5) + geom_line(alpha=0.5) +
+    theme_bw() + geom_text_repel() + xlim(c(2005,2021))  +
+    xlab("Year of Article") + ylab("Proportion of Nature Last Authors") +
+    ggtitle("Est. Proportion of Nature Last Authors' Name Origin") + 
+    scale_fill_brewer(palette="Set2") +
+    theme(legend.position = "none")
+
+ggsave(file.path(proj_dir, "/figure_notebooks/manuscript_figs/fig3_tmp/nature_last_overview_gg.pdf"),
+       nature_last_overview_gg, width = 7, height = 5, units = "in", device = "pdf")
+
+### springer
+springer_first_overview_gg = ggplot(springer_origin_df_first, aes(x=as.numeric(year), y=mean,
+                          ymin=bottom_CI, ymax=top_CI,
+                          fill=name_origin, label=label)) +
+    geom_point() + geom_ribbon(alpha=0.5) + geom_line(alpha=0.5) +
+    theme_bw() + geom_text_repel() + xlim(c(2005,2021))  +
+    xlab("Year of Article") + ylab("Proportion of Springer First Authors") +
+    ggtitle("Est. Proportion of Springer First Authors' Name Origin") + 
+    scale_fill_brewer(palette="Set2") +
+    theme(legend.position = "none")
+
+ggsave(file.path(proj_dir, "/figure_notebooks/manuscript_figs/fig3_tmp/springer_first_overview_gg.pdf"),
+       springer_first_overview_gg, width = 7, height = 5, units = "in", device = "pdf")
+
+springer_last_overview_gg = ggplot(springer_origin_df_last, aes(x=as.numeric(year), y=mean,
+                          ymin=bottom_CI, ymax=top_CI,
+                          fill=name_origin, label=label)) +
+    geom_point() + geom_ribbon(alpha=0.5) + geom_line(alpha=0.5) +
+    theme_bw() + geom_text_repel() + xlim(c(2005,2021))  +
+    xlab("Year of Article") + ylab("Proportion of Springer Last Authors") +
+    ggtitle("Est. Proportion of Springer Last Authors' Name Origin") + 
+    scale_fill_brewer(palette="Set2") +
+    theme(legend.position = "none")
+
+ggsave(file.path(proj_dir, "/figure_notebooks/manuscript_figs/fig3_tmp/springer_last_overview_gg.pdf"),
+       springer_last_overview_gg, width = 7, height = 5, units = "in", device = "pdf")
 ```
 
 ### format main figure
@@ -878,10 +1145,10 @@ full_image <- image_append(image_scale(c(plot_overview, middle_image, bottom_ima
 print(full_image)
 ```
 
-    ## # A tibble: 1 x 7
+    ## # A tibble: 1 × 7
     ##   format width height colorspace matte filesize density
     ##   <chr>  <int>  <int> <chr>      <lgl>    <int> <chr>  
-    ## 1 PNG     3000   3140 sRGB       TRUE         0 300x300
+    ## 1 PNG     3000   3044 sRGB       TRUE         0 300x300
 
 <img src="figure3_files/figure-markdown_github/make_fig1-1.png" width="3000" />
 
@@ -900,41 +1167,54 @@ tot_art_gg = image_read_pdf(file.path(proj_dir,
                                   "/figure_notebooks/manuscript_figs/fig3_tmp/tot_art_gg.pdf"))
 tot_art_gg = image_annotate(tot_art_gg, "a", size = 20)
 
-citation_j_overview_gg = image_read_pdf(file.path(proj_dir,
-                                  "/figure_notebooks/manuscript_figs/fig3_tmp/citation_j_overview_gg.pdf"))
-citation_j_overview_gg = image_annotate(citation_j_overview_gg, "b", size = 30)
+citation_j_overview_gg1 = image_read_pdf(file.path(proj_dir,
+                                  "/figure_notebooks/manuscript_figs/fig3_tmp/citation_j_overview_gg1.pdf"))
+citation_j_overview_gg1 = image_annotate(citation_j_overview_gg1, "b", size = 30)
 
 
-citation_s_overview_gg = image_read_pdf(file.path(proj_dir,
-                                  "/figure_notebooks/manuscript_figs/fig3_tmp/citation_s_overview_gg.pdf"))
-citation_s_overview_gg = image_annotate(citation_s_overview_gg, "c", size = 30)
+citation_s_overview_gg1 = image_read_pdf(file.path(proj_dir,
+                                  "/figure_notebooks/manuscript_figs/fig3_tmp/citation_s_overview_gg1.pdf"))
+citation_s_overview_gg1 = image_annotate(citation_s_overview_gg1, "c", size = 30)
+
+
+citation_j_overview_gg2 = image_read_pdf(file.path(proj_dir,
+                                  "/figure_notebooks/manuscript_figs/fig3_tmp/citation_j_overview_gg2.pdf"))
+citation_j_overview_gg2 = image_annotate(citation_j_overview_gg2, "d", size = 30)
+
+
+citation_s_overview_gg2 = image_read_pdf(file.path(proj_dir,
+                                  "/figure_notebooks/manuscript_figs/fig3_tmp/citation_s_overview_gg2.pdf"))
+citation_s_overview_gg2 = image_annotate(citation_s_overview_gg2, "e", size = 30)
 
 
 quote_overview_gg = image_read_pdf(file.path(proj_dir,
                                   "/figure_notebooks/manuscript_figs/fig3_tmp/quote_overview_gg.pdf"))
-quote_overview_gg = image_annotate(quote_overview_gg, "d", size = 30)
+quote_overview_gg = image_annotate(quote_overview_gg, "f", size = 30)
 
 
 mention_overview_gg = image_read_pdf(file.path(proj_dir,
                                   "/figure_notebooks/manuscript_figs/fig3_tmp/mention_overview_gg.pdf"))
-mention_overview_gg = image_annotate(mention_overview_gg, "e", size = 30)
+mention_overview_gg = image_annotate(mention_overview_gg, "g", size = 30)
 
 
 bottom_image <- image_append(image_scale(c(quote_overview_gg, 
                                            mention_overview_gg),3000), stack = FALSE)
-middle_image <- image_append(image_scale(c(citation_j_overview_gg,
-                                           citation_s_overview_gg),3000), stack = FALSE)
+middle_image1 <- image_append(image_scale(c(citation_j_overview_gg1,
+                                           citation_s_overview_gg1),3000), stack = FALSE)
+middle_image2 <- image_append(image_scale(c(citation_j_overview_gg2,
+                                           citation_s_overview_gg2),3000), stack = FALSE)
 full_image <- image_append(c(image_scale(tot_art_gg, 1500), 
-                             image_scale(c(middle_image, bottom_image), 3000)), stack = TRUE)
+                             image_scale(c(middle_image1, middle_image2, 
+                                           bottom_image), 3000)), stack = TRUE)
                            
 
 print(full_image)
 ```
 
-    ## # A tibble: 1 x 7
+    ## # A tibble: 1 × 7
     ##   format width height colorspace matte filesize density
     ##   <chr>  <int>  <int> <chr>      <lgl>    <int> <chr>  
-    ## 1 PNG     3000   3644 sRGB       TRUE         0 300x300
+    ## 1 PNG     3000   4716 sRGB       TRUE         0 300x300
 
 <img src="figure3_files/figure-markdown_github/make_supp_fig-1.png" width="3000" />
 
@@ -990,7 +1270,7 @@ full_image <- image_append(image_scale(c(top_image, middle_image, bottom_image),
 print(full_image)
 ```
 
-    ## # A tibble: 1 x 7
+    ## # A tibble: 1 × 7
     ##   format width height colorspace matte filesize density
     ##   <chr>  <int>  <int> <chr>      <lgl>    <int> <chr>  
     ## 1 PNG     3000   3216 sRGB       TRUE         0 300x300
@@ -1001,5 +1281,52 @@ print(full_image)
 outfile = file.path(proj_dir,"/figure_notebooks/manuscript_figs/fig3_tmp/fig3_supp2.pdf")
 image_write(full_image, format = "pdf", outfile)
 outfile = file.path(proj_dir,"/figure_notebooks/manuscript_figs/fig3_tmp/fig3_supp2.png")
+image_write(full_image, format = "png", outfile)
+```
+
+### format supp. figure 5
+
+``` r
+nature_first_overview_gg = image_read_pdf(file.path(proj_dir,
+                                  "/figure_notebooks/manuscript_figs/fig3_tmp/nature_first_overview_gg.pdf"))
+nature_first_overview_gg = image_annotate(nature_first_overview_gg, "a", size = 30)
+
+
+nature_last_overview_gg = image_read_pdf(file.path(proj_dir,
+                                  "/figure_notebooks/manuscript_figs/fig3_tmp/nature_last_overview_gg.pdf"))
+nature_last_overview_gg = image_annotate(nature_last_overview_gg, "b", size = 30)
+
+
+springer_first_overview_gg = image_read_pdf(file.path(proj_dir,
+                                  "/figure_notebooks/manuscript_figs/fig3_tmp/springer_first_overview_gg.pdf"))
+springer_first_overview_gg = image_annotate(springer_first_overview_gg, "c", size = 30)
+
+
+springer_last_overview_gg = image_read_pdf(file.path(proj_dir,
+                                  "/figure_notebooks/manuscript_figs/fig3_tmp/springer_last_overview_gg.pdf"))
+springer_last_overview_gg = image_annotate(springer_last_overview_gg, "d", size = 30)
+
+
+
+top_image <- image_append(image_scale(c(nature_first_overview_gg,
+                                           nature_last_overview_gg),3000), stack = FALSE)
+bottom_image <- image_append(image_scale(c(springer_first_overview_gg, 
+                                           springer_last_overview_gg),3000), stack = FALSE)
+full_image <- image_append(image_scale(c(top_image, bottom_image), 3000), stack = TRUE)
+
+print(full_image)
+```
+
+    ## # A tibble: 1 × 7
+    ##   format width height colorspace matte filesize density
+    ##   <chr>  <int>  <int> <chr>      <lgl>    <int> <chr>  
+    ## 1 PNG     3000   2144 sRGB       TRUE         0 300x300
+
+<img src="figure3_files/figure-markdown_github/make_supp_fig_backgrgound-1.png" width="3000" />
+
+``` r
+outfile = file.path(proj_dir,"/figure_notebooks/manuscript_figs/fig3_tmp/fig3_supp3.pdf")
+image_write(full_image, format = "pdf", outfile)
+outfile = file.path(proj_dir,"/figure_notebooks/manuscript_figs/fig3_tmp/fig3_supp3.png")
 image_write(full_image, format = "png", outfile)
 ```

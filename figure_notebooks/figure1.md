@@ -78,7 +78,7 @@ print(dim(news_df))
 
 ``` r
 # filter out career column and news-and-views
-news_df = subset(news_df, !type %in% c("career-column", "news-and-views"))
+news_df = subset(news_df, !type %in% c("career-column", "news-and-views", "guardian"))
 print("Total Articles, journalist")
 ```
 
@@ -88,19 +88,19 @@ print("Total Articles, journalist")
 print(dim(news_df))
 ```
 
-    ## [1] 31827     3
+    ## [1] 16080     3
 
 ``` r
 head(news_df)
 ```
 
-    ##   year     type                                               file_id
-    ## 2 2005 guardian                          missed_generize_io_names.tsv
-    ## 3 2005 guardian news.2005.apr.28.thisweekssciencequestions.psychology
-    ## 4 2005 guardian                 news.2005.dec.06.topstories3.genetics
-    ## 5 2005 guardian                       news.2005.dec.21.food.christmas
-    ## 6 2005 guardian        news.2005.feb.05.guardianobituaries.obituaries
-    ## 7 2005 guardian            news.2005.feb.10.thisweekssciencequestions
+    ##      year type        file_id
+    ## 1123 2005 news  041220-1.html
+    ## 1124 2005 news  050103-1.html
+    ## 1125 2005 news 050103-10.html
+    ## 1126 2005 news 050103-11.html
+    ## 1127 2005 news 050103-12.html
+    ## 1128 2005 news  050103-2.html
 
 ### Read in the nature + springer research author information
 
@@ -269,7 +269,7 @@ full_image <- image_append(image_scale(c(bottom_panel, news_nature_gg),3000),
 print(full_image)
 ```
 
-    ## # A tibble: 1 x 7
+    ## # A tibble: 1 × 7
     ##   format width height colorspace matte filesize density
     ##   <chr>  <int>  <int> <chr>      <lgl>    <int> <chr>  
     ## 1 PNG     3000   2071 sRGB       TRUE         0 300x300
