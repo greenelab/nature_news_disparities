@@ -13,10 +13,9 @@ ARTICLE_TYPE_FACTOR_ORDER = c("research",
                             "news-and-views",
                             "news-feature",
                             "technology-feature",
-                            "toolbox",
-                            "guardian")
+                            "toolbox")
 
-ARTICLE_TYPE_COLOR = brewer.pal(n = 10, name = "Set3")
+ARTICLE_TYPE_COLOR = brewer.pal(n = 9, name = "Set3")
 names(ARTICLE_TYPE_COLOR) = ARTICLE_TYPE_FACTOR_ORDER
 
 QUOTE_ANALYSIS_ORDER = c("nature_first",
@@ -24,22 +23,21 @@ QUOTE_ANALYSIS_ORDER = c("nature_first",
                             "springer_first",
                             "springer_last",
                             "quote",
-                            "citation_journalist",
+                            "citation_journalist_first",
                             "career-column",
-                            "citation_scientist",
+                            "citation_scientist_first",
                             "citation",
                             "mention",
                             "career-feature",
                             "other",
-                            "guardian",
-                            "guardian_quote",
-                            "guardian_mention"
+                            "citation_journalist_last",
+                            "citation_scientist_last"
 )
 
 
 QUOTE_ANALYSIS_COLOR = c("#8DD3C7", "#1D4942", "#FFFFB3", "#98c700", "#BC80BD", 
                         "#FB8072", "#BEBADA", "#94e283", "#FFED6F", "#FCCDE5", 
-                        "#FB8072", "#FCCDE5", "#7FA0BD", "#7FA0BD", "3D5B76")
+                        "#FB8072", "#FCCDE5", "#7FA0BD", "#7FA0BD")#, "3D5B76")
 names(QUOTE_ANALYSIS_COLOR) = QUOTE_ANALYSIS_ORDER
 
 QUOTE_ANALYSIS_LABELS = c("Nature First",
@@ -47,13 +45,15 @@ QUOTE_ANALYSIS_LABELS = c("Nature First",
                             "Springer First",
                             "Springer Last",
                             "Quote",
-                            "Citation (journalist)",
+                            "Citation (journalist) 1st",
                             "career-column",
-                            "Citation (scientist)",
+                            "Citation (scientist) 1st",
                             "Citation",
                             "Mention",
                             "Career Feature",
-                            "other"
+                            "other",
+                            "Citation (journalist) last",
+                            "Citation (scientist) last"
 )
 
 ###################################
