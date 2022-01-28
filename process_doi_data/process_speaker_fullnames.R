@@ -33,6 +33,8 @@ process_all_quote_fullnames <- function(quote_dir, outdir){
     }
     full_quote_df = full_quote_df[-1,]
 
+    full_quote_df_all = full_quote_df
+
     # now that we have the quotes with their names
     # we have to process the names such that we are sure we have 
     # the last name
@@ -51,6 +53,10 @@ process_all_quote_fullnames <- function(quote_dir, outdir){
     non_whitespace = which(trimws(full_quote_df$author)!="")
     full_quote_df = full_quote_df[non_whitespace,]
 
+    # get the names that were missed
+    all_authors = unique(full_quote_df_all$est_speaker)
+    kept_authors = unique(full_quote_df$est_speaker)
+    missed_authors = setdiff(all_authors, kept_authors)
 
     # format the output
     col_ids = c("year", "type", "author", "file_id", "quote")
@@ -59,6 +65,8 @@ process_all_quote_fullnames <- function(quote_dir, outdir){
     all_speaker_file = file.path(outdir, "all_speaker_fullname.tsv")
     write.table(full_quote_df, file=all_speaker_file, sep="\t", quote=F, row.names=F)
 
+    all_speaker_file = file.path(outdir, "all_speaker_fullname_excluded.tsv")
+    write.table(missed_authors, file=all_speaker_file, sep="\t", quote=F, row.names=F)
 
 }
 
@@ -115,6 +123,10 @@ process_all_mentioned_fullnames <- function(corenlp_output_dir, outdir){
 
     }
     all_persons = all_persons[-1,]
+    all_persons_full = all_persons
+
+    # keep original name too
+    all_persons$author_raw = all_persons$author
 
     # only keep the name if there are atleast 2 parts
     # this means there must be a space
@@ -133,9 +145,17 @@ process_all_mentioned_fullnames <- function(corenlp_output_dir, outdir){
     non_whitespace = which(trimws(all_persons$author)!="")
     all_persons = all_persons[non_whitespace,]
 
+    # get the names that were missed
+    all_names = unique(all_persons_full$author)
+    kept_names = unique(all_persons$author_raw)
+    missed_names = setdiff(all_names, kept_names)
+
 
     outfile = file.path(outdir, "all_mentioned_fullname.tsv")
     write.table(all_persons, file=outfile, sep="\t", quote=F, row.names=F)
+
+    outfile = file.path(outdir, "all_mentioned_fullname_excluded.tsv")
+    write.table(missed_names, file=outfile, sep="\t", quote=F, row.names=F)
 
 
 }
