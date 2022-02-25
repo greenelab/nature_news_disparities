@@ -109,7 +109,7 @@ for(curr_dir in news_scraped_dir_files){
 news_df = news_df[-1,]
 
 # filter out career column and news-and-views
-news_df = subset(news_df, !type %in% c("career-column", "news-and-views"))
+news_df = subset(news_df, !type %in% c("career-column", "news-and-views", "guardian"))
 head(news_df)
 
 ```
@@ -141,7 +141,7 @@ name_pred_file = file.path(proj_dir,
 name_info_file = file.path(proj_dir, 
                              "/data/author_data/all_speaker_fullname.tsv")
 quote_name_origin_df = read_name_origin(name_pred_file, name_info_file)
-quote_name_origin_df = subset(quote_name_origin_df, !type %in% c("career-column", "news-and-views"))
+quote_name_origin_df = subset(quote_name_origin_df, !type %in% c("career-column", "news-and-views", "guardian"))
 
 
 ```
@@ -209,8 +209,15 @@ head(nature_pred_gender_df)
 ```{r quotes_gender_pred_table1, echo=TRUE, warning=FALSE, message=F}
 
 
+# filter out articles with more than 25 quotes
+num_quotes = table(full_quote_df$file_id)
+too_many_quotes_idx = which(num_quotes > 25)
+too_many_quotes_file_id = names(num_quotes)[too_many_quotes_idx]
+full_quote_df = subset(full_quote_df, !file_id %in% too_many_quotes_file_id)
+
+
 # filter out career column and news-and-views
-full_quote_df_gender = subset(full_quote_df, !type %in% c("career-column", "news-and-views"))
+full_quote_df_gender = subset(full_quote_df, !type %in% c("career-column", "news-and-views", "guardian"))
 full_quote_df_gender = unique(full_quote_df_gender)
 
 print("Total Quotes")
@@ -250,7 +257,7 @@ print(quotes_with_gender)
 ```{r quotes_origin_pred_table1, echo=TRUE, warning=FALSE, message=F}
 
 # filter out career column and news-and-views
-full_quote_df_origin = subset(full_quote_df, !type %in% c("career-column", "news-and-views"))
+full_quote_df_origin = subset(full_quote_df, !type %in% c("career-column", "news-and-views", "guardian"))
 full_quote_df_origin = unique(full_quote_df_origin)
 
 
@@ -428,6 +435,9 @@ nature_author_df_gender = unique(nature_author_df_gender)
 num_gender_nature = nrow(nature_author_df_gender)
 print("Number of nature Gender Prediction")
 print(num_gender_nature)
+
+print("Number nature Gender Prediction by authorship")
+table(nature_author_df_gender$author_pos)
 
 # double check that it matches the pre-processed table we are working with
 nature_pred_gender_df_pass = subset(nature_pred_gender_df, !is.na(est_gender))

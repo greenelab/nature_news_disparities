@@ -378,7 +378,7 @@ head(mention_cite_df)
     ## 2        doi:10.1038/nature13883      first naturenews_citations  united states
     ## 3  doi:10.1038/s41586-019-1142-2      first naturenews_citations united kingdom
     ## 4        doi:10.1038/nature09166      first naturenews_citations        denmark
-    ## 5        doi:10.1038/nature09166      first naturenews_citations         france
+    ## 5        doi:10.1038/nature09166      first naturenews_citations               
     ## 6        doi:10.1038/nature09166      first naturenews_citations         sweden
     ##   query_date num_entries
     ## 1 2021-04-11           1
@@ -400,8 +400,8 @@ head(quote_cite_df)
     ## 5  Abderrazak Albani 2010 news.2010.323.html news
     ## 6  Abderrazak Albani 2010 news.2010.323.html news
     ##                                                                               quote
-    ## 1                               issues with figure presentation and underlying data
-    ## 2                                cannot confirm the results in the affected figures
+    ## 1                                cannot confirm the results in the affected figures
+    ## 2                               issues with figure presentation and underlying data
     ## 3 I now firmly believe that my own so-called first animals were pseudo-fossils too.
     ## 4 I now firmly believe that my own so-called first animals were pseudo-fossils too.
     ## 5 I now firmly believe that my own so-called first animals were pseudo-fossils too.
@@ -416,10 +416,10 @@ head(quote_cite_df)
     ##          country query_date num_entries
     ## 1 united kingdom 2021-04-11           1
     ## 2 united kingdom 2021-04-11           1
-    ## 3                2021-04-10           1
-    ## 4        denmark 2021-04-10           1
-    ## 5         france 2021-04-10           1
-    ## 6         sweden 2021-04-10           1
+    ## 3         sweden 2021-04-10           1
+    ## 4        belgium 2021-04-10           1
+    ## 5        denmark 2021-04-10           1
+    ## 6         france 2021-04-10           1
 
 ### now lets look at only the US
 
@@ -432,7 +432,7 @@ table(us_mention_cite_df$year)
 
     ## 
     ## 2005 2006 2007 2008 2009 2010 2011 2012 2013 2014 2015 2016 2017 2018 2019 2020 
-    ##  105  103   40   45   61  116  121  125  151  136  130  107   94   86   95   66
+    ##  105  104   40   46   61  116  122  125  153  136  131  107   95   86   95   66
 
 ``` r
 us_quote_cite_df = subset(quote_cite_df, country %in% c("united states"))
@@ -443,7 +443,7 @@ table(us_quote_cite_df$year)
 
     ## 
     ## 2005 2006 2007 2008 2009 2010 2011 2012 2013 2014 2015 2016 2017 2018 2019 2020 
-    ##  226  140   80   80  103  233  199  194  239  226  177  205  150  180  146  106
+    ##  226  141   80   82  103  233  200  194  240  226  177  205  152  180  146  106
 
 ``` r
 us_bg_country_df = subset(bg_df, country %in% c("united states"))
@@ -452,7 +452,7 @@ table(us_bg_country_df$year)
 
     ## 
     ## 2005 2006 2007 2008 2009 2010 2011 2012 2013 2014 2015 2016 2017 2018 2019 2020 
-    ## 1043  825  905  873  801  864  828  899  879  907  835  907  932  961  907  991
+    ## 1057  833  912  881  810  874  835  913  897  919  846  919  938  971  913 1001
 
 ## Get bootstrap estimations
 
@@ -876,7 +876,7 @@ full_image <- image_append(image_scale(c(top_image, bottom_image), 3000), stack 
 print(full_image)
 ```
 
-    ## # A tibble: 1 x 7
+    ## # A tibble: 1 × 7
     ##   format width height colorspace matte filesize density
     ##   <chr>  <int>  <int> <chr>      <lgl>    <int> <chr>  
     ## 1 PNG     3000   2144 sRGB       TRUE         0 300x300

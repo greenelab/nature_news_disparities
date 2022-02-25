@@ -91,7 +91,7 @@ for(quote_file in quote_files){
 full_quote_df = full_quote_df[-1,]
 
 # filter out career column and news-and-views
-full_quote_df = subset(full_quote_df, !type %in% c("career-column", "news-and-views"))
+full_quote_df = subset(full_quote_df, !type %in% c("career-column", "news-and-views", "guardian"))
 full_quote_df = unique(full_quote_df)
 
 # filter out articles with more than 25 quotes
@@ -135,9 +135,9 @@ print("Male Quote Ratio Nature:")
 table(subset(full_quote_df, year == 2005 & type != "guardian")$est_gender)
 table(subset(full_quote_df, year == 2020 & type != "guardian")$est_gender)
 
-print("Male Quote Ratio Guardian:")
-table(subset(full_quote_df, year == 2005 & type == "guardian")$est_gender)
-table(subset(full_quote_df, year == 2020 & type == "guardian")$est_gender)
+#print("Male Quote Ratio Guardian:")
+#table(subset(full_quote_df, year == 2005 & type == "guardian")$est_gender)
+#table(subset(full_quote_df, year == 2020 & type == "guardian")$est_gender)
 
 
 print("Career-feature info:")
@@ -267,11 +267,11 @@ if(RERUN_BOOTSTRAP){
     quote_prop_df$corpus = "quote"
     
     #### Guardian Quote data
-    guardian_quote_prop_df = compute_bootstrap_gender(subset(full_quote_df, type == "guardian"), 
-                                               year_col_id = "year", 
-                                               article_col_id = "quote",
-                                               conf_int=0.95)
-    guardian_quote_prop_df$corpus = "guardian"
+    #guardian_quote_prop_df = compute_bootstrap_gender(subset(full_quote_df, type == "guardian"), 
+    #                                           year_col_id = "year", 
+    #                                           article_col_id = "quote",
+    #                                           conf_int=0.95)
+    #guardian_quote_prop_df$corpus = "guardian"
     
     #### Quote data broken down by article type
     get_subboot <- function(type_id, type_names, in_df){
@@ -293,7 +293,7 @@ if(RERUN_BOOTSTRAP){
     
     #### Quote data broken down by article type career vs non-career
     career_df = NA
-    non_career = setdiff(unique(full_quote_df$type), c("career-feature", "guardian"))
+    non_career = setdiff(unique(full_quote_df$type), c("career-feature"))
     career_type = list("career-feature", non_career)
     career_name = c("career-feature", "other")
     for(curr_type_idx in 1:length(career_type)){
@@ -345,7 +345,7 @@ if(RERUN_BOOTSTRAP){
     save(quote_prop_df, type_df, career_df, 
          springer_first_prop_df, springer_last_prop_df, 
          nature_first_prop_df, nature_last_prop_df, 
-         first_cited_prop_df, guardian_quote_prop_df,
+         first_cited_prop_df, #guardian_quote_prop_df,
          file = all_bootstrap_file)
 }else{
     all_bootstrap_file = file.path(proj_dir,
@@ -372,7 +372,7 @@ tot_quotes_gg = ggplot(full_quote_df, aes(x=as.numeric(year), fill=type)) +
     theme_bw() +
     xlab("Year of Article") + ylab("# Quotes") +
     ggtitle("# of Quotes per News Article Type Over Time") + 
-    scale_fill_manual(values=ARTICLE_TYPE_COLOR) +
+    scale_fill_manual(values=ARTICLE_TYPE_COLOR[unique(full_quote_df$type)]) +
     theme(legend.position="bottom")
 
 ggsave(file.path(proj_dir, "/figure_notebooks/manuscript_figs/fig2_tmp/tot_quotes_gg.pdf"),
@@ -384,12 +384,13 @@ compare_df = rbind(springer_first_prop_df,
                    springer_last_prop_df,
                    nature_first_prop_df,
                    nature_last_prop_df,
-                   quote_prop_df[,colnames(springer_last_prop_df)],
-                   guardian_quote_prop_df[,colnames(springer_last_prop_df)])
+                   quote_prop_df[,colnames(springer_last_prop_df)])
+                   #guardian_quote_prop_df[,colnames(springer_last_prop_df)])
 compare_df$corpus = factor(compare_df$corpus, levels = QUOTE_ANALYSIS_ORDER)
 
+quote_sub = subset(compare_df, corpus %in% c("nature_last", "nature_first", "quote"))
 quotes_nature_gg = 
-    ggplot(subset(compare_df, corpus %in% c("nature_last", "nature_first", "quote", "guardian")), 
+    ggplot(quote_sub, 
       aes(x=as.numeric(year), y=mean,
                           ymin=bottom_CI, ymax=top_CI,
                           fill=corpus)) +
@@ -398,15 +399,15 @@ quotes_nature_gg =
     ggtitle("News Quotes vs First+Last Author Research Citations") + 
     ylim(c(0, 1)) +
     geom_hline(yintercept=0.5, color="red") +
-    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR) +
+    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR[unique(quote_sub$corpus)]) +
     theme(legend.position="bottom")
 
 ggsave(file.path(proj_dir, "/figure_notebooks/manuscript_figs/fig2_tmp/quotes_nature_gg.pdf"),
        quotes_nature_gg, width = 6, height = 5, units = "in", device = "pdf")
 
-
+quote_sub = subset(compare_df, corpus %in% c("springer_last", "springer_first", "quote"))
 quotes_springer_gg = 
-    ggplot(subset(compare_df, corpus %in% c("springer_last", "springer_first", "quote", "guardian")), 
+    ggplot(quote_sub, 
       aes(x=as.numeric(year), y=mean,
                           ymin=bottom_CI, ymax=top_CI,
                           fill=corpus)) +
@@ -415,7 +416,7 @@ quotes_springer_gg =
     ggtitle("News Quotes vs First+Last Author Springer Article Citations") + 
     ylim(c(0, 1)) +
     geom_hline(yintercept=0.5, color="red") +
-    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR) +
+    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR[unique(quote_sub$corpus)]) +
     theme(legend.position="bottom")
 
 ggsave(file.path(proj_dir, "/figure_notebooks/manuscript_figs/fig2_tmp/quotes_springer_gg.pdf"),
@@ -433,7 +434,7 @@ all_type_gg = ggplot(type_df, aes(x=as.numeric(year), y=mean,
     ggtitle("Male Proportion of Quotes Over Time") + 
     ylim(c(0, 1)) +
     geom_hline(yintercept=0.5, color="red") +
-    scale_fill_manual(values=ARTICLE_TYPE_COLOR) +
+    scale_fill_manual(values=ARTICLE_TYPE_COLOR[unique(type_df$corpus)]) +
     theme(legend.position="bottom")
 
 ggsave(file.path(proj_dir, "/figure_notebooks/manuscript_figs/fig2_tmp/all_type_gg.pdf"),
@@ -451,7 +452,7 @@ career_gg = ggplot(career_df, aes(x=as.numeric(year), y=mean,
     ylim(c(0, 1)) +
     ggtitle("Male Proportion of Quotes in Career-Feature vs Other Articles") + 
     geom_hline(yintercept=0.5, color="red") +
-    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR) +
+    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR[unique(career_df$corpus)]) +
     theme(legend.position="bottom")
 
 ggsave(file.path(proj_dir, "/figure_notebooks/manuscript_figs/fig2_tmp/career_gg.pdf"),

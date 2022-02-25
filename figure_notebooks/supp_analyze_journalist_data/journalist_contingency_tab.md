@@ -447,15 +447,15 @@ table(gender_journo_quote$type, gender_journo_quote$year)
     ##                     
     ##                      2005 2006 2007 2008 2009 2010 2011 2012 2013 2014 2015
     ##   career-feature        0    0    0    0    0    0    0    0    0    0    0
-    ##   news               4476 4427 4749 5643 6490 6416 5779 5751 5048 4625 4552
-    ##   news-feature       1349 1323 1201 1097 1205 1111  993 1127 1060 1155  922
+    ##   news               4484 4450 4750 5652 6490 6423 5946 6006 5343 4664 4567
+    ##   news-feature       1349 1344 1220 1097 1224 1120  993 1169 1083 1172  946
     ##   technology-feature   67   54  110   57   41   76  106   43   52   72   85
     ##   toolbox               0    0    0    0    0    0    0    0    0   41   90
     ##                     
     ##                      2016 2017 2018 2019 2020
     ##   career-feature        0   51  412  258  206
-    ##   news               4237 3481 3561 3197 3087
-    ##   news-feature        750  807  881  868  868
+    ##   news               4250 3528 3561 3197 3097
+    ##   news-feature        750  807  894  868  868
     ##   technology-feature  184  187   92  214  378
     ##   toolbox             113  103  168  153    0
 
@@ -485,27 +485,27 @@ table(name_origin_journo_quote$journo_name_origin, name_origin_journo_quote$year
     ##                
     ##                 2005 2006 2007 2008 2009 2010 2011 2012 2013 2014 2015 2016
     ##   African          0   24    3    0    7    9  163   14    0   15   32   20
-    ##   ArabTurkPers    13   11    3   44   92  181   87   98   53   33   76  139
-    ##   CelticEnglish 3301 3381 3540 3916 3751 3785 3440 3745 2783 2418 2338 2242
-    ##   EastAsian       53  126   92  161  320  368  139  353  351  200  279  183
-    ##   European      1925 1735 1745 1844 2296 1816 1945 1781 1945 2245 1964 1803
+    ##   ArabTurkPers    13   11    3   44   92  190   87   98   53   33   76  139
+    ##   CelticEnglish 3315 3433 3557 3933 3767 3807 3536 3833 2843 2424 2371 2263
+    ##   EastAsian       53  127   92  172  329  375  240  548  621  260  295  187
+    ##   European      1939 1753 1778 1847 2324 1852 1951 1792 1963 2249 1979 1823
     ##   Greek            0    0    0    0    0    0    0    0    0    0   11    0
-    ##   Hebrew          31   39    6   41   84   72   94   75    0    5   25   47
-    ##   Hispanic         0    0    5    9    4   20   40   14   54   50    8   16
-    ##   Nordic         108    0   95  241  445  722  433  284  369  280  390  326
-    ##   SouthAsian      16   67   57   16  155   86  144  124   25   94   36   67
+    ##   Hebrew          31   39    6   41   84   72   94   79    0    5   25   47
+    ##   Hispanic         0    0    5    9    4   20   40   14   54   51    8   16
+    ##   Nordic         108    0   96  245  447  722  439  289  369  283  391  329
+    ##   SouthAsian      16   69   57   16  155   86  144  126   25  101   36   67
     ##                
     ##                 2017 2018 2019 2020
     ##   African         16   17   11    0
     ##   ArabTurkPers    29   41   28   19
-    ##   CelticEnglish 2175 2080 1899 1684
-    ##   EastAsian       64  192  143   82
-    ##   European      1600 1827 1618 1480
+    ##   CelticEnglish 2222 2096 1905 1698
+    ##   EastAsian       64  192  143   84
+    ##   European      1619 1852 1639 1493
     ##   Greek            0    0    8    0
     ##   Hebrew           1    2   12   26
     ##   Hispanic        78   24   41   26
-    ##   Nordic         231  255  222  191
-    ##   SouthAsian      77   87  227  592
+    ##   Nordic         231  255  224  196
+    ##   SouthAsian      77   89  227  608
 
 ``` r
 name_origin_journo_quote = subset(name_origin_journo_quote, journo_name_origin %in% c("CelticEnglish", "European", "EastAsian"))
@@ -524,14 +524,14 @@ table(cite_quote_df$journo_name_origin, cite_quote_df$year)
 
     ##                
     ##                 2005 2006 2007 2008 2009 2010 2011 2012 2013 2014 2015 2016
-    ##   CelticEnglish  378  299  205  227  209  469  323  314  276  206  396  281
-    ##   EastAsian        0   16    0    5   12   66   21    9   29   12   21   19
-    ##   European       136  174   63   74  150  192  131  159  118  151  169  179
+    ##   CelticEnglish  378  299  205  231  210  469  330  318  292  206  396  281
+    ##   EastAsian        0   18    0    5   12   66   21   44  139   20   21   19
+    ##   European       136  174   63   74  154  192  132  159  118  151  169  179
     ##                
     ##                 2017 2018 2019 2020
-    ##   CelticEnglish  341  335  365  250
+    ##   CelticEnglish  379  335  365  250
     ##   EastAsian       21   28    0    0
-    ##   European       154  157  167  100
+    ##   European       156  157  167  100
 
 ## Process Gender and Name Origin
 
@@ -622,42 +622,42 @@ knitr::kable(tab_quote, format = "pipe",
 <tbody>
 <tr class="odd">
 <td align="left">CelticEnglish</td>
-<td align="right">946</td>
-<td align="right">1121</td>
-<td align="right">22490</td>
-<td align="right">1750</td>
-<td align="right">14862</td>
-<td align="right">305</td>
-<td align="right">771</td>
-<td align="right">1554</td>
-<td align="right">1650</td>
-<td align="right">1029</td>
+<td align="right">960</td>
+<td align="right">1165</td>
+<td align="right">22752</td>
+<td align="right">1796</td>
+<td align="right">14987</td>
+<td align="right">308</td>
+<td align="right">775</td>
+<td align="right">1565</td>
+<td align="right">1661</td>
+<td align="right">1034</td>
 </tr>
 <tr class="even">
 <td align="left">EastAsian</td>
-<td align="right">47</td>
-<td align="right">48</td>
-<td align="right">1064</td>
-<td align="right">808</td>
-<td align="right">761</td>
+<td align="right">69</td>
+<td align="right">66</td>
+<td align="right">1340</td>
+<td align="right">919</td>
+<td align="right">944</td>
 <td align="right">18</td>
-<td align="right">41</td>
-<td align="right">77</td>
-<td align="right">118</td>
-<td align="right">124</td>
+<td align="right">60</td>
+<td align="right">98</td>
+<td align="right">135</td>
+<td align="right">133</td>
 </tr>
 <tr class="odd">
 <td align="left">European</td>
 <td align="right">650</td>
-<td align="right">654</td>
-<td align="right">12468</td>
-<td align="right">2465</td>
-<td align="right">9707</td>
+<td align="right">673</td>
+<td align="right">12544</td>
+<td align="right">2578</td>
+<td align="right">9732</td>
 <td align="right">161</td>
 <td align="right">480</td>
-<td align="right">1260</td>
-<td align="right">934</td>
-<td align="right">790</td>
+<td align="right">1272</td>
+<td align="right">966</td>
+<td align="right">797</td>
 </tr>
 </tbody>
 </table>
@@ -700,42 +700,42 @@ knitr::kable(tab_quote_percent, format = "pipe",
 <tbody>
 <tr class="odd">
 <td align="left">CelticEnglish</td>
-<td align="right">0.0203537</td>
-<td align="right">0.0241189</td>
-<td align="right">0.4838848</td>
-<td align="right">0.0376522</td>
-<td align="right">0.3197642</td>
-<td align="right">0.0065622</td>
-<td align="right">0.0165885</td>
-<td align="right">0.0334352</td>
-<td align="right">0.0355007</td>
-<td align="right">0.0221395</td>
+<td align="right">0.0204242</td>
+<td align="right">0.0247857</td>
+<td align="right">0.4840542</td>
+<td align="right">0.0382103</td>
+<td align="right">0.3188520</td>
+<td align="right">0.0065528</td>
+<td align="right">0.0164883</td>
+<td align="right">0.0332957</td>
+<td align="right">0.0353382</td>
+<td align="right">0.0219986</td>
 </tr>
 <tr class="even">
 <td align="left">EastAsian</td>
-<td align="right">0.0151320</td>
-<td align="right">0.0154540</td>
-<td align="right">0.3425628</td>
-<td align="right">0.2601417</td>
-<td align="right">0.2450097</td>
-<td align="right">0.0057952</td>
-<td align="right">0.0132003</td>
-<td align="right">0.0247907</td>
-<td align="right">0.0379910</td>
-<td align="right">0.0399227</td>
+<td align="right">0.0182443</td>
+<td align="right">0.0174511</td>
+<td align="right">0.3543099</td>
+<td align="right">0.2429931</td>
+<td align="right">0.2496034</td>
+<td align="right">0.0047594</td>
+<td align="right">0.0158646</td>
+<td align="right">0.0259122</td>
+<td align="right">0.0356954</td>
+<td align="right">0.0351666</td>
 </tr>
 <tr class="odd">
 <td align="left">European</td>
-<td align="right">0.0219825</td>
-<td align="right">0.0221178</td>
-<td align="right">0.4216578</td>
-<td align="right">0.0833643</td>
-<td align="right">0.3282830</td>
-<td align="right">0.0054449</td>
-<td align="right">0.0162332</td>
-<td align="right">0.0426122</td>
-<td align="right">0.0315871</td>
-<td align="right">0.0267172</td>
+<td align="right">0.0217734</td>
+<td align="right">0.0225438</td>
+<td align="right">0.4201923</td>
+<td align="right">0.0863565</td>
+<td align="right">0.3259974</td>
+<td align="right">0.0053931</td>
+<td align="right">0.0160788</td>
+<td align="right">0.0426088</td>
+<td align="right">0.0323586</td>
+<td align="right">0.0266975</td>
 </tr>
 </tbody>
 </table>
@@ -778,11 +778,11 @@ knitr::kable(tab_quote_cite, format = "pipe",
 <tbody>
 <tr class="odd">
 <td align="left">CelticEnglish</td>
-<td align="right">76</td>
-<td align="right">111</td>
+<td align="right">78</td>
+<td align="right">135</td>
+<td align="right">1817</td>
+<td align="right">347</td>
 <td align="right">1797</td>
-<td align="right">339</td>
-<td align="right">1781</td>
 <td align="right">41</td>
 <td align="right">83</td>
 <td align="right">113</td>
@@ -792,27 +792,27 @@ knitr::kable(tab_quote_cite, format = "pipe",
 <tr class="even">
 <td align="left">EastAsian</td>
 <td align="right">1</td>
-<td align="right">17</td>
-<td align="right">109</td>
-<td align="right">46</td>
-<td align="right">41</td>
+<td align="right">32</td>
+<td align="right">156</td>
+<td align="right">59</td>
+<td align="right">65</td>
 <td align="right">0</td>
-<td align="right">4</td>
-<td align="right">18</td>
-<td align="right">2</td>
-<td align="right">21</td>
+<td align="right">5</td>
+<td align="right">55</td>
+<td align="right">8</td>
+<td align="right">33</td>
 </tr>
 <tr class="odd">
 <td align="left">European</td>
 <td align="right">32</td>
 <td align="right">63</td>
 <td align="right">828</td>
-<td align="right">262</td>
+<td align="right">265</td>
 <td align="right">803</td>
 <td align="right">14</td>
 <td align="right">70</td>
 <td align="right">59</td>
-<td align="right">75</td>
+<td align="right">79</td>
 <td align="right">68</td>
 </tr>
 </tbody>
@@ -856,42 +856,42 @@ knitr::kable(tab_quote_cite_percent, format = "pipe",
 <tbody>
 <tr class="odd">
 <td align="left">CelticEnglish</td>
-<td align="right">0.0155929</td>
-<td align="right">0.0227739</td>
-<td align="right">0.3686910</td>
-<td align="right">0.0695527</td>
-<td align="right">0.3654083</td>
-<td align="right">0.0084120</td>
-<td align="right">0.0170291</td>
-<td align="right">0.0231842</td>
-<td align="right">0.0837095</td>
-<td align="right">0.0256463</td>
+<td align="right">0.0157767</td>
+<td align="right">0.0273058</td>
+<td align="right">0.3675162</td>
+<td align="right">0.0701861</td>
+<td align="right">0.3634709</td>
+<td align="right">0.0082929</td>
+<td align="right">0.0167880</td>
+<td align="right">0.0228560</td>
+<td align="right">0.0825243</td>
+<td align="right">0.0252832</td>
 </tr>
 <tr class="even">
 <td align="left">EastAsian</td>
-<td align="right">0.0038610</td>
-<td align="right">0.0656371</td>
-<td align="right">0.4208494</td>
-<td align="right">0.1776062</td>
-<td align="right">0.1583012</td>
+<td align="right">0.0024155</td>
+<td align="right">0.0772947</td>
+<td align="right">0.3768116</td>
+<td align="right">0.1425121</td>
+<td align="right">0.1570048</td>
 <td align="right">0.0000000</td>
-<td align="right">0.0154440</td>
-<td align="right">0.0694981</td>
-<td align="right">0.0077220</td>
-<td align="right">0.0810811</td>
+<td align="right">0.0120773</td>
+<td align="right">0.1328502</td>
+<td align="right">0.0193237</td>
+<td align="right">0.0797101</td>
 </tr>
 <tr class="odd">
 <td align="left">European</td>
-<td align="right">0.0140721</td>
-<td align="right">0.0277045</td>
-<td align="right">0.3641161</td>
-<td align="right">0.1152155</td>
-<td align="right">0.3531223</td>
-<td align="right">0.0061566</td>
-<td align="right">0.0307828</td>
-<td align="right">0.0259455</td>
-<td align="right">0.0329815</td>
-<td align="right">0.0299033</td>
+<td align="right">0.0140289</td>
+<td align="right">0.0276195</td>
+<td align="right">0.3629987</td>
+<td align="right">0.1161771</td>
+<td align="right">0.3520386</td>
+<td align="right">0.0061377</td>
+<td align="right">0.0306883</td>
+<td align="right">0.0258658</td>
+<td align="right">0.0346339</td>
+<td align="right">0.0298115</td>
 </tr>
 </tbody>
 </table>
@@ -934,10 +934,10 @@ knitr::kable(tab_quote_us, format = "pipe",
 <tbody>
 <tr class="odd">
 <td align="left">CelticEnglish</td>
-<td align="right">15</td>
+<td align="right">16</td>
 <td align="right">35</td>
-<td align="right">551</td>
-<td align="right">129</td>
+<td align="right">571</td>
+<td align="right">132</td>
 <td align="right">545</td>
 <td align="right">15</td>
 <td align="right">32</td>
@@ -949,13 +949,13 @@ knitr::kable(tab_quote_us, format = "pipe",
 <td align="left">EastAsian</td>
 <td align="right">0</td>
 <td align="right">12</td>
-<td align="right">55</td>
-<td align="right">14</td>
-<td align="right">20</td>
+<td align="right">62</td>
+<td align="right">27</td>
+<td align="right">38</td>
 <td align="right">0</td>
 <td align="right">1</td>
-<td align="right">8</td>
-<td align="right">1</td>
+<td align="right">27</td>
+<td align="right">6</td>
 <td align="right">9</td>
 </tr>
 <tr class="odd">
@@ -963,7 +963,7 @@ knitr::kable(tab_quote_us, format = "pipe",
 <td align="right">19</td>
 <td align="right">27</td>
 <td align="right">374</td>
-<td align="right">98</td>
+<td align="right">101</td>
 <td align="right">273</td>
 <td align="right">11</td>
 <td align="right">21</td>
@@ -1012,42 +1012,42 @@ knitr::kable(tab_quote_us_percent, format = "pipe",
 <tbody>
 <tr class="odd">
 <td align="left">CelticEnglish</td>
-<td align="right">0.0100874</td>
-<td align="right">0.0235373</td>
-<td align="right">0.3705447</td>
-<td align="right">0.0867518</td>
-<td align="right">0.3665098</td>
-<td align="right">0.0100874</td>
-<td align="right">0.0215198</td>
-<td align="right">0.0295898</td>
-<td align="right">0.0564896</td>
-<td align="right">0.0248823</td>
+<td align="right">0.0105890</td>
+<td align="right">0.0231635</td>
+<td align="right">0.3778954</td>
+<td align="right">0.0873594</td>
+<td align="right">0.3606883</td>
+<td align="right">0.0099272</td>
+<td align="right">0.0211780</td>
+<td align="right">0.0291198</td>
+<td align="right">0.0555923</td>
+<td align="right">0.0244871</td>
 </tr>
 <tr class="even">
 <td align="left">EastAsian</td>
 <td align="right">0.0000000</td>
-<td align="right">0.1000000</td>
-<td align="right">0.4583333</td>
-<td align="right">0.1166667</td>
-<td align="right">0.1666667</td>
+<td align="right">0.0659341</td>
+<td align="right">0.3406593</td>
+<td align="right">0.1483516</td>
+<td align="right">0.2087912</td>
 <td align="right">0.0000000</td>
-<td align="right">0.0083333</td>
-<td align="right">0.0666667</td>
-<td align="right">0.0083333</td>
-<td align="right">0.0750000</td>
+<td align="right">0.0054945</td>
+<td align="right">0.1483516</td>
+<td align="right">0.0329670</td>
+<td align="right">0.0494505</td>
 </tr>
 <tr class="odd">
 <td align="left">European</td>
-<td align="right">0.0208791</td>
-<td align="right">0.0296703</td>
-<td align="right">0.4109890</td>
-<td align="right">0.1076923</td>
-<td align="right">0.3000000</td>
-<td align="right">0.0120879</td>
-<td align="right">0.0230769</td>
-<td align="right">0.0186813</td>
-<td align="right">0.0307692</td>
-<td align="right">0.0461538</td>
+<td align="right">0.0208105</td>
+<td align="right">0.0295728</td>
+<td align="right">0.4096386</td>
+<td align="right">0.1106243</td>
+<td align="right">0.2990142</td>
+<td align="right">0.0120482</td>
+<td align="right">0.0230011</td>
+<td align="right">0.0186199</td>
+<td align="right">0.0306681</td>
+<td align="right">0.0460022</td>
 </tr>
 </tbody>
 </table>

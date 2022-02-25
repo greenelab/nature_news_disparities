@@ -77,17 +77,17 @@ for(curr_dir in news_scraped_dir_files){
 news_df = news_df[-1,]
 
 # filter out career column and news-and-views
-news_df = subset(news_df, !type %in% c("career-column", "news-and-views"))
+news_df = subset(news_df, !type %in% c("career-column", "news-and-views", "guardian"))
 head(news_df)
 ```
 
-    ##   year type        file_id
-    ## 2 2005 news  041220-1.html
-    ## 3 2005 news  050103-1.html
-    ## 4 2005 news 050103-10.html
-    ## 5 2005 news 050103-11.html
-    ## 6 2005 news 050103-12.html
-    ## 7 2005 news  050103-2.html
+    ##      year type        file_id
+    ## 1123 2005 news  041220-1.html
+    ## 1124 2005 news  050103-1.html
+    ## 1125 2005 news 050103-10.html
+    ## 1126 2005 news 050103-11.html
+    ## 1127 2005 news 050103-12.html
+    ## 1128 2005 news  050103-2.html
 
 ### Read in the quotes
 
@@ -114,7 +114,7 @@ name_pred_file = file.path(proj_dir,
 name_info_file = file.path(proj_dir, 
                              "/data/author_data/all_speaker_fullname.tsv")
 quote_name_origin_df = read_name_origin(name_pred_file, name_info_file)
-quote_name_origin_df = subset(quote_name_origin_df, !type %in% c("career-column", "news-and-views"))
+quote_name_origin_df = subset(quote_name_origin_df, !type %in% c("career-column", "news-and-views", "guardian"))
 ```
 
 ### Read in the authorship info (springer, nature, and cited articles)
@@ -323,10 +323,10 @@ head(nature_pred_gender_df)
     ##       author                            doi year author_pos            file_id
     ## 1     aakash doi:10.1038/s41586-020-03052-3 2020      first s41586-020-03052-3
     ## 2 aanindeeta        doi:10.1038/nature17185 2016      first        nature17185
-    ## 3      aaron  doi:10.1038/s41586-020-3009-y 2020      first  s41586-020-3009-y
-    ## 4      aaron        doi:10.1038/nature07885 2009       last        nature07885
-    ## 5      aaron        doi:10.1038/nature03831 2005       last        nature03831
-    ## 6      aaron        doi:10.1038/nature04790 2006       last        nature04790
+    ## 3      aaron  doi:10.1038/s41586-019-1598-0 2019       last  s41586-019-1598-0
+    ## 4      aaron  doi:10.1038/s41586-020-2864-x 2020       last  s41586-020-2864-x
+    ## 5      aaron        doi:10.1038/nature23912 2017      first        nature23912
+    ## 6      aaron        doi:10.1038/nature20781 2016       last        nature20781
     ##   est_gender gender
     ## 1       MALE   MALE
     ## 2       <NA>   <NA>
@@ -340,8 +340,15 @@ head(nature_pred_gender_df)
 ### Gender prediction for quotes
 
 ``` r
+# filter out articles with more than 25 quotes
+num_quotes = table(full_quote_df$file_id)
+too_many_quotes_idx = which(num_quotes > 25)
+too_many_quotes_file_id = names(num_quotes)[too_many_quotes_idx]
+full_quote_df = subset(full_quote_df, !file_id %in% too_many_quotes_file_id)
+
+
 # filter out career column and news-and-views
-full_quote_df_gender = subset(full_quote_df, !type %in% c("career-column", "news-and-views"))
+full_quote_df_gender = subset(full_quote_df, !type %in% c("career-column", "news-and-views", "guardian"))
 full_quote_df_gender = unique(full_quote_df_gender)
 
 print("Total Quotes")
@@ -354,7 +361,7 @@ total_quotes = nrow(full_quote_df_gender)
 print(total_quotes)
 ```
 
-    ## [1] 119998
+    ## [1] 105457
 
 ``` r
 # remove names with single name and do not have a pronoun
@@ -377,7 +384,7 @@ quotes_with_name_or_pronoun = nrow(full_quote_df_gender)
 print(quotes_with_name_or_pronoun)
 ```
 
-    ## [1] 110035
+    ## [1] 96620
 
 ``` r
 # remove quotes where no gender could be estimated
@@ -395,13 +402,13 @@ quotes_with_gender = nrow(full_quote_df_gender)
 print(quotes_with_gender)
 ```
 
-    ## [1] 109723
+    ## [1] 96390
 
 ### Name origin prediction for quotes
 
 ``` r
 # filter out career column and news-and-views
-full_quote_df_origin = subset(full_quote_df, !type %in% c("career-column", "news-and-views"))
+full_quote_df_origin = subset(full_quote_df, !type %in% c("career-column", "news-and-views", "guardian"))
 full_quote_df_origin = unique(full_quote_df_origin)
 
 
@@ -427,7 +434,7 @@ quotes_with_fullname = nrow(full_quote_df_origin)
 print(quotes_with_fullname)
 ```
 
-    ## [1] 100529
+    ## [1] 88535
 
 ``` r
 print("Total quotes with name origin prediction")
@@ -440,7 +447,7 @@ quotes_with_name_pred = nrow(unique(quote_name_origin_df))
 print(quotes_with_name_pred)
 ```
 
-    ## [1] 100528
+    ## [1] 100457
 
 ``` r
 table1_res = c(total_quotes, quotes_with_name_or_pronoun, quotes_with_gender, quotes_with_fullname, quotes_with_name_pred)
@@ -529,11 +536,11 @@ print(named_citations)
 ```
 
     ##                  type fullname_first_author_citations
-    ## 1 citation_journalist                            4405
-    ## 2  citation_scientist                           11151
+    ## 1 citation_journalist                            4452
+    ## 2  citation_scientist                           11276
     ##   fullname_last_author_citations
-    ## 1                           4423
-    ## 2                          11083
+    ## 1                           4464
+    ## 2                          11170
 
 ``` r
 # filter to the authors with a name prediciton
@@ -554,11 +561,11 @@ print(pred_citations)
 ```
 
     ##                  type name_origin_pred_first_author_citations
-    ## 1 citation_journalist                                    4402
-    ## 2  citation_scientist                                   11151
+    ## 1 citation_journalist                                    4449
+    ## 2  citation_scientist                                   11276
     ##   name_origin_pred_last_author_citations
-    ## 1                                   4406
-    ## 2                                  11065
+    ## 1                                   4447
+    ## 2                                  11152
 
 ``` r
 table2_res = Reduce(merge, list(tot_citations, springer_citations, 
@@ -596,7 +603,7 @@ num_names_springer = nrow(springer_gender_df)
 print(num_names_springer)
 ```
 
-    ## [1] 54509
+    ## [1] 55370
 
 ``` r
 res = get_author_gender(springer_gender_df)
@@ -620,7 +627,7 @@ print("Number of Springer Gender Prediction")
 print(num_gender_springer)
 ```
 
-    ## [1] 50877
+    ## [1] 51686
 
 ``` r
 # double check that it matches the pre-processed table we are working with
@@ -630,7 +637,7 @@ num_names_springer_preprocessed = nrow(springer_pred_gender_df_pass)
 print(num_names_springer_preprocessed)
 ```
 
-    ## [1] 50877
+    ## [1] 51686
 
 ``` r
 print(num_names_springer_preprocessed == num_gender_springer)
@@ -651,7 +658,7 @@ pred_springer = nrow(pred_springer)
 print(pred_springer)
 ```
 
-    ## [1] 54358
+    ## [1] 55197
 
 ``` r
 table3_res = c(num_citations_springer, num_names_springer, num_gender_springer, pred_springer)
@@ -689,7 +696,7 @@ num_names_nature = nrow(nature_gender_df)
 print(num_names_nature)
 ```
 
-    ## [1] 21765
+    ## [1] 21996
 
 ``` r
 res = get_author_gender(nature_gender_df)
@@ -714,7 +721,21 @@ print("Number of nature Gender Prediction")
 print(num_gender_nature)
 ```
 
-    ## [1] 20942
+    ## [1] 21173
+
+``` r
+print("Number nature Gender Prediction by authorship")
+```
+
+    ## [1] "Number nature Gender Prediction by authorship"
+
+``` r
+table(nature_author_df_gender$author_pos)
+```
+
+    ## 
+    ## first  last 
+    ## 10601 10572
 
 ``` r
 # double check that it matches the pre-processed table we are working with
@@ -723,7 +744,7 @@ num_names_nature_preprocessed = nrow(nature_pred_gender_df_pass)
 print(num_names_nature_preprocessed)
 ```
 
-    ## [1] 20942
+    ## [1] 21173
 
 ``` r
 print(num_names_nature_preprocessed == num_gender_nature)
@@ -744,7 +765,7 @@ pred_nature = nrow(pred_nature)
 print(pred_nature)
 ```
 
-    ## [1] 21765
+    ## [1] 21996
 
 ``` r
 table4_res = c(num_citations_nature, num_names_nature, num_gender_nature, pred_nature)
@@ -760,11 +781,11 @@ knitr::kable(data.frame(Frequency=table1_res), format = "pipe",
 
 |                                 |  Frequency|
 |:--------------------------------|----------:|
-| total\_quotes                   |     119998|
-| quotes\_with\_name\_or\_pronoun |     110035|
-| quotes\_with\_gender\_pred      |     109723|
-| quotes\_with\_fullname          |     100529|
-| quotes\_with\_name\_pred        |     100528|
+| total\_quotes                   |     105457|
+| quotes\_with\_name\_or\_pronoun |      96620|
+| quotes\_with\_gender\_pred      |      96390|
+| quotes\_with\_fullname          |      88535|
+| quotes\_with\_name\_pred        |     100457|
 
 ``` r
 knitr::kable(table2_res, format = "pipe", 
@@ -798,19 +819,19 @@ knitr::kable(table2_res, format = "pipe",
 <td align="left">citation_journalist</td>
 <td align="right">15713</td>
 <td align="right">5736</td>
-<td align="right">4405</td>
-<td align="right">4423</td>
-<td align="right">4402</td>
-<td align="right">4406</td>
+<td align="right">4452</td>
+<td align="right">4464</td>
+<td align="right">4449</td>
+<td align="right">4447</td>
 </tr>
 <tr class="even">
 <td align="left">citation_scientist</td>
 <td align="right">40707</td>
 <td align="right">14597</td>
-<td align="right">11151</td>
-<td align="right">11083</td>
-<td align="right">11151</td>
-<td align="right">11065</td>
+<td align="right">11276</td>
+<td align="right">11170</td>
+<td align="right">11276</td>
+<td align="right">11152</td>
 </tr>
 </tbody>
 </table>
@@ -823,9 +844,9 @@ knitr::kable(data.frame(Frequency=table3_res), format = "pipe",
 |                             |  Frequency|
 |:----------------------------|----------:|
 | num\_springer\_articles     |      38400|
-| num\_springer\_full\_names  |      54509|
-| num\_springer\_gender\_pred |      50877|
-| num\_springer\_origin\_pred |      54358|
+| num\_springer\_full\_names  |      55370|
+| num\_springer\_gender\_pred |      51686|
+| num\_springer\_origin\_pred |      55197|
 
 ``` r
 knitr::kable(data.frame(Frequency=table4_res), format = "pipe", 
@@ -835,6 +856,6 @@ knitr::kable(data.frame(Frequency=table4_res), format = "pipe",
 |                           |  Frequency|
 |:--------------------------|----------:|
 | num\_nature\_articles     |      13414|
-| num\_nature\_full\_names  |      21765|
-| num\_nature\_gender\_pred |      20942|
-| num\_nature\_origin\_pred |      21765|
+| num\_nature\_full\_names  |      21996|
+| num\_nature\_gender\_pred |      21173|
+| num\_nature\_origin\_pred |      21996|
