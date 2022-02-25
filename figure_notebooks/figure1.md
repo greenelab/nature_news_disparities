@@ -77,8 +77,21 @@ print(dim(news_df))
     ## [1] 37748     3
 
 ``` r
+news_df = subset(news_df, !type %in% c("guardian"))
+print("Total Articles Nature")
+```
+
+    ## [1] "Total Articles Nature"
+
+``` r
+print(dim(news_df))
+```
+
+    ## [1] 22001     3
+
+``` r
 # filter out career column and news-and-views
-news_df = subset(news_df, !type %in% c("career-column", "news-and-views", "guardian"))
+news_df = subset(news_df, !type %in% c("career-column", "news-and-views"))
 print("Total Articles, journalist")
 ```
 
@@ -227,16 +240,19 @@ full_df = Reduce(rbind, list(nature_author_df[,col_ids],
 ``` r
 # plot number of articles scraped
 full_df$type = factor(full_df$type, levels = ARTICLE_TYPE_FACTOR_ORDER)
-news_nature_gg = ggplot(subset(full_df, type != "springer"), 
+
+nature_df = subset(full_df, type != "springer")
+
+news_nature_gg = ggplot(nature_df, 
                         aes(x=as.factor(year), fill=type)) +
                 geom_bar() + theme_bw() +
-                scale_fill_manual(values=ARTICLE_TYPE_COLOR) +
+                scale_fill_manual(values=ARTICLE_TYPE_COLOR[unique(nature_df$type)]) +
                 xlab("Year of Article") + ylab("Num. Articles") +
                     ggtitle("# Nature News and Research Articles Over Time")
 
 all_gg = ggplot(full_df, aes(x=as.factor(year), fill=type)) +
                 geom_bar() + theme_bw() +
-                scale_fill_manual(values=ARTICLE_TYPE_COLOR) +
+                scale_fill_manual(values=ARTICLE_TYPE_COLOR[unique(full_df$type)]) +
                 xlab("Year of Article") + ylab("# articles") +
                     ggtitle("# Springer + Nature News and Research Articles Over Time")
 ggsave(file.path(proj_dir, "/figure_notebooks/manuscript_figs/fig1_tmp/news_nature_gg.png"),
