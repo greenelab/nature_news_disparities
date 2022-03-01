@@ -89,7 +89,7 @@ format_author_firstnames <- function(author_vec){
     # now strip periods
     author_vec = gsub("[.]", "", author_vec)
 
-    # or less than 3 characters
+    # or less than 2 characters
     short_name_idx = which(unlist(lapply(author_vec, nchar)) < 2)
     author_vec[short_name_idx] = ""
 
