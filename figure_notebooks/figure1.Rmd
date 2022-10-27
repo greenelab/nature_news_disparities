@@ -161,13 +161,15 @@ nature_df = subset(full_df, type != "springer")
 news_nature_gg = ggplot(nature_df, 
                         aes(x=as.factor(year), fill=type)) +
                 geom_bar() + theme_bw() +
-                scale_fill_manual(values=ARTICLE_TYPE_COLOR[unique(nature_df$type)]) +
+                scale_fill_manual(values=ARTICLE_TYPE_COLOR[unique(nature_df$type)],
+                                  labels=ARTICLE_TYPE_LABELS[unique(nature_df$type)]) +
                 xlab("Year of Article") + ylab("Num. Articles") +
                     ggtitle("# Nature News and Research Articles Over Time")
 
 all_gg = ggplot(full_df, aes(x=as.factor(year), fill=type)) +
                 geom_bar() + theme_bw() +
-                scale_fill_manual(values=ARTICLE_TYPE_COLOR[unique(full_df$type)]) +
+                scale_fill_manual(values=ARTICLE_TYPE_COLOR[unique(full_df$type)],
+                                  labels=ARTICLE_TYPE_LABELS[unique(full_df$type)]) +
                 xlab("Year of Article") + ylab("# articles") +
                     ggtitle("# Springer + Nature News and Research Articles Over Time")
 ggsave(file.path(proj_dir, "/figure_notebooks/manuscript_figs/fig1_tmp/news_nature_gg.png"),

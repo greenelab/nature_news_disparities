@@ -514,7 +514,8 @@ tot_quotes_gg = ggplot(full_quote_df, aes(x=as.numeric(year), fill=type)) +
     theme_bw() +
     xlab("Year of Article") + ylab("# Quotes") +
     ggtitle("# of Quotes per News Article Type Over Time") + 
-    scale_fill_manual(values=ARTICLE_TYPE_COLOR[unique(full_quote_df$type)]) +
+    scale_fill_manual(values=ARTICLE_TYPE_COLOR[unique(full_quote_df$type)],
+                      labels=ARTICLE_TYPE_LABELS[unique(full_quote_df$type)]) +
     theme(legend.position="bottom")
 
 ggsave(file.path(proj_dir, "/figure_notebooks/manuscript_figs/fig2_tmp/tot_quotes_gg.pdf"),
@@ -541,7 +542,8 @@ quotes_nature_gg =
     ggtitle("News Quotes vs First+Last Author Research Citations") + 
     ylim(c(0, 1)) +
     geom_hline(yintercept=0.5, color="red") +
-    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR[unique(quote_sub$corpus)]) +
+    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR[unique(quote_sub$corpus)],
+                      labels=QUOTE_ANALYSIS_LABELS[unique(quote_sub$corpus)]) +
     theme(legend.position="bottom")
 
 ggsave(file.path(proj_dir, "/figure_notebooks/manuscript_figs/fig2_tmp/quotes_nature_gg.pdf"),
@@ -558,7 +560,8 @@ quotes_springer_gg =
     ggtitle("News Quotes vs First+Last Author Springer Article Citations") + 
     ylim(c(0, 1)) +
     geom_hline(yintercept=0.5, color="red") +
-    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR[unique(quote_sub$corpus)]) +
+    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR[unique(quote_sub$corpus)],
+                      labels=QUOTE_ANALYSIS_LABELS[unique(quote_sub$corpus)]) +
     theme(legend.position="bottom")
 
 ggsave(file.path(proj_dir, "/figure_notebooks/manuscript_figs/fig2_tmp/quotes_springer_gg.pdf"),
@@ -576,7 +579,8 @@ all_type_gg = ggplot(type_df, aes(x=as.numeric(year), y=mean,
     ggtitle("Male Proportion of Quotes Over Time") + 
     ylim(c(0, 1)) +
     geom_hline(yintercept=0.5, color="red") +
-    scale_fill_manual(values=ARTICLE_TYPE_COLOR[unique(type_df$corpus)]) +
+    scale_fill_manual(values=ARTICLE_TYPE_COLOR[unique(type_df$corpus)],
+                      labels=ARTICLE_TYPE_LABELS[unique(type_df$corpus)]) +
     theme(legend.position="bottom")
 
 ggsave(file.path(proj_dir, "/figure_notebooks/manuscript_figs/fig2_tmp/all_type_gg.pdf"),
@@ -584,6 +588,7 @@ ggsave(file.path(proj_dir, "/figure_notebooks/manuscript_figs/fig2_tmp/all_type_
 
 
 #### breakdown MALE bias by career vs non-career article type
+career_df = rbind(career_df, subset(compare_df, corpus == "quote"))
 career_df$corpus = factor(career_df$corpus, levels = QUOTE_ANALYSIS_ORDER)
 career_gg = ggplot(career_df, aes(x=as.numeric(year), y=mean,
                           ymin=bottom_CI, ymax=top_CI,
@@ -594,7 +599,8 @@ career_gg = ggplot(career_df, aes(x=as.numeric(year), y=mean,
     ylim(c(0, 1)) +
     ggtitle("Male Proportion of Quotes in Career-Feature vs Other Articles") + 
     geom_hline(yintercept=0.5, color="red") +
-    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR[unique(career_df$corpus)]) +
+    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR[unique(career_df$corpus)],
+                      labels=QUOTE_ANALYSIS_LABELS[unique(career_df$corpus)]) +
     theme(legend.position="bottom")
 
 ggsave(file.path(proj_dir, "/figure_notebooks/manuscript_figs/fig2_tmp/career_gg.pdf"),
@@ -607,7 +613,7 @@ first_v_last_gg = ggplot(first_cited_prop_df, aes(x=as.numeric(year), y=mean,
     geom_point() + geom_ribbon(alpha=0.5) + geom_line(alpha=0.5) + 
     theme_bw() + 
     xlab("Year of Article") + ylab("First Author Quotation Percentage") +
-    ggtitle("# First Author Quotes /  Total # Quotes") + 
+    ggtitle("# First Author Quotes /  First + Last Author Quotes") + 
     geom_hline(yintercept=0.5, color="red") +
     theme(legend.position="bottom")
 

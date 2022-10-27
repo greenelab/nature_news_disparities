@@ -1020,11 +1020,12 @@ tot_art_gg = ggplot(num_art_tot, aes(x=as.numeric(year), y=tot_articles,
     geom_point() + geom_line(show.legend = F) + theme_bw() + 
     xlab("Year of Article") + ylab("Number of Total Articles/Quotes/Citations/Mentions") +
     ggtitle("Total number of Articles/Quotes/Citations/Mentions per Corpus") + 
-    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR) +
+    scale_color_manual(values=QUOTE_ANALYSIS_COLOR[unique(num_art_tot$corpus)],
+                      labels=QUOTE_ANALYSIS_LABELS[unique(num_art_tot$corpus)]) +
     theme(legend.position="bottom")
 
 ggsave(file.path(proj_dir, "/figure_notebooks/manuscript_figs/fig3_tmp/tot_art_gg.pdf"),
-       tot_art_gg, width = 5, height = 5, units = "in", device = "pdf")
+       tot_art_gg, width = 10, height = 5, units = "in", device = "pdf")
 ```
 
 ### generate the citation plots
@@ -1099,7 +1100,8 @@ citation_nature_indiv_full_gg = ggplot(cite_sub,
     theme_bw() + 
     xlab("Year of Article") + ylab("Percentage Citations or Articles") +
     ggtitle(paste("Percentage Citations vs Authorship by Name Origin")) + 
-    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR[unique(cite_sub$corpus)]) +
+    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR[unique(cite_sub$corpus)],
+                      labels=QUOTE_ANALYSIS_LABELS[unique(cite_sub$corpus)]) +
     facet_wrap(~ name_origin, scales = "free_y") +
     theme(legend.position="bottom")
 
@@ -1123,7 +1125,8 @@ citation_springer_indiv_full_gg = ggplot(cite_sub,
     theme_bw() + 
     xlab("Year of Article") + ylab("Percentage Citations or Articles") +
     ggtitle(paste("Percentage Citations vs Authorship by Name Origin")) + 
-    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR[unique(cite_sub$corpus)]) +
+    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR[unique(cite_sub$corpus)],
+                      labels=QUOTE_ANALYSIS_LABELS[unique(cite_sub$corpus)]) +
     facet_wrap(~ name_origin, scales = "free_y") +
     theme(legend.position="bottom")
 
@@ -1143,7 +1146,8 @@ citation_j_nature_indiv_sub_gg = ggplot(cite_sub,
     theme_bw() + 
     xlab("Year of Article") + ylab("Percentage Citations or Articles") +
     ggtitle(paste("Prop. Citations vs Authorship by Name Origin in Journalist Written Articles")) + 
-    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR[unique(cite_sub$corpus)]) +
+    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR[unique(cite_sub$corpus)],
+                      labels=QUOTE_ANALYSIS_LABELS[unique(cite_sub$corpus)]) +
     facet_wrap(~ name_origin, dir="h", scales="free") +
     theme(legend.position="bottom")
 
@@ -1162,7 +1166,8 @@ citation_s_nature_indiv_sub_gg = ggplot(cite_sub,
     theme_bw() + 
     xlab("Year of Article") + ylab("Percentage Citations or Articles") +
     ggtitle(paste("Prop. Citations vs Authorship by Name Origin in Scientist Written Articles")) + 
-    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR[cite_sub$corpus]) +
+    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR[cite_sub$corpus],
+                      labels=QUOTE_ANALYSIS_LABELS[cite_sub$corpus]) +
     facet_wrap(~ name_origin, dir="h", scales="free") +
     theme(legend.position="bottom")
 
@@ -1199,7 +1204,8 @@ quote_nature_indiv_full_gg = ggplot(quote_sub,
     theme_bw() + 
     xlab("Year of Article") + ylab("Percentage Quotes or Articles") +
     ggtitle(paste("Percentage Quotes vs Authorship by Name Origin")) + 
-    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR[unique(quote_sub$corpus)]) +
+    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR[unique(quote_sub$corpus)],
+                      labels=QUOTE_ANALYSIS_LABELS[unique(quote_sub$corpus)]) +
     facet_wrap( ~ name_origin, scales = "free_y") +
     theme(legend.position="bottom")
 
@@ -1216,7 +1222,8 @@ quote_springer_indiv_full_gg = ggplot(quote_sub,
     theme_bw() + 
     xlab("Year of Article") + ylab("Percentage Quotes or Articles") +
     ggtitle(paste("Percentage Quotes vs Authorship by Name Origin")) + 
-    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR[unique(quote_sub$corpus)]) +
+    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR[unique(quote_sub$corpus)],
+                      labels=QUOTE_ANALYSIS_LABELS[unique(quote_sub$corpus)]) +
     facet_wrap( ~ name_origin, scales = "free_y") +
     theme(legend.position="bottom")
 
@@ -1235,7 +1242,8 @@ quote_nature_indiv_sub_gg = ggplot(quote_sub,
     theme_bw() + 
     xlab("Year of Article") + ylab("Percentage Quotes or Articles") +
     ggtitle(paste("Percentage Quotes vs Authorship by Name Origin")) + 
-    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR[unique(quote_sub$corpus)]) +
+    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR[unique(quote_sub$corpus)],
+                      labels=QUOTE_ANALYSIS_LABELS[unique(quote_sub$corpus)]) +
     facet_wrap(~ name_origin) +
     theme(legend.position="bottom")
 
@@ -1273,7 +1281,8 @@ mention_nature_indiv_full_gg = ggplot(mention_sub,
     theme_bw() + 
     xlab("Year of Article") + ylab("Percentage Mentions or Articles") +
     ggtitle(paste("Percentage Mentions vs Authorship by Name Origin")) + 
-    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR[unique(mention_sub$corpus)]) +
+    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR[unique(mention_sub$corpus)],
+                      labels=QUOTE_ANALYSIS_LABELS[unique(mention_sub$corpus)]) +
     facet_wrap( ~ name_origin, scales = "free_y") +
     theme(legend.position="bottom")
 
@@ -1291,7 +1300,8 @@ mention_springer_indiv_full_gg = ggplot(mention_sub,
     theme_bw() + 
     xlab("Year of Article") + ylab("Percentage Mentions or Articles") +
     ggtitle(paste("Percentage Mentions vs Authorship by Name Origin")) + 
-    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR[unique(mention_sub$corpus)]) +
+    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR[unique(mention_sub$corpus)],
+                      labels=QUOTE_ANALYSIS_LABELS[unique(mention_sub$corpus)]) +
     facet_wrap( ~ name_origin, scales = "free_y") +
     theme(legend.position="bottom")
 
@@ -1311,7 +1321,8 @@ mention_nature_indiv_sub_gg = ggplot(mention_sub,
     theme_bw() + 
     xlab("Year of Article") + ylab("Percentage Mentions or Articles") +
     ggtitle(paste("Percentage Mentions vs Authorship by Name Origin")) + 
-    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR[unique(mention_sub$corpus)]) +
+    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR[unique(mention_sub$corpus)],
+                      labels=QUOTE_ANALYSIS_LABELS[unique(mention_sub$corpus)]) +
     facet_wrap(~ name_origin) +
     theme(legend.position="bottom")
 
@@ -1472,7 +1483,7 @@ middle_image1 <- image_append(image_scale(c(citation_j_overview_gg1,
                                            citation_s_overview_gg1),3000), stack = FALSE)
 middle_image2 <- image_append(image_scale(c(citation_j_overview_gg2,
                                            citation_s_overview_gg2),3000), stack = FALSE)
-full_image <- image_append(c(image_scale(tot_art_gg, 1500), 
+full_image <- image_append(c(image_scale(tot_art_gg, 3000), 
                              image_scale(c(middle_image1, middle_image2, 
                                            bottom_image), 3000)), stack = TRUE)
                            
