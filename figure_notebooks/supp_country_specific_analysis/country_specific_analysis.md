@@ -693,7 +693,8 @@ quote_nature_indiv_sub_gg = ggplot(subset(all_bootstrap_df_all,
     theme_bw() + 
     xlab("Year of Article") + ylab("Percentage Quotes or Articles") +
     ggtitle(paste("Prop. Quote vs Last Authorship by Name Origin -- restricted to cited")) + 
-    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR[c("nature_last", "quote")]) +
+    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR[c("nature_last", "quote")],
+                      labels=QUOTE_ANALYSIS_LABELS[c("nature_last", "quote")]) +
     facet_wrap(~ name_origin, dir="h", scales="free") +
     theme(legend.position="bottom")
 
@@ -711,7 +712,8 @@ mention_nature_indiv_sub_gg = ggplot(subset(all_bootstrap_df_all,
     theme_bw() + 
     xlab("Year of Article") + ylab("Percentage mentions or Articles") +
     ggtitle(paste("Prop. mention vs Last Authorship by Name Origin -- restricted to cited")) + 
-    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR[c("nature_last", "mention")]) +
+    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR[c("nature_last", "mention")],
+                      labels=QUOTE_ANALYSIS_LABELS[c("nature_last", "mention")]) +
     facet_wrap(~ name_origin, dir="h", scales="free") +
     theme(legend.position="bottom")
 
@@ -733,7 +735,8 @@ quote_springer_indiv_sub_gg = ggplot(subset(all_bootstrap_df_all,
     theme_bw() + 
     xlab("Year of Article") + ylab("Percentage Quotes or Articles") +
     ggtitle(paste("Prop. Quote vs Last Authorship by Name Origin -- restricted to cited")) + 
-    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR[c("springer_last", "quote")]) +
+    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR[c("springer_last", "quote")],
+                      labels=QUOTE_ANALYSIS_LABELS[c("springer_last", "quote")]) +
     facet_wrap(~ name_origin, dir="h", scales="free") +
     theme(legend.position="bottom")
 
@@ -751,7 +754,8 @@ mention_springer_indiv_sub_gg = ggplot(subset(all_bootstrap_df_all,
     theme_bw() + 
     xlab("Year of Article") + ylab("Percentage mentions or Articles") +
     ggtitle(paste("Prop. mention vs Last Authorship by Name Origin -- restricted to cited")) + 
-    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR[c("springer_last", "mention")]) +
+    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR[c("springer_last", "mention")],
+                      labels=QUOTE_ANALYSIS_LABELS[c("springer_last", "mention")]) +
     facet_wrap(~ name_origin, dir="h", scales="free") +
     theme(legend.position="bottom")
 
@@ -776,7 +780,8 @@ quote_nature_indiv_sub_gg = ggplot(subset(all_bootstrap_df,
     theme_bw() + 
     xlab("Year of Article") + ylab("Percentage Quotes or Articles") +
     ggtitle(paste("Prop. Quote vs Last Authorship by Name Origin -- restricted to US affil.")) + 
-    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR[c("nature_last", "quote")]) +
+    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR[c("nature_last", "quote")],
+                      labels=QUOTE_ANALYSIS_LABELS[c("nature_last", "quote")]) +
     facet_wrap(~ name_origin, dir="h", scales="free") +
     theme(legend.position="bottom")
 
@@ -794,7 +799,8 @@ mention_nature_indiv_sub_gg = ggplot(subset(all_bootstrap_df,
     theme_bw() + 
     xlab("Year of Article") + ylab("Percentage mentions or Articles") +
     ggtitle(paste("Prop. mention vs Last Authorship by Name Origin -- restricted to US affil.")) + 
-    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR[c("nature_last", "mention")]) +
+    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR[c("nature_last", "mention")],
+                      labels=QUOTE_ANALYSIS_LABELS[c("nature_last", "mention")]) +
     facet_wrap(~ name_origin, dir="h", scales="free") +
     theme(legend.position="bottom")
 
@@ -816,7 +822,8 @@ quote_springer_indiv_sub_gg = ggplot(subset(all_bootstrap_df,
     theme_bw() + 
     xlab("Year of Article") + ylab("Percentage Quotes or Articles") +
     ggtitle(paste("Prop. Quote vs Last Authorship by Name Origin -- restricted to US affil.")) + 
-    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR[c("nature_last", "springer_last")]) +
+    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR[c("nature_last", "springer_last")],
+                      labels=QUOTE_ANALYSIS_LABELS[c("nature_last", "springer_last")]) +
     facet_wrap(~ name_origin, dir="h", scales="free") +
     theme(legend.position="bottom")
 
@@ -834,7 +841,8 @@ mention_springer_indiv_sub_gg = ggplot(subset(all_bootstrap_df,
     theme_bw() + 
     xlab("Year of Article") + ylab("Percentage mentions or Articles") +
     ggtitle(paste("Prop. mention vs Last Authorship by Name Origin -- restricted to US affil.")) + 
-    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR[c("springer_last", "mention")]) +
+    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR[c("springer_last", "mention")],
+                      labels=QUOTE_ANALYSIS_LABELS[c("springer_last", "mention")]) +
     facet_wrap(~ name_origin, dir="h", scales="free") +
     theme(legend.position="bottom")
 
