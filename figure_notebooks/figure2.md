@@ -383,10 +383,12 @@ if(RERUN_BOOTSTRAP){
         
     
     #### Quote data
-    quote_prop_df = compute_bootstrap_gender(subset(full_quote_df, type != "guardian"), 
+    res = compute_bootstrap_gender(subset(full_quote_df, type != "guardian"), 
                                                year_col_id = "year", 
                                                article_col_id = "quote",
                                                conf_int=0.95)
+    quote_prop_df = res$quantile_res
+    quote_prop_boot = res$boot_res
     quote_prop_df$corpus = "quote"
     
     #### Guardian Quote data
@@ -402,6 +404,7 @@ if(RERUN_BOOTSTRAP){
                                                year_col_id = "year", 
                                                article_col_id = "quote",
                                                conf_int=0.95)
+        bootstrap_res = bootstrap_res$quantile_res
         bootstrap_res$corpus = type_names
         return(bootstrap_res)
     
@@ -432,43 +435,65 @@ if(RERUN_BOOTSTRAP){
     
     
     #### Background data
-    springer_first_prop_df = compute_bootstrap_gender(
+    springer_first_prop_res = compute_bootstrap_gender(
                                 subset(springer_author_df, author_pos == "first"), 
                                 year_col_id = "year", 
                                 article_col_id = "doi",
                                 conf_int=0.95)
-    springer_last_prop_df = compute_bootstrap_gender(
+    springer_last_prop_res = compute_bootstrap_gender(
                                 subset(springer_author_df, author_pos == "last"), 
                                 year_col_id = "year", 
                                 article_col_id = "doi",
                                 conf_int=0.95)
-    nature_first_prop_df = compute_bootstrap_gender(
+    nature_first_prop_res = compute_bootstrap_gender(
                                 subset(nature_author_df, author_pos == "first"), 
                                 year_col_id = "year", 
                                 article_col_id = "doi",
                                 conf_int=0.95)
-    nature_last_prop_df = compute_bootstrap_gender(
+    nature_last_prop_res = compute_bootstrap_gender(
                                 subset(nature_author_df, author_pos == "last"), 
                                 year_col_id = "year", 
                                 article_col_id = "doi",
                                 conf_int=0.95)
-    springer_first_prop_df$corpus = "springer_first"
-    springer_last_prop_df$corpus = "springer_last"
-    nature_first_prop_df$corpus = "nature_first"
-    nature_last_prop_df$corpus = "nature_last"
     
+    springer_first_prop_df = springer_first_prop_res$quantile_res
+    springer_first_prop_df$corpus = "springer_first"
+    springer_first_prop_boot = springer_first_prop_res$boot_res
+    
+    springer_last_prop_df = springer_last_prop_res$quantile_res
+    springer_last_prop_df$corpus = "springer_last"
+    springer_last_prop_boot = springer_last_prop_res$boot_res
+    
+    nature_first_prop_df = nature_first_prop_res$quantile_res
+    nature_first_prop_df$corpus = "nature_first"
+    nature_first_prop_boot = nature_first_prop_res$boot_res
+
+    nature_last_prop_df = nature_last_prop_res$quantile_res
+    nature_last_prop_df$corpus = "nature_last"
+    nature_last_prop_boot = nature_last_prop_res$boot_res
+   
+
     
     #### first v last author quotes
-    first_cited_prop_df = compute_bootstrap_first_author(quote_author_df, 
+    first_cited_prop_res = compute_bootstrap_first_author(quote_author_df, 
                                                    year_col_id = "year", 
                                                    article_col_id = "file_id",
                                                    conf_int=0.95)
+    
+    first_cited_prop_df = first_cited_prop_res$quantile_res
+    first_cited_prop_boot = first_cited_prop_res$boot_res
+
+    
     all_bootstrap_file = file.path(proj_dir,
                             "/figure_notebooks/manuscript_figs/fig2_tmp/fig2.RData")
-    save(quote_prop_df, type_df, career_df, 
-         springer_first_prop_df, springer_last_prop_df, 
-         nature_first_prop_df, nature_last_prop_df, 
-         first_cited_prop_df, #guardian_quote_prop_df,
+    save(quote_prop_df, quote_prop_boot, 
+         type_df, career_df, 
+         springer_first_prop_df, springer_first_prop_boot, 
+         springer_last_prop_df, springer_last_prop_boot,
+         nature_first_prop_df, nature_first_prop_boot,
+         nature_last_prop_df, nature_last_prop_df,
+         first_cited_prop_df, first_cited_prop_boot,
+         #guardian_quote_prop_df,
          file = all_bootstrap_file)
 }else{
     all_bootstrap_file = file.path(proj_dir,

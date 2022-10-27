@@ -402,157 +402,91 @@ get_subboot <- function(origin_id, curr_corpus, in_df, bootstrap_col_id="doi"){
                                               country_col_id = "name_origin",
                                               country_agg = origin_id, 
                                               conf_int = 0.95)
-    bootstrap_res$name_origin = origin_id
+    bootstrap_df = bootstrap_res$quantile_res
+    bootstrap_raw = bootstrap_res$boot_res
+    
+    bootstrap_df$name_origin = origin_id
+    bootstrap_raw$name_origin = origin_id
     
     # add a label for plotting later
-    bootstrap_res$label[bootstrap_res$year == 2020] = 
-        bootstrap_res$name_origin[bootstrap_res$year == 2020]
+    bootstrap_df$label[bootstrap_df$year == 2020] = 
+        bootstrap_df$name_origin[bootstrap_df$year == 2020]
         
 
-    return(bootstrap_res)
+    return(list(bootstrap_df=bootstrap_df, bootstrap_raw=bootstrap_raw))
+
+}
+
+call_get_subboot <- function(name_df, curr_corpus){
+    
+    # get the bootstrapped CI for each source data type
+    origin_df = NA
+    origin_raw = NA
+    for(curr_origin in unique(name_df$name_origin)){
+        print(curr_origin)
+        res = get_subboot(curr_origin, 
+                          curr_corpus=curr_corpus,
+                          name_df)
+        origin_df = rbind(origin_df, res[[1]])
+        origin_raw = rbind(origin_raw, res[[2]])
+    }
+    origin_df = origin_df[-1,]
+    origin_raw = origin_raw[-1,]
+    
+    origin_df$corpus = curr_corpus
+    origin_raw$corpus = curr_corpus
+    
+    return(list(quant_df=origin_df, raw_df=origin_raw))
 
 }
 
 if(RERUN_BOOTSTRAP){
     
     # get the bootstrapped CI for each source data type
-    citation_j_origin_df1 = NA
-    for(curr_origin in unique(name_df$name_origin)){
-        print(curr_origin)
-        res = get_subboot(curr_origin, 
-                          curr_corpus="citation_journalist_first",
-                          name_df)
-        citation_j_origin_df1 = rbind(citation_j_origin_df1, res)
-    }
-    citation_j_origin_df1 = citation_j_origin_df1[-1,]
-    
-    citation_s_origin_df1 = NA
-    for(curr_origin in unique(name_df$name_origin)){
-        print(curr_origin)
-        res = get_subboot(curr_origin, 
-                          curr_corpus="citation_scientist_first",
-                          name_df)
-        citation_s_origin_df1 = rbind(citation_s_origin_df1, res)
-    }
-    citation_s_origin_df1 = citation_s_origin_df1[-1,]
-    
-    citation_j_origin_df2 = NA
-    for(curr_origin in unique(name_df$name_origin)){
-        print(curr_origin)
-        res = get_subboot(curr_origin, 
-                          curr_corpus="citation_journalist_last",
-                          name_df)
-        citation_j_origin_df2 = rbind(citation_j_origin_df2, res)
-    }
-    citation_j_origin_df2 = citation_j_origin_df2[-1,]
-    
-    citation_s_origin_df2 = NA
-    for(curr_origin in unique(name_df$name_origin)){
-        print(curr_origin)
-        res = get_subboot(curr_origin, 
-                          curr_corpus="citation_scientist_last",
-                          name_df)
-        citation_s_origin_df2 = rbind(citation_s_origin_df2, res)
-    }
-    citation_s_origin_df2 = citation_s_origin_df2[-1,]
-    
-    
-    
-    quote_origin_df = NA
-    for(curr_origin in unique(name_df$name_origin)){
-        print(curr_origin)
-        res = get_subboot(curr_origin, 
-                          curr_corpus="quote",
-                          name_df)
-        quote_origin_df = rbind(quote_origin_df, res)
-    }
-    quote_origin_df = quote_origin_df[-1,]
-    
-    #g_quote_origin_df = NA
-    #for(curr_origin in unique(name_df$name_origin)){
-    #    print(curr_origin)
-    #    res = get_subboot(curr_origin, 
-    #                      curr_corpus="guardian_quote",
-    #                      name_df)
-    #    g_quote_origin_df = rbind(g_quote_origin_df, res)
-    #}
-    #g_quote_origin_df = g_quote_origin_df[-1,]
+    res = call_get_subboot(name_df, "citation_journalist_first")
+    citation_j_origin_df1 = res$quant_df
+    citation_j_origin_raw1 = res$raw_df
+      
+    res = call_get_subboot(name_df, "citation_scientist_first")
+    citation_s_origin_df1 = res$quant_df
+    citation_s_origin_raw1 = res$raw_df
 
-    springer_origin_df_last = NA
-    for(curr_origin in unique(name_df$name_origin)){
-        print(curr_origin)
-        res = get_subboot(curr_origin, 
-                          curr_corpus="springer_last",
-                          name_df)
-        springer_origin_df_last = rbind(springer_origin_df_last, res)
-    }
-    springer_origin_df_last = springer_origin_df_last[-1,]
+    res = call_get_subboot(name_df, "citation_journalist_last")
+    citation_j_origin_df2 = res$quant_df
+    citation_j_origin_raw2 = res$raw_df
     
-    nature_origin_df_last = NA
-    for(curr_origin in unique(name_df$name_origin)){
-        print(curr_origin)
-        res = get_subboot(curr_origin, 
-                          curr_corpus="nature_last",
-                          name_df)
-        nature_origin_df_last = rbind(nature_origin_df_last, res)
-    }
-    nature_origin_df_last = nature_origin_df_last[-1,]
-    
-    springer_origin_df_first = NA
-    for(curr_origin in unique(name_df$name_origin)){
-        print(curr_origin)
-        res = get_subboot(curr_origin, 
-                          curr_corpus="springer_first",
-                          name_df)
-        springer_origin_df_first = rbind(springer_origin_df_first, res)
-    }
-    springer_origin_df_first = springer_origin_df_first[-1,]
-    
-    nature_origin_df_first = NA
-    for(curr_origin in unique(name_df$name_origin)){
-        print(curr_origin)
-        res = get_subboot(curr_origin, 
-                          curr_corpus="nature_first",
-                          name_df)
-        nature_origin_df_first = rbind(nature_origin_df_first, res)
-    }
-    nature_origin_df_first = nature_origin_df_first[-1,]
-    
-    
-    mention_origin_df = NA
-    for(curr_origin in unique(name_df$name_origin)){
-        print(curr_origin)
-        res = get_subboot(curr_origin, 
-                          curr_corpus="mention",
-                          name_df)
-        mention_origin_df = rbind(mention_origin_df, res)
-    }
-    mention_origin_df = mention_origin_df[-1,]
-    
-    #g_mention_origin_df = NA
-    #for(curr_origin in unique(name_df$name_origin)){
-    #    print(curr_origin)
-    #    res = get_subboot(curr_origin, 
-    #                      curr_corpus="guardian_mention",
-    #                      name_df)
-    #    g_mention_origin_df = rbind(g_mention_origin_df, res)
-    #}
-    #g_mention_origin_df = g_mention_origin_df[-1,]
+    res = call_get_subboot(name_df, "citation_scientist_last")
+    citation_s_origin_df2 = res$quant_df
+    citation_s_origin_raw2 = res$raw_df
+       
+    res = call_get_subboot(name_df, "quote")
+    quote_origin_df = res$quant_df
+    quote_origin_raw = res$raw_df
 
-    # re-add corpus column for easy reference later
-    citation_j_origin_df1$corpus = "citation_journalist_first"
-    citation_s_origin_df1$corpus = "citation_scientist_first"
-    citation_j_origin_df2$corpus = "citation_journalist_last"
-    citation_s_origin_df2$corpus = "citation_scientist_last"
-    quote_origin_df$corpus = "quote"
-    #g_quote_origin_df$corpus = "guardian_quote"
-    springer_origin_df_first$corpus = "springer_first"
-    nature_origin_df_first$corpus = "nature_first"
-    springer_origin_df_last$corpus = "springer_last"
-    nature_origin_df_last$corpus = "nature_last"
-    mention_origin_df$corpus = "mention"
-    #g_mention_origin_df$corpus = "guardian_mention"
+    res = call_get_subboot(name_df, "springer_last")
+    springer_origin_df_last = res$quant_df
+    springer_origin_df_last_raw = res$raw_df
 
+    res = call_get_subboot(name_df, "nature_last")
+    nature_origin_df_last = res$quant_df
+    nature_origin_df_last_raw = res$raw_df
+    
+    
+    res = call_get_subboot(name_df, "springer_first")
+    springer_origin_df_first = res$quant_df
+    springer_origin_df_first_raw = res$raw_df
+    
+    
+    res = call_get_subboot(name_df, "nature_first")
+    nature_origin_df_first = res$quant_df
+    nature_origin_df_first_raw = res$raw_df
+    
+    
+    res = call_get_subboot(name_df, "mention")
+    mention_origin_df = res$quant_df
+    mention_origin_raw = res$raw_df
+    
+    
     all_bootstrap_df = Reduce(rbind, list(quote_origin_df,
                                        citation_j_origin_df1,
                                        citation_s_origin_df1,
@@ -567,8 +501,28 @@ if(RERUN_BOOTSTRAP){
     
     outfile = file.path(proj_dir,"/figure_notebooks/manuscript_figs/fig3_tmp/all_bootstrap_df.tsv")
     write.table(all_bootstrap_df, outfile, sep="\t", quote=F, row.names=F)
+    
+    raw_bootstrap_df = Reduce(rbind, list(quote_origin_raw,
+                                       citation_j_origin_raw1,
+                                       citation_s_origin_raw1,
+                                       citation_j_origin_raw2,
+                                       citation_s_origin_raw2,
+                                       nature_origin_df_first_raw,
+                                       springer_origin_df_first_raw,
+                                       nature_origin_df_last_raw,
+                                       springer_origin_df_last_raw,
+                                       mention_origin_raw))
+    raw_bootstrap_df$corpus = factor(raw_bootstrap_df$corpus, levels = QUOTE_ANALYSIS_ORDER)
+    
+    outfile = file.path(proj_dir,"/figure_notebooks/manuscript_figs/fig3_tmp/raw_bootstrap_df.tsv")
+    write.table(raw_bootstrap_df, outfile, sep="\t", quote=F, row.names=F)
+
 }else{
     
+    raw_bootstrap_file = file.path(proj_dir,
+                                      "/figure_notebooks/manuscript_figs/fig3_tmp/raw_bootstrap_df.tsv")
+    raw_bootstrap_df = data.frame(fread(raw_bootstrap_file))
+
     all_bootstrap_file = file.path(proj_dir,
                                       "/figure_notebooks/manuscript_figs/fig3_tmp/all_bootstrap_df.tsv")
     all_bootstrap_df = data.frame(fread(all_bootstrap_file))
@@ -602,7 +556,7 @@ summary(subset(citation_j_origin_df1,
 ```
 
     ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-    ##  0.1919  0.2806  0.3018  0.2986  0.3279  0.3968
+    ##  0.1927  0.2802  0.3027  0.2987  0.3279  0.3961
 
 ``` r
 summary(subset(citation_s_origin_df1, 
@@ -610,7 +564,7 @@ summary(subset(citation_s_origin_df1,
 ```
 
     ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-    ##  0.2180  0.2583  0.2915  0.2966  0.3279  0.3709
+    ##  0.2179  0.2579  0.2911  0.2966  0.3280  0.3707
 
 ``` r
 print("citation range of European and CelticEnglish names Last author")
@@ -624,7 +578,7 @@ summary(subset(citation_j_origin_df2,
 ```
 
     ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-    ##  0.2480  0.3157  0.3333  0.3362  0.3595  0.4202
+    ##  0.2493  0.3160  0.3326  0.3361  0.3592  0.4223
 
 ``` r
 summary(subset(citation_s_origin_df2, 
@@ -632,7 +586,7 @@ summary(subset(citation_s_origin_df2,
 ```
 
     ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-    ##  0.2633  0.3151  0.3665  0.3532  0.3977  0.4277
+    ##  0.2628  0.3153  0.3663  0.3532  0.3971  0.4279
 
 ``` r
 print("citation range of East names first")
@@ -646,7 +600,7 @@ summary(subset(citation_j_origin_df1,
 ```
 
     ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-    ##  0.1111  0.1647  0.2070  0.2000  0.2324  0.2881
+    ##  0.1112  0.1645  0.2069  0.1999  0.2327  0.2884
 
 ``` r
 summary(subset(citation_s_origin_df1, 
@@ -654,7 +608,7 @@ summary(subset(citation_s_origin_df1,
 ```
 
     ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-    ##  0.1897  0.2082  0.2250  0.2281  0.2452  0.2727
+    ##  0.1897  0.2083  0.2255  0.2280  0.2452  0.2711
 
 ``` r
 print("citation range of East names last")
@@ -668,7 +622,7 @@ summary(subset(citation_j_origin_df2,
 ```
 
     ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-    ## 0.06338 0.10955 0.14801 0.15047 0.17762 0.24845
+    ## 0.06431 0.10919 0.14843 0.15028 0.17786 0.24674
 
 ``` r
 summary(subset(citation_s_origin_df2, 
@@ -676,7 +630,7 @@ summary(subset(citation_s_origin_df2,
 ```
 
     ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-    ##  0.1072  0.1209  0.1359  0.1384  0.1575  0.1720
+    ##  0.1073  0.1208  0.1360  0.1385  0.1579  0.1719
 
 ``` r
 print("quote range of East names first")
@@ -690,7 +644,7 @@ summary(subset(quote_origin_df,
 ```
 
     ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-    ## 0.05029 0.05850 0.06650 0.06533 0.07188 0.07680
+    ## 0.05049 0.05851 0.06664 0.06532 0.07185 0.07683
 
 ``` r
 #summary(subset(g_quote_origin_df, 
@@ -707,7 +661,7 @@ summary(subset(citation_j_origin_df1,
 ```
 
     ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-    ## 0.00000 0.01471 0.02796 0.02898 0.04342 0.08078
+    ## 0.00000 0.01453 0.02822 0.02897 0.04308 0.08077
 
 ``` r
 summary(subset(citation_s_origin_df1, 
@@ -715,7 +669,7 @@ summary(subset(citation_s_origin_df1,
 ```
 
     ##     Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
-    ## 0.001947 0.013010 0.024593 0.025521 0.036302 0.058886
+    ## 0.001981 0.013038 0.024678 0.025540 0.036225 0.059169
 
 ``` r
 print("citation range of non European or non CelticEnglish or non EastAsian names last")
@@ -729,7 +683,7 @@ summary(subset(citation_j_origin_df2,
 ```
 
     ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-    ## 0.00000 0.01121 0.02165 0.02533 0.03661 0.07945
+    ## 0.00000 0.01160 0.02122 0.02536 0.03652 0.07935
 
 ``` r
 summary(subset(citation_s_origin_df2, 
@@ -737,7 +691,322 @@ summary(subset(citation_s_origin_df2,
 ```
 
     ##     Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
-    ## 0.003198 0.011646 0.021381 0.022155 0.030934 0.051644
+    ## 0.003282 0.011732 0.021176 0.022147 0.030897 0.051859
+
+## Make the Reference table
+
+``` r
+conf_int = 0.95
+
+get_FC_summary <- function(raw_bootstrap_df, curr_corpus_fg, curr_corpus_bg,
+                           name_origins, conf_int){
+    
+    all_res = NA
+    for(curr_name_origin in name_origins){
+        
+        curr_fg_df = subset(raw_bootstrap_df, corpus == curr_corpus_fg &
+                                   name_origin == curr_name_origin)
+        curr_fg_df = curr_fg_df[,c("year", "boot")]
+        colnames(curr_fg_df)[2] = "boot_fg"
+        curr_fg_df = curr_fg_df[order(curr_fg_df$year), ]
+        
+        curr_bg_df = subset(raw_bootstrap_df, corpus == curr_corpus_bg &
+                                           name_origin == curr_name_origin)
+        curr_bg_df = curr_bg_df[,c("year", "boot")]
+        colnames(curr_bg_df)[2] = "boot_bg"
+        curr_bg_df = curr_bg_df[order(curr_bg_df$year), ]
+        
+        # these are random samples, so we just need to align them by year
+        # to get the boot strap estimation of thee FC
+        curr_df = cbind(curr_fg_df, curr_bg_df$boot_bg)
+        colnames(curr_df)[3] = "boot_bg"
+        curr_df$FC = curr_df$boot_fg / curr_df$boot_bg
+        
+        # summarize -- we are year agnostic in the summary because 
+        # the FC is already calculated on a per year basis
+        curr_df = curr_df %>%
+                        summarize(bot_quant = quantile(FC, 1-conf_int),
+                                  top_quant = quantile(FC, conf_int),
+                                  mean(FC))
+        
+        res_str = paste0(round(curr_df$`mean(FC)`, 2),
+                         " (", 
+                         round(curr_df$bot_quant, 2),
+                         ", ",
+                         round(curr_df$top_quant, 2),
+                         ")")
+        curr_df$res_str = res_str
+        all_res = rbind(all_res, curr_df)
+    }
+    
+    all_res = all_res[-1,]
+    
+    
+    all_res$name_origin = name_origins
+    
+    str_tab = t(all_res$res_str)
+    colnames(str_tab) = name_origins
+    rownames(str_tab) = paste(curr_corpus_fg, "vs.", curr_corpus_bg)
+
+    return(str_tab)
+
+}
+
+
+name_origins = c("CelticEnglish", "EastAsian", "European")
+
+cite_1_j = get_FC_summary(raw_bootstrap_df, 
+                             curr_corpus_fg = "citation_journalist_first", 
+                             curr_corpus_bg = "nature_first", 
+                             name_origins, conf_int)
+
+cite_2_j = get_FC_summary(raw_bootstrap_df, 
+                             curr_corpus_fg = "citation_journalist_last", 
+                             curr_corpus_bg = "nature_last", 
+                             name_origins, conf_int)
+
+cite_1_s = get_FC_summary(raw_bootstrap_df, 
+                             curr_corpus_fg = "citation_scientist_first", 
+                             curr_corpus_bg = "nature_first", 
+                             name_origins, conf_int)
+
+cite_2_s = get_FC_summary(raw_bootstrap_df, 
+                             curr_corpus_fg = "citation_scientist_last", 
+                             curr_corpus_bg = "nature_last", 
+                             name_origins, conf_int)
+
+
+
+quote_1 = get_FC_summary(raw_bootstrap_df, 
+                             curr_corpus_fg = "quote", 
+                             curr_corpus_bg = "nature_first", 
+                             name_origins, conf_int)
+
+quote_2 = get_FC_summary(raw_bootstrap_df, 
+                             curr_corpus_fg = "quote", 
+                             curr_corpus_bg = "nature_last", 
+                             name_origins, conf_int)
+
+
+mention_1 = get_FC_summary(raw_bootstrap_df, 
+                             curr_corpus_fg = "mention", 
+                             curr_corpus_bg = "nature_first", 
+                             name_origins, conf_int)
+
+mention_2 = get_FC_summary(raw_bootstrap_df, 
+                             curr_corpus_fg = "mention", 
+                             curr_corpus_bg = "nature_last", 
+                             name_origins, conf_int)
+
+full_list = list(cite_1_j, cite_2_j,
+                 cite_1_s, cite_2_s,
+                 quote_1, quote_2,
+                 mention_1, mention_2)
+
+
+
+final_table = Reduce(rbind, full_list)
+
+
+knitr::kable(data.frame(final_table), format = "pipe", 
+             caption = "Mean fold change comparison with Nature from bootstrap samples with 95% CI")
+```
+
+<table style="width:100%;">
+<caption>Mean fold change comparison with Nature from bootstrap samples with 95% CI</caption>
+<colgroup>
+<col width="43%" />
+<col width="18%" />
+<col width="18%" />
+<col width="18%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="left">CelticEnglish</th>
+<th align="left">EastAsian</th>
+<th align="left">European</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">citation_journalist_first vs. nature_first</td>
+<td align="left">1.37 (0.93, 1.82)</td>
+<td align="left">0.68 (0.44, 0.91)</td>
+<td align="left">1.01 (0.77, 1.28)</td>
+</tr>
+<tr class="even">
+<td align="left">citation_journalist_last vs. nature_last</td>
+<td align="left">1.18 (0.91, 1.58)</td>
+<td align="left">0.81 (0.4, 1.27)</td>
+<td align="left">0.92 (0.68, 1.17)</td>
+</tr>
+<tr class="odd">
+<td align="left">citation_scientist_first vs. nature_first</td>
+<td align="left">1.28 (1.04, 1.56)</td>
+<td align="left">0.8 (0.64, 1.02)</td>
+<td align="left">1.06 (0.88, 1.25)</td>
+</tr>
+<tr class="even">
+<td align="left">citation_scientist_last vs. nature_last</td>
+<td align="left">1.11 (0.93, 1.34)</td>
+<td align="left">0.76 (0.56, 1)</td>
+<td align="left">1.07 (0.91, 1.22)</td>
+</tr>
+<tr class="odd">
+<td align="left">quote vs. nature_first</td>
+<td align="left">2.2 (1.8, 2.64)</td>
+<td align="left">0.23 (0.18, 0.29)</td>
+<td align="left">1.02 (0.79, 1.23)</td>
+</tr>
+<tr class="even">
+<td align="left">quote vs. nature_last</td>
+<td align="left">1.54 (1.33, 1.85)</td>
+<td align="left">0.36 (0.28, 0.47)</td>
+<td align="left">0.89 (0.78, 1.01)</td>
+</tr>
+<tr class="odd">
+<td align="left">mention vs. nature_first</td>
+<td align="left">2.1 (1.69, 2.53)</td>
+<td align="left">0.27 (0.21, 0.33)</td>
+<td align="left">1.02 (0.8, 1.24)</td>
+</tr>
+<tr class="even">
+<td align="left">mention vs. nature_last</td>
+<td align="left">1.47 (1.26, 1.76)</td>
+<td align="left">0.42 (0.32, 0.52)</td>
+<td align="left">0.89 (0.78, 1)</td>
+</tr>
+</tbody>
+</table>
+
+``` r
+##### Same for Springer
+
+cite_1_j = get_FC_summary(raw_bootstrap_df, 
+                             curr_corpus_fg = "citation_journalist_first", 
+                             curr_corpus_bg = "springer_first", 
+                             name_origins, conf_int)
+
+cite_2_j = get_FC_summary(raw_bootstrap_df, 
+                             curr_corpus_fg = "citation_journalist_last", 
+                             curr_corpus_bg = "springer_last", 
+                             name_origins, conf_int)
+
+cite_1_s = get_FC_summary(raw_bootstrap_df, 
+                             curr_corpus_fg = "citation_scientist_first", 
+                             curr_corpus_bg = "springer_last", 
+                             name_origins, conf_int)
+
+cite_2_s = get_FC_summary(raw_bootstrap_df, 
+                             curr_corpus_fg = "citation_scientist_last", 
+                             curr_corpus_bg = "nature_last", 
+                             name_origins, conf_int)
+
+
+
+quote_1 = get_FC_summary(raw_bootstrap_df, 
+                             curr_corpus_fg = "quote", 
+                             curr_corpus_bg = "springer_last", 
+                             name_origins, conf_int)
+
+quote_2 = get_FC_summary(raw_bootstrap_df, 
+                             curr_corpus_fg = "quote", 
+                             curr_corpus_bg = "nature_last", 
+                             name_origins, conf_int)
+
+
+mention_1 = get_FC_summary(raw_bootstrap_df, 
+                             curr_corpus_fg = "mention", 
+                             curr_corpus_bg = "springer_last", 
+                             name_origins, conf_int)
+
+mention_2 = get_FC_summary(raw_bootstrap_df, 
+                             curr_corpus_fg = "mention", 
+                             curr_corpus_bg = "nature_last", 
+                             name_origins, conf_int)
+
+full_list = list(cite_1_j, cite_2_j,
+                 cite_1_s, cite_2_s,
+                 quote_1, quote_2,
+                 mention_1, mention_2)
+
+
+
+final_table = Reduce(rbind, full_list)
+
+
+knitr::kable(data.frame(final_table), format = "pipe", 
+             caption = "Mean fold change comparison with Springer Nature from bootstrap samples with 95% CI")
+```
+
+<table>
+<caption>Mean fold change comparison with Springer Nature from bootstrap samples with 95% CI</caption>
+<colgroup>
+<col width="44%" />
+<col width="18%" />
+<col width="18%" />
+<col width="18%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="left">CelticEnglish</th>
+<th align="left">EastAsian</th>
+<th align="left">European</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">citation_journalist_first vs. springer_first</td>
+<td align="left">2.08 (1.42, 2.9)</td>
+<td align="left">0.68 (0.45, 0.94)</td>
+<td align="left">1.15 (0.87, 1.53)</td>
+</tr>
+<tr class="even">
+<td align="left">citation_journalist_last vs. springer_last</td>
+<td align="left">2.08 (1.31, 3.26)</td>
+<td align="left">0.56 (0.28, 0.81)</td>
+<td align="left">1.13 (0.87, 1.43)</td>
+</tr>
+<tr class="odd">
+<td align="left">citation_scientist_first vs. springer_last</td>
+<td align="left">1.59 (0.95, 2.29)</td>
+<td align="left">0.9 (0.61, 1.67)</td>
+<td align="left">1.15 (0.91, 1.37)</td>
+</tr>
+<tr class="even">
+<td align="left">citation_scientist_last vs. nature_last</td>
+<td align="left">1.11 (0.93, 1.34)</td>
+<td align="left">0.76 (0.56, 1)</td>
+<td align="left">1.07 (0.91, 1.22)</td>
+</tr>
+<tr class="odd">
+<td align="left">quote vs. springer_last</td>
+<td align="left">2.71 (1.78, 3.91)</td>
+<td align="left">0.26 (0.18, 0.5)</td>
+<td align="left">1.1 (0.84, 1.37)</td>
+</tr>
+<tr class="even">
+<td align="left">quote vs. nature_last</td>
+<td align="left">1.54 (1.33, 1.85)</td>
+<td align="left">0.36 (0.28, 0.47)</td>
+<td align="left">0.89 (0.78, 1.01)</td>
+</tr>
+<tr class="odd">
+<td align="left">mention vs. springer_last</td>
+<td align="left">2.59 (1.68, 3.75)</td>
+<td align="left">0.3 (0.21, 0.56)</td>
+<td align="left">1.1 (0.86, 1.34)</td>
+</tr>
+<tr class="even">
+<td align="left">mention vs. nature_last</td>
+<td align="left">1.47 (1.26, 1.76)</td>
+<td align="left">0.42 (0.32, 0.52)</td>
+<td align="left">0.89 (0.78, 1)</td>
+</tr>
+</tbody>
+</table>
 
 ## Make the Figures
 

@@ -7,7 +7,7 @@ require(here)
 proj_dir = here()
 source(file.path(proj_dir, "/utils/scraper_processing_utils.R"))
 
-BOOTSTRAP_SIZE=5000
+BOOTSTRAP_SIZE=1000
 
 # read in all word frequencies for faster compute
 FREQ_FILE = file.path(proj_dir, "data/scraped_data/freq_table_raw.tsv")
@@ -173,6 +173,8 @@ compute_bootstrap_first_author <- function(full_data_df, year_col_id, article_co
                                 bottom_CI = NA,
                                 top_CI = NA,
                                 mean = NA)
+    full_boot_res = data.frame(year=rep(unique(in_df$year), each=BOOTSTRAP_SIZE),
+                              boot = NA)
     for(curr_year in unique(in_df$year)){
         year_df = subset(in_df, year == curr_year)
 
@@ -200,10 +202,13 @@ compute_bootstrap_first_author <- function(full_data_df, year_col_id, article_co
                         quantile(boot_res, 1-conf_int),
                         quantile(boot_res, conf_int),
                         mean(boot_res))
-
+        
+        full_boot_res[full_boot_res$year == curr_year,] = 
+            data.frame(curr_year, boot_res)
+        
     }
 
-    return(quantile_res)
+    return(list(quantile_res=quantile_res, boot_res=full_boot_res))
 
 }
 
@@ -231,6 +236,8 @@ compute_bootstrap_gender <- function(full_data_df, year_col_id, article_col_id, 
                                 bottom_CI = NA,
                                 top_CI = NA,
                                 mean = NA)
+    full_boot_res = data.frame(year=rep(unique(in_df$year), each=BOOTSTRAP_SIZE),
+                               boot = NA)
     for(curr_year in unique(in_df$year)){
         year_df = subset(in_df, year == curr_year)
 
@@ -258,10 +265,13 @@ compute_bootstrap_gender <- function(full_data_df, year_col_id, article_col_id, 
                         quantile(boot_res, 1-conf_int),
                         quantile(boot_res, conf_int),
                         mean(boot_res))
-
+        
+        full_boot_res[full_boot_res$year == curr_year,] = 
+            data.frame(curr_year, boot_res)
+        
     }
 
-    return(quantile_res)
+    return(list(quantile_res=quantile_res, boot_res=full_boot_res))
 
 }
 
@@ -288,6 +298,8 @@ compute_bootstrap_location <- function(full_data_df, year_col_id, article_col_id
                                 bottom_CI = NA,
                                 top_CI = NA,
                                 mean = NA)
+    full_boot_res = data.frame(year=rep(unique(in_df$year), each=BOOTSTRAP_SIZE),
+                               boot = NA)
     for(curr_year in unique(in_df$year)){
         year_df = subset(in_df, year == curr_year)
 
@@ -319,10 +331,11 @@ compute_bootstrap_location <- function(full_data_df, year_col_id, article_col_id
                         quantile(boot_res, 1-conf_int),
                         quantile(boot_res, conf_int),
                         mean(boot_res))
-
+        full_boot_res[full_boot_res$year == curr_year,] = 
+            data.frame(curr_year, boot_res)
     }
 
-    return(quantile_res)
+    return(list(quantile_res=quantile_res, boot_res=full_boot_res))
 
 }
 
