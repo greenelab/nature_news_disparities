@@ -76,7 +76,7 @@ print("Num Removed Articles")
 print(length(too_many_quotes_file_id))
 ```
 
-    ## [1] 433
+    ## [1] 527
 
 ``` r
 print("Num Total Articles")
@@ -88,7 +88,7 @@ print("Num Total Articles")
 print(length(num_quotes))
 ```
 
-    ## [1] 15302
+    ## [1] 16739
 
 ``` r
 print("Total Quotes")
@@ -100,7 +100,7 @@ print("Total Quotes")
 print(dim(full_quote_df))
 ```
 
-    ## [1] 105457      8
+    ## [1] 118043      8
 
 ``` r
 full_quote_df = full_quote_df[full_quote_df$est_gender %in% c("FEMALE", "MALE"), ]
@@ -119,7 +119,7 @@ allowed_idx = unique(c(space_idx, pronoun_idx_canonical, pronoun_idx_partial))
 length(allowed_idx)
 ```
 
-    ## [1] 96390
+    ## [1] 107560
 
 ``` r
 full_quote_df = full_quote_df[allowed_idx,]
@@ -161,7 +161,7 @@ print("Total with Gender Prediction")
 print(dim(full_quote_df))
 ```
 
-    ## [1] 96390     8
+    ## [1] 107560      8
 
 ``` r
 print("Male Quote Ratio Nature:")
@@ -183,7 +183,31 @@ table(subset(full_quote_df, year == 2020 & type != "guardian")$est_gender)
 
     ## 
     ## FEMALE   MALE 
-    ##   1298   2870
+    ##   1357   2849
+
+``` r
+table(subset(full_quote_df, year == 2021 & type != "guardian")$est_gender)
+```
+
+    ## 
+    ## FEMALE   MALE 
+    ##   1455   2896
+
+``` r
+table(subset(full_quote_df, year == 2022 & type != "guardian")$est_gender)
+```
+
+    ## 
+    ## FEMALE   MALE 
+    ##   1677   3263
+
+``` r
+table(subset(full_quote_df, year == 2023 & type != "guardian")$est_gender)
+```
+
+    ## 
+    ## FEMALE   MALE 
+    ##    611   1230
 
 ``` r
 #print("Male Quote Ratio Guardian:")
@@ -200,7 +224,7 @@ print("Career-feature info:")
 dim(subset(full_quote_df, type == "career-feature"))
 ```
 
-    ## [1] 898   8
+    ## [1] 1459    8
 
 ``` r
 table(subset(full_quote_df, type == "career-feature")$est_gender)
@@ -208,7 +232,7 @@ table(subset(full_quote_df, type == "career-feature")$est_gender)
 
     ## 
     ## FEMALE   MALE 
-    ##    449    449
+    ##    750    709
 
 ### Read in the nature + springer research author information
 
@@ -244,10 +268,10 @@ head(nature_author_df)
     ##       author                            doi year author_pos            file_id
     ## 1     aakash doi:10.1038/s41586-020-03052-3 2020      first s41586-020-03052-3
     ## 2 aanindeeta        doi:10.1038/nature17185 2016      first        nature17185
-    ## 3      aaron  doi:10.1038/s41586-019-1598-0 2019       last  s41586-019-1598-0
-    ## 4      aaron  doi:10.1038/s41586-020-2864-x 2020       last  s41586-020-2864-x
-    ## 5      aaron        doi:10.1038/nature23912 2017      first        nature23912
-    ## 6      aaron        doi:10.1038/nature20781 2016       last        nature20781
+    ## 3      aaron  doi:10.1038/s41586-019-0953-5 2019      first  s41586-019-0953-5
+    ## 4      aaron        doi:10.1038/nature10921 2012      first        nature10921
+    ## 5      aaron        doi:10.1038/nature06830 2008      first        nature06830
+    ## 6      aaron  doi:10.1038/s41586-020-2288-7 2020      first  s41586-020-2288-7
     ##   est_gender gender
     ## 1       MALE   MALE
     ## 2       <NA>   <NA>
@@ -273,7 +297,7 @@ print(table(nature_author_df$author_pos))
 
     ## 
     ## first  last 
-    ## 10601 10572
+    ## 12569 12609
 
 ### reading in the first and last author data
 
@@ -366,7 +390,7 @@ print("Quote Stats")
 dim(quote_author_df)
 ```
 
-    ## [1] 6545    8
+    ## [1] 7567    8
 
 ``` r
 table(quote_author_df$author_pos)
@@ -374,7 +398,7 @@ table(quote_author_df$author_pos)
 
     ## 
     ## first  last 
-    ##  2871  3674
+    ##  3326  4241
 
 ### Get bootstrap estimates
 
@@ -501,6 +525,8 @@ if(RERUN_BOOTSTRAP){
     load(all_bootstrap_file)
 }
 ```
+
+    ## [1] 2
 
 ## Make the Figures
 

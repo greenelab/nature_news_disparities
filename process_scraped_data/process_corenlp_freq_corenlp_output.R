@@ -9,10 +9,10 @@ proj_dir = here()
 source(file.path(proj_dir, "/utils/scraper_processing_utils.R"))
 source(file.path(proj_dir, "/analysis_scripts/analysis_utils.R"))
 
-YEARS=2005:2020
+YEARS=2005:2023
 TARGET_TYPES=c("news", "news-and-views", "news-feature", "toolbox", 
-                "technology-feature", "career-column", "career-feature",
-                "guardian")
+                "technology-feature", "career-column", "career-feature")
+                #"guardian")
 
 
 #' Get the word frequencies from a JSON file containing

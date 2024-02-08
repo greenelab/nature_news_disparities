@@ -74,9 +74,12 @@ print("Total Articles")
 print(dim(news_df))
 ```
 
-    ## [1] 37748     3
+    ## [1] 39138     3
 
 ``` r
+news_df = subset(news_df, year < 2021)
+
+
 news_df = subset(news_df, !type %in% c("guardian"))
 print("Total Articles Nature")
 ```
@@ -87,7 +90,7 @@ print("Total Articles Nature")
 print(dim(news_df))
 ```
 
-    ## [1] 22001     3
+    ## [1] 22007     3
 
 ``` r
 # filter out career column and news-and-views
@@ -101,7 +104,7 @@ print("Total Articles, journalist")
 print(dim(news_df))
 ```
 
-    ## [1] 16080     3
+    ## [1] 16084     3
 
 ``` r
 head(news_df)
@@ -155,8 +158,17 @@ nature_author_df = read_nature_author_json_files(nature_author_dir)
     ## [1] "/Users/natalie/Documents/projects/greenelab/checkouts/nature_news_disparities//data/author_data/downloads//links_crawled_2019_article.json"
     ## [1] "/Users/natalie/Documents/projects/greenelab/checkouts/nature_news_disparities//data/author_data/downloads//links_crawled_2019_letter.json"
     ## [1] "/Users/natalie/Documents/projects/greenelab/checkouts/nature_news_disparities//data/author_data/downloads//links_crawled_2020_article.json"
+    ## [1] "/Users/natalie/Documents/projects/greenelab/checkouts/nature_news_disparities//data/author_data/downloads//links_crawled_2020_letter.json"
+    ## [1] "/Users/natalie/Documents/projects/greenelab/checkouts/nature_news_disparities//data/author_data/downloads//links_crawled_2021_article.json"
+    ## [1] "/Users/natalie/Documents/projects/greenelab/checkouts/nature_news_disparities//data/author_data/downloads//links_crawled_2021_letter.json"
+    ## [1] "/Users/natalie/Documents/projects/greenelab/checkouts/nature_news_disparities//data/author_data/downloads//links_crawled_2022_article.json"
+    ## [1] "/Users/natalie/Documents/projects/greenelab/checkouts/nature_news_disparities//data/author_data/downloads//links_crawled_2022_letter.json"
+    ## [1] "/Users/natalie/Documents/projects/greenelab/checkouts/nature_news_disparities//data/author_data/downloads//links_crawled_2023_article.json"
+    ## [1] "/Users/natalie/Documents/projects/greenelab/checkouts/nature_news_disparities//data/author_data/downloads//links_crawled_2023_letter.json"
 
 ``` r
+nature_author_df = subset(nature_author_df, year < 2021)
+
 head(nature_author_df)
 ```
 
@@ -187,6 +199,7 @@ head(nature_author_df)
 springer_author_file = file.path(proj_dir, 
                                 "/data/reference_data/springer_bg_author_cache.tsv")
 springer_author_df = data.frame(fread(springer_author_file))
+springer_author_df = subset(springer_author_df, year < 2021)
 
 head(springer_author_df)
 ```
@@ -242,6 +255,9 @@ full_df = Reduce(rbind, list(nature_author_df[,col_ids],
 full_df$type = factor(full_df$type, levels = ARTICLE_TYPE_FACTOR_ORDER)
 
 nature_df = subset(full_df, type != "springer")
+nature_df$source = "Research"
+nature_df$source[which(nature_df$type != "research")] = "News"
+
 
 news_nature_gg = ggplot(nature_df, 
                         aes(x=as.factor(year), fill=type)) +
@@ -249,7 +265,8 @@ news_nature_gg = ggplot(nature_df,
                 scale_fill_manual(values=ARTICLE_TYPE_COLOR[unique(nature_df$type)],
                                   labels=ARTICLE_TYPE_LABELS[unique(nature_df$type)]) +
                 xlab("Year of Article") + ylab("Num. Articles") +
-                    ggtitle("# Nature News and Research Articles Over Time")
+                    ggtitle("# Nature News and Research Articles Over Time") +
+                facet_grid(~ source) + theme(axis.text.x = element_text(angle=45, vjust=1, hjust=1))
 
 all_gg = ggplot(full_df, aes(x=as.factor(year), fill=type)) +
                 geom_bar() + theme_bw() +

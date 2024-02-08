@@ -9,7 +9,7 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 cd ${DIR}/nature_news_scraper
 
 # now crawl over the years of interest
-TARGET_YRS=($( seq 2005 2020  ))
+TARGET_YRS=($( seq 2020 2023  ))
 TARGET_TYPES=("article" "letter")
 
 for TARGET_YEAR in "${TARGET_YRS[@]}"

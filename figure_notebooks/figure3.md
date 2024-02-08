@@ -203,19 +203,19 @@ head(name_df)
 ```
 
     ##                author year  name_origin         corpus
-    ## 5         A-Mf Jacobs 2007     European springer_first
-    ## 6            AA Hanke 2010    EastAsian springer_first
-    ## 7         Aakash Basu 2020   SouthAsian   nature_first
-    ## 9          Aalya Amin 2012 ArabTurkPers springer_first
-    ## 10 AAM Coelho-Castelo 2006     European springer_first
-    ## 11      Aamir Alamgir 2019 ArabTurkPers springer_first
+    ## 12        A-Mf Jacobs 2007     European springer_first
+    ## 13           AA Hanke 2010    EastAsian springer_first
+    ## 14        Aakash Basu 2020   SouthAsian   nature_first
+    ## 15        Aale Luusua 2022       Nordic springer_first
+    ## 17         Aalya Amin 2012 ArabTurkPers springer_first
+    ## 18 AAM Coelho-Castelo 2006     European springer_first
     ##                               doi
-    ## 5      doi:10.1038/sj.onc.1210387
-    ## 6   doi:10.1186/2047-783X-15-2-59
-    ## 7  doi:10.1038/s41586-020-03052-3
-    ## 9  doi:10.1186/1753-6561-6-S5-O16
-    ## 10      doi:10.1186/1479-0556-4-1
-    ## 11  doi:10.1007/s13201-019-1049-y
+    ## 12     doi:10.1038/sj.onc.1210387
+    ## 13  doi:10.1186/2047-783X-15-2-59
+    ## 14 doi:10.1038/s41586-020-03052-3
+    ## 15 doi:10.1007/s00146-022-01537-5
+    ## 17 doi:10.1186/1753-6561-6-S5-O16
+    ## 18      doi:10.1186/1479-0556-4-1
 
 ``` r
 name_df = unique(name_df)
@@ -327,16 +327,16 @@ num_art_tot %>%
     ## # A tibble: 10 × 2
     ##    corpus                    `n()`
     ##    <chr>                     <int>
-    ##  1 citation_journalist_first    16
-    ##  2 citation_journalist_last     16
-    ##  3 citation_scientist_first     16
-    ##  4 citation_scientist_last      16
-    ##  5 mention                      16
-    ##  6 nature_first                 16
-    ##  7 nature_last                  16
-    ##  8 quote                        16
-    ##  9 springer_first               16
-    ## 10 springer_last                16
+    ##  1 citation_journalist_first    19
+    ##  2 citation_journalist_last     19
+    ##  3 citation_scientist_first     19
+    ##  4 citation_scientist_last      19
+    ##  5 mention                      19
+    ##  6 nature_first                 19
+    ##  7 nature_last                  19
+    ##  8 quote                        19
+    ##  9 springer_first               19
+    ## 10 springer_last                19
 
 ``` r
 print("median of observations")
@@ -352,17 +352,17 @@ num_art_tot %>%
 
     ## # A tibble: 10 × 2
     ##    corpus                    `median(tot_articles)`
-    ##    <chr>                                      <dbl>
-    ##  1 citation_journalist_first                   269 
-    ##  2 citation_journalist_last                    268 
-    ##  3 citation_scientist_first                    676.
-    ##  4 citation_scientist_last                     664 
-    ##  5 mention                                    4752 
-    ##  6 nature_first                                694.
-    ##  7 nature_last                                 684.
-    ##  8 quote                                      5696.
-    ##  9 springer_first                             1727 
-    ## 10 springer_last                              1710
+    ##    <chr>                                      <int>
+    ##  1 citation_journalist_first                    269
+    ##  2 citation_journalist_last                     268
+    ##  3 citation_scientist_first                     677
+    ##  4 citation_scientist_last                      665
+    ##  5 mention                                     4539
+    ##  6 nature_first                                 704
+    ##  7 nature_last                                  686
+    ##  8 quote                                       5349
+    ##  9 springer_first                              1776
+    ## 10 springer_last                               1755
 
 ``` r
 print("min of observations")
@@ -379,16 +379,16 @@ num_art_tot %>%
     ## # A tibble: 10 × 2
     ##    corpus                    `min(tot_articles)`
     ##    <chr>                                   <int>
-    ##  1 citation_journalist_first                 144
-    ##  2 citation_journalist_last                  142
-    ##  3 citation_scientist_first                  518
-    ##  4 citation_scientist_last                   512
-    ##  5 mention                                  3225
-    ##  6 nature_first                              573
-    ##  7 nature_last                               568
-    ##  8 quote                                    3788
-    ##  9 springer_first                           1341
-    ## 10 springer_last                            1332
+    ##  1 citation_journalist_first                 134
+    ##  2 citation_journalist_last                  137
+    ##  3 citation_scientist_first                  328
+    ##  4 citation_scientist_last                   322
+    ##  5 mention                                  1263
+    ##  6 nature_first                              307
+    ##  7 nature_last                               302
+    ##  8 quote                                    1690
+    ##  9 springer_first                           1037
+    ## 10 springer_last                            1025
 
 ### Get bootstrap estimates
 
@@ -409,8 +409,8 @@ get_subboot <- function(origin_id, curr_corpus, in_df, bootstrap_col_id="doi"){
     bootstrap_raw$name_origin = origin_id
     
     # add a label for plotting later
-    bootstrap_df$label[bootstrap_df$year == 2020] = 
-        bootstrap_df$name_origin[bootstrap_df$year == 2020]
+    bootstrap_df$label[bootstrap_df$year == max(bootstrap_df$year)] = 
+        bootstrap_df$name_origin[bootstrap_df$year == max(bootstrap_df$year)]
         
 
     return(list(bootstrap_df=bootstrap_df, bootstrap_raw=bootstrap_raw))
@@ -556,7 +556,7 @@ summary(subset(citation_j_origin_df1,
 ```
 
     ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-    ##  0.1927  0.2802  0.3027  0.2987  0.3279  0.3961
+    ##  0.1776  0.2750  0.3000  0.2929  0.3256  0.3855
 
 ``` r
 summary(subset(citation_s_origin_df1, 
@@ -564,7 +564,7 @@ summary(subset(citation_s_origin_df1,
 ```
 
     ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-    ##  0.2179  0.2579  0.2911  0.2966  0.3280  0.3707
+    ##  0.1780  0.2548  0.2947  0.2923  0.3323  0.3759
 
 ``` r
 print("citation range of European and CelticEnglish names Last author")
@@ -578,7 +578,7 @@ summary(subset(citation_j_origin_df2,
 ```
 
     ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-    ##  0.2493  0.3160  0.3326  0.3361  0.3592  0.4223
+    ##  0.2522  0.2991  0.3360  0.3341  0.3576  0.4288
 
 ``` r
 summary(subset(citation_s_origin_df2, 
@@ -586,7 +586,7 @@ summary(subset(citation_s_origin_df2,
 ```
 
     ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-    ##  0.2628  0.3153  0.3663  0.3532  0.3971  0.4279
+    ##  0.2486  0.3096  0.3624  0.3472  0.3842  0.4254
 
 ``` r
 print("citation range of East names first")
@@ -600,7 +600,7 @@ summary(subset(citation_j_origin_df1,
 ```
 
     ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-    ##  0.1112  0.1645  0.2069  0.1999  0.2327  0.2884
+    ##  0.1090  0.1827  0.2158  0.2073  0.2339  0.3106
 
 ``` r
 summary(subset(citation_s_origin_df1, 
@@ -608,7 +608,7 @@ summary(subset(citation_s_origin_df1,
 ```
 
     ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-    ##  0.1897  0.2083  0.2255  0.2280  0.2452  0.2711
+    ##  0.1844  0.2125  0.2249  0.2315  0.2517  0.2801
 
 ``` r
 print("citation range of East names last")
@@ -622,7 +622,7 @@ summary(subset(citation_j_origin_df2,
 ```
 
     ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-    ## 0.06431 0.10919 0.14843 0.15028 0.17786 0.24674
+    ## 0.05775 0.11883 0.14162 0.14907 0.17991 0.23905
 
 ``` r
 summary(subset(citation_s_origin_df2, 
@@ -630,7 +630,7 @@ summary(subset(citation_s_origin_df2,
 ```
 
     ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-    ##  0.1073  0.1208  0.1360  0.1385  0.1579  0.1719
+    ##  0.1033  0.1237  0.1485  0.1453  0.1651  0.1888
 
 ``` r
 print("quote range of East names first")
@@ -644,7 +644,7 @@ summary(subset(quote_origin_df,
 ```
 
     ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-    ## 0.05049 0.05851 0.06664 0.06532 0.07185 0.07683
+    ## 0.05113 0.06055 0.06977 0.06854 0.07410 0.09898
 
 ``` r
 #summary(subset(g_quote_origin_df, 
@@ -661,15 +661,15 @@ summary(subset(citation_j_origin_df1,
 ```
 
     ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-    ## 0.00000 0.01453 0.02822 0.02897 0.04308 0.08077
+    ## 0.00000 0.01346 0.02661 0.02935 0.04423 0.07610
 
 ``` r
 summary(subset(citation_s_origin_df1, 
                !name_origin %in% c("European", "CelticEnglish", "EastAsian"))$mean)
 ```
 
-    ##     Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
-    ## 0.001981 0.013038 0.024678 0.025540 0.036225 0.059169
+    ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+    ## 0.00173 0.01334 0.02456 0.02627 0.03852 0.06921
 
 ``` r
 print("citation range of non European or non CelticEnglish or non EastAsian names last")
@@ -683,7 +683,7 @@ summary(subset(citation_j_origin_df2,
 ```
 
     ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-    ## 0.00000 0.01160 0.02122 0.02536 0.03652 0.07935
+    ## 0.00000 0.01194 0.02234 0.02595 0.03928 0.08613
 
 ``` r
 summary(subset(citation_s_origin_df2, 
@@ -691,7 +691,7 @@ summary(subset(citation_s_origin_df2,
 ```
 
     ##     Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
-    ## 0.003282 0.011732 0.021176 0.022147 0.030897 0.051859
+    ## 0.002338 0.012484 0.021763 0.022908 0.032544 0.063975
 
 ## Make the Reference table
 
@@ -831,51 +831,51 @@ knitr::kable(data.frame(final_table), format = "pipe",
 <tbody>
 <tr class="odd">
 <td align="left">citation_journalist_first vs. nature_first</td>
-<td align="left">1.37 (0.93, 1.82)</td>
-<td align="left">0.68 (0.44, 0.91)</td>
-<td align="left">1.01 (0.77, 1.28)</td>
+<td align="left">1.34 (0.86, 1.77)</td>
+<td align="left">0.68 (0.45, 0.9)</td>
+<td align="left">1.07 (0.8, 1.42)</td>
 </tr>
 <tr class="even">
 <td align="left">citation_journalist_last vs. nature_last</td>
-<td align="left">1.18 (0.91, 1.58)</td>
-<td align="left">0.81 (0.4, 1.27)</td>
-<td align="left">0.92 (0.68, 1.17)</td>
+<td align="left">1.16 (0.91, 1.5)</td>
+<td align="left">0.77 (0.37, 1.21)</td>
+<td align="left">0.97 (0.7, 1.22)</td>
 </tr>
 <tr class="odd">
 <td align="left">citation_scientist_first vs. nature_first</td>
-<td align="left">1.28 (1.04, 1.56)</td>
-<td align="left">0.8 (0.64, 1.02)</td>
-<td align="left">1.06 (0.88, 1.25)</td>
+<td align="left">1.26 (1.03, 1.54)</td>
+<td align="left">0.77 (0.58, 0.99)</td>
+<td align="left">1.11 (0.89, 1.38)</td>
 </tr>
 <tr class="even">
 <td align="left">citation_scientist_last vs. nature_last</td>
-<td align="left">1.11 (0.93, 1.34)</td>
-<td align="left">0.76 (0.56, 1)</td>
-<td align="left">1.07 (0.91, 1.22)</td>
+<td align="left">1.11 (0.93, 1.31)</td>
+<td align="left">0.75 (0.57, 0.98)</td>
+<td align="left">1.08 (0.92, 1.22)</td>
 </tr>
 <tr class="odd">
 <td align="left">quote vs. nature_first</td>
-<td align="left">2.2 (1.8, 2.64)</td>
+<td align="left">2.2 (1.83, 2.63)</td>
 <td align="left">0.23 (0.18, 0.29)</td>
-<td align="left">1.02 (0.79, 1.23)</td>
+<td align="left">1.05 (0.79, 1.3)</td>
 </tr>
 <tr class="even">
 <td align="left">quote vs. nature_last</td>
-<td align="left">1.54 (1.33, 1.85)</td>
-<td align="left">0.36 (0.28, 0.47)</td>
-<td align="left">0.89 (0.78, 1.01)</td>
+<td align="left">1.54 (1.35, 1.8)</td>
+<td align="left">0.36 (0.28, 0.45)</td>
+<td align="left">0.9 (0.79, 1.07)</td>
 </tr>
 <tr class="odd">
 <td align="left">mention vs. nature_first</td>
-<td align="left">2.1 (1.69, 2.53)</td>
+<td align="left">2.1 (1.74, 2.51)</td>
 <td align="left">0.27 (0.21, 0.33)</td>
-<td align="left">1.02 (0.8, 1.24)</td>
+<td align="left">1.05 (0.82, 1.33)</td>
 </tr>
 <tr class="even">
 <td align="left">mention vs. nature_last</td>
-<td align="left">1.47 (1.26, 1.76)</td>
+<td align="left">1.47 (1.28, 1.7)</td>
 <td align="left">0.42 (0.32, 0.52)</td>
-<td align="left">0.89 (0.78, 1)</td>
+<td align="left">0.9 (0.78, 1.05)</td>
 </tr>
 </tbody>
 </table>
@@ -959,51 +959,51 @@ knitr::kable(data.frame(final_table), format = "pipe",
 <tbody>
 <tr class="odd">
 <td align="left">citation_journalist_first vs. springer_first</td>
-<td align="left">2.08 (1.42, 2.9)</td>
-<td align="left">0.68 (0.45, 0.94)</td>
-<td align="left">1.15 (0.87, 1.53)</td>
+<td align="left">2.11 (1.4, 2.88)</td>
+<td align="left">0.68 (0.46, 0.93)</td>
+<td align="left">1.23 (0.91, 1.72)</td>
 </tr>
 <tr class="even">
 <td align="left">citation_journalist_last vs. springer_last</td>
-<td align="left">2.08 (1.31, 3.26)</td>
-<td align="left">0.56 (0.28, 0.81)</td>
-<td align="left">1.13 (0.87, 1.43)</td>
+<td align="left">2.16 (1.32, 3.25)</td>
+<td align="left">0.53 (0.28, 0.77)</td>
+<td align="left">1.23 (0.9, 1.72)</td>
 </tr>
 <tr class="odd">
 <td align="left">citation_scientist_first vs. springer_last</td>
-<td align="left">1.59 (0.95, 2.29)</td>
-<td align="left">0.9 (0.61, 1.67)</td>
-<td align="left">1.15 (0.91, 1.37)</td>
+<td align="left">1.65 (0.94, 2.35)</td>
+<td align="left">0.88 (0.6, 1.59)</td>
+<td align="left">1.21 (0.96, 1.55)</td>
 </tr>
 <tr class="even">
 <td align="left">citation_scientist_last vs. nature_last</td>
-<td align="left">1.11 (0.93, 1.34)</td>
-<td align="left">0.76 (0.56, 1)</td>
-<td align="left">1.07 (0.91, 1.22)</td>
+<td align="left">1.11 (0.93, 1.31)</td>
+<td align="left">0.75 (0.57, 0.98)</td>
+<td align="left">1.08 (0.92, 1.22)</td>
 </tr>
 <tr class="odd">
 <td align="left">quote vs. springer_last</td>
-<td align="left">2.71 (1.78, 3.91)</td>
-<td align="left">0.26 (0.18, 0.5)</td>
-<td align="left">1.1 (0.84, 1.37)</td>
+<td align="left">2.86 (1.77, 4.17)</td>
+<td align="left">0.26 (0.18, 0.45)</td>
+<td align="left">1.15 (0.86, 1.47)</td>
 </tr>
 <tr class="even">
 <td align="left">quote vs. nature_last</td>
-<td align="left">1.54 (1.33, 1.85)</td>
-<td align="left">0.36 (0.28, 0.47)</td>
-<td align="left">0.89 (0.78, 1.01)</td>
+<td align="left">1.54 (1.35, 1.8)</td>
+<td align="left">0.36 (0.28, 0.45)</td>
+<td align="left">0.9 (0.79, 1.07)</td>
 </tr>
 <tr class="odd">
 <td align="left">mention vs. springer_last</td>
-<td align="left">2.59 (1.68, 3.75)</td>
-<td align="left">0.3 (0.21, 0.56)</td>
-<td align="left">1.1 (0.86, 1.34)</td>
+<td align="left">2.73 (1.67, 3.91)</td>
+<td align="left">0.3 (0.21, 0.55)</td>
+<td align="left">1.14 (0.89, 1.41)</td>
 </tr>
 <tr class="even">
 <td align="left">mention vs. nature_last</td>
-<td align="left">1.47 (1.26, 1.76)</td>
+<td align="left">1.47 (1.28, 1.7)</td>
 <td align="left">0.42 (0.32, 0.52)</td>
-<td align="left">0.89 (0.78, 1)</td>
+<td align="left">0.9 (0.78, 1.05)</td>
 </tr>
 </tbody>
 </table>

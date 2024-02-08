@@ -134,6 +134,9 @@ print(dim(full_quote_df))
 print("Male Quote Ratio Nature:")
 table(subset(full_quote_df, year == 2005 & type != "guardian")$est_gender)
 table(subset(full_quote_df, year == 2020 & type != "guardian")$est_gender)
+table(subset(full_quote_df, year == 2021 & type != "guardian")$est_gender)
+table(subset(full_quote_df, year == 2022 & type != "guardian")$est_gender)
+table(subset(full_quote_df, year == 2023 & type != "guardian")$est_gender)
 
 #print("Male Quote Ratio Guardian:")
 #table(subset(full_quote_df, year == 2005 & type == "guardian")$est_gender)
@@ -376,6 +379,24 @@ if(RERUN_BOOTSTRAP){
     all_bootstrap_file = file.path(proj_dir,
                                 "/figure_notebooks/manuscript_figs/fig2_tmp/fig2.RData")
     load(all_bootstrap_file)
+    
+    full_quote_df = subset(full_quote_df, year < 2021)
+    quote_prop_df = subset(quote_prop_df, year < 2021)
+    quote_prop_boot = subset(quote_prop_boot, year < 2021)
+    type_df = subset(type_df, year < 2021)
+    career_df = subset(career_df, year < 2021)
+    springer_first_prop_df = subset(springer_first_prop_df, year < 2021)
+    springer_first_prop_boot = subset(springer_first_prop_boot, year < 2021)
+    springer_last_prop_df = subset(springer_last_prop_df, year < 2021)
+    springer_last_prop_boot = subset(springer_last_prop_boot, year < 2021)
+    nature_first_prop_df = subset(nature_first_prop_df, year < 2021)
+    nature_first_prop_boot = subset(nature_first_prop_boot, year < 2021)
+    nature_last_prop_df = subset(nature_last_prop_df, year < 2021)
+    nature_last_prop_df = subset(nature_last_prop_df, year < 2021)
+    first_cited_prop_df = subset(first_cited_prop_df, year < 2021)
+    first_cited_prop_boot = subset(first_cited_prop_boot, year < 2021)
+
+    
 }
 
 

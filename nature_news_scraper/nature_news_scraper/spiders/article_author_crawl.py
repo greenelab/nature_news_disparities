@@ -36,7 +36,7 @@ class NewsSpider(scrapy.Spider):
 
 
         # also see if there's a next page and yield that, too
-        next_page = response.css('ul.c-pagination > li[data-page="next"] > a::attr(href)').get()
+        next_page = response.css('ul.c-pagination li[data-page="next"] > a::attr(href)').get()
         if next_page is not None:
             next_page = response.urljoin(next_page)
             print("next page: %s" % next_page)

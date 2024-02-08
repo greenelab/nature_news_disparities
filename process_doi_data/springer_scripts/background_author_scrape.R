@@ -170,7 +170,7 @@ batch_springer_bg_author_query <- function(year_vec, month_vec, page_vec, api_ke
 initialize_springer_bg_author_query <- function(api_key){
 
     # query each month for each year
-    year_vec = 2005:2020
+    year_vec = 2005:2023
     month_vec = 1:12
     page_vec = 1:4
 

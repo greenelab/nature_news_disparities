@@ -34,7 +34,7 @@ class NewsSpider(scrapy.Spider):
 
 
         # also see if there's a next page and yield that, too
-        next_page = response.css('ol.pagination > li[data-page="next"] > a::attr(href)').get()
+        next_page = response.css('ul.c-pagination li[data-page="next"] > a::attr(href)').get()
         if next_page is not None:
             next_page = response.urljoin(next_page)
             print("next page: %s" % next_page)
@@ -45,8 +45,15 @@ class NewsSpider(scrapy.Spider):
 
         article_body = response.css('div.article__body.cleared > p::text')
 
+        ## beyond 2015
+        if not article_body:
+            # div.c-article-body.main-content > p:nth-child(1)
+            article_body = response.css('div.c-article-body.main-content > p *::text')
+
+
         ## 2015
         if not article_body:
+            # div.c-article-body.main-content > p:nth-child(1)
             article_body = response.css('section#article-body div.main-content.content > p *::text')
 
         ## 2010

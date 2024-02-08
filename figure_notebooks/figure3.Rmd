@@ -25,6 +25,9 @@ source(file.path(proj_dir, "/process_doi_data/springer_scripts/springer_scrape_u
 
 RERUN_BOOTSTRAP = FALSE
 
+name_origin_ids = c("African", "CelticEnglish", 
+                    "EastAsian", "European", "Greek", "Hispanic", 
+                    "Hebrew", "ArabTurkPers", "Nordic", "SouthAsian")
 
 ```
 
@@ -144,8 +147,9 @@ name_pred_file = file.path(proj_dir,
 name_info_file = file.path(proj_dir, 
                              "/data/author_data/all_speaker_fullname.tsv")
 
-quote_name_df = read_name_origin(name_pred_file, name_info_file)
-quote_name_df$name_origin[quote_name_df$name_origin == "Jewish"] = "Hebrew"
+quote_name_df = read_name_origin_prob(name_pred_file, name_info_file)
+#quote_name_df$name_origin[quote_name_df$name_origin == "Jewish"] = "Hebrew"
+colnames(quote_name_df)[which(colnames(quote_name_df) == "Jewish")] = "Hebrew"
 quote_name_df = subset(quote_name_df, !file_id %in% too_many_quotes_file_id)
 
 # second read in the names mentioned data
@@ -154,8 +158,9 @@ name_pred_file = file.path(proj_dir,
 name_info_file = file.path(proj_dir, 
                              "/data/author_data/all_mentioned_fullname.tsv")
 
-mentioned_name_df = read_name_origin(name_pred_file, name_info_file)
-mentioned_name_df$name_origin[mentioned_name_df$name_origin == "Jewish"] = "Hebrew"
+mentioned_name_df = read_name_origin_prob(name_pred_file, name_info_file)
+#mentioned_name_df$name_origin[mentioned_name_df$name_origin == "Jewish"] = "Hebrew"
+colnames(mentioned_name_df)[which(colnames(mentioned_name_df) == "Jewish")] = "Hebrew"
 mentioned_name_df = subset(mentioned_name_df, !file_id %in% too_many_quotes_file_id)
 
 
@@ -164,8 +169,9 @@ name_pred_file = file.path(proj_dir,
                          "/data/author_data/all_author_fullname_pred.tsv")
 name_info_file = file.path(proj_dir, 
                          "/data/author_data/all_author_fullname.tsv")
-cite_name_df = read_name_origin(name_pred_file, name_info_file)
-cite_name_df$name_origin[cite_name_df$name_origin == "Jewish"] = "Hebrew"
+cite_name_df = read_name_origin_prob(name_pred_file, name_info_file)
+#cite_name_df$name_origin[cite_name_df$name_origin == "Jewish"] = "Hebrew"
+colnames(cite_name_df)[which(colnames(cite_name_df) == "Jewish")] = "Hebrew"
 
 
 # get first authors in the citations
@@ -224,7 +230,9 @@ quote_name_df = subset(quote_name_df, !type %in% c("career-column", "news-and-vi
 mentioned_name_df = subset(mentioned_name_df, !type %in% c("career-column", "news-and-views", "guardian"))
 
 
-col_ids = c("author", "year", "name_origin", "corpus", "doi")
+col_ids = c("author", "year", "corpus", "doi", "African", "CelticEnglish", 
+            "EastAsian", "European", "Greek", "Hispanic", 
+            "Hebrew", "ArabTurkPers", "Nordic", "SouthAsian")
 name_df = rbind(cite_name_df[,col_ids], 
                 quote_name_df[,col_ids], 
                 mentioned_name_df[,col_ids])
@@ -363,8 +371,8 @@ get_subboot <- function(origin_id, curr_corpus, in_df, bootstrap_col_id="doi"){
     bootstrap_raw$name_origin = origin_id
     
     # add a label for plotting later
-    bootstrap_df$label[bootstrap_df$year == 2020] = 
-        bootstrap_df$name_origin[bootstrap_df$year == 2020]
+    bootstrap_df$label[bootstrap_df$year == max(bootstrap_df$year)] = 
+        bootstrap_df$name_origin[bootstrap_df$year == max(bootstrap_df$year)]
         
 
     return(list(bootstrap_df=bootstrap_df, bootstrap_raw=bootstrap_raw))
@@ -394,50 +402,96 @@ call_get_subboot <- function(name_df, curr_corpus){
 
 }
 
+# helper method for calling the bootstrap, using probabilities
+get_subboot_prob <- function(origin_id, curr_corpus, in_df, bootstrap_col_id="doi"){
+    bootstrap_res = compute_bootstrap_location_prob(subset(in_df, 
+                                                      corpus==curr_corpus), 
+                                              year_col_id = "year", 
+                                              article_col_id = bootstrap_col_id, 
+                                              country_col_id = origin_id,
+                                              conf_int = 0.95)
+    bootstrap_df = bootstrap_res$quantile_res
+    bootstrap_raw = bootstrap_res$boot_res
+    
+    bootstrap_df$name_origin = origin_id
+    bootstrap_raw$name_origin = origin_id
+    
+    # add a label for plotting later
+    bootstrap_df$label[bootstrap_df$year == max(bootstrap_df$year)] = 
+        bootstrap_df$name_origin[bootstrap_df$year == max(bootstrap_df$year)]
+        
+
+    return(list(bootstrap_df=bootstrap_df, bootstrap_raw=bootstrap_raw))
+
+}
+
+call_get_subboot_prob <- function(name_df, curr_corpus){
+    
+    # get the bootstrapped CI for each source data type
+    origin_df = NA
+    origin_raw = NA
+    for(curr_origin in name_origin_ids){
+        print(curr_origin)
+        res = get_subboot_prob(curr_origin, 
+                          curr_corpus=curr_corpus,
+                          name_df)
+        origin_df = rbind(origin_df, res[[1]])
+        origin_raw = rbind(origin_raw, res[[2]])
+    }
+    origin_df = origin_df[-1,]
+    origin_raw = origin_raw[-1,]
+    
+    origin_df$corpus = curr_corpus
+    origin_raw$corpus = curr_corpus
+    
+    return(list(quant_df=origin_df, raw_df=origin_raw))
+
+}
+
 if(RERUN_BOOTSTRAP){
     
     # get the bootstrapped CI for each source data type
-    res = call_get_subboot(name_df, "citation_journalist_first")
+    res = call_get_subboot_prob(name_df, "citation_journalist_first")
     citation_j_origin_df1 = res$quant_df
     citation_j_origin_raw1 = res$raw_df
       
-    res = call_get_subboot(name_df, "citation_scientist_first")
+    res = call_get_subboot_prob(name_df, "citation_scientist_first")
     citation_s_origin_df1 = res$quant_df
     citation_s_origin_raw1 = res$raw_df
 
-    res = call_get_subboot(name_df, "citation_journalist_last")
+    res = call_get_subboot_prob(name_df, "citation_journalist_last")
     citation_j_origin_df2 = res$quant_df
     citation_j_origin_raw2 = res$raw_df
     
-    res = call_get_subboot(name_df, "citation_scientist_last")
+    res = call_get_subboot_prob(name_df, "citation_scientist_last")
     citation_s_origin_df2 = res$quant_df
     citation_s_origin_raw2 = res$raw_df
        
-    res = call_get_subboot(name_df, "quote")
+    res = call_get_subboot_prob(name_df, "quote")
     quote_origin_df = res$quant_df
     quote_origin_raw = res$raw_df
 
-    res = call_get_subboot(name_df, "springer_last")
+    res = call_get_subboot_prob(name_df, "springer_last")
     springer_origin_df_last = res$quant_df
     springer_origin_df_last_raw = res$raw_df
 
 
-    res = call_get_subboot(name_df, "nature_last")
+    res = call_get_subboot_prob(name_df, "nature_last")
     nature_origin_df_last = res$quant_df
     nature_origin_df_last_raw = res$raw_df
     
     
-    res = call_get_subboot(name_df, "springer_first")
+    res = call_get_subboot_prob(name_df, "springer_first")
     springer_origin_df_first = res$quant_df
     springer_origin_df_first_raw = res$raw_df
     
     
-    res = call_get_subboot(name_df, "nature_first")
+    res = call_get_subboot_prob(name_df, "nature_first")
     nature_origin_df_first = res$quant_df
     nature_origin_df_first_raw = res$raw_df
     
     
-    res = call_get_subboot(name_df, "mention")
+    res = call_get_subboot_prob(name_df, "mention")
     mention_origin_df = res$quant_df
     mention_origin_raw = res$raw_df
     
@@ -477,11 +531,13 @@ if(RERUN_BOOTSTRAP){
     raw_bootstrap_file = file.path(proj_dir,
                                       "/figure_notebooks/manuscript_figs/fig3_tmp/raw_bootstrap_df.tsv")
     raw_bootstrap_df = data.frame(fread(raw_bootstrap_file))
+    raw_bootstrap_df = raw_bootstrap_df[which(raw_bootstrap_df$year < 2021), ]
 
     all_bootstrap_file = file.path(proj_dir,
                                       "/figure_notebooks/manuscript_figs/fig3_tmp/all_bootstrap_df.tsv")
     all_bootstrap_df = data.frame(fread(all_bootstrap_file))
-    
+    all_bootstrap_df = all_bootstrap_df[which(all_bootstrap_df$year < 2021), ]
+
     citation_j_origin_df1 = subset(all_bootstrap_df, corpus == "citation_journalist_first")
     citation_s_origin_df1 = subset(all_bootstrap_df, corpus == "citation_scientist_first")
     citation_j_origin_df2 = subset(all_bootstrap_df, corpus == "citation_journalist_last")
@@ -565,6 +621,10 @@ get_FC_summary <- function(raw_bootstrap_df, curr_corpus_fg, curr_corpus_bg,
         curr_bg_df = curr_bg_df[,c("year", "boot")]
         colnames(curr_bg_df)[2] = "boot_bg"
         curr_bg_df = curr_bg_df[order(curr_bg_df$year), ]
+        
+        common_years = intersect(curr_fg_df$year, curr_bg_df$year)
+        curr_bg_df = curr_bg_df[which(curr_bg_df$year %in% common_years), ]
+        curr_fg_df = curr_fg_df[which(curr_fg_df$year %in% common_years), ]
         
         # these are random samples, so we just need to align them by year
         # to get the boot strap estimation of thee FC
@@ -770,7 +830,7 @@ citation_j_overview_gg2 = ggplot(citation_j_origin_df2, aes(x=as.numeric(year), 
                           ymin=bottom_CI, ymax=top_CI,
                           fill=name_origin, label=label)) +
     geom_point() + geom_ribbon(alpha=0.5) + geom_line(alpha=0.5) +
-    theme_bw() + geom_text_repel() + xlim(c(2005,2021))  +
+    theme_bw() + geom_text_repel() + xlim(c(2005,2020))  +
     xlab("Year of Article") + ylab("Proportion of Journalist Citations") +
     ggtitle("Est. Proportion of the Cited Last Author Name Origin (journalist written)") + 
     scale_fill_brewer(palette="Set2") +
@@ -783,7 +843,7 @@ citation_s_overview_gg1 = ggplot(citation_s_origin_df1, aes(x=as.numeric(year), 
                           ymin=bottom_CI, ymax=top_CI,
                           fill=name_origin, label=label)) +
     geom_point() + geom_ribbon(alpha=0.5) + geom_line(alpha=0.5) +
-    theme_bw() + geom_text_repel() + xlim(c(2005,2021))  +
+    theme_bw() + geom_text_repel() + xlim(c(2005,2020))  +
     xlab("Year of Article") + ylab("Proportion of Scientist Citations") +
     ggtitle("Est. Proportion of the Cited First Author Name Origin (scientist written)") + 
     scale_fill_brewer(palette="Set2") +
@@ -796,7 +856,7 @@ citation_s_overview_gg2 = ggplot(citation_s_origin_df2, aes(x=as.numeric(year), 
                           ymin=bottom_CI, ymax=top_CI,
                           fill=name_origin, label=label)) +
     geom_point() + geom_ribbon(alpha=0.5) + geom_line(alpha=0.5) +
-    theme_bw() + geom_text_repel() + xlim(c(2005,2021))  +
+    theme_bw() + geom_text_repel() + xlim(c(2005,2020))  +
     xlab("Year of Article") + ylab("Proportion of Scientist Citations") +
     ggtitle("Est. Proportion of the Cited Last Author Name Origin (scientist written)") + 
     scale_fill_brewer(palette="Set2") +
@@ -909,7 +969,7 @@ quote_overview_gg = ggplot(quote_origin_df, aes(x=as.numeric(year), y=mean,
                           ymin=bottom_CI, ymax=top_CI,
                           fill=name_origin, label=label)) +
     geom_point() + geom_ribbon(alpha=0.5) + geom_line(alpha=0.5) +
-    theme_bw() + geom_text_repel() + xlim(c(2005,2021))  +
+    theme_bw() + geom_text_repel() + xlim(c(2005,2020))  +
     xlab("Year of Article") + ylab("Proportion of Quotes") +
     ggtitle("Est. Proportion of Quoted Speakers' Name Origin") + 
     scale_fill_brewer(palette="Set2") +
@@ -992,7 +1052,7 @@ mention_overview_gg = ggplot(mention_origin_df, aes(x=as.numeric(year), y=mean,
                           ymin=bottom_CI, ymax=top_CI,
                           fill=name_origin, label=label)) +
     geom_point() + geom_ribbon(alpha=0.5) + geom_line(alpha=0.5) +
-    theme_bw() + geom_text_repel() + xlim(c(2005,2021))  +
+    theme_bw() + geom_text_repel() + xlim(c(2005,2020))  +
     xlab("Year of Article") + ylab("Proportion of Mentioned Names") +
     ggtitle("Est. Proportion of Mentioned Speakers' Name Origin") + 
     scale_fill_brewer(palette="Set2") +
@@ -1075,7 +1135,7 @@ nature_first_overview_gg = ggplot(nature_origin_df_first, aes(x=as.numeric(year)
                           ymin=bottom_CI, ymax=top_CI,
                           fill=name_origin, label=label)) +
     geom_point() + geom_ribbon(alpha=0.5) + geom_line(alpha=0.5) +
-    theme_bw() + geom_text_repel() + xlim(c(2005,2021))  +
+    theme_bw() + geom_text_repel() + xlim(c(2005,2020))  +
     xlab("Year of Article") + ylab("Proportion of Nature First Authors") +
     ggtitle("Est. Proportion of Nature First Authors' Name Origin") + 
     scale_fill_brewer(palette="Set2") +
@@ -1088,7 +1148,7 @@ nature_last_overview_gg = ggplot(nature_origin_df_last, aes(x=as.numeric(year), 
                           ymin=bottom_CI, ymax=top_CI,
                           fill=name_origin, label=label)) +
     geom_point() + geom_ribbon(alpha=0.5) + geom_line(alpha=0.5) +
-    theme_bw() + geom_text_repel() + xlim(c(2005,2021))  +
+    theme_bw() + geom_text_repel() + xlim(c(2005,2020))  +
     xlab("Year of Article") + ylab("Proportion of Nature Last Authors") +
     ggtitle("Est. Proportion of Nature Last Authors' Name Origin") + 
     scale_fill_brewer(palette="Set2") +
@@ -1102,7 +1162,7 @@ springer_first_overview_gg = ggplot(springer_origin_df_first, aes(x=as.numeric(y
                           ymin=bottom_CI, ymax=top_CI,
                           fill=name_origin, label=label)) +
     geom_point() + geom_ribbon(alpha=0.5) + geom_line(alpha=0.5) +
-    theme_bw() + geom_text_repel() + xlim(c(2005,2021))  +
+    theme_bw() + geom_text_repel() + xlim(c(2005,2020))  +
     xlab("Year of Article") + ylab("Proportion of Springer First Authors") +
     ggtitle("Est. Proportion of Springer First Authors' Name Origin") + 
     scale_fill_brewer(palette="Set2") +
@@ -1115,7 +1175,7 @@ springer_last_overview_gg = ggplot(springer_origin_df_last, aes(x=as.numeric(yea
                           ymin=bottom_CI, ymax=top_CI,
                           fill=name_origin, label=label)) +
     geom_point() + geom_ribbon(alpha=0.5) + geom_line(alpha=0.5) +
-    theme_bw() + geom_text_repel() + xlim(c(2005,2021))  +
+    theme_bw() + geom_text_repel() + xlim(c(2005,2020))  +
     xlab("Year of Article") + ylab("Proportion of Springer Last Authors") +
     ggtitle("Est. Proportion of Springer Last Authors' Name Origin") + 
     scale_fill_brewer(palette="Set2") +

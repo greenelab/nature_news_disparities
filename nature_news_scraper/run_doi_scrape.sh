@@ -10,6 +10,7 @@ cd ${DIR}/nature_news_scraper
 
 # now crawl over the years of interest
 TARGET_YRS=($( seq 2005 2020  ))
+TARGET_YRS=($( seq 2020 2023  ))
 TARGET_TYPES=("news" "news-and-views" "news-feature" "toolbox" "technology-feature" "career-column" "career-feature")
 
 
