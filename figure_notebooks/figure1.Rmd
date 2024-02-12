@@ -94,6 +94,9 @@ news_df = news_df[-1,]
 print("Total Articles")
 print(dim(news_df))
 
+news_df = subset(news_df, year < 2021)
+
+
 news_df = subset(news_df, !type %in% c("guardian"))
 print("Total Articles Nature")
 print(dim(news_df))
@@ -116,6 +119,7 @@ head(news_df)
 nature_author_dir = file.path(proj_dir,
                     "/data/author_data/downloads/")
 nature_author_df = read_nature_author_json_files(nature_author_dir)
+nature_author_df = subset(nature_author_df, year < 2021)
 
 head(nature_author_df)
 
@@ -123,6 +127,7 @@ head(nature_author_df)
 springer_author_file = file.path(proj_dir, 
                                 "/data/reference_data/springer_bg_author_cache.tsv")
 springer_author_df = data.frame(fread(springer_author_file))
+springer_author_df = subset(springer_author_df, year < 2021)
 
 head(springer_author_df)
 
@@ -157,17 +162,23 @@ full_df = Reduce(rbind, list(nature_author_df[,col_ids],
 full_df$type = factor(full_df$type, levels = ARTICLE_TYPE_FACTOR_ORDER)
 
 nature_df = subset(full_df, type != "springer")
+nature_df$source = "Research"
+nature_df$source[which(nature_df$type != "research")] = "News"
+
 
 news_nature_gg = ggplot(nature_df, 
                         aes(x=as.factor(year), fill=type)) +
                 geom_bar() + theme_bw() +
-                scale_fill_manual(values=ARTICLE_TYPE_COLOR[unique(nature_df$type)]) +
+                scale_fill_manual(values=ARTICLE_TYPE_COLOR[unique(nature_df$type)],
+                                  labels=ARTICLE_TYPE_LABELS[unique(nature_df$type)]) +
                 xlab("Year of Article") + ylab("Num. Articles") +
-                    ggtitle("# Nature News and Research Articles Over Time")
+                    ggtitle("# Nature News and Research Articles Over Time") +
+                facet_grid(~ source) + theme(axis.text.x = element_text(angle=45, vjust=1, hjust=1))
 
 all_gg = ggplot(full_df, aes(x=as.factor(year), fill=type)) +
                 geom_bar() + theme_bw() +
-                scale_fill_manual(values=ARTICLE_TYPE_COLOR[unique(full_df$type)]) +
+                scale_fill_manual(values=ARTICLE_TYPE_COLOR[unique(full_df$type)],
+                                  labels=ARTICLE_TYPE_LABELS[unique(full_df$type)]) +
                 xlab("Year of Article") + ylab("# articles") +
                     ggtitle("# Springer + Nature News and Research Articles Over Time")
 ggsave(file.path(proj_dir, "/figure_notebooks/manuscript_figs/fig1_tmp/news_nature_gg.png"),

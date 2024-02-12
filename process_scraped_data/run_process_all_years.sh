@@ -7,7 +7,7 @@
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
 # process each year individually
-TARGET_YRS=($( seq 2005 2020 ))
+TARGET_YRS=($( seq 2020 2023 ))
 TARGET_TYPES=("guardian")
 TARGET_TYPES=("news" "news-and-views" "news-feature" "toolbox" "technology-feature" "career-column" "career-feature")
 

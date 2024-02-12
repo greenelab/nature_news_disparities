@@ -134,6 +134,9 @@ print(dim(full_quote_df))
 print("Male Quote Ratio Nature:")
 table(subset(full_quote_df, year == 2005 & type != "guardian")$est_gender)
 table(subset(full_quote_df, year == 2020 & type != "guardian")$est_gender)
+table(subset(full_quote_df, year == 2021 & type != "guardian")$est_gender)
+table(subset(full_quote_df, year == 2022 & type != "guardian")$est_gender)
+table(subset(full_quote_df, year == 2023 & type != "guardian")$est_gender)
 
 #print("Male Quote Ratio Guardian:")
 #table(subset(full_quote_df, year == 2005 & type == "guardian")$est_gender)
@@ -260,10 +263,12 @@ if(RERUN_BOOTSTRAP){
         
     
     #### Quote data
-    quote_prop_df = compute_bootstrap_gender(subset(full_quote_df, type != "guardian"), 
+    res = compute_bootstrap_gender(subset(full_quote_df, type != "guardian"), 
                                                year_col_id = "year", 
                                                article_col_id = "quote",
                                                conf_int=0.95)
+    quote_prop_df = res$quantile_res
+    quote_prop_boot = res$boot_res
     quote_prop_df$corpus = "quote"
     
     #### Guardian Quote data
@@ -279,6 +284,7 @@ if(RERUN_BOOTSTRAP){
                                                year_col_id = "year", 
                                                article_col_id = "quote",
                                                conf_int=0.95)
+        bootstrap_res = bootstrap_res$quantile_res
         bootstrap_res$corpus = type_names
         return(bootstrap_res)
     
@@ -309,48 +315,88 @@ if(RERUN_BOOTSTRAP){
     
     
     #### Background data
-    springer_first_prop_df = compute_bootstrap_gender(
+    springer_first_prop_res = compute_bootstrap_gender(
                                 subset(springer_author_df, author_pos == "first"), 
                                 year_col_id = "year", 
                                 article_col_id = "doi",
                                 conf_int=0.95)
-    springer_last_prop_df = compute_bootstrap_gender(
+    springer_last_prop_res = compute_bootstrap_gender(
                                 subset(springer_author_df, author_pos == "last"), 
                                 year_col_id = "year", 
                                 article_col_id = "doi",
                                 conf_int=0.95)
-    nature_first_prop_df = compute_bootstrap_gender(
+    nature_first_prop_res = compute_bootstrap_gender(
                                 subset(nature_author_df, author_pos == "first"), 
                                 year_col_id = "year", 
                                 article_col_id = "doi",
                                 conf_int=0.95)
-    nature_last_prop_df = compute_bootstrap_gender(
+    nature_last_prop_res = compute_bootstrap_gender(
                                 subset(nature_author_df, author_pos == "last"), 
                                 year_col_id = "year", 
                                 article_col_id = "doi",
                                 conf_int=0.95)
-    springer_first_prop_df$corpus = "springer_first"
-    springer_last_prop_df$corpus = "springer_last"
-    nature_first_prop_df$corpus = "nature_first"
-    nature_last_prop_df$corpus = "nature_last"
     
+    springer_first_prop_df = springer_first_prop_res$quantile_res
+    springer_first_prop_df$corpus = "springer_first"
+    springer_first_prop_boot = springer_first_prop_res$boot_res
+    
+    springer_last_prop_df = springer_last_prop_res$quantile_res
+    springer_last_prop_df$corpus = "springer_last"
+    springer_last_prop_boot = springer_last_prop_res$boot_res
+    
+    nature_first_prop_df = nature_first_prop_res$quantile_res
+    nature_first_prop_df$corpus = "nature_first"
+    nature_first_prop_boot = nature_first_prop_res$boot_res
+
+    nature_last_prop_df = nature_last_prop_res$quantile_res
+    nature_last_prop_df$corpus = "nature_last"
+    nature_last_prop_boot = nature_last_prop_res$boot_res
+   
+
     
     #### first v last author quotes
-    first_cited_prop_df = compute_bootstrap_first_author(quote_author_df, 
+    first_cited_prop_res = compute_bootstrap_first_author(quote_author_df, 
                                                    year_col_id = "year", 
                                                    article_col_id = "file_id",
                                                    conf_int=0.95)
+    
+    first_cited_prop_df = first_cited_prop_res$quantile_res
+    first_cited_prop_boot = first_cited_prop_res$boot_res
+
+    
     all_bootstrap_file = file.path(proj_dir,
                             "/figure_notebooks/manuscript_figs/fig2_tmp/fig2.RData")
-    save(quote_prop_df, type_df, career_df, 
-         springer_first_prop_df, springer_last_prop_df, 
-         nature_first_prop_df, nature_last_prop_df, 
-         first_cited_prop_df, #guardian_quote_prop_df,
+    save(quote_prop_df, quote_prop_boot, 
+         type_df, career_df, 
+         springer_first_prop_df, springer_first_prop_boot, 
+         springer_last_prop_df, springer_last_prop_boot,
+         nature_first_prop_df, nature_first_prop_boot,
+         nature_last_prop_df, nature_last_prop_df,
+         first_cited_prop_df, first_cited_prop_boot,
+         #guardian_quote_prop_df,
          file = all_bootstrap_file)
 }else{
     all_bootstrap_file = file.path(proj_dir,
                                 "/figure_notebooks/manuscript_figs/fig2_tmp/fig2.RData")
     load(all_bootstrap_file)
+    
+    full_quote_df = subset(full_quote_df, year < 2021)
+    quote_prop_df = subset(quote_prop_df, year < 2021)
+    quote_prop_boot = subset(quote_prop_boot, year < 2021)
+    type_df = subset(type_df, year < 2021)
+    career_df = subset(career_df, year < 2021)
+    springer_first_prop_df = subset(springer_first_prop_df, year < 2021)
+    springer_first_prop_boot = subset(springer_first_prop_boot, year < 2021)
+    springer_last_prop_df = subset(springer_last_prop_df, year < 2021)
+    springer_last_prop_boot = subset(springer_last_prop_boot, year < 2021)
+    nature_first_prop_df = subset(nature_first_prop_df, year < 2021)
+    nature_first_prop_boot = subset(nature_first_prop_boot, year < 2021)
+    nature_last_prop_df = subset(nature_last_prop_df, year < 2021)
+    nature_last_prop_df = subset(nature_last_prop_df, year < 2021)
+    first_cited_prop_df = subset(first_cited_prop_df, year < 2021)
+    first_cited_prop_boot = subset(first_cited_prop_boot, year < 2021)
+
+    
 }
 
 
@@ -372,7 +418,8 @@ tot_quotes_gg = ggplot(full_quote_df, aes(x=as.numeric(year), fill=type)) +
     theme_bw() +
     xlab("Year of Article") + ylab("# Quotes") +
     ggtitle("# of Quotes per News Article Type Over Time") + 
-    scale_fill_manual(values=ARTICLE_TYPE_COLOR[unique(full_quote_df$type)]) +
+    scale_fill_manual(values=ARTICLE_TYPE_COLOR[unique(full_quote_df$type)],
+                      labels=ARTICLE_TYPE_LABELS[unique(full_quote_df$type)]) +
     theme(legend.position="bottom")
 
 ggsave(file.path(proj_dir, "/figure_notebooks/manuscript_figs/fig2_tmp/tot_quotes_gg.pdf"),
@@ -399,7 +446,8 @@ quotes_nature_gg =
     ggtitle("News Quotes vs First+Last Author Research Citations") + 
     ylim(c(0, 1)) +
     geom_hline(yintercept=0.5, color="red") +
-    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR[unique(quote_sub$corpus)]) +
+    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR[unique(quote_sub$corpus)],
+                      labels=QUOTE_ANALYSIS_LABELS[unique(quote_sub$corpus)]) +
     theme(legend.position="bottom")
 
 ggsave(file.path(proj_dir, "/figure_notebooks/manuscript_figs/fig2_tmp/quotes_nature_gg.pdf"),
@@ -416,7 +464,8 @@ quotes_springer_gg =
     ggtitle("News Quotes vs First+Last Author Springer Article Citations") + 
     ylim(c(0, 1)) +
     geom_hline(yintercept=0.5, color="red") +
-    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR[unique(quote_sub$corpus)]) +
+    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR[unique(quote_sub$corpus)],
+                      labels=QUOTE_ANALYSIS_LABELS[unique(quote_sub$corpus)]) +
     theme(legend.position="bottom")
 
 ggsave(file.path(proj_dir, "/figure_notebooks/manuscript_figs/fig2_tmp/quotes_springer_gg.pdf"),
@@ -434,7 +483,8 @@ all_type_gg = ggplot(type_df, aes(x=as.numeric(year), y=mean,
     ggtitle("Male Proportion of Quotes Over Time") + 
     ylim(c(0, 1)) +
     geom_hline(yintercept=0.5, color="red") +
-    scale_fill_manual(values=ARTICLE_TYPE_COLOR[unique(type_df$corpus)]) +
+    scale_fill_manual(values=ARTICLE_TYPE_COLOR[unique(type_df$corpus)],
+                      labels=ARTICLE_TYPE_LABELS[unique(type_df$corpus)]) +
     theme(legend.position="bottom")
 
 ggsave(file.path(proj_dir, "/figure_notebooks/manuscript_figs/fig2_tmp/all_type_gg.pdf"),
@@ -442,6 +492,7 @@ ggsave(file.path(proj_dir, "/figure_notebooks/manuscript_figs/fig2_tmp/all_type_
 
 
 #### breakdown MALE bias by career vs non-career article type
+career_df = rbind(career_df, subset(compare_df, corpus == "quote"))
 career_df$corpus = factor(career_df$corpus, levels = QUOTE_ANALYSIS_ORDER)
 career_gg = ggplot(career_df, aes(x=as.numeric(year), y=mean,
                           ymin=bottom_CI, ymax=top_CI,
@@ -452,7 +503,8 @@ career_gg = ggplot(career_df, aes(x=as.numeric(year), y=mean,
     ylim(c(0, 1)) +
     ggtitle("Male Proportion of Quotes in Career-Feature vs Other Articles") + 
     geom_hline(yintercept=0.5, color="red") +
-    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR[unique(career_df$corpus)]) +
+    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR[unique(career_df$corpus)],
+                      labels=QUOTE_ANALYSIS_LABELS[unique(career_df$corpus)]) +
     theme(legend.position="bottom")
 
 ggsave(file.path(proj_dir, "/figure_notebooks/manuscript_figs/fig2_tmp/career_gg.pdf"),
@@ -465,7 +517,7 @@ first_v_last_gg = ggplot(first_cited_prop_df, aes(x=as.numeric(year), y=mean,
     geom_point() + geom_ribbon(alpha=0.5) + geom_line(alpha=0.5) + 
     theme_bw() + 
     xlab("Year of Article") + ylab("First Author Quotation Percentage") +
-    ggtitle("# First Author Quotes /  Total # Quotes") + 
+    ggtitle("# First Author Quotes /  First + Last Author Quotes") + 
     geom_hline(yintercept=0.5, color="red") +
     theme(legend.position="bottom")
 

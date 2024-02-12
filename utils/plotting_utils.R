@@ -18,6 +18,17 @@ ARTICLE_TYPE_FACTOR_ORDER = c("research",
 ARTICLE_TYPE_COLOR = brewer.pal(n = 9, name = "Set3")
 names(ARTICLE_TYPE_COLOR) = ARTICLE_TYPE_FACTOR_ORDER
 
+ARTICLE_TYPE_LABELS = c("Research",
+                              "Springer",
+                              "Career Column",
+                              "Career Feature",
+                              "News",
+                              "News & Views",
+                              "News Feature",
+                              "Tech Feature",
+                              "Toolbox")
+names(ARTICLE_TYPE_LABELS) = ARTICLE_TYPE_FACTOR_ORDER
+
 QUOTE_ANALYSIS_ORDER = c("nature_first",
                             "nature_last",
                             "springer_first",
@@ -44,17 +55,18 @@ QUOTE_ANALYSIS_LABELS = c("Nature First",
                             "Nature Last",
                             "Springer First",
                             "Springer Last",
-                            "Quote",
+                            "Quotes",
                             "Citation (journalist) 1st",
                             "career-column",
                             "Citation (scientist) 1st",
                             "Citation",
                             "Mention",
                             "Career Feature",
-                            "other",
+                            "Non-Career Feature",
                             "Citation (journalist) last",
                             "Citation (scientist) last"
 )
+names(QUOTE_ANALYSIS_LABELS) = QUOTE_ANALYSIS_ORDER
 
 ###################################
 ###

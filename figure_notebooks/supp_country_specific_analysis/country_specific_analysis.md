@@ -366,27 +366,27 @@ quote_cite_df = merge(quote_name_df, cited_author_country_df)
 head(mention_cite_df)
 ```
 
-    ##               author year            file_id         type  name_origin
-    ## 1      Aaron Clauset 2020 d41586-020-00012-9         news     European
-    ## 2      Aaswath Raman 2019 d41586-019-03911-8 news-feature   SouthAsian
-    ## 3 Abderrahmane Kaidi 2019 d41586-019-00406-4         news ArabTurkPers
-    ## 4  Abderrazak Albani 2010 news.2010.323.html         news ArabTurkPers
-    ## 5  Abderrazak Albani 2010 news.2010.323.html         news ArabTurkPers
-    ## 6  Abderrazak Albani 2010 news.2010.323.html         news ArabTurkPers
-    ##                              doi author_pos               corpus        country
-    ## 1 doi:10.1038/s41467-019-08746-5       last naturenews_citations  united states
-    ## 2        doi:10.1038/nature13883      first naturenews_citations  united states
-    ## 3  doi:10.1038/s41586-019-1142-2      first naturenews_citations united kingdom
-    ## 4        doi:10.1038/nature09166      first naturenews_citations        denmark
-    ## 5        doi:10.1038/nature09166      first naturenews_citations               
-    ## 6        doi:10.1038/nature09166      first naturenews_citations         sweden
-    ##   query_date num_entries
-    ## 1 2021-04-11           1
-    ## 2 2021-04-10           1
-    ## 3 2021-04-11           1
-    ## 4 2021-04-10           1
-    ## 5 2021-04-10           1
-    ## 6 2021-04-10           1
+    ##               author year            file_id         type           author_raw
+    ## 1      Aaron Clauset 2020 d41586-020-00012-9         news        Aaron Clauset
+    ## 2      Aaswath Raman 2019 d41586-019-03911-8 news-feature        Aaswath Raman
+    ## 3 Abderrahmane Kaidi 2019 d41586-019-00406-4         news   Abderrahmane Kaidi
+    ## 4  Abderrazak Albani 2010 news.2010.323.html         news Abderrazak El Albani
+    ## 5  Abderrazak Albani 2010 news.2010.323.html         news Abderrazak El Albani
+    ## 6  Abderrazak Albani 2010 news.2010.323.html         news Abderrazak El Albani
+    ##    name_origin                            doi author_pos               corpus
+    ## 1     European doi:10.1038/s41467-019-08746-5       last naturenews_citations
+    ## 2   SouthAsian        doi:10.1038/nature13883      first naturenews_citations
+    ## 3 ArabTurkPers  doi:10.1038/s41586-019-1142-2      first naturenews_citations
+    ## 4 ArabTurkPers        doi:10.1038/nature09166      first naturenews_citations
+    ## 5 ArabTurkPers        doi:10.1038/nature09166      first naturenews_citations
+    ## 6 ArabTurkPers        doi:10.1038/nature09166      first naturenews_citations
+    ##          country query_date num_entries
+    ## 1  united states 2021-04-11           1
+    ## 2  united states 2021-04-10           1
+    ## 3 united kingdom 2021-04-11           1
+    ## 4        denmark 2021-04-10           1
+    ## 5                2021-04-10           1
+    ## 6         sweden 2021-04-10           1
 
 ``` r
 head(quote_cite_df)
@@ -693,7 +693,8 @@ quote_nature_indiv_sub_gg = ggplot(subset(all_bootstrap_df_all,
     theme_bw() + 
     xlab("Year of Article") + ylab("Percentage Quotes or Articles") +
     ggtitle(paste("Prop. Quote vs Last Authorship by Name Origin -- restricted to cited")) + 
-    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR) +
+    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR[c("nature_last", "quote")],
+                      labels=QUOTE_ANALYSIS_LABELS[c("nature_last", "quote")]) +
     facet_wrap(~ name_origin, dir="h", scales="free") +
     theme(legend.position="bottom")
 
@@ -711,7 +712,8 @@ mention_nature_indiv_sub_gg = ggplot(subset(all_bootstrap_df_all,
     theme_bw() + 
     xlab("Year of Article") + ylab("Percentage mentions or Articles") +
     ggtitle(paste("Prop. mention vs Last Authorship by Name Origin -- restricted to cited")) + 
-    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR) +
+    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR[c("nature_last", "mention")],
+                      labels=QUOTE_ANALYSIS_LABELS[c("nature_last", "mention")]) +
     facet_wrap(~ name_origin, dir="h", scales="free") +
     theme(legend.position="bottom")
 
@@ -733,7 +735,8 @@ quote_springer_indiv_sub_gg = ggplot(subset(all_bootstrap_df_all,
     theme_bw() + 
     xlab("Year of Article") + ylab("Percentage Quotes or Articles") +
     ggtitle(paste("Prop. Quote vs Last Authorship by Name Origin -- restricted to cited")) + 
-    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR) +
+    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR[c("springer_last", "quote")],
+                      labels=QUOTE_ANALYSIS_LABELS[c("springer_last", "quote")]) +
     facet_wrap(~ name_origin, dir="h", scales="free") +
     theme(legend.position="bottom")
 
@@ -751,7 +754,8 @@ mention_springer_indiv_sub_gg = ggplot(subset(all_bootstrap_df_all,
     theme_bw() + 
     xlab("Year of Article") + ylab("Percentage mentions or Articles") +
     ggtitle(paste("Prop. mention vs Last Authorship by Name Origin -- restricted to cited")) + 
-    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR) +
+    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR[c("springer_last", "mention")],
+                      labels=QUOTE_ANALYSIS_LABELS[c("springer_last", "mention")]) +
     facet_wrap(~ name_origin, dir="h", scales="free") +
     theme(legend.position="bottom")
 
@@ -776,7 +780,8 @@ quote_nature_indiv_sub_gg = ggplot(subset(all_bootstrap_df,
     theme_bw() + 
     xlab("Year of Article") + ylab("Percentage Quotes or Articles") +
     ggtitle(paste("Prop. Quote vs Last Authorship by Name Origin -- restricted to US affil.")) + 
-    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR) +
+    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR[c("nature_last", "quote")],
+                      labels=QUOTE_ANALYSIS_LABELS[c("nature_last", "quote")]) +
     facet_wrap(~ name_origin, dir="h", scales="free") +
     theme(legend.position="bottom")
 
@@ -794,7 +799,8 @@ mention_nature_indiv_sub_gg = ggplot(subset(all_bootstrap_df,
     theme_bw() + 
     xlab("Year of Article") + ylab("Percentage mentions or Articles") +
     ggtitle(paste("Prop. mention vs Last Authorship by Name Origin -- restricted to US affil.")) + 
-    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR) +
+    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR[c("nature_last", "mention")],
+                      labels=QUOTE_ANALYSIS_LABELS[c("nature_last", "mention")]) +
     facet_wrap(~ name_origin, dir="h", scales="free") +
     theme(legend.position="bottom")
 
@@ -816,7 +822,8 @@ quote_springer_indiv_sub_gg = ggplot(subset(all_bootstrap_df,
     theme_bw() + 
     xlab("Year of Article") + ylab("Percentage Quotes or Articles") +
     ggtitle(paste("Prop. Quote vs Last Authorship by Name Origin -- restricted to US affil.")) + 
-    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR) +
+    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR[c("nature_last", "springer_last")],
+                      labels=QUOTE_ANALYSIS_LABELS[c("nature_last", "springer_last")]) +
     facet_wrap(~ name_origin, dir="h", scales="free") +
     theme(legend.position="bottom")
 
@@ -834,7 +841,8 @@ mention_springer_indiv_sub_gg = ggplot(subset(all_bootstrap_df,
     theme_bw() + 
     xlab("Year of Article") + ylab("Percentage mentions or Articles") +
     ggtitle(paste("Prop. mention vs Last Authorship by Name Origin -- restricted to US affil.")) + 
-    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR) +
+    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR[c("springer_last", "mention")],
+                      labels=QUOTE_ANALYSIS_LABELS[c("springer_last", "mention")]) +
     facet_wrap(~ name_origin, dir="h", scales="free") +
     theme(legend.position="bottom")
 

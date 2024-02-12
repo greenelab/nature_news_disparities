@@ -25,6 +25,9 @@ source(file.path(proj_dir, "/process_doi_data/springer_scripts/springer_scrape_u
 
 RERUN_BOOTSTRAP = FALSE
 
+name_origin_ids = c("African", "CelticEnglish", 
+                    "EastAsian", "European", "Greek", "Hispanic", 
+                    "Hebrew", "ArabTurkPers", "Nordic", "SouthAsian")
 
 ```
 
@@ -144,8 +147,9 @@ name_pred_file = file.path(proj_dir,
 name_info_file = file.path(proj_dir, 
                              "/data/author_data/all_speaker_fullname.tsv")
 
-quote_name_df = read_name_origin(name_pred_file, name_info_file)
-quote_name_df$name_origin[quote_name_df$name_origin == "Jewish"] = "Hebrew"
+quote_name_df = read_name_origin_prob(name_pred_file, name_info_file)
+#quote_name_df$name_origin[quote_name_df$name_origin == "Jewish"] = "Hebrew"
+colnames(quote_name_df)[which(colnames(quote_name_df) == "Jewish")] = "Hebrew"
 quote_name_df = subset(quote_name_df, !file_id %in% too_many_quotes_file_id)
 
 # second read in the names mentioned data
@@ -154,8 +158,9 @@ name_pred_file = file.path(proj_dir,
 name_info_file = file.path(proj_dir, 
                              "/data/author_data/all_mentioned_fullname.tsv")
 
-mentioned_name_df = read_name_origin(name_pred_file, name_info_file)
-mentioned_name_df$name_origin[mentioned_name_df$name_origin == "Jewish"] = "Hebrew"
+mentioned_name_df = read_name_origin_prob(name_pred_file, name_info_file)
+#mentioned_name_df$name_origin[mentioned_name_df$name_origin == "Jewish"] = "Hebrew"
+colnames(mentioned_name_df)[which(colnames(mentioned_name_df) == "Jewish")] = "Hebrew"
 mentioned_name_df = subset(mentioned_name_df, !file_id %in% too_many_quotes_file_id)
 
 
@@ -164,8 +169,9 @@ name_pred_file = file.path(proj_dir,
                          "/data/author_data/all_author_fullname_pred.tsv")
 name_info_file = file.path(proj_dir, 
                          "/data/author_data/all_author_fullname.tsv")
-cite_name_df = read_name_origin(name_pred_file, name_info_file)
-cite_name_df$name_origin[cite_name_df$name_origin == "Jewish"] = "Hebrew"
+cite_name_df = read_name_origin_prob(name_pred_file, name_info_file)
+#cite_name_df$name_origin[cite_name_df$name_origin == "Jewish"] = "Hebrew"
+colnames(cite_name_df)[which(colnames(cite_name_df) == "Jewish")] = "Hebrew"
 
 
 # get first authors in the citations
@@ -224,7 +230,9 @@ quote_name_df = subset(quote_name_df, !type %in% c("career-column", "news-and-vi
 mentioned_name_df = subset(mentioned_name_df, !type %in% c("career-column", "news-and-views", "guardian"))
 
 
-col_ids = c("author", "year", "name_origin", "corpus", "doi")
+col_ids = c("author", "year", "corpus", "doi", "African", "CelticEnglish", 
+            "EastAsian", "European", "Greek", "Hispanic", 
+            "Hebrew", "ArabTurkPers", "Nordic", "SouthAsian")
 name_df = rbind(cite_name_df[,col_ids], 
                 quote_name_df[,col_ids], 
                 mentioned_name_df[,col_ids])
@@ -356,157 +364,138 @@ get_subboot <- function(origin_id, curr_corpus, in_df, bootstrap_col_id="doi"){
                                               country_col_id = "name_origin",
                                               country_agg = origin_id, 
                                               conf_int = 0.95)
-    bootstrap_res$name_origin = origin_id
+    bootstrap_df = bootstrap_res$quantile_res
+    bootstrap_raw = bootstrap_res$boot_res
+    
+    bootstrap_df$name_origin = origin_id
+    bootstrap_raw$name_origin = origin_id
     
     # add a label for plotting later
-    bootstrap_res$label[bootstrap_res$year == 2020] = 
-        bootstrap_res$name_origin[bootstrap_res$year == 2020]
+    bootstrap_df$label[bootstrap_df$year == max(bootstrap_df$year)] = 
+        bootstrap_df$name_origin[bootstrap_df$year == max(bootstrap_df$year)]
         
 
-    return(bootstrap_res)
+    return(list(bootstrap_df=bootstrap_df, bootstrap_raw=bootstrap_raw))
+
+}
+
+call_get_subboot <- function(name_df, curr_corpus){
+    
+    # get the bootstrapped CI for each source data type
+    origin_df = NA
+    origin_raw = NA
+    for(curr_origin in unique(name_df$name_origin)){
+        print(curr_origin)
+        res = get_subboot(curr_origin, 
+                          curr_corpus=curr_corpus,
+                          name_df)
+        origin_df = rbind(origin_df, res[[1]])
+        origin_raw = rbind(origin_raw, res[[2]])
+    }
+    origin_df = origin_df[-1,]
+    origin_raw = origin_raw[-1,]
+    
+    origin_df$corpus = curr_corpus
+    origin_raw$corpus = curr_corpus
+    
+    return(list(quant_df=origin_df, raw_df=origin_raw))
+
+}
+
+# helper method for calling the bootstrap, using probabilities
+get_subboot_prob <- function(origin_id, curr_corpus, in_df, bootstrap_col_id="doi"){
+    bootstrap_res = compute_bootstrap_location_prob(subset(in_df, 
+                                                      corpus==curr_corpus), 
+                                              year_col_id = "year", 
+                                              article_col_id = bootstrap_col_id, 
+                                              country_col_id = origin_id,
+                                              conf_int = 0.95)
+    bootstrap_df = bootstrap_res$quantile_res
+    bootstrap_raw = bootstrap_res$boot_res
+    
+    bootstrap_df$name_origin = origin_id
+    bootstrap_raw$name_origin = origin_id
+    
+    # add a label for plotting later
+    bootstrap_df$label[bootstrap_df$year == max(bootstrap_df$year)] = 
+        bootstrap_df$name_origin[bootstrap_df$year == max(bootstrap_df$year)]
+        
+
+    return(list(bootstrap_df=bootstrap_df, bootstrap_raw=bootstrap_raw))
+
+}
+
+call_get_subboot_prob <- function(name_df, curr_corpus){
+    
+    # get the bootstrapped CI for each source data type
+    origin_df = NA
+    origin_raw = NA
+    for(curr_origin in name_origin_ids){
+        print(curr_origin)
+        res = get_subboot_prob(curr_origin, 
+                          curr_corpus=curr_corpus,
+                          name_df)
+        origin_df = rbind(origin_df, res[[1]])
+        origin_raw = rbind(origin_raw, res[[2]])
+    }
+    origin_df = origin_df[-1,]
+    origin_raw = origin_raw[-1,]
+    
+    origin_df$corpus = curr_corpus
+    origin_raw$corpus = curr_corpus
+    
+    return(list(quant_df=origin_df, raw_df=origin_raw))
 
 }
 
 if(RERUN_BOOTSTRAP){
     
     # get the bootstrapped CI for each source data type
-    citation_j_origin_df1 = NA
-    for(curr_origin in unique(name_df$name_origin)){
-        print(curr_origin)
-        res = get_subboot(curr_origin, 
-                          curr_corpus="citation_journalist_first",
-                          name_df)
-        citation_j_origin_df1 = rbind(citation_j_origin_df1, res)
-    }
-    citation_j_origin_df1 = citation_j_origin_df1[-1,]
-    
-    citation_s_origin_df1 = NA
-    for(curr_origin in unique(name_df$name_origin)){
-        print(curr_origin)
-        res = get_subboot(curr_origin, 
-                          curr_corpus="citation_scientist_first",
-                          name_df)
-        citation_s_origin_df1 = rbind(citation_s_origin_df1, res)
-    }
-    citation_s_origin_df1 = citation_s_origin_df1[-1,]
-    
-    citation_j_origin_df2 = NA
-    for(curr_origin in unique(name_df$name_origin)){
-        print(curr_origin)
-        res = get_subboot(curr_origin, 
-                          curr_corpus="citation_journalist_last",
-                          name_df)
-        citation_j_origin_df2 = rbind(citation_j_origin_df2, res)
-    }
-    citation_j_origin_df2 = citation_j_origin_df2[-1,]
-    
-    citation_s_origin_df2 = NA
-    for(curr_origin in unique(name_df$name_origin)){
-        print(curr_origin)
-        res = get_subboot(curr_origin, 
-                          curr_corpus="citation_scientist_last",
-                          name_df)
-        citation_s_origin_df2 = rbind(citation_s_origin_df2, res)
-    }
-    citation_s_origin_df2 = citation_s_origin_df2[-1,]
-    
-    
-    
-    quote_origin_df = NA
-    for(curr_origin in unique(name_df$name_origin)){
-        print(curr_origin)
-        res = get_subboot(curr_origin, 
-                          curr_corpus="quote",
-                          name_df)
-        quote_origin_df = rbind(quote_origin_df, res)
-    }
-    quote_origin_df = quote_origin_df[-1,]
-    
-    #g_quote_origin_df = NA
-    #for(curr_origin in unique(name_df$name_origin)){
-    #    print(curr_origin)
-    #    res = get_subboot(curr_origin, 
-    #                      curr_corpus="guardian_quote",
-    #                      name_df)
-    #    g_quote_origin_df = rbind(g_quote_origin_df, res)
-    #}
-    #g_quote_origin_df = g_quote_origin_df[-1,]
+    res = call_get_subboot_prob(name_df, "citation_journalist_first")
+    citation_j_origin_df1 = res$quant_df
+    citation_j_origin_raw1 = res$raw_df
+      
+    res = call_get_subboot_prob(name_df, "citation_scientist_first")
+    citation_s_origin_df1 = res$quant_df
+    citation_s_origin_raw1 = res$raw_df
 
-    springer_origin_df_last = NA
-    for(curr_origin in unique(name_df$name_origin)){
-        print(curr_origin)
-        res = get_subboot(curr_origin, 
-                          curr_corpus="springer_last",
-                          name_df)
-        springer_origin_df_last = rbind(springer_origin_df_last, res)
-    }
-    springer_origin_df_last = springer_origin_df_last[-1,]
+    res = call_get_subboot_prob(name_df, "citation_journalist_last")
+    citation_j_origin_df2 = res$quant_df
+    citation_j_origin_raw2 = res$raw_df
     
-    nature_origin_df_last = NA
-    for(curr_origin in unique(name_df$name_origin)){
-        print(curr_origin)
-        res = get_subboot(curr_origin, 
-                          curr_corpus="nature_last",
-                          name_df)
-        nature_origin_df_last = rbind(nature_origin_df_last, res)
-    }
-    nature_origin_df_last = nature_origin_df_last[-1,]
-    
-    springer_origin_df_first = NA
-    for(curr_origin in unique(name_df$name_origin)){
-        print(curr_origin)
-        res = get_subboot(curr_origin, 
-                          curr_corpus="springer_first",
-                          name_df)
-        springer_origin_df_first = rbind(springer_origin_df_first, res)
-    }
-    springer_origin_df_first = springer_origin_df_first[-1,]
-    
-    nature_origin_df_first = NA
-    for(curr_origin in unique(name_df$name_origin)){
-        print(curr_origin)
-        res = get_subboot(curr_origin, 
-                          curr_corpus="nature_first",
-                          name_df)
-        nature_origin_df_first = rbind(nature_origin_df_first, res)
-    }
-    nature_origin_df_first = nature_origin_df_first[-1,]
-    
-    
-    mention_origin_df = NA
-    for(curr_origin in unique(name_df$name_origin)){
-        print(curr_origin)
-        res = get_subboot(curr_origin, 
-                          curr_corpus="mention",
-                          name_df)
-        mention_origin_df = rbind(mention_origin_df, res)
-    }
-    mention_origin_df = mention_origin_df[-1,]
-    
-    #g_mention_origin_df = NA
-    #for(curr_origin in unique(name_df$name_origin)){
-    #    print(curr_origin)
-    #    res = get_subboot(curr_origin, 
-    #                      curr_corpus="guardian_mention",
-    #                      name_df)
-    #    g_mention_origin_df = rbind(g_mention_origin_df, res)
-    #}
-    #g_mention_origin_df = g_mention_origin_df[-1,]
+    res = call_get_subboot_prob(name_df, "citation_scientist_last")
+    citation_s_origin_df2 = res$quant_df
+    citation_s_origin_raw2 = res$raw_df
+       
+    res = call_get_subboot_prob(name_df, "quote")
+    quote_origin_df = res$quant_df
+    quote_origin_raw = res$raw_df
 
-    # re-add corpus column for easy reference later
-    citation_j_origin_df1$corpus = "citation_journalist_first"
-    citation_s_origin_df1$corpus = "citation_scientist_first"
-    citation_j_origin_df2$corpus = "citation_journalist_last"
-    citation_s_origin_df2$corpus = "citation_scientist_last"
-    quote_origin_df$corpus = "quote"
-    #g_quote_origin_df$corpus = "guardian_quote"
-    springer_origin_df_first$corpus = "springer_first"
-    nature_origin_df_first$corpus = "nature_first"
-    springer_origin_df_last$corpus = "springer_last"
-    nature_origin_df_last$corpus = "nature_last"
-    mention_origin_df$corpus = "mention"
-    #g_mention_origin_df$corpus = "guardian_mention"
+    res = call_get_subboot_prob(name_df, "springer_last")
+    springer_origin_df_last = res$quant_df
+    springer_origin_df_last_raw = res$raw_df
 
+
+    res = call_get_subboot_prob(name_df, "nature_last")
+    nature_origin_df_last = res$quant_df
+    nature_origin_df_last_raw = res$raw_df
+    
+    
+    res = call_get_subboot_prob(name_df, "springer_first")
+    springer_origin_df_first = res$quant_df
+    springer_origin_df_first_raw = res$raw_df
+    
+    
+    res = call_get_subboot_prob(name_df, "nature_first")
+    nature_origin_df_first = res$quant_df
+    nature_origin_df_first_raw = res$raw_df
+    
+    
+    res = call_get_subboot_prob(name_df, "mention")
+    mention_origin_df = res$quant_df
+    mention_origin_raw = res$raw_df
+    
+    
     all_bootstrap_df = Reduce(rbind, list(quote_origin_df,
                                        citation_j_origin_df1,
                                        citation_s_origin_df1,
@@ -521,12 +510,34 @@ if(RERUN_BOOTSTRAP){
     
     outfile = file.path(proj_dir,"/figure_notebooks/manuscript_figs/fig3_tmp/all_bootstrap_df.tsv")
     write.table(all_bootstrap_df, outfile, sep="\t", quote=F, row.names=F)
+    
+    raw_bootstrap_df = Reduce(rbind, list(quote_origin_raw,
+                                       citation_j_origin_raw1,
+                                       citation_s_origin_raw1,
+                                       citation_j_origin_raw2,
+                                       citation_s_origin_raw2,
+                                       nature_origin_df_first_raw,
+                                       springer_origin_df_first_raw,
+                                       nature_origin_df_last_raw,
+                                       springer_origin_df_last_raw,
+                                       mention_origin_raw))
+    raw_bootstrap_df$corpus = factor(raw_bootstrap_df$corpus, levels = QUOTE_ANALYSIS_ORDER)
+    
+    outfile = file.path(proj_dir,"/figure_notebooks/manuscript_figs/fig3_tmp/raw_bootstrap_df.tsv")
+    write.table(raw_bootstrap_df, outfile, sep="\t", quote=F, row.names=F)
+
 }else{
     
+    raw_bootstrap_file = file.path(proj_dir,
+                                      "/figure_notebooks/manuscript_figs/fig3_tmp/raw_bootstrap_df.tsv")
+    raw_bootstrap_df = data.frame(fread(raw_bootstrap_file))
+    raw_bootstrap_df = raw_bootstrap_df[which(raw_bootstrap_df$year < 2021), ]
+
     all_bootstrap_file = file.path(proj_dir,
                                       "/figure_notebooks/manuscript_figs/fig3_tmp/all_bootstrap_df.tsv")
     all_bootstrap_df = data.frame(fread(all_bootstrap_file))
-    
+    all_bootstrap_df = all_bootstrap_df[which(all_bootstrap_df$year < 2021), ]
+
     citation_j_origin_df1 = subset(all_bootstrap_df, corpus == "citation_journalist_first")
     citation_s_origin_df1 = subset(all_bootstrap_df, corpus == "citation_scientist_first")
     citation_j_origin_df2 = subset(all_bootstrap_df, corpus == "citation_journalist_last")
@@ -586,6 +597,193 @@ summary(subset(citation_s_origin_df2,
 
 ```
 
+## Make the Reference table
+
+
+```{r make_ref_table, echo=TRUE, warning=FALSE, message=F}
+
+conf_int = 0.95
+
+get_FC_summary <- function(raw_bootstrap_df, curr_corpus_fg, curr_corpus_bg,
+                           name_origins, conf_int){
+    
+    all_res = NA
+    for(curr_name_origin in name_origins){
+        
+        curr_fg_df = subset(raw_bootstrap_df, corpus == curr_corpus_fg &
+                                   name_origin == curr_name_origin)
+        curr_fg_df = curr_fg_df[,c("year", "boot")]
+        colnames(curr_fg_df)[2] = "boot_fg"
+        curr_fg_df = curr_fg_df[order(curr_fg_df$year), ]
+        
+        curr_bg_df = subset(raw_bootstrap_df, corpus == curr_corpus_bg &
+                                           name_origin == curr_name_origin)
+        curr_bg_df = curr_bg_df[,c("year", "boot")]
+        colnames(curr_bg_df)[2] = "boot_bg"
+        curr_bg_df = curr_bg_df[order(curr_bg_df$year), ]
+        
+        common_years = intersect(curr_fg_df$year, curr_bg_df$year)
+        curr_bg_df = curr_bg_df[which(curr_bg_df$year %in% common_years), ]
+        curr_fg_df = curr_fg_df[which(curr_fg_df$year %in% common_years), ]
+        
+        # these are random samples, so we just need to align them by year
+        # to get the boot strap estimation of thee FC
+        curr_df = cbind(curr_fg_df, curr_bg_df$boot_bg)
+        colnames(curr_df)[3] = "boot_bg"
+        curr_df$FC = curr_df$boot_fg / curr_df$boot_bg
+        
+        # summarize -- we are year agnostic in the summary because 
+        # the FC is already calculated on a per year basis
+        curr_df = curr_df %>%
+                        summarize(bot_quant = quantile(FC, 1-conf_int),
+                                  top_quant = quantile(FC, conf_int),
+                                  mean(FC))
+        
+        res_str = paste0(round(curr_df$`mean(FC)`, 2),
+                         " (", 
+                         round(curr_df$bot_quant, 2),
+                         ", ",
+                         round(curr_df$top_quant, 2),
+                         ")")
+        curr_df$res_str = res_str
+        all_res = rbind(all_res, curr_df)
+    }
+    
+    all_res = all_res[-1,]
+    
+    
+    all_res$name_origin = name_origins
+    
+    str_tab = t(all_res$res_str)
+    colnames(str_tab) = name_origins
+    rownames(str_tab) = paste(curr_corpus_fg, "vs.", curr_corpus_bg)
+
+    return(str_tab)
+
+}
+
+
+name_origins = c("CelticEnglish", "EastAsian", "European")
+
+cite_1_j = get_FC_summary(raw_bootstrap_df, 
+                             curr_corpus_fg = "citation_journalist_first", 
+                             curr_corpus_bg = "nature_first", 
+                             name_origins, conf_int)
+
+cite_2_j = get_FC_summary(raw_bootstrap_df, 
+                             curr_corpus_fg = "citation_journalist_last", 
+                             curr_corpus_bg = "nature_last", 
+                             name_origins, conf_int)
+
+cite_1_s = get_FC_summary(raw_bootstrap_df, 
+                             curr_corpus_fg = "citation_scientist_first", 
+                             curr_corpus_bg = "nature_first", 
+                             name_origins, conf_int)
+
+cite_2_s = get_FC_summary(raw_bootstrap_df, 
+                             curr_corpus_fg = "citation_scientist_last", 
+                             curr_corpus_bg = "nature_last", 
+                             name_origins, conf_int)
+
+
+
+quote_1 = get_FC_summary(raw_bootstrap_df, 
+                             curr_corpus_fg = "quote", 
+                             curr_corpus_bg = "nature_first", 
+                             name_origins, conf_int)
+
+quote_2 = get_FC_summary(raw_bootstrap_df, 
+                             curr_corpus_fg = "quote", 
+                             curr_corpus_bg = "nature_last", 
+                             name_origins, conf_int)
+
+
+mention_1 = get_FC_summary(raw_bootstrap_df, 
+                             curr_corpus_fg = "mention", 
+                             curr_corpus_bg = "nature_first", 
+                             name_origins, conf_int)
+
+mention_2 = get_FC_summary(raw_bootstrap_df, 
+                             curr_corpus_fg = "mention", 
+                             curr_corpus_bg = "nature_last", 
+                             name_origins, conf_int)
+
+full_list = list(cite_1_j, cite_2_j,
+                 cite_1_s, cite_2_s,
+                 quote_1, quote_2,
+                 mention_1, mention_2)
+
+
+
+final_table = Reduce(rbind, full_list)
+
+
+knitr::kable(data.frame(final_table), format = "pipe", 
+             caption = "Mean fold change comparison with Nature from bootstrap samples with 95% CI")
+
+
+##### Same for Springer
+
+cite_1_j = get_FC_summary(raw_bootstrap_df, 
+                             curr_corpus_fg = "citation_journalist_first", 
+                             curr_corpus_bg = "springer_first", 
+                             name_origins, conf_int)
+
+cite_2_j = get_FC_summary(raw_bootstrap_df, 
+                             curr_corpus_fg = "citation_journalist_last", 
+                             curr_corpus_bg = "springer_last", 
+                             name_origins, conf_int)
+
+cite_1_s = get_FC_summary(raw_bootstrap_df, 
+                             curr_corpus_fg = "citation_scientist_first", 
+                             curr_corpus_bg = "springer_last", 
+                             name_origins, conf_int)
+
+cite_2_s = get_FC_summary(raw_bootstrap_df, 
+                             curr_corpus_fg = "citation_scientist_last", 
+                             curr_corpus_bg = "nature_last", 
+                             name_origins, conf_int)
+
+
+
+quote_1 = get_FC_summary(raw_bootstrap_df, 
+                             curr_corpus_fg = "quote", 
+                             curr_corpus_bg = "springer_last", 
+                             name_origins, conf_int)
+
+quote_2 = get_FC_summary(raw_bootstrap_df, 
+                             curr_corpus_fg = "quote", 
+                             curr_corpus_bg = "nature_last", 
+                             name_origins, conf_int)
+
+
+mention_1 = get_FC_summary(raw_bootstrap_df, 
+                             curr_corpus_fg = "mention", 
+                             curr_corpus_bg = "springer_last", 
+                             name_origins, conf_int)
+
+mention_2 = get_FC_summary(raw_bootstrap_df, 
+                             curr_corpus_fg = "mention", 
+                             curr_corpus_bg = "nature_last", 
+                             name_origins, conf_int)
+
+full_list = list(cite_1_j, cite_2_j,
+                 cite_1_s, cite_2_s,
+                 quote_1, quote_2,
+                 mention_1, mention_2)
+
+
+
+final_table = Reduce(rbind, full_list)
+
+
+knitr::kable(data.frame(final_table), format = "pipe", 
+             caption = "Mean fold change comparison with Springer Nature from bootstrap samples with 95% CI")
+
+
+
+
+```
 
 
 ## Make the Figures
@@ -601,11 +799,12 @@ tot_art_gg = ggplot(num_art_tot, aes(x=as.numeric(year), y=tot_articles,
     geom_point() + geom_line(show.legend = F) + theme_bw() + 
     xlab("Year of Article") + ylab("Number of Total Articles/Quotes/Citations/Mentions") +
     ggtitle("Total number of Articles/Quotes/Citations/Mentions per Corpus") + 
-    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR) +
+    scale_color_manual(values=QUOTE_ANALYSIS_COLOR[unique(num_art_tot$corpus)],
+                      labels=QUOTE_ANALYSIS_LABELS[unique(num_art_tot$corpus)]) +
     theme(legend.position="bottom")
 
 ggsave(file.path(proj_dir, "/figure_notebooks/manuscript_figs/fig3_tmp/tot_art_gg.pdf"),
-       tot_art_gg, width = 5, height = 5, units = "in", device = "pdf")
+       tot_art_gg, width = 10, height = 5, units = "in", device = "pdf")
 
 ```
 
@@ -631,7 +830,7 @@ citation_j_overview_gg2 = ggplot(citation_j_origin_df2, aes(x=as.numeric(year), 
                           ymin=bottom_CI, ymax=top_CI,
                           fill=name_origin, label=label)) +
     geom_point() + geom_ribbon(alpha=0.5) + geom_line(alpha=0.5) +
-    theme_bw() + geom_text_repel() + xlim(c(2005,2021))  +
+    theme_bw() + geom_text_repel() + xlim(c(2005,2020))  +
     xlab("Year of Article") + ylab("Proportion of Journalist Citations") +
     ggtitle("Est. Proportion of the Cited Last Author Name Origin (journalist written)") + 
     scale_fill_brewer(palette="Set2") +
@@ -644,7 +843,7 @@ citation_s_overview_gg1 = ggplot(citation_s_origin_df1, aes(x=as.numeric(year), 
                           ymin=bottom_CI, ymax=top_CI,
                           fill=name_origin, label=label)) +
     geom_point() + geom_ribbon(alpha=0.5) + geom_line(alpha=0.5) +
-    theme_bw() + geom_text_repel() + xlim(c(2005,2021))  +
+    theme_bw() + geom_text_repel() + xlim(c(2005,2020))  +
     xlab("Year of Article") + ylab("Proportion of Scientist Citations") +
     ggtitle("Est. Proportion of the Cited First Author Name Origin (scientist written)") + 
     scale_fill_brewer(palette="Set2") +
@@ -657,7 +856,7 @@ citation_s_overview_gg2 = ggplot(citation_s_origin_df2, aes(x=as.numeric(year), 
                           ymin=bottom_CI, ymax=top_CI,
                           fill=name_origin, label=label)) +
     geom_point() + geom_ribbon(alpha=0.5) + geom_line(alpha=0.5) +
-    theme_bw() + geom_text_repel() + xlim(c(2005,2021))  +
+    theme_bw() + geom_text_repel() + xlim(c(2005,2020))  +
     xlab("Year of Article") + ylab("Proportion of Scientist Citations") +
     ggtitle("Est. Proportion of the Cited Last Author Name Origin (scientist written)") + 
     scale_fill_brewer(palette="Set2") +
@@ -683,7 +882,8 @@ citation_nature_indiv_full_gg = ggplot(cite_sub,
     theme_bw() + 
     xlab("Year of Article") + ylab("Percentage Citations or Articles") +
     ggtitle(paste("Percentage Citations vs Authorship by Name Origin")) + 
-    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR[unique(cite_sub$corpus)]) +
+    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR[unique(cite_sub$corpus)],
+                      labels=QUOTE_ANALYSIS_LABELS[unique(cite_sub$corpus)]) +
     facet_wrap(~ name_origin, scales = "free_y") +
     theme(legend.position="bottom")
 
@@ -707,7 +907,8 @@ citation_springer_indiv_full_gg = ggplot(cite_sub,
     theme_bw() + 
     xlab("Year of Article") + ylab("Percentage Citations or Articles") +
     ggtitle(paste("Percentage Citations vs Authorship by Name Origin")) + 
-    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR[unique(cite_sub$corpus)]) +
+    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR[unique(cite_sub$corpus)],
+                      labels=QUOTE_ANALYSIS_LABELS[unique(cite_sub$corpus)]) +
     facet_wrap(~ name_origin, scales = "free_y") +
     theme(legend.position="bottom")
 
@@ -727,7 +928,8 @@ citation_j_nature_indiv_sub_gg = ggplot(cite_sub,
     theme_bw() + 
     xlab("Year of Article") + ylab("Percentage Citations or Articles") +
     ggtitle(paste("Prop. Citations vs Authorship by Name Origin in Journalist Written Articles")) + 
-    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR[unique(cite_sub$corpus)]) +
+    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR[unique(cite_sub$corpus)],
+                      labels=QUOTE_ANALYSIS_LABELS[unique(cite_sub$corpus)]) +
     facet_wrap(~ name_origin, dir="h", scales="free") +
     theme(legend.position="bottom")
 
@@ -746,7 +948,8 @@ citation_s_nature_indiv_sub_gg = ggplot(cite_sub,
     theme_bw() + 
     xlab("Year of Article") + ylab("Percentage Citations or Articles") +
     ggtitle(paste("Prop. Citations vs Authorship by Name Origin in Scientist Written Articles")) + 
-    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR[cite_sub$corpus]) +
+    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR[cite_sub$corpus],
+                      labels=QUOTE_ANALYSIS_LABELS[cite_sub$corpus]) +
     facet_wrap(~ name_origin, dir="h", scales="free") +
     theme(legend.position="bottom")
 
@@ -766,7 +969,7 @@ quote_overview_gg = ggplot(quote_origin_df, aes(x=as.numeric(year), y=mean,
                           ymin=bottom_CI, ymax=top_CI,
                           fill=name_origin, label=label)) +
     geom_point() + geom_ribbon(alpha=0.5) + geom_line(alpha=0.5) +
-    theme_bw() + geom_text_repel() + xlim(c(2005,2021))  +
+    theme_bw() + geom_text_repel() + xlim(c(2005,2020))  +
     xlab("Year of Article") + ylab("Proportion of Quotes") +
     ggtitle("Est. Proportion of Quoted Speakers' Name Origin") + 
     scale_fill_brewer(palette="Set2") +
@@ -787,7 +990,8 @@ quote_nature_indiv_full_gg = ggplot(quote_sub,
     theme_bw() + 
     xlab("Year of Article") + ylab("Percentage Quotes or Articles") +
     ggtitle(paste("Percentage Quotes vs Authorship by Name Origin")) + 
-    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR[unique(quote_sub$corpus)]) +
+    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR[unique(quote_sub$corpus)],
+                      labels=QUOTE_ANALYSIS_LABELS[unique(quote_sub$corpus)]) +
     facet_wrap( ~ name_origin, scales = "free_y") +
     theme(legend.position="bottom")
 
@@ -804,7 +1008,8 @@ quote_springer_indiv_full_gg = ggplot(quote_sub,
     theme_bw() + 
     xlab("Year of Article") + ylab("Percentage Quotes or Articles") +
     ggtitle(paste("Percentage Quotes vs Authorship by Name Origin")) + 
-    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR[unique(quote_sub$corpus)]) +
+    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR[unique(quote_sub$corpus)],
+                      labels=QUOTE_ANALYSIS_LABELS[unique(quote_sub$corpus)]) +
     facet_wrap( ~ name_origin, scales = "free_y") +
     theme(legend.position="bottom")
 
@@ -823,7 +1028,8 @@ quote_nature_indiv_sub_gg = ggplot(quote_sub,
     theme_bw() + 
     xlab("Year of Article") + ylab("Percentage Quotes or Articles") +
     ggtitle(paste("Percentage Quotes vs Authorship by Name Origin")) + 
-    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR[unique(quote_sub$corpus)]) +
+    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR[unique(quote_sub$corpus)],
+                      labels=QUOTE_ANALYSIS_LABELS[unique(quote_sub$corpus)]) +
     facet_wrap(~ name_origin) +
     theme(legend.position="bottom")
 
@@ -846,7 +1052,7 @@ mention_overview_gg = ggplot(mention_origin_df, aes(x=as.numeric(year), y=mean,
                           ymin=bottom_CI, ymax=top_CI,
                           fill=name_origin, label=label)) +
     geom_point() + geom_ribbon(alpha=0.5) + geom_line(alpha=0.5) +
-    theme_bw() + geom_text_repel() + xlim(c(2005,2021))  +
+    theme_bw() + geom_text_repel() + xlim(c(2005,2020))  +
     xlab("Year of Article") + ylab("Proportion of Mentioned Names") +
     ggtitle("Est. Proportion of Mentioned Speakers' Name Origin") + 
     scale_fill_brewer(palette="Set2") +
@@ -868,7 +1074,8 @@ mention_nature_indiv_full_gg = ggplot(mention_sub,
     theme_bw() + 
     xlab("Year of Article") + ylab("Percentage Mentions or Articles") +
     ggtitle(paste("Percentage Mentions vs Authorship by Name Origin")) + 
-    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR[unique(mention_sub$corpus)]) +
+    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR[unique(mention_sub$corpus)],
+                      labels=QUOTE_ANALYSIS_LABELS[unique(mention_sub$corpus)]) +
     facet_wrap( ~ name_origin, scales = "free_y") +
     theme(legend.position="bottom")
 
@@ -886,7 +1093,8 @@ mention_springer_indiv_full_gg = ggplot(mention_sub,
     theme_bw() + 
     xlab("Year of Article") + ylab("Percentage Mentions or Articles") +
     ggtitle(paste("Percentage Mentions vs Authorship by Name Origin")) + 
-    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR[unique(mention_sub$corpus)]) +
+    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR[unique(mention_sub$corpus)],
+                      labels=QUOTE_ANALYSIS_LABELS[unique(mention_sub$corpus)]) +
     facet_wrap( ~ name_origin, scales = "free_y") +
     theme(legend.position="bottom")
 
@@ -906,7 +1114,8 @@ mention_nature_indiv_sub_gg = ggplot(mention_sub,
     theme_bw() + 
     xlab("Year of Article") + ylab("Percentage Mentions or Articles") +
     ggtitle(paste("Percentage Mentions vs Authorship by Name Origin")) + 
-    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR[unique(mention_sub$corpus)]) +
+    scale_fill_manual(values=QUOTE_ANALYSIS_COLOR[unique(mention_sub$corpus)],
+                      labels=QUOTE_ANALYSIS_LABELS[unique(mention_sub$corpus)]) +
     facet_wrap(~ name_origin) +
     theme(legend.position="bottom")
 
@@ -926,7 +1135,7 @@ nature_first_overview_gg = ggplot(nature_origin_df_first, aes(x=as.numeric(year)
                           ymin=bottom_CI, ymax=top_CI,
                           fill=name_origin, label=label)) +
     geom_point() + geom_ribbon(alpha=0.5) + geom_line(alpha=0.5) +
-    theme_bw() + geom_text_repel() + xlim(c(2005,2021))  +
+    theme_bw() + geom_text_repel() + xlim(c(2005,2020))  +
     xlab("Year of Article") + ylab("Proportion of Nature First Authors") +
     ggtitle("Est. Proportion of Nature First Authors' Name Origin") + 
     scale_fill_brewer(palette="Set2") +
@@ -939,7 +1148,7 @@ nature_last_overview_gg = ggplot(nature_origin_df_last, aes(x=as.numeric(year), 
                           ymin=bottom_CI, ymax=top_CI,
                           fill=name_origin, label=label)) +
     geom_point() + geom_ribbon(alpha=0.5) + geom_line(alpha=0.5) +
-    theme_bw() + geom_text_repel() + xlim(c(2005,2021))  +
+    theme_bw() + geom_text_repel() + xlim(c(2005,2020))  +
     xlab("Year of Article") + ylab("Proportion of Nature Last Authors") +
     ggtitle("Est. Proportion of Nature Last Authors' Name Origin") + 
     scale_fill_brewer(palette="Set2") +
@@ -953,7 +1162,7 @@ springer_first_overview_gg = ggplot(springer_origin_df_first, aes(x=as.numeric(y
                           ymin=bottom_CI, ymax=top_CI,
                           fill=name_origin, label=label)) +
     geom_point() + geom_ribbon(alpha=0.5) + geom_line(alpha=0.5) +
-    theme_bw() + geom_text_repel() + xlim(c(2005,2021))  +
+    theme_bw() + geom_text_repel() + xlim(c(2005,2020))  +
     xlab("Year of Article") + ylab("Proportion of Springer First Authors") +
     ggtitle("Est. Proportion of Springer First Authors' Name Origin") + 
     scale_fill_brewer(palette="Set2") +
@@ -966,7 +1175,7 @@ springer_last_overview_gg = ggplot(springer_origin_df_last, aes(x=as.numeric(yea
                           ymin=bottom_CI, ymax=top_CI,
                           fill=name_origin, label=label)) +
     geom_point() + geom_ribbon(alpha=0.5) + geom_line(alpha=0.5) +
-    theme_bw() + geom_text_repel() + xlim(c(2005,2021))  +
+    theme_bw() + geom_text_repel() + xlim(c(2005,2020))  +
     xlab("Year of Article") + ylab("Proportion of Springer Last Authors") +
     ggtitle("Est. Proportion of Springer Last Authors' Name Origin") + 
     scale_fill_brewer(palette="Set2") +
@@ -1074,7 +1283,7 @@ middle_image1 <- image_append(image_scale(c(citation_j_overview_gg1,
                                            citation_s_overview_gg1),3000), stack = FALSE)
 middle_image2 <- image_append(image_scale(c(citation_j_overview_gg2,
                                            citation_s_overview_gg2),3000), stack = FALSE)
-full_image <- image_append(c(image_scale(tot_art_gg, 1500), 
+full_image <- image_append(c(image_scale(tot_art_gg, 3000), 
                              image_scale(c(middle_image1, middle_image2, 
                                            bottom_image), 3000)), stack = TRUE)
                            
